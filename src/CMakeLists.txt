@@ -11,15 +11,18 @@ set(ALL_SOURCES
     ComponentInstance.cpp
     ComponentParameter.cpp
     CSG.cpp
+    CSGNode.cpp
     TransformMatrix.cpp
     Vector.cpp
     )
 
-include_directories("${CMAKE_SOURCE_DIR}/src")
+include_directories("${CMAKE_SOURCE_DIR}")
+include_directories("${CMAKE_SOURCE_DIR}/json/include")
+add_subdirectory("${CMAKE_SOURCE_DIR}/json")
 
 add_library(libmetabot ${ALL_SOURCES})
 
-target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json)
 
 add_executable(metabot "main.cpp")
 target_link_libraries(metabot libmetabot)

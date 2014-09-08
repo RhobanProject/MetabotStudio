@@ -1,10 +1,86 @@
+#include <iostream>
 #include "CSG.h"
+#include "CSGNode.h"
+#include "util.h"
 
 namespace Metabot
 {
-    CSG CSG::parse(std::string data)
+    CSG::CSG()
     {
-        CSG document;
+        root = new CSGNode("root");
+    }
+
+    CSG::~CSG()
+    {
+        if (root != NULL) {
+            delete root;
+        }
+    }
+
+    CSG *CSG::parse(std::string data)
+    {
+        CSG *document = new CSG;
+        int state = 0;
+        unsigned int n = data.length();
+        std::vector<CSGNode *> stack;
+        std::string name;
+        std::string value;
+        stack.push_back(document->root);
+
+        for (unsigned int i=0; i<n; i++) {
+            char c = data[i];
+            switch (state) {
+                case 0:
+                    if (c == '}') {
+                        if (stack.size() == 1) {
+                            throw std::string("CSG: Too much }");
+                        }
+                        stack.pop_back();
+                    } else if (c == '(') {
+                        state++;
+                    } else {
+                        name += c;
+                    }
+                break;
+                case 1:
+                    if (c == ')') {
+                        state = 3;
+                    } else {
+                        value += c;
+                        if (c == '"') {
+                            state = 2;
+                        }
+                    }
+                break;
+                case 2:
+                    value += c;
+                    if (c == '"') {
+                        state = 1;
+                    }
+                break;
+                case 3:
+                    if (c == ';' || c == '{') {
+                        name = trim(name);
+                        value = trim(value);
+                        CSGNode *node = new CSGNode(name, value);
+                        CSGNode *last = stack[stack.size()-1];
+                        last->children.push_back(node);
+                        
+                        if (c == '{') { 
+                            stack.push_back(node);
+                        }
+
+                        name = "";
+                        value = "";
+                        state = 0;
+                    }
+                break;
+            }
+        }
+
+        if (stack.size() != 1) {
+            throw std::string("CSG: No { } matching");
+        }
 
         return document;
     }

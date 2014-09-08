@@ -13,3 +13,5 @@ std::string tempname();
 bool file_exists(std::string filename);
 void file_put_contents(std::string path, std::string contents);
 std::string file_get_contents(std::string path);
+bool startswith(std::string str, std::string start);
+std::string removestart(std::string str, std::string start);

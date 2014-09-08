@@ -4,9 +4,14 @@
 
 namespace Metabot
 {
+    class CSGNode;
     class CSG
     {
         public:
-            static CSG parse(std::string data);
+            CSG();
+            virtual ~CSG();
+            static CSG *parse(std::string data);
+
+            CSGNode *root;
     };
 }

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <cstdio>
@@ -76,4 +77,14 @@ std::string file_get_contents(std::string path)
     std::string content((std::istreambuf_iterator<char>(ifs)),
             (std::istreambuf_iterator<char>()));
     return content;
+}
+
+bool startswith(std::string str, std::string start)
+{
+    return str.substr(0, start.length())==start;
+}
+
+std::string removestart(std::string str, std::string start)
+{
+    return str.substr(start.length());
 }

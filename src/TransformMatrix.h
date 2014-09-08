@@ -18,5 +18,6 @@ namespace Metabot
             
             static TransformMatrix identity();
             static TransformMatrix zero();
+            static TransformMatrix fromJSON(std::string json);
     };
 }

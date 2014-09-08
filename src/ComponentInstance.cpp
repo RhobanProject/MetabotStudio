@@ -25,9 +25,9 @@ namespace Metabot
     void ComponentInstance::compile()
     {
         std::string csg = openscad("csg");
-        std::string stl = openscad("stl");
 
-        CSG document = CSG::parse(csg);
+        CSG *document = CSG::parse(csg);
+        std::string stl = openscad("stl");
     }
 
     std::string ComponentInstance::openscad(std::string format)
@@ -41,7 +41,8 @@ namespace Metabot
         cmd << component->filename << " -o " << output << " >/dev/null 2>/dev/null";
         std::string command = cmd.str();
         
-        std::cout << "compile(): " << command << std::endl;
+        // Uncomment that to see the compile command called
+        // std::cout << "compile(): " << command << std::endl;
 
         FILE *process = popen(command.c_str(), "r");
         if (pclose(process) != 0) {
