@@ -1,17 +1,17 @@
 // Component motor
 use <../parts/leg.scad>;
 
-// Parameter
+// Parameter Size of the first part
 SizeA = 60;
-// Parameter
+// Parameter Size of the second part
 SizeB = 20;
-// Parameter
+// Parameter Size of the third part
 SizeC = 20;
-// Parmaeter
+// Parmaeter Size of the bottom
 SizeBottom = 10;
-// Parameter
+// Parameter Size of the top
 SizeTop = 15;
-// Parameter
+// Parameter Thickness of the part
 Thickness = 2.2;
 
 rotate([90,90,0]) {
