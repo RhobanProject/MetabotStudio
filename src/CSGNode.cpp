@@ -5,7 +5,7 @@
 namespace Metabot
 {
     CSGNode::CSGNode(std::string name_, std::string value_)
-        : name(name_), value(value_), anchor(false), model(false), part(false)
+        : name(name_), value(value_), anchor(false), model(false), part(false), parameter(false)
     {
         if (isMatrix()) {
             matrix = TransformMatrix::fromJSON(value);
@@ -26,8 +26,20 @@ namespace Metabot
                 part = true;
                 data = trim(removestart(noquote, "metabot_part: "));
             }
+            if (startswith(noquote, "metabot_parameter: ")) {
+                parameter = true;
+                data = trim(removestart(noquote, "metabot_parameter: "));
+            }
         }
     }
+    
+    CSGNode::~CSGNode()
+    {
+        for (auto node : children) {
+            delete node;
+        }
+    }
+
 
     bool CSGNode::isMatrix()
     {
@@ -37,12 +49,5 @@ namespace Metabot
     bool CSGNode::isMarker()
     {
         return (name == "marker");
-    }
- 
-    CSGNode::~CSGNode()
-    {
-        for (auto node : children) {
-            delete node;
-        }
     }
 }

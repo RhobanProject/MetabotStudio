@@ -25,9 +25,12 @@ namespace Metabot
     void ComponentInstance::compile()
     {
         std::string csg = openscad("csg");
+        std::string stl = openscad("stl");
 
         CSG *document = CSG::parse(csg);
-        std::string stl = openscad("stl");
+        anchors = document->anchors;
+
+        delete document;
     }
 
     std::string ComponentInstance::openscad(std::string format)

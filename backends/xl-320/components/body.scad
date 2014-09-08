@@ -7,7 +7,7 @@ use <../parts/body.scad>;
 // Parameter Size of the body
 Size = 40;
 // Parameter Number of legs
-Legs = 6;
+Legs = 4;
 // Parameter Thickness
 Thickness = 2.2;
 

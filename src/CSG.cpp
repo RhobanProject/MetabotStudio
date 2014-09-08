@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "CSG.h"
 #include "CSGNode.h"
 #include "util.h"
@@ -26,6 +27,7 @@ namespace Metabot
         std::string name;
         std::string value;
         stack.push_back(document->root);
+        CSGNode *lastPart = NULL;
 
         for (unsigned int i=0; i<n; i++) {
             char c = data[i];
@@ -65,6 +67,13 @@ namespace Metabot
                         CSGNode *node = new CSGNode(name, value);
                         CSGNode *last = stack[stack.size()-1];
                         last->children.push_back(node);
+
+                        if (node->part) {
+                            lastPart = node;
+                        }
+                        if (node->parameter && lastPart != NULL) {
+                            lastPart->parameters.push_back(node->data);
+                        }
                         
                         if (c == '{') { 
                             stack.push_back(node);
@@ -82,6 +91,30 @@ namespace Metabot
             throw std::string("CSG: No { } matching");
         }
 
+        auto matrix = TransformMatrix::identity();
+        document->walk(matrix, document->root);
+
         return document;
+    }
+            
+    void CSG::walk(TransformMatrix matrix, CSGNode *node)
+    {
+        if (node->isMatrix()) {
+            matrix = matrix.multiply(node->matrix);
+        }
+
+        if (node->anchor) {
+            AnchorPoint *anchor = new AnchorPoint(node->data, matrix);
+            anchors.push_back(anchor);
+        }
+
+        if (node->part) {
+            std::cout << "Part " << node->data << ", params: " << implode(node->parameters, " ") << std::endl;
+            parts.push_back(node->data);
+        }
+
+        for (auto child : node->children) {
+            walk(matrix, child);
+        }
     }
 }

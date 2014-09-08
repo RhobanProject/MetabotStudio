@@ -1,7 +1,13 @@
+include <../../metabot.scad>;
 use <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 module body(size=20, legs=4, thickness=2.2) {
+    metabot_part("body");
+    metabot_parameter("size", size);
+    metabot_parameter("legs", legs);
+    metabot_parameter("thickness", thickness);
+
     module bodyPart() {
         translate([-10,0,0])
             rounded(20, size, thickness, 5);

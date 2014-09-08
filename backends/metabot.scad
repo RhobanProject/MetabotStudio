@@ -11,6 +11,10 @@ module metabot_part(name) {
     marker(str("metabot_part: ", name));
 }
 
+module metabot_parameter(name, value) {
+    marker(str("metabot_parameter: -D", name, "=", value));
+}
+
 // Used to put an anchor point in the file
 module metabot_anchor(name) {
     marker(str("metabot_anchor: ", name));

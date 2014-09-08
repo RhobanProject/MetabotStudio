@@ -6,6 +6,8 @@ set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -pedantic -U__STRICT_ANSI__")
 
 set(ALL_SOURCES
     util.cpp
+    
+    AnchorPoint.cpp
     Backend.cpp
     Component.cpp
     ComponentInstance.cpp

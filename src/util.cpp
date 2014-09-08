@@ -16,6 +16,18 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return parts;
 }
 
+std::string implode(std::vector<std::string> strs, std::string separator)
+{
+    std::stringstream str;
+    for (unsigned int i=0; i<strs.size(); i++) {
+        str << strs[i];
+        if (i != strs.size()-1) {
+            str << separator;
+        }
+    }
+    return str.str();
+}
+
 std::string basename(std::string const pathname)
 {
     std::string buffer = "";

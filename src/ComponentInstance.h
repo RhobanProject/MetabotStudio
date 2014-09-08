@@ -1,5 +1,10 @@
 #pragma once
 
+#include <map>
+#include <vector>
+#include <string>
+#include "AnchorPoint.h"
+
 namespace Metabot
 {
     class Component;
@@ -16,6 +21,7 @@ namespace Metabot
             void set(std::string name, std::string value);
 
             std::map<std::string, std::string> values;
+            std::vector<AnchorPoint *> anchors;
             Component *component;
     };
 }

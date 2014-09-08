@@ -19,12 +19,10 @@ namespace Metabot
             // For marker nodes
             std::string data;
             bool isMarker();
-            bool isAnchor();
-            bool isModel();
-            bool isPart();
 
             std::string name, value;
             std::vector<CSGNode*> children;
-            bool anchor, model, part;
+            std::vector<std::string> parameters;
+            bool anchor, model, part, parameter;
     };
 }
