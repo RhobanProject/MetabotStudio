@@ -1,4 +1,7 @@
 #include <sstream>
+#include <fstream>
+#include <cstdio>
+#include <fcntl.h>
 #include "util.h"
 
 std::vector<std::string> split(const std::string &s, char delim) {
@@ -40,4 +43,37 @@ std::string rtrim(std::string s) {
 
 std::string trim(std::string s) {
     return ltrim(rtrim(s));
+}
+
+std::string tempname() {
+    return tempnam(NULL, "metabot");
+}
+
+bool file_exists(std::string filename)
+{
+    int fd = open(filename.c_str(), O_RDONLY);
+    if (fd > 0) {
+        close(fd);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void file_put_contents(std::string path, std::string contents)
+{
+    std::ofstream ofile(path.c_str());
+
+    if (ofile) {
+        ofile << contents;
+        ofile.close();
+    }
+}
+
+std::string file_get_contents(std::string path)
+{
+    std::ifstream ifs(path.c_str());
+    std::string content((std::istreambuf_iterator<char>(ifs)),
+            (std::istreambuf_iterator<char>()));
+    return content;
 }

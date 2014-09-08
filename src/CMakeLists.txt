@@ -8,7 +8,11 @@ set(ALL_SOURCES
     util.cpp
     Backend.cpp
     Component.cpp
+    ComponentInstance.cpp
     ComponentParameter.cpp
+    CSG.cpp
+    TransformMatrix.cpp
+    Vector.cpp
     )
 
 include_directories("${CMAKE_SOURCE_DIR}/src")

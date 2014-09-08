@@ -14,8 +14,19 @@ namespace Metabot
     Backend::~Backend()
     {
         for (auto component : components) {
-            delete component;
+            delete component.second;
         }
+    }
+            
+    std::vector<Component*> Backend::getComponents(std::string type)
+    {
+        std::vector<Component *> all;
+        for (auto component : components) {
+            if (component.second->type == type) {
+                all.push_back(component.second);
+            }
+        }
+        return all;
     }
 
     void Backend::load()
@@ -58,7 +69,7 @@ namespace Metabot
         if (filename.length()>5 && filename.substr(filename.length()-5)==".scad") {
             Component *component = Component::load(filename);
             if (component != NULL) {
-                components.push_back(component);
+                components[component->name] = component;
             }
         }
     }

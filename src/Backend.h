@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <vector>
 #include <string>
 #include "Component.h"
@@ -16,8 +17,10 @@ namespace Metabot
             void loadComponents();
             void loadComponent(std::string name);
 
+            std::vector<Component*> getComponents(std::string type);
+
             std::string name;
             std::string directory;
-            std::vector<Component *> components;
+            std::map<std::string, Component *> components;
     };
 }

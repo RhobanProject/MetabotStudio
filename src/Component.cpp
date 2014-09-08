@@ -2,19 +2,30 @@
 #include <fstream>
 #include "util.h"
 #include "Component.h"
+#include "ComponentInstance.h"
 
 namespace Metabot
 {
-    Component::Component(std::string name_)
-        : name(name_), type("")
+    Component::Component(std::string name_, std::string filename_)
+        : name(name_), filename(filename_), type("")
     {
     }
             
     Component::~Component()
     {
         for (auto parameter : parameters) {
-            delete parameter;
+            delete parameter.second;
         }
+    }
+    
+    ComponentInstance *Component::instanciate()
+    {
+        ComponentInstance *instance = new ComponentInstance(this);
+        for (auto parameter : parameters) {
+            instance->values[parameter.first] = parameter.second->value;
+        }
+
+        return instance;
     }
 
     Component *Component::load(std::string filename)
@@ -25,7 +36,7 @@ namespace Metabot
         std::string description;
         int state = 0;
         std::string name = basename(filename);
-        Component *component = new Component(name);
+        Component *component = new Component(name, filename);
 
         while (std::getline(f, line)) {
             switch (state) {
@@ -47,7 +58,8 @@ namespace Metabot
                         if (value[value.length()-1] == ';') {
                             value = value.substr(0, value.length()-1);
                         }
-                        component->parameters.push_back(new ComponentParameter(name, value, description));
+                        ComponentParameter *parameter = new ComponentParameter(param, value, description);
+                        component->parameters[parameter->name] = parameter;
                     }
                     state = 0;
                 }
