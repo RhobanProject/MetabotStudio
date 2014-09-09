@@ -22,10 +22,10 @@ namespace Metabot
 
             void compileAll();
             void compile();
-            std::string openscadCached(std::string filename, std::string format);
-            std::string openscadCached(std::string format);
-            std::string openscad(std::string filename, std::string format, std::string parameters="");
             std::string stl();
+            std::string parameters();
+            std::string csgHash();
+            std::string stlHash();
 
             // Accessing parameter values
             std::string get(std::string name);

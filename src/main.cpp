@@ -43,7 +43,7 @@ int main()
         // Getting 3D model
         robot.computeModel();
         Model model = robot.toModel();
-        saveModelToFileAscii("/tmp/demo.stl", &model);
+        saveModelToFileBinary("/tmp/demo.stl", &model);
 
     } catch (string error) {
         cerr << "[ERROR] " << error << endl;

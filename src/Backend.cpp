@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include "Backend.h"
 #include "Cache.h"
+#include "util.h"
 
 namespace Metabot
 {
@@ -105,5 +106,48 @@ namespace Metabot
     Model Backend::getModel(std::string name)
     {
         return models[name];
+    }
+   
+    std::string Backend::openscadCached(std::string key, std::string filename, std::string format, std::string parameters)
+    {
+        if (cache != NULL) {
+            return cache->get(key, [this, format, filename, parameters]() {
+                return this->openscad(filename, format, parameters);
+            });
+        } else {
+            return openscad(filename, format);
+        }
+    }
+    
+    std::string Backend::openscad(std::string filename, std::string format, std::string parameters)
+    {
+        std::stringstream cmd;
+        cmd << "openscad -D\\$fn=20 ";
+        cmd << parameters;
+        std::string output = tempname() + "." + format;
+        cmd << filename << " -o " << output;
+        // cmd << " >/dev/null 2>/dev/null";
+        std::string command = cmd.str();
+        
+        // Uncomment that to see the compile command called
+        std::cout << "compile(): " << command << std::endl;
+
+        FILE *process = popen(command.c_str(), "r");
+        if (pclose(process) != 0) {
+            std::stringstream error;
+            error << "Compilation failed for file " << filename;
+            throw error.str();
+        }
+
+        if (!file_exists(output)) {
+            std::stringstream error;
+            error << "Compilation did not produced the output file";
+            throw error.str();
+        }
+
+        std::string data = file_get_contents(output);
+        remove(output.c_str());
+
+        return data;
     }
 }

@@ -47,7 +47,7 @@ namespace Metabot
         for (auto ref : models) {
             if (!component->backend->hasModel(ref->name)) {
                 std::string filename = component->backend->directory + "/models/" + ref->name + ".scad";
-                Model m = loadModelSTL_string(openscadCached(filename, "stl"));
+                Model m = loadModelSTL_string(component->backend->openscad(filename, "stl"));
                 component->backend->setModel(ref->name, m);
             }
             Model m = component->backend->getModel(ref->name);
@@ -90,8 +90,9 @@ namespace Metabot
 
     void ComponentInstance::compile()
     {
-        std::string csg = openscadCached("csg");
-        openscadCached("stl");
+        std::string filename = component->filename;
+        std::string csg = component->backend->openscadCached(csgHash(), filename, "csg", parameters());
+        component->backend->openscadCached(stlHash(), filename, "stl", parameters());
 
         CSG *document = CSG::parse(csg);
         // XXX: todo: merge & release memory
@@ -101,76 +102,28 @@ namespace Metabot
         delete document;
     }
 
-    std::string ComponentInstance::stl()
-    {
-        return openscadCached("stl");
-    }
-    
-    std::string ComponentInstance::openscadCached(std::string filename, std::string format)
-    {
-        if (component->backend->cache != NULL) {
-            std::string key = hash_sha1(filename);
-
-            return component->backend->cache->get(key, [this, format, filename]() {
-                return this->openscad(filename, format);
-            });
-        } else {
-            return openscad(filename, format);
-        }
-    }
-    
-    std::string ComponentInstance::openscadCached(std::string format)
+    std::string ComponentInstance::parameters()
     {
         std::stringstream cmd;
         cmd << "-DNoModels=true ";
         for (auto value : values) {
             cmd << "-D" << value.first << "=" << value.second << " ";
         }
-        std::string parameters = cmd.str();
-
-        if (component->backend->cache != NULL) {
-            std::stringstream entry;
-            entry << component->filename << "." << format << " w/ ";
-            entry << parameters;
-            std::string key = hash_sha1(entry.str());
-
-            return component->backend->cache->get(key, [this, format, parameters, component]() {
-                return this->openscad(component->filename, format, parameters);
-            });
-        } else {
-            return openscad(component->filename, format, parameters);
-        }
+        return cmd.str();
     }
 
-    std::string ComponentInstance::openscad(std::string filename, std::string format, std::string parameters)
+    std::string ComponentInstance::csgHash()
     {
-        std::stringstream cmd;
-        cmd << "openscad ";
-        cmd << parameters;
-        std::string output = tempname() + "." + format;
-        cmd << filename << " -o " << output;
-        // cmd << " >/dev/null 2>/dev/null";
-        std::string command = cmd.str();
-        
-        // Uncomment that to see the compile command called
-        std::cout << "compile(): " << command << std::endl;
+        return hash_sha1(component->filename+".csg / "+parameters());
+    }
 
-        FILE *process = popen(command.c_str(), "r");
-        if (pclose(process) != 0) {
-            std::stringstream error;
-            error << "Compilation failed for part " << component->name;
-            throw error.str();
-        }
+    std::string ComponentInstance::stlHash()
+    {
+        return hash_sha1(component->filename+".stl / "+parameters());
+    }
 
-        if (!file_exists(output)) {
-            std::stringstream error;
-            error << "Compilation did not produced the output file";
-            throw error.str();
-        }
-
-        std::string data = file_get_contents(output);
-        remove(output.c_str());
-
-        return data;
+    std::string ComponentInstance::stl()
+    {
+        return component->backend->openscadCached(stlHash(), component->filename, "stl", parameters());
     }
 }

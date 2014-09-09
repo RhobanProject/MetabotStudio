@@ -32,5 +32,8 @@ namespace Metabot
             void setModel(std::string name, Model m);
             Model getModel(std::string name);
             std::map<std::string, Model> models;
+            
+            std::string openscadCached(std::string key, std::string filename, std::string format, std::string parameters="");
+            std::string openscad(std::string filename, std::string format, std::string parameters="");
     };
 }
