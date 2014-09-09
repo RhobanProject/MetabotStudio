@@ -9,6 +9,8 @@ namespace Metabot
         : name(name_)
     {
         directory = "backends/" + name;
+        std::string cacheDir = directory + "/cache";
+        cache.setDirectory(cacheDir);
     }
 
     Backend::~Backend()
@@ -69,6 +71,7 @@ namespace Metabot
         if (filename.length()>5 && filename.substr(filename.length()-5)==".scad") {
             Component *component = Component::load(filename);
             if (component != NULL) {
+                component->cache = &cache;
                 components[component->name] = component;
             }
         }

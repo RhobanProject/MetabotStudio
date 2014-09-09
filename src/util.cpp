@@ -3,8 +3,11 @@
 #include <fstream>
 #include <cstdio>
 #include <fcntl.h>
+#include <dirent.h>
 #include "util.h"
 #include "sha1.h"
+#include <sys/stat.h>
+#include <sys/types.h>
 
 std::vector<std::string> split(const std::string &s, char delim) {
     std::vector<std::string> parts;
@@ -110,4 +113,21 @@ std::string hash_sha1(std::string str)
     sha1::toHexString(hash, hexstring);
 
     return std::string(hexstring, 41);
+}
+
+bool is_directory(std::string path)
+{
+    DIR *dir;
+    dir = opendir(path.c_str());
+    if (dir != NULL) {
+        closedir(dir);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void makedir(std::string path)
+{
+    mkdir(path.c_str(), 0755);
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Component.h"
 #include "ComponentInstance.h"
+#include "Cache.h"
 #include "CSG.h"
 #include "util.h"
 
@@ -24,13 +25,31 @@ namespace Metabot
 
     void ComponentInstance::compile()
     {
-        std::string csg = openscad("csg");
-        std::string stl = openscad("stl");
+        std::string csg = openscadCached("csg");
+        std::string stl = openscadCached("stl");
 
         CSG *document = CSG::parse(csg);
         anchors = document->anchors;
 
         delete document;
+    }
+    
+    std::string ComponentInstance::openscadCached(std::string format)
+    {
+        if (component->cache != NULL) {
+            std::stringstream entry;
+            entry << component->filename << "." << format << "/";
+            for (auto value : values) {
+                entry << value.first << "=" << value.second << "/";
+            }
+            std::string key = hash_sha1(entry.str());
+
+            return component->cache->get(key, [this, format]() {
+                return this->openscad(format);
+            });
+        } else {
+            return openscad(format);
+        }
     }
 
     std::string ComponentInstance::openscad(std::string format)

@@ -7,6 +7,7 @@
 
 namespace Metabot
 {
+    class Cache;
     class ComponentInstance;
     class Component
     {
@@ -19,6 +20,7 @@ namespace Metabot
             std::string name, filename, type;
             std::map<std::string, ComponentParameter *> parameters;
             
+            Cache *cache;
             static Component *load(std::string filename);
     };
 }

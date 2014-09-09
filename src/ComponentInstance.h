@@ -14,6 +14,7 @@ namespace Metabot
             ComponentInstance(Component *component);
 
             void compile();
+            std::string openscadCached(std::string format);
             std::string openscad(std::string format);
 
             // Accessing parameter values

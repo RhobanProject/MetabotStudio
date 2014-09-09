@@ -10,6 +10,7 @@ set(ALL_SOURCES
     
     AnchorPoint.cpp
     Backend.cpp
+    Cache.cpp
     Component.cpp
     ComponentInstance.cpp
     ComponentParameter.cpp
