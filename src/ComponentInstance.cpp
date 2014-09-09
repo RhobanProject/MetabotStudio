@@ -13,6 +13,19 @@ namespace Metabot
     {
     }
 
+    ComponentInstance::~ComponentInstance()
+    {
+        for (auto anchor : anchors) {
+            delete anchor;
+        }
+        for (auto part : parts) {
+            delete part;
+        }
+        for (auto model : models) {
+            delete model;
+        }
+    }
+
     std::string ComponentInstance::get(std::string name)
     {
         return values[name];
@@ -29,9 +42,24 @@ namespace Metabot
         std::string stl = openscadCached("stl");
 
         CSG *document = CSG::parse(csg);
+        // XXX: todo: merge & release memory
         anchors = document->anchors;
-
+        parts = document->parts;
+        models = document->models;
         delete document;
+    }
+    
+    std::string ComponentInstance::openscadCached(std::string filename, std::string format)
+    {
+        if (component->cache != NULL) {
+            std::string key = hash_sha1(filename);
+
+            return component->cache->get(key, [this, format, filename]() {
+                return this->openscad(filename, format);
+            });
+        } else {
+            return openscad(filename, format);
+        }
     }
     
     std::string ComponentInstance::openscadCached(std::string format)
@@ -44,15 +72,15 @@ namespace Metabot
             }
             std::string key = hash_sha1(entry.str());
 
-            return component->cache->get(key, [this, format]() {
-                return this->openscad(format);
+            return component->cache->get(key, [this, format, component]() {
+                return this->openscad(component->filename, format);
             });
         } else {
-            return openscad(format);
+            return openscad(component->filename, format);
         }
     }
 
-    std::string ComponentInstance::openscad(std::string format)
+    std::string ComponentInstance::openscad(std::string filename, std::string format)
     {
         std::stringstream cmd;
         cmd << "openscad -DMotorMark=true ";
@@ -60,7 +88,7 @@ namespace Metabot
             cmd << "-D" << value.first << "=" << value.second << " ";
         }
         std::string output = tempname() + "." + format;
-        cmd << component->filename << " -o " << output << " >/dev/null 2>/dev/null";
+        cmd << filename << " -o " << output << " >/dev/null 2>/dev/null";
         std::string command = cmd.str();
         
         // Uncomment that to see the compile command called

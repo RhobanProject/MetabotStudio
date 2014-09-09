@@ -16,6 +16,8 @@ set(ALL_SOURCES
     ComponentParameter.cpp
     CSG.cpp
     CSGNode.cpp
+    Model.cpp
+    Part.cpp
     TransformMatrix.cpp
     Vector.cpp
     )

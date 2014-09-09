@@ -27,7 +27,7 @@ namespace Metabot
         std::string name;
         std::string value;
         stack.push_back(document->root);
-        CSGNode *lastPart = NULL;
+        CSGNode *lastMarker = NULL;
 
         for (unsigned int i=0; i<n; i++) {
             char c = data[i];
@@ -68,11 +68,11 @@ namespace Metabot
                         CSGNode *last = stack[stack.size()-1];
                         last->children.push_back(node);
 
-                        if (node->part) {
-                            lastPart = node;
+                        if (node->isMarker()) {
+                            lastMarker = node;
                         }
-                        if (node->parameter && lastPart != NULL) {
-                            lastPart->parameters.push_back(node->data);
+                        if (node->parameter && lastMarker != NULL) {
+                            lastMarker->parameters.push_back(node->data);
                         }
                         
                         if (c == '{') { 
@@ -108,9 +108,14 @@ namespace Metabot
             anchors.push_back(anchor);
         }
 
+        if (node->model) {
+            Model *model = new Model(node->data, matrix);
+            models.push_back(model);
+        }
+
         if (node->part) {
-            std::cout << "Part " << node->data << ", params: " << implode(node->parameters, " ") << std::endl;
-            parts.push_back(node->data);
+            Part *part = new Part(node->data, implode(node->parameters, " "));
+            parts.push_back(part);
         }
 
         for (auto child : node->children) {
