@@ -1,4 +1,4 @@
-// Component motor
+// Component arm
 include <../../metabot.scad>;
 include <../models/motor.scad>;
 use <../models/motor_arm.scad>;

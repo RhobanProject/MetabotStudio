@@ -13,6 +13,8 @@ namespace Metabot
         public:
             AnchorPoint(std::string name, TransformMatrix matrix);
             virtual ~AnchorPoint();
+            
+            void attach(ComponentInstance *instance);
 
             Model toModel();
 

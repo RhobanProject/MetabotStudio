@@ -1,6 +1,18 @@
+include <../../metabot.scad>;
 use <../models/ollo.scad>;
 
 module u(height=15, radius=8, thickness=2.2, screwsSpacing=10, screwsDiameter=2.6, screws=true, olloScrew=false, thicknessSize=15, print=false) {
+    metabot_part("u");
+    metabot_parameter("height", height);
+    metabot_parameter("radius", radius);
+    metabot_parameter("thickness", thickness);
+    metabot_parameter("screwsSpacing", screwsSpacing);
+    metabot_parameter("screwsDiameter", screwsDiameter);
+    metabot_parameter("screws", screws);
+    metabot_parameter("olloScrew", olloScrew);
+    metabot_parameter("thicknessSize", thicknessSize);
+    metabot_parameter("print", true);
+
     module Ubranch() {
         union() {  
             cylinder(thickness, 10, 10);

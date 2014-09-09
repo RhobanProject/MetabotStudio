@@ -68,7 +68,7 @@ namespace Metabot
                         CSGNode *last = stack[stack.size()-1];
                         last->children.push_back(node);
 
-                        if (node->isMarker()) {
+                        if (node->isMarker() && !node->parameter) {
                             lastMarker = node;
                         }
                         if (node->parameter && lastMarker != NULL) {

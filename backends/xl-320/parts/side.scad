@@ -1,7 +1,14 @@
+include <../../metabot.scad>;
 include <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 module side(size=40, holesToBorder=5, thickness=2.2, print=false) {
+    metabot_part("side");
+    metabot_parameter("size", size);
+    metabot_parameter("holesToBorder", holesToBorder);
+    metabot_parameter("thickness", thickness);
+    metabot_parameter("print", true);
+
     if (print) {
         translate([0,-size+holesToBorder,0])
             side(size,holesToBorder,thickness,false);

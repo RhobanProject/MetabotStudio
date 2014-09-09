@@ -21,23 +21,23 @@ int main()
         // Making a robot
         Robot robot;
         robot.root = backend.getComponent("body")->instanciate();
-        robot.root->set("Legs", "4");
+        robot.root->set("Size", "35");
+        robot.root->set("Legs", "6");
         robot.root->compile();
 
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<6; i++) {
             ComponentInstance *double_u = backend.getComponent("double_u")->instanciate();
-            double_u->compile();
-            robot.root->anchors[i]->instance = double_u;
+            robot.root->anchors[i]->attach(double_u);
 
             ComponentInstance *side = backend.getComponent("side_to_side")->instanciate();
-            side->compile();
-            double_u->anchors[0]->instance = side;
+            double_u->anchors[0]->attach(side);
             double_u->anchors[0]->alpha = -DEG2RAD(30);
 
             ComponentInstance *leg = backend.getComponent("arm_leg")->instanciate();
-            leg->compile();
-            side->anchors[0]->instance = leg;
-            side->anchors[0]->alpha = DEG2RAD(85);
+            leg->set("SizeB", "40");
+            leg->set("SizeC", "40");
+            side->anchors[0]->attach(leg);
+            side->anchors[0]->alpha = DEG2RAD(110);
         }
         
         // Getting 3D model
