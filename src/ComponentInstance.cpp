@@ -2,6 +2,9 @@
 #include <iostream>
 #include "Component.h"
 #include "ComponentInstance.h"
+#include "AnchorPoint.h"
+#include "Part.h"
+#include "ModelRef.h"
 #include "Cache.h"
 #include "CSG.h"
 #include "util.h"

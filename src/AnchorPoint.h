@@ -2,6 +2,7 @@
 
 #include <string>
 #include "TransformMatrix.h"
+#include "ComponentInstance.h"
 
 namespace Metabot
 {

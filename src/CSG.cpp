@@ -109,7 +109,7 @@ namespace Metabot
         }
 
         if (node->model) {
-            Model *model = new Model(node->data, matrix);
+            ModelRef *model = new ModelRef(node->data, matrix);
             models.push_back(model);
         }
 

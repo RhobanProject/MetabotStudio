@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Model.h"
+#include "ModelRef.h"
 
 namespace Metabot
 {
-    Model::Model(std::string name_, TransformMatrix matrix_)
+    ModelRef::ModelRef(std::string name_, TransformMatrix matrix_)
         : name(name_), matrix(matrix_)
     {
     }

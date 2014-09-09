@@ -7,6 +7,12 @@ set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -pedantic -U__STRICT_ANSI__")
 set(ALL_SOURCES
     sha1.cpp
     util.cpp
+
+    stl/Face.cpp
+    stl/Model.cpp
+    stl/Point3.cpp
+    stl/StlFactory.cpp
+    stl/Volume.cpp
     
     AnchorPoint.cpp
     Backend.cpp
@@ -16,7 +22,7 @@ set(ALL_SOURCES
     ComponentParameter.cpp
     CSG.cpp
     CSGNode.cpp
-    Model.cpp
+    ModelRef.cpp
     Part.cpp
     TransformMatrix.cpp
     Vector.cpp

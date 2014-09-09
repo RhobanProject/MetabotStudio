@@ -3,12 +3,12 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "AnchorPoint.h"
-#include "Part.h"
-#include "Model.h"
 
 namespace Metabot
 {
+    class AnchorPoint;
+    class Part;
+    class ModelRef;
     class Component;
     class ComponentInstance
     {
@@ -30,6 +30,6 @@ namespace Metabot
             
             std::vector<AnchorPoint *> anchors;
             std::vector<Part *> parts;
-            std::vector<Model*> models;
+            std::vector<ModelRef*> models;
     };
 }

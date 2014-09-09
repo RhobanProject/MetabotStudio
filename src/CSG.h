@@ -5,7 +5,7 @@
 #include "TransformMatrix.h"
 #include "AnchorPoint.h"
 #include "Part.h"
-#include "Model.h"
+#include "ModelRef.h"
 
 namespace Metabot
 {
@@ -21,7 +21,7 @@ namespace Metabot
 
             std::vector<AnchorPoint*> anchors;
             std::vector<Part*> parts;
-            std::vector<Model*> models;
+            std::vector<ModelRef*> models;
 
             CSGNode *root;
     };

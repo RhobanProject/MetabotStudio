@@ -5,10 +5,10 @@
 
 namespace Metabot
 {
-    class Model
+    class ModelRef
     {
         public:
-            Model(std::string name, TransformMatrix matrix);
+            ModelRef(std::string name, TransformMatrix matrix);
 
             std::string name;
             TransformMatrix matrix;
