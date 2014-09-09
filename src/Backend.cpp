@@ -75,5 +75,5 @@ namespace Metabot
                 components[component->name] = component;
             }
         }
-    }
+    }            
 }

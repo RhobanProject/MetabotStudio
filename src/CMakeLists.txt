@@ -24,6 +24,7 @@ set(ALL_SOURCES
     CSGNode.cpp
     ModelRef.cpp
     Part.cpp
+    Robot.cpp
     TransformMatrix.cpp
     Vector.cpp
     )

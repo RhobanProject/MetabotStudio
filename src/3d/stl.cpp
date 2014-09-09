@@ -15,7 +15,7 @@
   #define strncasecmp _strnicmp
 #endif
 
-#include "StlFactory.h"
+#include "stl.h"
 
 using namespace std;
 using namespace Metabot;
