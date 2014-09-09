@@ -3,7 +3,7 @@
 namespace Metabot
 {
     AnchorPoint::AnchorPoint(std::string type_, TransformMatrix matrix_)
-        : type(type_), matrix(matrix_), component(NULL)
+        : type(type_), matrix(matrix_), instance(NULL)
     {
     }
 }

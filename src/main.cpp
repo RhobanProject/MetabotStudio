@@ -15,7 +15,7 @@ int main()
 
         auto components = backend.getComponents("root");
         auto root = components[0]->instanciate();
-        root->set("Thickness", "3");
+        root->set("Legs", "3");
         root->compile();
 
     } catch (string error) {

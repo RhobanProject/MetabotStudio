@@ -13,6 +13,6 @@ namespace Metabot
 
             std::string type;
             TransformMatrix matrix;
-            Component *component;
+            ComponentInstance *instance;
     };
 }

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Model.h"
 
 namespace Metabot
