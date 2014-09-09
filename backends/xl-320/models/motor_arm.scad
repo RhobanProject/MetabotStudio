@@ -2,11 +2,10 @@ include <../../metabot.scad>;
 include <motor.scad>;
 use <arm.scad>;
 
-MotorMark = false;
+NoModels = false;
 
 module motorArm() {
-    if (MotorMark) {
-        metabot_anchor("motor");
+    if (NoModels) {
         metabot_model("motor_arm");
     } else {
         motor();

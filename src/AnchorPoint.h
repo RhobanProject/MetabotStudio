@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <3d/Model.h>
 #include "TransformMatrix.h"
 #include "ComponentInstance.h"
 
@@ -10,10 +11,16 @@ namespace Metabot
     class AnchorPoint
     {
         public:
-            AnchorPoint(std::string type, TransformMatrix matrix);
+            AnchorPoint(std::string name, TransformMatrix matrix);
+            virtual ~AnchorPoint();
+
+            Model toModel();
 
             std::string type;
+            std::string model;
             TransformMatrix matrix;
             ComponentInstance *instance;
+
+            float alpha;
     };
 }

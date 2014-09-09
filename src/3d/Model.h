@@ -3,6 +3,7 @@
 
 #include "Volume.h"
 #include "Point3.h"
+#include "../TransformMatrix.h"
 using std::vector;
 
 namespace Metabot
@@ -16,11 +17,12 @@ namespace Metabot
 			Point3 min();
 			Point3 max();
 			bool contains(float x, float y);
-    		Model translate(float X=0, float Y=0, float Z=0);
 			void merge(const Model &other);
-			Model rotateZ(float r);
-			Model rotateY(float r);
-			Model rotateX(float r);
+            void apply(TransformMatrix matrix);
+    		void translate(float X=0, float Y=0, float Z=0);
+			void rotateZ(float r);
+			void rotateY(float r);
+			void rotateX(float r);
     };
 }
 #endif

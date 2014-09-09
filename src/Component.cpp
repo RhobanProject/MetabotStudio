@@ -7,7 +7,7 @@
 namespace Metabot
 {
     Component::Component(std::string name_, std::string filename_)
-        : name(name_), filename(filename_), type(""), cache(NULL)
+        : name(name_), filename(filename_), type(""), backend(NULL)
     {
     }
             

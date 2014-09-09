@@ -1,3 +1,4 @@
+#include <iostream>
 #include <math.h>
 #include "Model.h"
 
@@ -56,12 +57,9 @@ namespace Metabot
         return Point3(xmax, ymax, zmax);
     }
 
-    Model Model::translate(float X, float Y, float Z)
+    void Model::translate(float X, float Y, float Z)
     {
-        Model translated;
-        translated.volumes = volumes;
-
-        for (auto& volume : translated.volumes) {
+        for (auto& volume : volumes) {
             for (auto& face : volume.faces) {
                 for (int i=0; i<3; i++) {
                     face.v[i].x += X;
@@ -70,8 +68,6 @@ namespace Metabot
                 }
             }
         }
-
-        return translated;
     }
         
     void Model::merge(const Model &other)
@@ -81,12 +77,9 @@ namespace Metabot
         }
     }
     
-    Model Model::rotateZ(float r)
+    void Model::rotateZ(float r)
     {
-        Model rotated;
-        rotated.volumes = volumes;
-
-        for (auto& volume : rotated.volumes) {
+        for (auto& volume : volumes) {
             for (auto& face : volume.faces) {
                 for (int i=0; i<3; i++) {
                     float x = face.v[i].x;
@@ -96,16 +89,11 @@ namespace Metabot
                 }
             }
         }
-
-        return rotated;
     }
         
-    Model Model::rotateY(float r)
+    void Model::rotateY(float r)
     {
-        Model rotated;
-        rotated.volumes = volumes;
-
-        for (auto& volume : rotated.volumes) {
+        for (auto& volume : volumes) {
             for (auto& face : volume.faces) {
                 for (int i=0; i<3; i++) {
                     float x = face.v[i].x;
@@ -115,16 +103,11 @@ namespace Metabot
                 }
             }
         }
-
-        return rotated;
     }
         
-    Model Model::rotateX(float r)
+    void Model::rotateX(float r)
     {
-        Model rotated;
-        rotated.volumes = volumes;
-
-        for (auto& volume : rotated.volumes) {
+        for (auto& volume : volumes) {
             for (auto& face : volume.faces) {
                 for (int i=0; i<3; i++) {
                     float y = face.v[i].y;
@@ -134,7 +117,23 @@ namespace Metabot
                 }
             }
         }
-
-        return rotated;
+    }
+            
+    void Model::apply(TransformMatrix matrix)
+    {
+        for (auto& volume : volumes) {
+            for (auto& face : volume.faces) {
+                for (int i=0; i<3; i++) {
+                    Vector pt(face.v[i].x, face.v[i].y, face.v[i].z);
+                    // std::cout << pt.toString() << std::endl;
+                    pt = matrix.apply(pt);
+                    // std::cout << "=>" << std::endl;
+                    // std::cout << pt.toString() << std::endl;
+                    face.v[i].x = pt.values[0];
+                    face.v[i].y = pt.values[1];
+                    face.v[i].z = pt.values[2];
+                }
+            }
+        }
     }
 }

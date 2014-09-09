@@ -92,7 +92,7 @@ namespace Metabot
         Vector output;
 
         for (int i=0; i<4; i++) {
-            int value = 0;
+            float value = 0;
             for (int y=0; y<4; y++) {
                 value += vector.values[y] * values[i][y];
             }

@@ -2,6 +2,7 @@
 #include <sstream>
 #include <dirent.h>
 #include "Backend.h"
+#include "Cache.h"
 
 namespace Metabot
 {
@@ -10,13 +11,18 @@ namespace Metabot
     {
         directory = "backends/" + name;
         std::string cacheDir = directory + "/cache";
-        cache.setDirectory(cacheDir);
+        cache = new Cache();
+        cache->setDirectory(cacheDir);
     }
 
     Backend::~Backend()
     {
         for (auto component : components) {
             delete component.second;
+        }
+
+        if (cache != NULL) {
+            delete cache;
         }
     }
             
@@ -29,6 +35,15 @@ namespace Metabot
             }
         }
         return all;
+    }
+            
+    Component *Backend::getComponent(std::string name)
+    {
+        if (components.count(name)) {
+            return components[name];
+        }
+
+        return NULL;
     }
 
     void Backend::load()
@@ -71,9 +86,24 @@ namespace Metabot
         if (filename.length()>5 && filename.substr(filename.length()-5)==".scad") {
             Component *component = Component::load(filename);
             if (component != NULL) {
-                component->cache = &cache;
+                component->backend = this;
                 components[component->name] = component;
             }
         }
     }            
+
+    bool Backend::hasModel(std::string name)
+    {
+        return models.count(name);
+    }
+
+    void Backend::setModel(std::string name, Model m)
+    {
+        models[name] = m;
+    }
+
+    Model Backend::getModel(std::string name)
+    {
+        return models[name];
+    }
 }

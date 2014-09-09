@@ -3,11 +3,12 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <3d/Model.h>
 #include "Component.h"
-#include "Cache.h"
 
 namespace Metabot
 {
+    class Cache;
     class Backend
     {
         public:
@@ -19,11 +20,17 @@ namespace Metabot
             void loadComponent(std::string name);
 
             std::vector<Component*> getComponents(std::string type);
+            Component *getComponent(std::string name);
 
             std::string name;
             std::string directory;
             std::map<std::string, Component *> components;
 
-            Cache cache;
+            Cache *cache;
+
+            bool hasModel(std::string name);
+            void setModel(std::string name, Model m);
+            Model getModel(std::string name);
+            std::map<std::string, Model> models;
     };
 }

@@ -1,4 +1,5 @@
 // Component motor
+include <../../metabot.scad>;
 include <../models/motor.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/side.scad>;
@@ -9,6 +10,8 @@ Size = 40;
 HolesToBorder = 5;
 // Thickness
 Thickness = 2.2;
+
+motorArm();
 
 for (side=[MotorWidth/2+Thickness,-MotorWidth/2]) {
     translate([side,0,0]) {
@@ -21,7 +24,6 @@ for (side=[MotorWidth/2+Thickness,-MotorWidth/2]) {
 translate([0,-(Size*2-2*HolesToBorder),0]) {
     rotate([0,0,180]) {
         motorArm();
-        rotate([0,0,alpha])
-            children();
+        metabot_anchor("motor");
     }
 }

@@ -4,6 +4,13 @@
 #include <algorithm>
 #include <string>
 
+#ifndef DEG2RAD
+#define DEG2RAD(x) (((x)/180.0)*M_PI)
+#endif
+#ifndef RAD2DEG
+#define RAD2DEG(x) (((x)/M_PI)*180.0)
+#endif
+
 // String manipuliation
 std::vector<std::string> split(const std::string &s, char delim);
 std::string implode(std::vector<std::string> strs, std::string separator);

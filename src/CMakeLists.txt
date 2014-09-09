@@ -8,10 +8,10 @@ set(ALL_SOURCES
     sha1.cpp
     util.cpp
 
+    3d/stl.cpp
     3d/Face.cpp
     3d/Model.cpp
     3d/Point3.cpp
-    3d/StlFactory.cpp
     3d/Volume.cpp
     
     AnchorPoint.cpp

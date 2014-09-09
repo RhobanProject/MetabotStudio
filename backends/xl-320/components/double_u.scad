@@ -1,4 +1,5 @@
 // Component motor
+include <../../metabot.scad>;
 use <../parts/u.scad>;
 use <../models/motor_arm.scad>;
 
@@ -19,7 +20,7 @@ u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
 translate([0,(Height+Radius)*2,0]) {
     rotate([0,90,180]) {
         u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
-        motorArm();
+        metabot_anchor("motor");
         children();
     }
 }

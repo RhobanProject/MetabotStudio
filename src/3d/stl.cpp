@@ -48,22 +48,22 @@ void saveModelToFileAscii(const char *filename, Model *model)
         throw oss.str();
     }
 
-    ofile << "solid plate" << endl;
+    ofile << "solid robot" << endl;
     for (auto volume : model->volumes) {
         for (auto face : volume.faces) {
             ofile << "  facet normal 1 0 0" << endl;
             ofile << "    outer loop" << endl;
             for (int i=0; i<3; i++) {
                 ofile << "      vertex " << 
-                    face.v[i].x/1000.0 << " " <<
-                    face.v[i].y/1000.0 << " " <<
-                    face.v[i].z/1000.0 << endl;
+                    face.v[i].x << " " <<
+                    face.v[i].y << " " <<
+                    face.v[i].z << endl;
             }
             ofile << "    endloop" << endl;
             ofile << "  endfacet" << endl;
         }
     }
-    ofile << "endsolid plate" << endl;
+    ofile << "endsolid robot" << endl;
 
     ofile.close();
 }
@@ -90,9 +90,6 @@ Model loadModelSTL_ascii(const char* filename)
     {
         if (sscanf(buffer, " vertex %lf %lf %lf", &vertex.x, &vertex.y, &vertex.z) == 3)
         {
-            vertex.x*=1000;
-            vertex.y*=1000;
-            vertex.z*=1000;
             n++;
             switch(n)
             {
@@ -142,9 +139,9 @@ void saveModelToFileBinary(const char *filename, Model *model)
             ofile.write((char*)&b, sizeof(float));
             ofile.write((char*)&b, sizeof(float));
             for (int i=0; i<3; i++) {
-                float x = face.v[i].x/1000.0;
-                float y = face.v[i].y/1000.0;
-                float z = face.v[i].z/1000.0;
+                float x = face.v[i].x;
+                float y = face.v[i].y;
+                float z = face.v[i].z;
                 ofile.write((char*)&x, sizeof(float));
                 ofile.write((char*)&y, sizeof(float));
                 ofile.write((char*)&z, sizeof(float));
@@ -204,9 +201,9 @@ Model loadModelSTL_binary(const char* filename)
             fclose(f);
             return m;
         }
-        Point3 v0 = Point3(v[0]*1000, v[1]*1000, v[2]*1000);
-        Point3 v1 = Point3(v[3]*1000, v[4]*1000, v[5]*1000);
-        Point3 v2 = Point3(v[6]*1000, v[7]*1000, v[8]*1000);
+        Point3 v0 = Point3(v[0], v[1], v[2]);
+        Point3 v1 = Point3(v[3], v[4], v[5]);
+        Point3 v2 = Point3(v[6], v[7], v[8]);
         vol->addFace(Face(v0, v1, v2));
         if (fread(buffer, sizeof(uint16_t), 1, f) != 1)
         {
@@ -285,7 +282,7 @@ Model loadModelFromFile(const char* filename)
                 float f[3];
                 if (fread(f, 3, sizeof(float), binaryMeshBlob) < 1)
                     return m;
-                Point3 fp(f[0]*1000, f[1]*1000, f[2]*1000);
+                Point3 fp(f[0], f[1], f[2]);
                 v[pNr++] = fp;
                 if (pNr == 3)
                 {
@@ -296,6 +293,44 @@ Model loadModelFromFile(const char* filename)
             }
         }
         return m;
+    }
+    return m;
+}
+
+Model loadModelSTL_string(std::string str)
+{
+    Model m;
+    m.volumes.push_back(Volume());
+    Volume* vol = &m.volumes[0];
+
+    std::locale::global(std::locale("C"));
+    Point3 vertex;
+    int n = 0;
+    Point3 v0(0,0,0), v1(0,0,0), v2(0,0,0);
+    std::string line;
+    std::istringstream iss;
+    iss.str(str);
+    while (getline(iss, line))
+    {
+        const char *buffer = line.c_str();
+        if (sscanf(buffer, " vertex %lf %lf %lf", &vertex.x, &vertex.y, &vertex.z) == 3)
+        {
+            n++;
+            switch(n)
+            {
+                case 1:
+                    v0 = vertex;
+                    break;
+                case 2:
+                    v1 = vertex;
+                    break;
+                case 3:
+                    v2 = vertex;
+                    vol->addFace(Face(v0, v1, v2));
+                    n = 0;
+                    break;
+            }
+        }
     }
     return m;
 }
