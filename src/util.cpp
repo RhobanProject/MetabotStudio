@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <fcntl.h>
 #include "util.h"
+#include "sha1.h"
 
 std::vector<std::string> split(const std::string &s, char delim) {
     std::vector<std::string> parts;
@@ -99,4 +100,14 @@ bool startswith(std::string str, std::string start)
 std::string removestart(std::string str, std::string start)
 {
     return str.substr(start.length());
+}
+
+std::string hash_sha1(std::string str)
+{
+    unsigned char hash[20];
+    char hexstring[41];
+    sha1::calc(str.c_str(), str.length(), hash); // 10 is the length of the string
+    sha1::toHexString(hash, hexstring);
+
+    return std::string(hexstring, 41);
 }

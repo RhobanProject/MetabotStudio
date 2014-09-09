@@ -5,6 +5,7 @@ find_package (Threads)
 set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -pedantic -U__STRICT_ANSI__")
 
 set(ALL_SOURCES
+    sha1.cpp
     util.cpp
     
     AnchorPoint.cpp
