@@ -75,7 +75,7 @@ namespace Metabot
     void ComponentInstance::compile()
     {
         std::string filename = component->filename;
-        std::string csg = component->backend->openscadCached(filename, "csg", parameters());
+        std::string csg = component->backend->openscad(filename, "csg", parameters());
         myModel = loadModelSTL_string(stl());
 
         CSG *document = CSG::parse(csg);
@@ -98,6 +98,6 @@ namespace Metabot
 
     std::string ComponentInstance::stl()
     {
-        return component->backend->openscadCached(component->filename, "stl", parameters());
+        return component->backend->openscad(component->filename, "stl", parameters());
     }
 }

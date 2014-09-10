@@ -98,26 +98,26 @@ namespace Metabot
     {
         if (!models.count(name)) {
             std::string filename = directory + "/models/" + name + ".scad";
-            Model model = loadModelSTL_string(openscadCached(filename, "stl"));
+            Model model = loadModelSTL_string(openscad(filename, "stl"));
             models[name] = model;
         }
 
         return models[name];
     }
    
-    std::string Backend::openscadCached(std::string filename, std::string format, std::string parameters)
+    std::string Backend::openscad(std::string filename, std::string format, std::string parameters)
     {
         std::string key = hash_sha1(filename + "." + format + " w/ " + parameters);
         if (cache != NULL) {
             return cache->get(key, [this, format, filename, parameters]() {
-                return this->openscad(filename, format, parameters);
+                return this->doOpenscad(filename, format, parameters);
             });
         } else {
-            return openscad(filename, format);
+            return doOpenscad(filename, format);
         }
     }
     
-    std::string Backend::openscad(std::string filename, std::string format, std::string parameters)
+    std::string Backend::doOpenscad(std::string filename, std::string format, std::string parameters)
     {
         std::stringstream cmd;
         cmd << "openscad -D\\$fn=20 ";
