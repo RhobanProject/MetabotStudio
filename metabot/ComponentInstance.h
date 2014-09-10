@@ -17,15 +17,12 @@ namespace Metabot
             ComponentInstance(Component *component);
             virtual ~ComponentInstance();
 
-            void computeModel();
             Model toModel();
 
             void compileAll();
             void compile();
             std::string stl();
             std::string parameters();
-            std::string csgHash();
-            std::string stlHash();
 
             // Accessing parameter values
             std::string get(std::string name);

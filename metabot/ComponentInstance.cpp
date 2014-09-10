@@ -28,28 +28,12 @@ namespace Metabot
         }
     }
 
-    void ComponentInstance::computeModel()
-    {
-        myModel = loadModelSTL_string(stl());
-        
-        for (auto anchor : anchors) {
-            if (anchor->instance != NULL) {
-                anchor->instance->computeModel();
-            }
-        }
-    }
-
     Model ComponentInstance::toModel()
     {
         Model model = myModel;
 
         // Rendering models
         for (auto ref : models) {
-            if (!component->backend->hasModel(ref->name)) {
-                std::string filename = component->backend->directory + "/models/" + ref->name + ".scad";
-                Model m = loadModelSTL_string(component->backend->openscad(filename, "stl"));
-                component->backend->setModel(ref->name, m);
-            }
             Model m = component->backend->getModel(ref->name);
             m.apply(ref->matrix);
             model.merge(m);
@@ -91,8 +75,8 @@ namespace Metabot
     void ComponentInstance::compile()
     {
         std::string filename = component->filename;
-        std::string csg = component->backend->openscadCached(csgHash(), filename, "csg", parameters());
-        component->backend->openscadCached(stlHash(), filename, "stl", parameters());
+        std::string csg = component->backend->openscadCached(filename, "csg", parameters());
+        myModel = loadModelSTL_string(stl());
 
         CSG *document = CSG::parse(csg);
         // XXX: todo: merge & release memory
@@ -112,18 +96,8 @@ namespace Metabot
         return cmd.str();
     }
 
-    std::string ComponentInstance::csgHash()
-    {
-        return hash_sha1(component->filename+".csg / "+parameters());
-    }
-
-    std::string ComponentInstance::stlHash()
-    {
-        return hash_sha1(component->filename+".stl / "+parameters());
-    }
-
     std::string ComponentInstance::stl()
     {
-        return component->backend->openscadCached(stlHash(), component->filename, "stl", parameters());
+        return component->backend->openscadCached(component->filename, "stl", parameters());
     }
 }

@@ -23,9 +23,4 @@ namespace Metabot
     {
         root->compileAll();
     }
-    
-    void Robot::computeModel()
-    {
-        root->computeModel();
-    }
 }

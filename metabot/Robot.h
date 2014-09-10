@@ -10,7 +10,6 @@ namespace Metabot
         public:
             Robot();
             void compile();
-            void computeModel();
             Model toModel();
 
             ComponentInstance *root;

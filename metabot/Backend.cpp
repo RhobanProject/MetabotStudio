@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <dirent.h>
+#include <3d/stl.h>
 #include "Backend.h"
 #include "Cache.h"
 #include "util.h"
@@ -93,23 +94,20 @@ namespace Metabot
         }
     }            
 
-    bool Backend::hasModel(std::string name)
-    {
-        return models.count(name);
-    }
-
-    void Backend::setModel(std::string name, Model m)
-    {
-        models[name] = m;
-    }
-
     Model Backend::getModel(std::string name)
     {
+        if (!models.count(name)) {
+            std::string filename = directory + "/models/" + name + ".scad";
+            Model model = loadModelSTL_string(openscadCached(filename, "stl"));
+            models[name] = model;
+        }
+
         return models[name];
     }
    
-    std::string Backend::openscadCached(std::string key, std::string filename, std::string format, std::string parameters)
+    std::string Backend::openscadCached(std::string filename, std::string format, std::string parameters)
     {
+        std::string key = hash_sha1(filename + "." + format + " w/ " + parameters);
         if (cache != NULL) {
             return cache->get(key, [this, format, filename, parameters]() {
                 return this->openscad(filename, format, parameters);

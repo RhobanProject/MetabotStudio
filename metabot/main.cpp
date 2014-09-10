@@ -22,10 +22,10 @@ int main()
         Robot robot;
         robot.root = backend.getComponent("body")->instanciate();
         robot.root->set("Size", "35");
-        robot.root->set("Legs", "6");
+        robot.root->set("Legs", "4");
         robot.root->compile();
 
-        for (int i=0; i<6; i++) {
+        for (int i=0; i<4; i++) {
             ComponentInstance *double_u = backend.getComponent("double_u")->instanciate();
             robot.root->anchors[i]->attach(double_u);
 
@@ -41,7 +41,6 @@ int main()
         }
         
         // Getting 3D model
-        robot.computeModel();
         Model model = robot.toModel();
         saveModelToFileBinary("/tmp/demo.stl", &model);
 
