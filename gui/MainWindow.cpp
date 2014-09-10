@@ -1,8 +1,10 @@
+#include <iostream>
 #include "MainWindow.h"
 #include "ComponentWizard.h"
 #include "ui_MainWindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,8 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Metabot");
-    wizard = new ComponentWizard();
+
+
+    // Loading metabot backend
     backend = new Metabot::Backend("xl-320");
+    backend->load();
+
+    // Component wizard dialog
+    wizard = new ComponentWizard();
+    wizard->setBackend(backend);
 }
 
 MainWindow::~MainWindow()

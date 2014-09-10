@@ -2,6 +2,7 @@
 #define COMPONENTWIZARD_H
 
 #include <QDialog>
+#include <metabot/Backend.h>
 
 namespace Ui {
 class ComponentWizard;
@@ -14,6 +15,10 @@ class ComponentWizard : public QDialog
 public:
     explicit ComponentWizard(QWidget *parent = 0);
     ~ComponentWizard();
+
+    void setBackend(Metabot::Backend *backend);
+
+    Metabot::Backend *backend;
     
 private:
     Ui::ComponentWizard *ui;
