@@ -21,15 +21,14 @@ public:
     void setBackend(Metabot::Backend *backend);
 
     Metabot::Backend *backend;
+    void fill();
+    Viewer *viewer;
     
 private slots:
-    void on_ok_clicked();
-
     void on_listWidget_itemSelectionChanged();
 
 private:
     Ui::ComponentWizard *ui;
-    Viewer *viewer;
     Metabot::Model model;
     Metabot::ComponentInstance *instance;
 };

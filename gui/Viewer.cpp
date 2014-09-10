@@ -11,7 +11,8 @@
 using namespace Metabot;
 
 Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
-    : QGLWidget(parent), model(NULL)
+    : QGLWidget(parent), model(NULL),
+      canPaint(false)
 {
     alpha = 0;
     pressed = false;
@@ -48,9 +49,9 @@ void Viewer::setModel(Model *model_)
 
 void Viewer::initializeGL()
 {
-    GLfloat specular[] = { 0.2, 0.2, 0.2, 1.0 };
-    GLfloat ambient[] = {0.3f, 0.3f, 0.3f, 0.0f};
-    GLfloat diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat specular[] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat ambient[] = {0.05f, 0.05f, 0.05f, 0.0f};
+    GLfloat diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 
     glShadeModel(GL_SMOOTH);
     glClearColor(0.0f, 0.0f, 0.0f, 0.2f);
@@ -98,8 +99,8 @@ void Viewer::resizeGL(int width, int height)
         float Y = aX*sin(alpha)+aY*cos(alpha);
         float Z = aZ;
 
-        float Xl = aX*cos(alpha+M_PI/2)-aY*sin(alpha);
-        float Yl = aX*sin(alpha+M_PI/2)+aY*cos(alpha);
+        float Xl = aX*cos(alpha+M_PI/2)-aY*sin(alpha*M_PI/2);
+        float Yl = aX*sin(alpha+M_PI/2)+aY*cos(alpha*M_PI/2);
 
         GLfloat light0_pos[] = {Xl, Yl, Z, 0.0f};
         glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
@@ -112,6 +113,7 @@ void Viewer::resizeGL(int width, int height)
 
 void Viewer::paintGL()
 {
+    if (!canPaint) return;
     GLfloat mat_amb_diff[] = { 0.6, 0.6, 0.6, 1.0 };
     GLfloat mat_dif_diff[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_spe_diff[] = { 0.2, 0.2, 0.2, 1.0 };
@@ -131,7 +133,7 @@ void Viewer::paintGL()
                 mat_spe_diff);
 
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-    glColor4ub(255, 255, 255, 255);
+    glColor4ub(250, 250, 250, 255);
 
     glBegin(GL_TRIANGLES);
     if (model != NULL) {
@@ -162,6 +164,7 @@ void Viewer::paintGL()
         }
     }
     glEnd();
+    return;
 
     glDisable(GL_LIGHTING);
     glLineWidth(1.0);

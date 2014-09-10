@@ -9,6 +9,8 @@ class Viewer : public QGLWidget
 {
     Q_OBJECT
 public:
+    bool canPaint;
+
     explicit Viewer(int framesPerSecond = 10, QWidget *parent = 0, char *name = 0);
     void setModel(Metabot::Model *model);
     void initializeGL();

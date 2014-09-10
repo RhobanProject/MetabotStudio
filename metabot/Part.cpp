@@ -6,6 +6,6 @@ namespace Metabot
     Part::Part(std::string name_, std::string params_)
         : name(name_), params(params_)
     {
-        std::cout << "Part: " << name << ", " << params << std::endl;
+        // std::cout << "Part: " << name << ", " << params << std::endl;
     }
 }

@@ -17,8 +17,6 @@ ComponentWizard::ComponentWizard(QWidget *parent) :
 
     viewer = new Viewer;
     ui->zone->addWidget(viewer);
-
-    std::cout << "INIT" << std::endl;
 }
 
 ComponentWizard::~ComponentWizard()
@@ -30,9 +28,10 @@ ComponentWizard::~ComponentWizard()
 void ComponentWizard::setBackend(Metabot::Backend *backend_)
 {
     backend = backend_;
+    fill();
 }
 
-void ComponentWizard::on_ok_clicked()
+void ComponentWizard::fill()
 {
     std::map<std::string, Metabot::Component*>::iterator it;
     for (it=backend->components.begin(); it!=backend->components.end(); it++) {

@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Metabot");
 
-
     // Loading metabot backend
     backend = new Metabot::Backend("xl-320");
     backend->load();
@@ -21,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Component wizard dialog
     wizard = new ComponentWizard();
     wizard->setBackend(backend);
+    wizard->show();
+    // XXX: Hack to prevent premature GL painting
+    wizard->viewer->canPaint = true;
 }
 
 MainWindow::~MainWindow()
