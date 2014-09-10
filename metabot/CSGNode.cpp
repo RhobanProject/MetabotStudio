@@ -1,4 +1,5 @@
 #include <iostream>
+#include <json/json.h>
 #include "CSGNode.h"
 #include "util.h"
 
@@ -49,5 +50,19 @@ namespace Metabot
     bool CSGNode::isMarker()
     {
         return (name == "marker");
+    }
+
+    Json::Value CSGNode::json()
+    {
+        std::string doc = data;
+        Json::Value value;
+        Json::Reader reader;
+        for (unsigned int i=0; i<doc.length(); i++) {
+            if (doc[i] == '\'') doc[i] = '"';
+        }
+        reader.parse(doc, value);
+        // std::cout << doc << std::endl;
+        // std::cout << value << std::endl;
+        return value;
     }
 }

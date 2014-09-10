@@ -17,7 +17,9 @@ int main()
         // Loading the backend
         Backend backend("xl-320");
         backend.load();
+        backend.buildCache();
 
+        /*
         // Making a robot
         Robot robot;
         robot.root = backend.getComponent("body")->instanciate();
@@ -29,7 +31,6 @@ int main()
             ComponentInstance *double_u = backend.getComponent("double_u")->instanciate();
             robot.root->anchors[i]->attach(double_u);
 
-            /*
             ComponentInstance *side = backend.getComponent("side_to_side")->instanciate();
             double_u->anchors[0]->attach(side);
             double_u->anchors[0]->alpha = -DEG2RAD(30);
@@ -39,17 +40,12 @@ int main()
             leg->set("SizeC", "40");
             side->anchors[0]->attach(leg);
             side->anchors[0]->alpha = DEG2RAD(110);
-            */
-            
-            ComponentInstance *leg = backend.getComponent("bottom_leg")->instanciate();
-            leg->set("SizeB", "40");
-            leg->set("SizeC", "40");
-            double_u->anchors[0]->attach(leg);
         }
         
         // Getting 3D model
         Model model = robot.toModel();
         saveModelToFileBinary("/tmp/demo.stl", &model);
+        */
 
     } catch (string error) {
         cerr << "[ERROR] " << error << endl;

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <json/json.h>
 #include "TransformMatrix.h"
 
 namespace Metabot
@@ -19,6 +20,8 @@ namespace Metabot
             // For marker nodes
             std::string data;
             bool isMarker();
+
+            Json::Value json();
 
             std::string name, value;
             std::vector<CSGNode*> children;

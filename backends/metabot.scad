@@ -1,8 +1,8 @@
 
 // Tells metabot that a model should be rendered at this point, with its
 // name as parameter
-module metabot_model(name) {
-    marker(str("metabot_model: ", name));
+module metabot_model(name, col=[0.6,0.6,0.6]) {
+    marker(str("metabot_model: {'name':'", name, "','color':", col,"}"));
 }
 
 // Tell that a part is needed for this component to be created

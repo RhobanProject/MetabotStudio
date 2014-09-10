@@ -2,7 +2,7 @@
 // Anchor root
 // Description Simple star body
 include <../../metabot.scad>;
-include <../models/motor.scad>;
+include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/body.scad>;

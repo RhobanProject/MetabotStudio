@@ -2,7 +2,7 @@
 // Anchor arm
 // Description To motors tied on side
 include <../../metabot.scad>;
-include <../models/motor.scad>;
+include <../models/motor_values.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/side.scad>;
 

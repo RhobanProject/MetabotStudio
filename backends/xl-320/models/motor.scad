@@ -1,11 +1,6 @@
 include <ollo.scad>;
+include <motor_values.scad>;
 use <../util/rounded.scad>;
-
-// Motor dimensions
-MotorWidth = 24; 
-MotorHeight = 36; 
-MotorDepth = 24; 
-MotorArmOffset = 9;
 
 module motor(thickness=2.2) {
   translate([0,-MotorArmOffset,-MotorDepth/2]) {
@@ -39,4 +34,4 @@ module motor(thickness=2.2) {
 	}
 }
 
-// motor();
+motor();

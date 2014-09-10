@@ -47,6 +47,9 @@ namespace Metabot
             m = m.multiply(ref->matrix);
             m.openGLMult();
             Model model = component->backend->getModel(ref->name);
+            model.r = ref->r;
+            model.g = ref->g;
+            model.b = ref->b;
             model.openGLDraw();
         }
 

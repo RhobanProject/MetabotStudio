@@ -4,6 +4,8 @@
 #include <3d/stl.h>
 #include "Backend.h"
 #include "Cache.h"
+#include "ComponentInstance.h"
+#include "ModelRef.h"
 #include "util.h"
 
 namespace Metabot
@@ -25,6 +27,18 @@ namespace Metabot
 
         if (cache != NULL) {
             delete cache;
+        }
+    }
+            
+    void Backend::buildCache()
+    {
+        for (auto component : components) {
+            auto instance = component.second->instanciate();
+            instance->compile();
+            for (auto ref : instance->models) {
+                getModel(ref->name);
+            }
+            delete instance;
         }
     }
             
@@ -99,9 +113,6 @@ namespace Metabot
         if (!models.count(name)) {
             std::string filename = directory + "/models/" + name + ".scad";
             Model model = loadModelSTL_string(openscad(filename, "stl"));
-            model.r = 0.6;
-            model.g = 0.6;
-            model.b = 1.0;
             models[name] = model;
         }
 
@@ -123,7 +134,7 @@ namespace Metabot
     std::string Backend::doOpenscad(std::string filename, std::string format, std::string parameters)
     {
         std::stringstream cmd;
-        cmd << "openscad -D\\$fn=20 ";
+        cmd << "openscad -D\\$fn=15 ";
         cmd << parameters;
         std::string output = tempname() + "." + format;
         cmd << filename << " -o " << output;

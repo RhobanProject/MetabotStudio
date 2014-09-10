@@ -16,6 +16,50 @@
   <widget class="QWidget" name="main">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QTreeWidget" name="treeWidget">
+      <column>
+       <property name="text">
+        <string>Objects</string>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>A</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>A</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>&lt;b&gt;x&lt;/b&gt;</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>C</string>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>B</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>X</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Y</string>
+         </property>
+        </item>
+       </item>
+      </item>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="wizard">
       <property name="text">
        <string>Run the wizard</string>

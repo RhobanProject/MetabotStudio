@@ -18,6 +18,7 @@ namespace Metabot
             void load();
             void loadComponents();
             void loadComponent(std::string name);
+            void buildCache();
 
             std::vector<Component*> getComponents(std::string type);
             Component *getComponent(std::string name);
