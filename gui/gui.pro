@@ -11,13 +11,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     MainWindow.cpp \
-    ComponentWizard.cpp
+    ComponentWizard.cpp \
+    ComponentItem.cpp \
+    Viewer.cpp
 
 HEADERS  += MainWindow.h \
-    ComponentWizard.h
+    ComponentWizard.h \
+    ComponentItem.h \
+    Viewer.h
 
 FORMS    += MainWindow.ui \
-    ComponentWizard.ui
+    ComponentWizard.ui \
+    ComponentItem.ui
 
 CONFIG += c++11
 
