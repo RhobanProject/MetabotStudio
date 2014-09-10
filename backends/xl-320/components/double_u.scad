@@ -1,4 +1,6 @@
-// Component motor
+// Component Double U
+// Anchor motor
+// Description Two Us
 include <../../metabot.scad>;
 use <../parts/u.scad>;
 use <../models/motor_arm.scad>;

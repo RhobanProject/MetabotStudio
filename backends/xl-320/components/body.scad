@@ -1,4 +1,6 @@
-// Component root
+// Component Body
+// Anchor root
+// Description Simple star body
 include <../../metabot.scad>;
 include <../models/motor.scad>;
 include <../models/ollo.scad>;

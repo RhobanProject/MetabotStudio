@@ -1,4 +1,6 @@
-// Component arm
+// Component Side to side
+// Anchor arm
+// Description To motors tied on side
 include <../../metabot.scad>;
 include <../models/motor.scad>;
 use <../models/motor_arm.scad>;

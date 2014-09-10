@@ -1,5 +1,8 @@
-// Component motor
+// Component Bottom leg
+// Anchor arm
+// Description Leg on motor bottom
 use <../parts/leg.scad>;
+use <../models/motor_arm.scad>;
 
 // Parameter Size of the first part
 SizeA = 60;
@@ -15,6 +18,8 @@ SizeTop = 15;
 FixationAngle = 0;
 // Parameter Thickness of the part
 Thickness = 2.2;
+
+motorArm();
 
 translate([0,-(24),0]) {
     rotate([180,0,0]) {

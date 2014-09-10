@@ -1,4 +1,6 @@
-// Component motor
+// Component Arm leg
+// Description Leg on arm
+// Anchor motor
 use <../parts/leg.scad>;
 
 // Parameter Size of the first part

@@ -18,6 +18,7 @@ namespace Metabot
             ComponentInstance *instanciate();
 
             std::string name, filename, type;
+            std::string prettyName, description;
             std::map<std::string, ComponentParameter *> parameters;
            
             Backend *backend;
