@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QTimer>
 #include <QMainWindow>
+#include <metabot/Backend.h>
+#include "ComponentWizard.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,8 +23,12 @@ public slots:
     
 private slots:
 
+    void on_wizard_clicked();
+
 private:
     Ui::MainWindow *ui;
+    Metabot::Backend *backend;
+    ComponentWizard *wizard;
 };
 
 #endif // MAINWINDOW_H

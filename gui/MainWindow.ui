@@ -14,7 +14,15 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="main">
-   <layout class="QVBoxLayout" name="verticalLayout"/>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="wizard">
+      <property name="text">
+       <string>Run the wizard</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
