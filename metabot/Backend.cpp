@@ -99,6 +99,9 @@ namespace Metabot
         if (!models.count(name)) {
             std::string filename = directory + "/models/" + name + ".scad";
             Model model = loadModelSTL_string(openscad(filename, "stl"));
+            model.r = 0.6;
+            model.g = 0.6;
+            model.b = 1.0;
             models[name] = model;
         }
 

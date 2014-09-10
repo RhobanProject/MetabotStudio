@@ -4,15 +4,14 @@
 #include <QTimer>
 #include <QGLWidget>
 #include <3d/Model.h>
+#include <metabot/ComponentInstance.h>
 
 class Viewer : public QGLWidget
 {
     Q_OBJECT
 public:
-    bool canPaint;
-
     explicit Viewer(int framesPerSecond = 10, QWidget *parent = 0, char *name = 0);
-    void setModel(Metabot::Model *model);
+    void setInstance(Metabot::ComponentInstance *instance);
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
@@ -25,7 +24,7 @@ public:
 
     void setPlateDimension(float width, float height);
 
-    Metabot::Model *model;
+    Metabot::ComponentInstance *instance;
     float t;
     float plateWidth, plateHeight;
 

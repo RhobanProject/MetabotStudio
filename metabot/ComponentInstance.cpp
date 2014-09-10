@@ -1,6 +1,13 @@
 #include <sstream>
 #include <iostream>
 #include <3d/stl.h>
+#ifdef OPENGL
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
+#endif
 #include "Component.h"
 #include "ComponentInstance.h"
 #include "AnchorPoint.h"
@@ -27,6 +34,32 @@ namespace Metabot
             delete part;
         }
     }
+            
+#ifdef OPENGL
+    void ComponentInstance::openGLDraw(TransformMatrix matrix)
+    {
+        matrix.openGLMult();
+        myModel.openGLDraw();
+
+        // Rendering models
+        for (auto ref : models) {
+            TransformMatrix m = matrix;
+            m = m.multiply(ref->matrix);
+            m.openGLMult();
+            Model model = component->backend->getModel(ref->name);
+            model.openGLDraw();
+        }
+
+        // Rendering sub-components
+        for (auto anchor : anchors) {
+            if (anchor->instance != NULL) {
+                TransformMatrix m = matrix;
+                m = m.multiply(anchor->matrix);
+                anchor->instance->openGLDraw(m);
+            }
+        }
+    }
+#endif
 
     Model ComponentInstance::toModel()
     {

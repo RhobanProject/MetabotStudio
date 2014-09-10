@@ -1,6 +1,13 @@
 #include <sstream>
 #include <json/json.h>
 #include "TransformMatrix.h"
+#ifdef OPENGL
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
+#endif
 
 namespace Metabot
 {
@@ -23,6 +30,21 @@ namespace Metabot
         matrix.values[3][3] = 1;
         return matrix;
     }
+
+#ifdef OPENGL
+    void TransformMatrix::openGLMult()
+    {
+        int i = 0;
+        for (int x=0; x<4; x++) {
+            for (int y=0; y<4; y++) {
+                glmatrix[i++] = values[y][x];
+            }
+        }
+
+        glLoadIdentity();
+        glMultMatrixf(glmatrix);
+    }
+#endif
 
     TransformMatrix TransformMatrix::identity()
     {

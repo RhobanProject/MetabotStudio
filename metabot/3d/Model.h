@@ -23,6 +23,10 @@ namespace Metabot
 			void rotateZ(float r);
 			void rotateY(float r);
 			void rotateX(float r);
+#ifdef OPENGL
+            void openGLDraw();
+#endif
+            float r, g, b;
     };
 }
 #endif

@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     wizard = new ComponentWizard();
     wizard->setBackend(backend);
     wizard->show();
-    // XXX: Hack to prevent premature GL painting
-    wizard->viewer->canPaint = true;
 }
 
 MainWindow::~MainWindow()

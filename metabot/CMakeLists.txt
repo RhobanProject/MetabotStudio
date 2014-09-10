@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 project(metabot)
 find_package (Threads)
 
+option (OPENGL "Enable OpenGL" OFF)
+
+if (OPENGL)
+    add_definitions(-DOPENGL)
+endif ()
+
 set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -pedantic -U__STRICT_ANSI__")
 
 set(ALL_SOURCES
@@ -36,6 +42,9 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/json")
 add_library(libmetabot ${ALL_SOURCES})
 
 target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json)
+if (OPENGL)
+    target_link_libraries(libmetabot GL GLU)
+endif ()
 
 add_executable(metabot "main.cpp")
 target_link_libraries(metabot libmetabot)

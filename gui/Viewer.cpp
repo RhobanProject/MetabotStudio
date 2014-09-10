@@ -11,8 +11,7 @@
 using namespace Metabot;
 
 Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
-    : QGLWidget(parent), model(NULL),
-      canPaint(false)
+    : QGLWidget(parent), instance(NULL)
 {
     alpha = 0;
     pressed = false;
@@ -29,14 +28,15 @@ Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     }
 }
 
-void Viewer::setModel(Model *model_)
+void Viewer::setInstance(ComponentInstance *instance_)
 {
-    model = model_;
+    instance = instance_;
     autorotate = true;
     beta = M_PI/4.0;
 
-    Point3 maxP = model->max();
-    Point3 minP = model->min();
+    Model m = instance->toModel();
+    Point3 maxP = m.max();
+    Point3 minP = m.min();
     radius = maxP.x;
     if (maxP.y > radius) radius = maxP.y;
     if (maxP.z > radius) radius = maxP.z;
@@ -77,8 +77,9 @@ void Viewer::initializeGL()
 
 void Viewer::resizeGL(int width, int height)
 {
-    if(height == 0)
+    if(height == 0) {
         height = 1;
+    }
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -86,7 +87,7 @@ void Viewer::resizeGL(int width, int height)
 
     // gluLookAt(2.0, 2.0, 2.0, 0, 0, 0, 0, 0, 1);
     glEnable(GL_LIGHTING);
-    if (model) {
+    if (instance) {
         if (autorotate) {
             alpha += 0.02;
         }
@@ -113,14 +114,13 @@ void Viewer::resizeGL(int width, int height)
 
 void Viewer::paintGL()
 {
-    if (!canPaint) return;
+    if (instance == NULL) return;
+
     GLfloat mat_amb_diff[] = { 0.6, 0.6, 0.6, 1.0 };
     GLfloat mat_dif_diff[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_spe_diff[] = { 0.2, 0.2, 0.2, 1.0 };
 
-    if (model) {
-        resizeGL(size().width(), size().height());
-    }
+    resizeGL(size().width(), size().height());
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -135,36 +135,10 @@ void Viewer::paintGL()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
     glColor4ub(250, 250, 250, 255);
 
-    glBegin(GL_TRIANGLES);
-    if (model != NULL) {
-        vector<Volume>::iterator vit;
-        vector<Face>::iterator fit;
-        for (vit = model->volumes.begin(); vit != model->volumes.end(); vit++) {
-            Volume &volume = *vit;
-            for (fit = volume.faces.begin(); fit != volume.faces.end(); fit++) {
-                Face &face = *fit;
-                float x1 = face.v[1].x-face.v[0].x;
-                float y1 = face.v[1].y-face.v[0].y;
-                float z1 = face.v[1].z-face.v[0].z;
-
-                float x2 = face.v[2].x-face.v[0].x;
-                float y2 = face.v[2].y-face.v[0].y;
-                float z2 = face.v[2].z-face.v[0].z;
-
-                float Nx = (y1*z2 - z1*y2);
-                float Ny = (z1*x2 - x1*z2);
-                float Nz = (x1*y2 - y1*x2);
-                float Nd = sqrt(Nx*Nx+Ny*Ny+Nz*Nz);
-
-                glNormal3f(Nx/Nd, Ny/Nd, Nz/Nd);
-                for (int i=0; i<3; i++) {
-                    glVertex3f(face.v[i].x, face.v[i].y, face.v[i].z);
-                }
-            }
-        }
-    }
-    glEnd();
-    return;
+    glPushMatrix();
+    TransformMatrix matrix = TransformMatrix::identity();
+    instance->openGLDraw(matrix);
+    glPopMatrix();
 
     glDisable(GL_LIGHTING);
     glLineWidth(1.0);

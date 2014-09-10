@@ -2,6 +2,13 @@
 
 #include <string>
 #include "Vector.h"
+#ifdef OPENGL
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
+#endif
 
 namespace Metabot
 {
@@ -15,6 +22,11 @@ namespace Metabot
             Vector apply(Vector vector);
 
             float values[4][4];
+
+#ifdef OPENGL
+            void openGLMult();
+            GLfloat glmatrix[4*4];
+#endif
             
             static TransformMatrix identity();
             static TransformMatrix zero();

@@ -9,6 +9,8 @@ QT       += core gui opengl
 TARGET = Metabot
 TEMPLATE = app
 
+DEFINES += OPENGL
+
 SOURCES += main.cpp \
     MainWindow.cpp \
     ComponentWizard.cpp \

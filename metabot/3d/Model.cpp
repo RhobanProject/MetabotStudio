@@ -1,11 +1,19 @@
 #include <iostream>
 #include <math.h>
 #include "Model.h"
+#ifdef OPENGL
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
+#endif
 
 namespace Metabot
 {
 
     Model::Model()
+        : r(1.0), g(1.0), b(1.0)
     {
     }
 
@@ -136,4 +144,34 @@ namespace Metabot
             }
         }
     }
+
+#ifdef OPENGL
+    void Model::openGLDraw()
+    {
+        glColor3ub(r*255, g*255, b*255);
+        glBegin(GL_TRIANGLES);
+        for (auto &volume : volumes) {
+            for (auto &face : volume.faces) {
+                float x1 = face.v[1].x-face.v[0].x;
+                float y1 = face.v[1].y-face.v[0].y;
+                float z1 = face.v[1].z-face.v[0].z;
+
+                float x2 = face.v[2].x-face.v[0].x;
+                float y2 = face.v[2].y-face.v[0].y;
+                float z2 = face.v[2].z-face.v[0].z;
+
+                float Nx = (y1*z2 - z1*y2);
+                float Ny = (z1*x2 - x1*z2);
+                float Nz = (x1*y2 - y1*x2);
+                float Nd = sqrt(Nx*Nx+Ny*Ny+Nz*Nz);
+
+                glNormal3f(Nx/Nd, Ny/Nd, Nz/Nd);
+                for (int i=0; i<3; i++) {
+                    glVertex3f(face.v[i].x, face.v[i].y, face.v[i].z);
+                }
+            }
+        }
+        glEnd();
+    }
+#endif
 }

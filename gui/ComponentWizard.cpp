@@ -55,7 +55,6 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         QString data = item->data(ROLE_COMPONENT).toString();
         instance = backend->getComponent(data.toStdString())->instanciate();
         instance->compile();
-        model = instance->toModel();
-        viewer->setModel(&model);
+        viewer->setInstance(instance);
     }
 }
