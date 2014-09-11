@@ -26,8 +26,13 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
+    Metabot::ComponentInstance *body = backend->getComponent("body")->instanciate();
+    body->compile();
+    robot->root = body;
+    viewer->updateRatio();
+
     // Component wizard dialog
-    wizard = new ComponentWizard(viewer, robot, NULL);
+    wizard = new ComponentWizard(viewer, robot, body->anchors[1]);
     wizard->show();
 }
 

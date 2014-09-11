@@ -35,6 +35,17 @@ namespace Metabot
         }
     }
             
+    bool ComponentInstance::isCompatible(AnchorPoint *anchor)
+    {
+        for (auto my : anchors) {
+            if (my->isCompatible(anchor)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+            
 #ifdef OPENGL
     void ComponentInstance::openGLDraw()
     {

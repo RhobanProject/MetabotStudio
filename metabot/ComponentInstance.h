@@ -19,6 +19,7 @@ namespace Metabot
             virtual ~ComponentInstance();
 
             Model toModel();
+            bool isCompatible(AnchorPoint *anchor);
 
             void compileAll();
             void compile();

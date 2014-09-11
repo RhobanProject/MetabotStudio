@@ -38,13 +38,18 @@ void ComponentWizard::fill()
     for (it=robot->backend->components.begin();
          it!=robot->backend->components.end(); it++) {
         Metabot::Component *component = (*it).second;
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setData(ROLE_COMPONENT, QString::fromStdString((*it).first));
-        ComponentItem *widget = new ComponentItem();
-        widget->setInfo(component->prettyName, component->description);
-        item->setSizeHint(widget->size());
-        ui->listWidget->addItem(item);
-        ui->listWidget->setItemWidget(item, widget);
+        Metabot::ComponentInstance *instance = component->instanciate();
+        instance->compile();
+
+        if (instance->isCompatible(anchor)) {
+            QListWidgetItem *item = new QListWidgetItem();
+            item->setData(ROLE_COMPONENT, QString::fromStdString((*it).first));
+            ComponentItem *widget = new ComponentItem();
+            widget->setInfo(component->prettyName, component->description);
+            item->setSizeHint(widget->size());
+            ui->listWidget->addItem(item);
+            ui->listWidget->setItemWidget(item, widget);
+        }
     }
 }
 

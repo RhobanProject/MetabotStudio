@@ -17,7 +17,7 @@ namespace Metabot
             
     AnchorPoint::~AnchorPoint()
     {
-        if (anchor != NULL) {
+        if (anchor != NULL && above) {
             delete anchor;
         }
     }
@@ -42,9 +42,16 @@ namespace Metabot
         
         if (!isCompatible(anchor_)) {
             anchor = NULL;
+            /*
             std::stringstream ss;
-            ss << "Can't attach anchor " << anchor_->type << " on an anchor " << type;
+            if (anchor_ == NULL) {
+                ss << "Can't attach anchor (root) on an anchor " << type;
+            } else {
+                ss << "Can't attach anchor " << anchor_->type << " on an anchor " << type;
+            }
             throw ss.str();
+            */
+            return;
         }
         anchor = anchor_;
 
