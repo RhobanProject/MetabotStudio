@@ -1,5 +1,4 @@
 // Component Side to side
-// Anchor arm
 // Description To motors tied on side
 include <../../metabot.scad>;
 include <../models/motor_values.scad>;
@@ -13,6 +12,7 @@ HolesToBorder = 5;
 // Thickness
 Thickness = 2.2;
 
+metabot_anchor("motor", male=true);
 motorArm();
 
 for (side=[MotorWidth/2+Thickness,-MotorWidth/2]) {
@@ -26,6 +26,6 @@ for (side=[MotorWidth/2+Thickness,-MotorWidth/2]) {
 translate([0,-(Size*2-2*HolesToBorder),0]) {
     rotate([0,0,180]) {
         motorArm();
-        metabot_anchor("motor");
+        metabot_anchor("motor", male=true);
     }
 }

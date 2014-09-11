@@ -5,40 +5,65 @@
 
 namespace Metabot
 {
-    AnchorPoint::AnchorPoint(std::string type_, TransformMatrix matrix_)
-        : type(type_), matrix(matrix_), instance(NULL), alpha(0.0)
+    AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
+        : type(""), matrix(matrix_), anchor(NULL), above(false), alpha(0.0)
     {
+        if (json.isObject()) {
+            type = json["type"].asString();
+            male = json["male"].asBool();
+            female = json["female"].asBool();
+        }
     }
             
     AnchorPoint::~AnchorPoint()
     {
-        if (instance != NULL) {
-            delete instance;
+        if (anchor != NULL) {
+            delete anchor;
         }
     }
     
-    void AnchorPoint::attach(ComponentInstance *instance_)
+    void AnchorPoint::attach(AnchorPoint *anchor_, bool above_)
     {
-        Component *component = instance_->component;
-        if (component->type != type) {
+        above = above_;
+        if (anchor_->type != type
+            || !((male && anchor_->female) || (female && anchor_->male))) {
             std::stringstream ss;
-            ss << "Can't attach component " << component->name << " of type " << component->type << " on an anchor " << type;
+            ss << "Can't attach anchor " << anchor_->type << " on an anchor " << type;
             throw ss.str();
         }
-        instance_->compile();
-        instance = instance_;
+        anchor = anchor_;
+
+        if (above) {
+            anchor->attach(this, false);
+        }
     }
 
     Model AnchorPoint::toModel()
     {
         Model m;
 
-        if (instance != NULL) {
-            m = instance->toModel();
+        if (above) {
+            if (anchor != NULL) {
+                m = anchor->toModel();
+                m.rotateZ(alpha);
+                m.apply(matrix);
+            }
+        } else {
+            if (instance != NULL) {
+                m = instance->toModel();
+                m.apply(matrix.invert());
+            }
         }
 
-        m.rotateZ(alpha);
-
         return m;
+    }
+            
+    void AnchorPoint::openGLDraw(TransformMatrix m)
+    {
+        if (above) {
+            anchor->openGLDraw(m.multiply(matrix));
+        } else {
+            instance->openGLDraw(m.multiply(matrix));
+        }
     }
 }

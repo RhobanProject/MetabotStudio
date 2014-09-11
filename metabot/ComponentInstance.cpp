@@ -55,10 +55,8 @@ namespace Metabot
 
         // Rendering sub-components
         for (auto anchor : anchors) {
-            if (anchor->instance != NULL) {
-                TransformMatrix m = matrix;
-                m = m.multiply(anchor->matrix);
-                anchor->instance->openGLDraw(m);
+            if (anchor->above) {
+                anchor->openGLDraw(matrix);
             }
         }
     }
@@ -77,9 +75,8 @@ namespace Metabot
 
         // Rendering sub-components
         for (auto anchor : anchors) {
-            if (anchor->instance != NULL) {
+            if (anchor->above) {
                 Model component = anchor->toModel();
-                component.apply(anchor->matrix);
                 model.merge(component);
             }
         }
@@ -119,6 +116,11 @@ namespace Metabot
         anchors = document->anchors;
         parts = document->parts;
         models = document->models;
+        
+        for (auto anchor : anchors) {
+            anchor->instance = this;
+        }
+
         delete document;
     }
 

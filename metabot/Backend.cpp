@@ -45,11 +45,13 @@ namespace Metabot
     std::vector<Component*> Backend::getComponents(std::string type)
     {
         std::vector<Component *> all;
+        /*
         for (auto component : components) {
-            if (component.second->type == type) {
+            if (component.second->supports(type)) {
                 all.push_back(component.second);
             }
         }
+        */
         return all;
     }
             

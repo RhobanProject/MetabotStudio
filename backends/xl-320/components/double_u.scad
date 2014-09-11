@@ -1,5 +1,4 @@
 // Component Double U
-// Anchor motor
 // Description Two Us
 include <../../metabot.scad>;
 use <../parts/u.scad>;
@@ -18,11 +17,13 @@ ScrewsDiameter = 2.6;
 // Parameter Thickness
 Thickness = 2.2;
 
+metabot_anchor("motor", female=true);
+
 u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
 translate([0,(Height+Radius)*2,0]) {
     rotate([0,90,180]) {
         u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
-        metabot_anchor("arm");
+        metabot_anchor("motor", female=true);
         children();
     }
 }

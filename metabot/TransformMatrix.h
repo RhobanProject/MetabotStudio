@@ -17,11 +17,12 @@ namespace Metabot
         public:
             TransformMatrix();
             TransformMatrix multiply(TransformMatrix &other);
+            TransformMatrix invert();
             std::string toString();
 
             Vector apply(Vector vector);
 
-            float values[4][4];
+            float values[4*4];
 
 #ifdef OPENGL
             void openGLMult();

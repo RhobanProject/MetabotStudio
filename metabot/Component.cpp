@@ -7,7 +7,7 @@
 namespace Metabot
 {
     Component::Component(std::string name_, std::string filename_)
-        : name(name_), filename(filename_), type(""),
+        : name(name_), filename(filename_),
         prettyName(name), description(""),
         backend(NULL)
     {
@@ -44,13 +44,11 @@ namespace Metabot
             switch (state) {
                 case 0: {
                     if (line.substr(0, 12) == "// Component") {
+                        isOk = true;
                         std::string value = trim(line.substr(12));
                         if (value != "") {
                             component->prettyName = value;
                         }
-                    } else if (line.substr(0, 9) == "// Anchor") {
-                        isOk = true;
-                        component->type = trim(line.substr(9));
                     } else if (line.substr(0, 14) == "// Description") {
                         component->description = trim(line.substr(14));
                     } else if (line.substr(0, 12) == "// Parameter") {

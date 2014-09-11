@@ -1,5 +1,4 @@
 // Component Bottom leg
-// Anchor arm
 // Description Leg on motor bottom
 use <../parts/leg.scad>;
 use <../models/motor_arm.scad>;
@@ -19,6 +18,7 @@ FixationAngle = 0;
 // Parameter Thickness of the part
 Thickness = 2.2;
 
+metabot_anchor("motor", male=true);
 motorArm();
 
 translate([0,-(24),0]) {

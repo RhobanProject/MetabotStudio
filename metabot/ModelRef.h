@@ -12,7 +12,7 @@ namespace Metabot
     class ModelRef
     {
         public:
-            ModelRef(Json::Value data, TransformMatrix matrix);
+            ModelRef(Json::Value json, TransformMatrix matrix);
 
             std::string name;
             TransformMatrix matrix;

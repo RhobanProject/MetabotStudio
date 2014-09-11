@@ -104,7 +104,7 @@ namespace Metabot
         }
 
         if (node->anchor) {
-            AnchorPoint *anchor = new AnchorPoint(node->data, matrix);
+            AnchorPoint *anchor = new AnchorPoint(node->json(), matrix);
             anchors.push_back(anchor);
         }
 

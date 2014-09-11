@@ -2,6 +2,7 @@
 
 #include <string>
 #include <3d/Model.h>
+#include <json/json.h>
 #include "TransformMatrix.h"
 #include "ComponentInstance.h"
 
@@ -11,18 +12,33 @@ namespace Metabot
     class AnchorPoint
     {
         public:
-            AnchorPoint(std::string name, TransformMatrix matrix);
+            AnchorPoint(Json::Value json, TransformMatrix matrix);
             virtual ~AnchorPoint();
             
-            void attach(ComponentInstance *instance);
+            void attach(AnchorPoint *anchor, bool above=true);
 
             Model toModel();
+#ifdef OPENGL
+            void openGLDraw(TransformMatrix matrix);
+#endif
 
             std::string type;
             std::string model;
             TransformMatrix matrix;
+
+            // Anchor type
+            bool female, male;
+
+            // Component instance related to this anchor
             ComponentInstance *instance;
 
+            // Other anchor which is connected to this
+            AnchorPoint *anchor;
+
+            // Is this anchor below the other in the tree?
+            bool above;
+
+            // Rotate angle
             float alpha;
     };
 }
