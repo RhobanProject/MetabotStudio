@@ -85,7 +85,7 @@ namespace Metabot
 
         return model;
     }
-
+            
     std::string ComponentInstance::get(std::string name)
     {
         return values[name];
@@ -124,6 +124,15 @@ namespace Metabot
         }
 
         delete document;
+    }
+            
+    std::string ComponentInstance::getValue(std::string name)
+    {
+        if (values.count(name)) {
+            return values[name];
+        }
+
+        return "";
     }
 
     std::string ComponentInstance::parameters()

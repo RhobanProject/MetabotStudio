@@ -11,7 +11,7 @@
 using namespace Metabot;
 
 Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
-    : QGLWidget(parent), instance(NULL)
+    : QGLWidget(parent), robot(NULL)
 {
     alpha = 0;
     pressed = false;
@@ -28,14 +28,19 @@ Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     }
 }
 
-void Viewer::setInstance(ComponentInstance *instance_)
+void Viewer::setRobot(Robot *robot_)
 {
-    instance = instance_;
+    robot = robot_;
+    updateRatio();
+}
+
+void Viewer::updateRatio()
+{
     autorotate = true;
     beta = M_PI/4.0;
     matrix = TransformMatrix::identity();
 
-    Model m = instance->toModel();
+    Model m = robot->toModel();
     Point3 maxP = m.max();
     Point3 minP = m.min();
     radius = maxP.x;
@@ -45,7 +50,7 @@ void Viewer::setInstance(ComponentInstance *instance_)
     if (-minP.y > radius) radius = -minP.y;
     if (-minP.z > radius) radius = -minP.z;
 
-    radius *= 4;
+    radius *= 3;
 }
 
 void Viewer::initializeGL()
@@ -88,7 +93,7 @@ void Viewer::resizeGL(int width, int height)
 
     // gluLookAt(2.0, 2.0, 2.0, 0, 0, 0, 0, 0, 1);
     glEnable(GL_LIGHTING);
-    if (instance) {
+    if (robot) {
         if (autorotate) {
             alpha += 0.02;
         }
@@ -115,7 +120,7 @@ void Viewer::resizeGL(int width, int height)
 
 void Viewer::paintGL()
 {
-    if (instance == NULL) return;
+    if (robot == NULL) return;
 
     GLfloat mat_amb_diff[] = { 0.6, 0.6, 0.6, 1.0 };
     GLfloat mat_dif_diff[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -138,7 +143,7 @@ void Viewer::paintGL()
 
     glPushMatrix();
     matrix.openGLMult();
-    instance->openGLDraw();
+    robot->openGLDraw();
     glPopMatrix();
 
     glDisable(GL_LIGHTING);

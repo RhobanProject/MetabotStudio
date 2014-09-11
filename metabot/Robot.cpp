@@ -4,8 +4,8 @@
 
 namespace Metabot
 {
-    Robot::Robot()
-        : root(NULL)
+    Robot::Robot(Backend *backend_)
+        : root(NULL), backend(backend_)
     {
     }
 
@@ -21,6 +21,15 @@ namespace Metabot
 
     void Robot::compile()
     {
-        root->compileAll();
+        if (root != NULL) {
+            root->compileAll();
+        }
+    }
+            
+    void Robot::openGLDraw()
+    {
+        if (root != NULL) {
+            root->openGLDraw();
+        }
     }
 }

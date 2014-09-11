@@ -20,7 +20,7 @@ int main()
         backend.buildCache();
 
         // Making a robot
-        Robot robot;
+        Robot robot(&backend);
         robot.root = backend.getComponent("body")->instanciate();
         robot.root->set("Size", "35");
         robot.root->set("Legs", "4");

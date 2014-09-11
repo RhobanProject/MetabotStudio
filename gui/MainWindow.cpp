@@ -8,7 +8,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    robot(NULL), viewer(NULL)
 {
     ui->setupUi(this);
     setWindowTitle("Metabot");
@@ -17,9 +18,16 @@ MainWindow::MainWindow(QWidget *parent) :
     backend = new Metabot::Backend("xl-320");
     backend->load();
 
+    // Creating viewer
+    viewer = new Viewer();
+    ui->viewer->addWidget(viewer);
+
+    // Creating robot
+    robot = new Metabot::Robot(backend);
+    viewer->setRobot(robot);
+
     // Component wizard dialog
-    wizard = new ComponentWizard();
-    wizard->setBackend(backend);
+    wizard = new ComponentWizard(viewer, robot, NULL);
     wizard->show();
 }
 

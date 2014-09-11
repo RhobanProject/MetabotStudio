@@ -21,12 +21,27 @@ namespace Metabot
             delete anchor;
         }
     }
+            
+    bool AnchorPoint::isCompatible(AnchorPoint *anchor)
+    {
+        if (anchor == NULL) {
+            return type == "root";
+        } else {
+            if (type == anchor->type) {
+                return (male && anchor->female)
+                    || (female && anchor->male);
+            }
+        }
+
+        return false;
+    }
     
     void AnchorPoint::attach(AnchorPoint *anchor_, bool above_)
     {
         above = above_;
-        if (anchor_->type != type
-            || !((male && anchor_->female) || (female && anchor_->male))) {
+        
+        if (!isCompatible(anchor_)) {
+            anchor = NULL;
             std::stringstream ss;
             ss << "Can't attach anchor " << anchor_->type << " on an anchor " << type;
             throw ss.str();
@@ -35,6 +50,14 @@ namespace Metabot
 
         if (above) {
             anchor->attach(this, false);
+        }
+    }
+
+    void AnchorPoint::detach()
+    {
+        if (anchor != NULL) {
+            delete anchor;
+            anchor = NULL;
         }
     }
 

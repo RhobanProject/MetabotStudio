@@ -15,7 +15,9 @@ namespace Metabot
             AnchorPoint(Json::Value json, TransformMatrix matrix);
             virtual ~AnchorPoint();
             
+            bool isCompatible(AnchorPoint *anchor);
             void attach(AnchorPoint *anchor, bool above=true);
+            void detach();
 
             Model toModel();
 #ifdef OPENGL

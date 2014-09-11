@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QGLWidget>
 #include <3d/Model.h>
+#include <metabot/Robot.h>
 #include <metabot/ComponentInstance.h>
 #include <metabot/TransformMatrix.h>
 
@@ -12,7 +13,7 @@ class Viewer : public QGLWidget
     Q_OBJECT
 public:
     explicit Viewer(int framesPerSecond = 10, QWidget *parent = 0, char *name = 0);
-    void setInstance(Metabot::ComponentInstance *instance);
+    void setRobot(Metabot::Robot *robot);
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
@@ -22,10 +23,11 @@ public:
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void wheelEvent(QWheelEvent *);
+    void updateRatio();
 
     void setPlateDimension(float width, float height);
 
-    Metabot::ComponentInstance *instance;
+    Metabot::Robot *robot;
     Metabot::TransformMatrix matrix;
     float t;
     float plateWidth, plateHeight;

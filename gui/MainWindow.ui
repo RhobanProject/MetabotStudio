@@ -16,55 +16,35 @@
   <widget class="QWidget" name="main">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTreeWidget" name="treeWidget">
-      <column>
-       <property name="text">
-        <string>Objects</string>
-       </property>
-      </column>
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <property name="text">
-        <string>A</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>A</string>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>3D</string>
         </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>&lt;b&gt;x&lt;/b&gt;</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>C</string>
-        </property>
-       </item>
-      </item>
-      <item>
-       <property name="text">
-        <string>B</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>X</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Y</string>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>1</number>
          </property>
-        </item>
-       </item>
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
+          <number>1</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="viewer"/>
+         </item>
+        </layout>
+       </widget>
       </item>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="wizard">
-      <property name="text">
-       <string>Run the wizard</string>
-      </property>
-     </widget>
+     </layout>
     </item>
    </layout>
   </widget>

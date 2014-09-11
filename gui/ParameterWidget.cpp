@@ -13,8 +13,7 @@ ParameterWidget::ParameterWidget(Metabot::ComponentInstance *instance_,
     label(NULL), line(NULL), checkbox(NULL)
 {
     Metabot::ComponentParameter *param = instance->component->parameters[name];
-    std::cout << param->name << std::endl;
-    std::string value = param->value;
+    std::string value = instance->getValue(param->name);
 
     label = new QLabel;
     label->setText(QString::fromStdString(param->description));

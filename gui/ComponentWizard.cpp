@@ -10,7 +10,13 @@
 
 #define ROLE_COMPONENT  1002
 
-ComponentWizard::ComponentWizard(QWidget *parent) :
+ComponentWizard::ComponentWizard(Viewer *viewer_,
+                                 Metabot::Robot *robot_,
+                                 Metabot::AnchorPoint *anchor_,
+                                 QWidget *parent) :
+    viewer(viewer_),
+    robot(robot_),
+    anchor(anchor_),
     QDialog(parent),
     ui(new Ui::ComponentWizard),
     instance(NULL)
@@ -18,26 +24,19 @@ ComponentWizard::ComponentWizard(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Component wizard");
 
-    viewer = new Viewer;
-    ui->zone->addWidget(viewer);
+    fill();
 }
 
 ComponentWizard::~ComponentWizard()
 {
-    delete viewer;
     delete ui;
-}
-
-void ComponentWizard::setBackend(Metabot::Backend *backend_)
-{
-    backend = backend_;
-    fill();
 }
 
 void ComponentWizard::fill()
 {
     std::map<std::string, Metabot::Component*>::iterator it;
-    for (it=backend->components.begin(); it!=backend->components.end(); it++) {
+    for (it=robot->backend->components.begin();
+         it!=robot->backend->components.end(); it++) {
         Metabot::Component *component = (*it).second;
         QListWidgetItem *item = new QListWidgetItem();
         item->setData(ROLE_COMPONENT, QString::fromStdString((*it).first));
@@ -51,10 +50,7 @@ void ComponentWizard::fill()
 
 void ComponentWizard::setupInstance()
 {
-    currentAnchor = NULL;
-
-    // Giving it to the viewer
-    viewer->setInstance(instance);
+    setAnchor(NULL);
 
     // Anchor points
     {
@@ -68,14 +64,25 @@ void ComponentWizard::setupInstance()
 
     int index;
     std::vector<Metabot::AnchorPoint*>::iterator it;
+    QRadioButton *first = NULL;
     for (it=instance->anchors.begin(); it!=instance->anchors.end(); it++) {
-        index++;
-        QString label = QString("%1").arg(index);
-        QRadioButton *btn = new QRadioButton();
-        buttonToAnchor[btn] = *it;
-        btn->setText(label);
-        ui->anchor_items->addWidget(btn);
-        QObject::connect(btn, SIGNAL(clicked()), this, SLOT(on_anchorPoint_clicked()));
+        Metabot::AnchorPoint *anchorPoint = *it;
+        if (anchorPoint->isCompatible(anchor)) {
+            index++;
+            QString label = QString("%1").arg(index);
+            QRadioButton *btn = new QRadioButton();
+            if (first == NULL) {
+                first = btn;
+            }
+            buttonToAnchor[btn] = *it;
+            btn->setText(label);
+            ui->anchor_items->addWidget(btn);
+            QObject::connect(btn, SIGNAL(clicked()), this, SLOT(on_anchorPoint_clicked()));
+        }
+    }
+    if (first != NULL) {
+        first->setChecked(true);
+        setAnchor(buttonToAnchor[first]);
     }
     }
 
@@ -97,6 +104,9 @@ void ComponentWizard::setupInstance()
         ui->parameters_items->addWidget(parameterWidget);
     }
     }
+
+    updateGeometry();
+    update();
 }
 
 void ComponentWizard::on_listWidget_itemSelectionChanged()
@@ -112,16 +122,25 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         }
 
         // Create the instance
-        instance = backend->getComponent(data.toStdString())->instanciate();
+        instance = robot->backend->getComponent(data.toStdString())->instanciate();
         instance->compile();
         setupInstance();
     }
 }
 
-void ComponentWizard::setAnchor(Metabot::AnchorPoint *anchor)
+void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
 {
-    currentAnchor = anchor;
-    viewer->matrix = anchor->matrix.invert();
+    currentAnchor = newAnchor;
+    if (anchor == NULL) {
+        if (currentAnchor != NULL) {
+            robot->root = currentAnchor->instance;
+            viewer->updateRatio();
+        } else {
+            robot->root = NULL;
+        }
+    } else {
+        anchor->attach(currentAnchor);
+    }
 }
 
 void ComponentWizard::on_anchorPoint_clicked()
@@ -135,6 +154,7 @@ void ComponentWizard::on_generate_clicked()
     for (rit=parameters.begin(); rit!=parameters.end(); rit++) {
         ParameterWidget *parameter = *rit;
         instance->values[parameter->name] = parameter->getValue();
-        instance->compile();
     }
+    instance->compile();
+    setupInstance();
 }

@@ -17,16 +17,18 @@ class ComponentWizard : public QDialog
     Q_OBJECT
     
 public:
-    explicit ComponentWizard(QWidget *parent = 0);
+    explicit ComponentWizard(Viewer *viewer, Metabot::Robot *robot, Metabot::AnchorPoint *anchor,
+                             QWidget *parent = 0);
     ~ComponentWizard();
 
-    void setBackend(Metabot::Backend *backend);
+    // Set the anchor
     void setAnchor(Metabot::AnchorPoint *anchor);
+
+    // Called to setup the UI for instance
     void setupInstance();
 
-    Metabot::Backend *backend;
+    // Fill the list of available components
     void fill();
-    Viewer *viewer;
     
 private slots:
     void on_listWidget_itemSelectionChanged();
@@ -36,12 +38,20 @@ private slots:
     void on_generate_clicked();
 
 private:
+    // Robot and anchor we're working on
+    Viewer *viewer;
+    Metabot::Robot *robot;
+    Metabot::AnchorPoint *anchor;
+
+    // Candidate new instance and its anchor
+    Metabot::ComponentInstance *instance;
     Metabot::AnchorPoint *currentAnchor;
+
+    // Widgets to make choice for anchor point and parameters
     std::vector<ParameterWidget*> parameters;
     std::map<QWidget*, Metabot::AnchorPoint*> buttonToAnchor;
+
     Ui::ComponentWizard *ui;
-    Metabot::Model model;
-    Metabot::ComponentInstance *instance;
 };
 
 #endif // COMPONENTWIZARD_H

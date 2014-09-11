@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <map>
 #include <vector>
 #include <string>
@@ -24,6 +25,8 @@ namespace Metabot
 #ifdef OPENGL
             void openGLDraw();
 #endif
+
+            std::string getValue(std::string name);
             std::string stl();
             std::string parameters();
 
