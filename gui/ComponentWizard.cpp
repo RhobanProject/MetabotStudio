@@ -3,7 +3,9 @@
 #include "ComponentWizard.h"
 #include "ui_ComponentWizard.h"
 #include <metabot/ComponentInstance.h>
+#include <metabot/AnchorPoint.h>
 #include <metabot/Backend.h>
+#include <QRadioButton>
 
 #define ROLE_COMPONENT  1002
 
@@ -46,6 +48,34 @@ void ComponentWizard::fill()
     }
 }
 
+void ComponentWizard::setupInstance()
+{
+    // Giving it to the viewer
+    viewer->setInstance(instance);
+
+    // Anchor points
+    std::vector<QRadioButton*>::iterator rit;
+    for (rit=anchorButtons.begin(); rit!=anchorButtons.end(); rit++) {
+        ui->anchor_items->removeWidget(*rit);
+        delete *rit;
+    }
+    anchorButtons.clear();
+    buttonToAnchor.clear();
+
+    int index;
+    std::vector<Metabot::AnchorPoint*>::iterator it;
+    for (it=instance->anchors.begin(); it!=instance->anchors.end(); it++) {
+        index++;
+        QString label = QString("%1").arg(index);
+        QRadioButton *btn = new QRadioButton();
+        buttonToAnchor[btn] = *it;
+        anchorButtons.push_back(btn);
+        btn->setText(label);
+        ui->anchor_items->addWidget(btn);
+        QObject::connect(btn, SIGNAL(clicked()), this, SLOT(on_anchorPoint_clicked()));
+    }
+}
+
 void ComponentWizard::on_listWidget_itemSelectionChanged()
 {
     QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
@@ -53,8 +83,24 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
     if (items.size() == 1) {
         QListWidgetItem *item = items[0];
         QString data = item->data(ROLE_COMPONENT).toString();
+
+        if (instance != NULL) {
+            delete instance;
+        }
+
+        // Create the instance
         instance = backend->getComponent(data.toStdString())->instanciate();
         instance->compile();
-        viewer->setInstance(instance);
+        setupInstance();
     }
+}
+
+void ComponentWizard::setAnchor(Metabot::AnchorPoint *anchor)
+{
+    viewer->matrix = anchor->matrix.invert();
+}
+
+void ComponentWizard::on_anchorPoint_clicked()
+{
+    setAnchor(buttonToAnchor[dynamic_cast<QRadioButton*>(sender())]);
 }

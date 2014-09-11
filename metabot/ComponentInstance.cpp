@@ -36,19 +36,16 @@ namespace Metabot
     }
             
 #ifdef OPENGL
-    void ComponentInstance::openGLDraw(TransformMatrix matrix)
+    void ComponentInstance::openGLDraw()
     {
         glPushMatrix();
-        matrix.openGLMult();
         myModel.openGLDraw();
 
         // Rendering models
         for (auto ref : models) {
-            TransformMatrix m = matrix;
-            m = m.multiply(ref->matrix);
 
             glPushMatrix();
-            m.openGLMult();
+            ref->matrix.openGLMult();
             Model model = component->backend->getModel(ref->name);
             model.r = ref->r;
             model.g = ref->g;
@@ -60,7 +57,7 @@ namespace Metabot
         // Rendering sub-components
         for (auto anchor : anchors) {
             if (anchor->above) {
-                anchor->openGLDraw(matrix);
+                anchor->openGLDraw();
             }
         }
         glPopMatrix();

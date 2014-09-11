@@ -137,8 +137,8 @@ void Viewer::paintGL()
     glColor4ub(250, 250, 250, 255);
 
     glPushMatrix();
-    glTranslatef(10,10,30);
-    instance->openGLDraw(matrix);
+    matrix.openGLMult();
+    instance->openGLDraw();
     glPopMatrix();
 
     glDisable(GL_LIGHTING);

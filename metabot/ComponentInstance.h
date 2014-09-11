@@ -22,7 +22,7 @@ namespace Metabot
             void compileAll();
             void compile();
 #ifdef OPENGL
-            void openGLDraw(TransformMatrix matrix);
+            void openGLDraw();
 #endif
             std::string stl();
             std::string parameters();

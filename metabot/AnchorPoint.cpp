@@ -58,12 +58,16 @@ namespace Metabot
         return m;
     }
             
-    void AnchorPoint::openGLDraw(TransformMatrix m)
+#ifdef OPENGL
+    void AnchorPoint::openGLDraw()
     {
         if (above) {
-            anchor->openGLDraw(m.multiply(matrix));
+            matrix.openGLMult();
+            anchor->openGLDraw();
         } else {
-            instance->openGLDraw(m.multiply(matrix));
+            matrix.invert().openGLMult();
+            instance->openGLDraw();
         }
     }
+#endif
 }

@@ -19,7 +19,7 @@ namespace Metabot
 
             Model toModel();
 #ifdef OPENGL
-            void openGLDraw(TransformMatrix matrix);
+            void openGLDraw();
 #endif
 
             std::string type;

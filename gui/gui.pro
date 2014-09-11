@@ -33,7 +33,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$P
 else:symbian: LIBS += -llibmetabot -ljson
 else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib -llibmetabot -ljson
 
-INCLUDEPATH += $$PWD/../ $$PWD/../metabot/
+INCLUDEPATH += $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/json/include/
 DEPENDPATH += $$PWD/../
 
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a
