@@ -9,7 +9,7 @@ use <../parts/side.scad>;
 Size = 40;
 // Parameter Holes to border distance
 HolesToBorder = 5;
-// Thickness
+// Parameter Thickness
 Thickness = 2.2;
 
 metabot_anchor("motor", male=true);

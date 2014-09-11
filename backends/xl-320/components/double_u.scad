@@ -8,7 +8,7 @@ use <../models/motor_arm.scad>;
 Height = 15;
 // Parameter Radius of the fixation
 Radius = 8;
-// Parmaeter Put Screws?
+// Parameter Put Screws?
 Screws = true;
 // Parameter Screws spacing
 ScrewsSpacing = 10;

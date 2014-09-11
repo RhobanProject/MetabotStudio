@@ -5,6 +5,7 @@
 #include <metabot/Backend.h>
 #include <QListWidgetItem>
 #include <QRadioButton>
+#include "ParameterWidget.h"
 #include "Viewer.h"
 
 namespace Ui {
@@ -32,9 +33,12 @@ private slots:
 
     void on_anchorPoint_clicked();
 
+    void on_generate_clicked();
+
 private:
-    std::vector<QRadioButton*> anchorButtons;
-    std::map<QRadioButton*, Metabot::AnchorPoint*> buttonToAnchor;
+    Metabot::AnchorPoint *currentAnchor;
+    std::vector<ParameterWidget*> parameters;
+    std::map<QWidget*, Metabot::AnchorPoint*> buttonToAnchor;
     Ui::ComponentWizard *ui;
     Metabot::Model model;
     Metabot::ComponentInstance *instance;
