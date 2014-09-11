@@ -33,6 +33,7 @@ void Viewer::setInstance(ComponentInstance *instance_)
     instance = instance_;
     autorotate = true;
     beta = M_PI/4.0;
+    matrix = TransformMatrix::identity();
 
     Model m = instance->toModel();
     Point3 maxP = m.max();
@@ -136,7 +137,7 @@ void Viewer::paintGL()
     glColor4ub(250, 250, 250, 255);
 
     glPushMatrix();
-    TransformMatrix matrix = TransformMatrix::identity();
+    glTranslatef(10,10,30);
     instance->openGLDraw(matrix);
     glPopMatrix();
 

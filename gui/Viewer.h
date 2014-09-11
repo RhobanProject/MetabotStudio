@@ -5,6 +5,7 @@
 #include <QGLWidget>
 #include <3d/Model.h>
 #include <metabot/ComponentInstance.h>
+#include <metabot/TransformMatrix.h>
 
 class Viewer : public QGLWidget
 {
@@ -25,6 +26,7 @@ public:
     void setPlateDimension(float width, float height);
 
     Metabot::ComponentInstance *instance;
+    Metabot::TransformMatrix matrix;
     float t;
     float plateWidth, plateHeight;
 

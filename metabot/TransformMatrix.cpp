@@ -173,7 +173,6 @@ namespace Metabot
             }
         }
 
-        glLoadIdentity();
         glMultMatrixf(glmatrix);
     }
 #endif
