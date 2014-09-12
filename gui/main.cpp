@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QApplication>
 #include "MainWindow.h"
 
@@ -7,5 +8,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     
-    return a.exec();
+    try {
+        return a.exec();
+    } catch (std::string error) {
+        std::cerr << "Error: " << error << std::endl;
+    }
 }

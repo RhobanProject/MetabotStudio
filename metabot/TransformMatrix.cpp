@@ -199,7 +199,9 @@ namespace Metabot
         Json::Reader reader;
 
         if (!reader.parse(json, root)) {
-            throw std::string("Unable to decode matrix from data");
+            std::stringstream ss;
+            ss << "Unable to decode matrix from: " << json;
+            throw ss.str();
         }
 
         if (!root.isArray() || root.size()!=4) {
