@@ -104,7 +104,7 @@ void MainWindow::on_wizard_clicked()
 
 void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
-    ui->tree->expandAll();
+    ui->tree->blockSignals(true);
 
     if (wizard != NULL) {
         wizard->cancel();
@@ -115,17 +115,24 @@ void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
     if (items.count(item)) {
         Metabot::AnchorPoint *anchor = items[item];
         wizard = new ComponentWizard(viewer, robot, anchor);
-        if (anchor)
-        std::cout << anchor->type << " // " << anchor->male << std::endl;
         wizard->show();
         QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
+        QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
     }
+
+    ui->tree->blockSignals(false);
 }
 
 void MainWindow::on_wizard_ok()
 {
     drawTree();
     wizard->close();
+    delete wizard;
+    wizard = NULL;
+}
+
+void MainWindow::on_wizard_cancel()
+{
     delete wizard;
     wizard = NULL;
 }

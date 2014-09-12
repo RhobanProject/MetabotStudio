@@ -19,7 +19,9 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     anchor(anchor_),
     QDialog(parent),
     ui(new Ui::ComponentWizard),
-    instance(NULL)
+    instance(NULL),
+    previousInstance(NULL),
+    previousAnchor(NULL)
 {
     ui->setupUi(this);
     setWindowTitle("Component wizard");
@@ -29,9 +31,17 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     ui->generate->hide();
     ui->ok->setEnabled(false);
 
-    if (anchor != NULL && anchor->anchor != NULL) {
-        previousInstance = instance = anchor->anchor->instance;
-        setupInstance();
+    if (anchor == NULL) {
+        if (robot->root != NULL) {
+            previousInstance = instance = robot->root;
+            setupInstance();
+        }
+    } else {
+        if (anchor->anchor != NULL) {
+            previousAnchor = anchor->anchor;
+            previousInstance = instance = previousAnchor->instance;
+            setupInstance();
+        }
     }
 
     fill();
@@ -174,22 +184,43 @@ void ComponentWizard::on_anchorPoint_clicked()
 
 void ComponentWizard::on_generate_clicked()
 {
+    Metabot::ComponentInstance *previous = instance;
+
+    std::string name = instance->component->name;
+    instance = robot->backend->getComponent(name)->instanciate();
+
     std::vector<ParameterWidget*>::iterator rit;
     for (rit=parameters.begin(); rit!=parameters.end(); rit++) {
         ParameterWidget *parameter = *rit;
         instance->values[parameter->name] = parameter->getValue();
     }
     instance->compile();
+
+    if (previousInstance) {
+        instance->merge(previousInstance, false);
+    } else {
+        instance->merge(previous, true);
+    }
+
+    if (previous != previousInstance) {
+        delete previous;
+    }
     setupInstance();
 }
 
 void ComponentWizard::cancel()
 {
-    currentAnchor = NULL;
     if (anchor != NULL) {
-        anchor->detach();
+        if (currentAnchor != previousAnchor) {
+            anchor->detach();
+            anchor->attach(previousAnchor);
+        }
     } else {
-        robot->root = NULL;
+        robot->root = previousInstance;
+    }
+    if (instance != previousInstance) {
+        instance->detachAll();
+        delete instance;
     }
     this->close();
 }
@@ -197,9 +228,15 @@ void ComponentWizard::cancel()
 void ComponentWizard::on_cancel_clicked()
 {
     cancel();
+    on_cancel();
 }
 
 void ComponentWizard::on_ok_clicked()
 {
+    if (previousInstance != NULL && instance != previousInstance) {
+        // XXX: memory leak
+        previousInstance->detachAll();
+        delete previousInstance;
+    }
     on_ok();
 }

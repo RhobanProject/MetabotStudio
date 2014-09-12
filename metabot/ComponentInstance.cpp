@@ -125,24 +125,41 @@ namespace Metabot
 
         CSG *document = CSG::parse(csg);
         // XXX: todo: merge & release memory
-        std::vector<AnchorPoint *> previous = anchors;
-       
         anchors = document->anchors;
         parts = document->parts;
         models = document->models;
- 
-        for (unsigned int i=0; i<anchors.size(); i++) {
-            anchors[i]->instance = this;
-            if (i < previous.size()) {
-                if (previous[i]->anchor && anchors[i]->isCompatible(previous[i]->anchor)) {
-                    anchors[i]->attach(previous[i]->anchor);
-                    previous[i]->detach(false);
-                }
-                delete previous[i];
-            }
+
+        for (auto anchor : anchors) {
+            anchor->instance = this;
         }
 
         delete document;
+    }
+
+    void ComponentInstance::merge(ComponentInstance *other, bool detach)
+    { 
+        for (unsigned int i=0; i<anchors.size(); i++) {
+            if (i < other->anchors.size()) {
+                AnchorPoint *myAnchor = anchors[i];
+                AnchorPoint *otherAnchor = other->anchors[i];
+
+                if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
+                    myAnchor->anchor = otherAnchor->anchor;
+                    myAnchor->above = otherAnchor->above;
+                    
+                    if (detach) {
+                        otherAnchor->detach(false);
+                    }
+                }
+            }
+        }
+    }
+
+    void ComponentInstance::detachAll()
+    {
+        for (auto anchor : anchors) {
+            anchor->detach(false);
+        }
     }
             
     std::string ComponentInstance::getValue(std::string name)

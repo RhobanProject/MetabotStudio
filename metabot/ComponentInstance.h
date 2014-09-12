@@ -26,6 +26,12 @@ namespace Metabot
 #ifdef OPENGL
             void openGLDraw();
 #endif
+    
+            // Merge the anchors from another entity
+            // If detach is true, anchor will be detached from the other objects, and thus
+            // "taken" from it
+            void merge(ComponentInstance *other, bool detach);
+            void detachAll();
 
             std::string getValue(std::string name);
             std::string stl();

@@ -28,6 +28,7 @@ public:
 
 public slots:
     void on_wizard_ok();
+    void on_wizard_cancel();
 
 private slots:
 

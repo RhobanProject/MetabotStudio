@@ -35,6 +35,7 @@ public:
 
 signals:
     void on_ok();
+    void on_cancel();
     
 private slots:
     void on_listWidget_itemSelectionChanged();
@@ -56,6 +57,7 @@ private:
     // Candidate new instance and its anchor
     Metabot::ComponentInstance *instance;
     Metabot::ComponentInstance *previousInstance;
+    Metabot::AnchorPoint *previousAnchor;
     Metabot::AnchorPoint *currentAnchor;
 
     // Widgets to make choice for anchor point and parameters
