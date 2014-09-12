@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
+    <width>440</width>
     <height>381</height>
    </rect>
   </property>
@@ -44,6 +44,16 @@
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="welcome">
+       <property name="text">
+        <string>&lt; Welcome on the component wizard! Select your part on the left list</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QGroupBox" name="anchor">
        <property name="sizePolicy">

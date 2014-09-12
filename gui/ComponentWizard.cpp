@@ -24,6 +24,11 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     ui->setupUi(this);
     setWindowTitle("Component wizard");
 
+    ui->anchor->hide();
+    ui->parameters->hide();
+    ui->generate->hide();
+    ui->ok->setEnabled(false);
+
     fill();
 }
 
@@ -56,6 +61,7 @@ void ComponentWizard::fill()
 void ComponentWizard::setupInstance()
 {
     setAnchor(NULL);
+    ui->welcome->hide();
 
     // Anchor points
     {
@@ -89,6 +95,11 @@ void ComponentWizard::setupInstance()
         first->setChecked(true);
         setAnchor(buttonToAnchor[first]);
     }
+    if (buttonToAnchor.size() <= 1) {
+        ui->anchor->hide();
+    } else {
+        ui->anchor->show();
+    }
     }
 
     // Parameters
@@ -108,8 +119,11 @@ void ComponentWizard::setupInstance()
         parameters.push_back(parameterWidget);
         ui->parameters_items->addWidget(parameterWidget);
     }
+    ui->parameters->show();
     }
 
+    ui->generate->show();
+    ui->ok->setEnabled(true);
     updateGeometry();
     update();
 }
@@ -162,4 +176,11 @@ void ComponentWizard::on_generate_clicked()
     }
     instance->compile();
     setupInstance();
+}
+
+void ComponentWizard::on_cancel_clicked()
+{
+    currentAnchor = NULL;
+    anchor->detach();
+    this->close();
 }

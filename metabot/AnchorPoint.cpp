@@ -91,12 +91,14 @@ namespace Metabot
 #ifdef OPENGL
     void AnchorPoint::openGLDraw()
     {
-        if (above) {
-            matrix.openGLMult();
-            anchor->openGLDraw();
-        } else {
-            matrix.invert().openGLMult();
-            instance->openGLDraw();
+        if (anchor != NULL) {
+            if (above) {
+                matrix.openGLMult();
+                anchor->openGLDraw();
+            } else {
+                matrix.invert().openGLMult();
+                instance->openGLDraw();
+            }
         }
     }
 #endif

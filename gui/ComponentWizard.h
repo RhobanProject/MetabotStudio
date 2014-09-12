@@ -37,6 +37,8 @@ private slots:
 
     void on_generate_clicked();
 
+    void on_cancel_clicked();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;
