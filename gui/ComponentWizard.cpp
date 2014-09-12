@@ -39,7 +39,8 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     } else {
         if (anchor->anchor != NULL) {
             previousAnchor = anchor->anchor;
-            previousInstance = instance = previousAnchor->instance;
+            instance = previousAnchor->instance;
+            previousInstance = instance;
             setupInstance();
         }
     }
@@ -151,7 +152,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         QListWidgetItem *item = items[0];
         QString data = item->data(ROLE_COMPONENT).toString();
 
-        if (instance != NULL) {
+        if (instance != NULL && instance != previousInstance) {
             delete instance;
         }
 
