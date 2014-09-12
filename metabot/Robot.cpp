@@ -32,4 +32,20 @@ namespace Metabot
             root->openGLDraw();
         }
     }
+            
+#ifdef OPENGL
+    void Robot::shadow()
+    {
+        if (root != NULL) {
+            root->setBrightness(0.4, true);
+        }
+    }
+
+    void Robot::unShadow()
+    {
+        if (root != NULL) {
+            root->setBrightness(1.0, true);
+        }
+    }
+#endif
 }

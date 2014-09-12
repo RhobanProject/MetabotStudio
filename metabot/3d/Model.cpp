@@ -146,9 +146,9 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void Model::openGLDraw()
+    void Model::openGLDraw(float brightness)
     {
-        glColor3ub(r*255, g*255, b*255);
+        glColor3ub(r*brightness*255, g*brightness*255, b*brightness*255);
         glBegin(GL_TRIANGLES);
         for (auto &volume : volumes) {
             for (auto &face : volume.faces) {

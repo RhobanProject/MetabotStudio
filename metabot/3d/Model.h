@@ -24,7 +24,7 @@ namespace Metabot
 			void rotateY(float r);
 			void rotateX(float r);
 #ifdef OPENGL
-            void openGLDraw();
+            void openGLDraw(float brightness=1.0);
 #endif
             float r, g, b;
     };
