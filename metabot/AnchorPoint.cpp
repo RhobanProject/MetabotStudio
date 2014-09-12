@@ -6,7 +6,7 @@
 namespace Metabot
 {
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
-        : type(""), matrix(matrix_), anchor(NULL), above(false), alpha(0.0)
+        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0)
     {
         if (json.isObject()) {
             type = json["type"].asString();
@@ -60,10 +60,12 @@ namespace Metabot
         }
     }
 
-    void AnchorPoint::detach()
+    void AnchorPoint::detach(bool remove)
     {
         if (anchor != NULL) {
-            delete anchor;
+            if (remove) {
+                delete anchor;
+            }
             anchor = NULL;
         }
     }

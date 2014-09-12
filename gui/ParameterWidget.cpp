@@ -31,11 +31,11 @@ ParameterWidget::ParameterWidget(Metabot::ComponentInstance *instance_,
         this->layout()->addWidget(line);
     }
 
+    this->layout()->setSpacing(0);
+    this->layout()->setMargin(0);
     this->updateGeometry();
     this->update();
     this->show();
-    this->layout()->setSpacing(0);
-    this->layout()->setMargin(0);
 }
 
 ParameterWidget::~ParameterWidget()

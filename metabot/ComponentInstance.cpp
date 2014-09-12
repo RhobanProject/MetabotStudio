@@ -49,12 +49,10 @@ namespace Metabot
 #ifdef OPENGL
     void ComponentInstance::openGLDraw()
     {
-        glPushMatrix();
         myModel.openGLDraw();
 
         // Rendering models
         for (auto ref : models) {
-
             glPushMatrix();
             ref->matrix.openGLMult();
             Model model = component->backend->getModel(ref->name);
@@ -67,11 +65,12 @@ namespace Metabot
 
         // Rendering sub-components
         for (auto anchor : anchors) {
+            glPushMatrix();
             if (anchor->above) {
                 anchor->openGLDraw();
             }
+            glPopMatrix();
         }
-        glPopMatrix();
     }
 #endif
 
@@ -126,12 +125,21 @@ namespace Metabot
 
         CSG *document = CSG::parse(csg);
         // XXX: todo: merge & release memory
+        std::vector<AnchorPoint *> previous = anchors;
+       
         anchors = document->anchors;
         parts = document->parts;
         models = document->models;
-        
-        for (auto anchor : anchors) {
-            anchor->instance = this;
+ 
+        for (unsigned int i=0; i<anchors.size(); i++) {
+            anchors[i]->instance = this;
+            if (i < previous.size()) {
+                if (previous[i]->anchor && anchors[i]->isCompatible(previous[i]->anchor)) {
+                    anchors[i]->attach(previous[i]->anchor);
+                    previous[i]->detach(false);
+                }
+                delete previous[i];
+            }
         }
 
         delete document;

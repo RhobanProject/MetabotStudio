@@ -29,6 +29,11 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     ui->generate->hide();
     ui->ok->setEnabled(false);
 
+    if (anchor != NULL && anchor->anchor != NULL) {
+        previousInstance = instance = anchor->anchor->instance;
+        setupInstance();
+    }
+
     fill();
 }
 
@@ -178,9 +183,23 @@ void ComponentWizard::on_generate_clicked()
     setupInstance();
 }
 
-void ComponentWizard::on_cancel_clicked()
+void ComponentWizard::cancel()
 {
     currentAnchor = NULL;
-    anchor->detach();
+    if (anchor != NULL) {
+        anchor->detach();
+    } else {
+        robot->root = NULL;
+    }
     this->close();
+}
+
+void ComponentWizard::on_cancel_clicked()
+{
+    cancel();
+}
+
+void ComponentWizard::on_ok_clicked()
+{
+    on_ok();
 }

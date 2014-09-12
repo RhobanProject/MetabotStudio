@@ -29,6 +29,12 @@ public:
 
     // Fill the list of available components
     void fill();
+
+    // Cancel
+    void cancel();
+
+signals:
+    void on_ok();
     
 private slots:
     void on_listWidget_itemSelectionChanged();
@@ -39,6 +45,8 @@ private slots:
 
     void on_cancel_clicked();
 
+    void on_ok_clicked();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;
@@ -47,6 +55,7 @@ private:
 
     // Candidate new instance and its anchor
     Metabot::ComponentInstance *instance;
+    Metabot::ComponentInstance *previousInstance;
     Metabot::AnchorPoint *currentAnchor;
 
     // Widgets to make choice for anchor point and parameters

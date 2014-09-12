@@ -17,7 +17,7 @@ namespace Metabot
             
             bool isCompatible(AnchorPoint *anchor);
             void attach(AnchorPoint *anchor, bool above=true);
-            void detach();
+            void detach(bool remove=true);
 
             Model toModel();
 #ifdef OPENGL
