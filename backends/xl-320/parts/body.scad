@@ -23,13 +23,17 @@ module body(size=20, legs=4, thickness=2.2) {
         union() {
             cylinder(d=size*1.8, h=thickness);
             for (leg=[1:legs]) {
-                rotate([0,0,360*leg/legs])
-                    bodyPart();
+                if (legs > 0) {
+                    rotate([0,0,360*leg/legs])
+                        bodyPart();
+                }
             }
         }
         for (leg=[1:legs]) {
-            rotate([0,0,360*leg/legs])
-                bodyHoles();
+            if (legs > 0) {
+                rotate([0,0,360*leg/legs])
+                    bodyHoles();
+            }
         }
     }			
 }
