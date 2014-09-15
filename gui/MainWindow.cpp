@@ -119,6 +119,7 @@ void MainWindow::drawTree()
     }
 
     robot->unHighlight();
+    viewer->updatePlate();
 }
 
 void MainWindow::on_wizard_clicked()

@@ -16,12 +16,14 @@ ScrewsSpacing = 10;
 ScrewsDiameter = 2.6;
 // Parameter Thickness
 Thickness = 2.2;
+// Parameter Angle
+Angle = 90;
 
 metabot_anchor("motor", female=true);
 
 u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
 translate([0,(Height+Radius)*2,0]) {
-    rotate([0,90,180]) {
+    rotate([0,Angle,180]) {
         u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
         metabot_anchor("motor", female=true);
         children();

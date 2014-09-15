@@ -110,7 +110,6 @@ namespace Metabot
         } else {
             if (above && highlight) {
                 matrix.openGLMult();
-                glColor3f(0.4, 1.0, 0.2);
                 Model m = instance->component->backend->getModel("anchor");
                 m.r = 0.4;
                 m.g = 1.0;

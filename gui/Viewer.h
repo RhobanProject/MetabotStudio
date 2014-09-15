@@ -24,13 +24,16 @@ public:
     void mouseMoveEvent(QMouseEvent *);
     void wheelEvent(QWheelEvent *);
     void updateRatio();
+    void updatePlate();
 
-    void setPlateDimension(float width, float height);
+    void setPlateDimension(float x1, float y1, float x2, float y2, float z);
 
     Metabot::Robot *robot;
     Metabot::TransformMatrix matrix;
     float t;
-    float plateWidth, plateHeight;
+    float plateX1, plateY1;
+    float plateX2, plateY2;
+    float plateZ;
 
 public slots:
     virtual void timeOutSlot();

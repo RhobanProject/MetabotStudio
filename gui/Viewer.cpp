@@ -50,7 +50,17 @@ void Viewer::updateRatio()
     if (-minP.y > radius) radius = -minP.y;
     if (-minP.z > radius) radius = -minP.z;
 
+    setPlateDimension(minP.x, minP.y, maxP.x, maxP.y, minP.z);
+
     radius *= 3;
+}
+
+void Viewer::updatePlate()
+{
+    Model m = robot->toModel();
+    Point3 maxP = m.max();
+    Point3 minP = m.min();
+    setPlateDimension(minP.x, minP.y, maxP.x, maxP.y, minP.z);
 }
 
 void Viewer::initializeGL()
@@ -148,18 +158,19 @@ void Viewer::paintGL()
 
     glDisable(GL_LIGHTING);
     glLineWidth(1.0);
-    glColor3f(0.15, 0.15, 0.75);
     glBegin(GL_LINES);
-    for (float x=0; x<=plateWidth; x+=10.0) {
-        glVertex3f(x-plateWidth/2, -plateHeight/2, 0);
-        glVertex3f(x-plateWidth/2, plateHeight/2, 0);
+    glColor3f(0.3, 0.3, 0.3);
+    for (float x=plateX1; x<=plateX2; x+=10.0) {
+        glVertex3f(x, plateY1, plateZ);
+        glVertex3f(x, plateY2, plateZ);
     }
-    for (float y=0; y<=plateHeight; y+=10.0) {
-        glVertex3f(-plateWidth/2, y-plateHeight/2, 0);
-        glVertex3f(plateWidth/2, y-plateHeight/2, 0);
+    for (float y=plateY1; y<=plateY2; y+=10.0) {
+        glVertex3f(plateX1, y, plateZ);
+        glVertex3f(plateX2, y, plateZ);
     }
     glEnd();
 
+    glDisable(GL_LIGHTING);
     glLineWidth(1.0);
     glBegin(GL_LINES);
     glColor3f(0.9, 0.0, 0.0);
@@ -215,10 +226,13 @@ void Viewer::wheelEvent(QWheelEvent *evt)
     radius -= evt->delta()*0.1;
 }
 
-void Viewer::setPlateDimension(float width, float height)
+void Viewer::setPlateDimension(float x1, float y1, float x2, float y2, float z)
 {
-    plateWidth = width;
-    plateHeight = height;
+    plateX1 = x1;
+    plateY1 = y1;
+    plateX2 = x2;
+    plateY2 = y2;
+    plateZ = z;
 }
 
 void Viewer::timeOutSlot()
