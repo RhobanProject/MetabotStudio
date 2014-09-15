@@ -5,6 +5,7 @@
 #include "Backend.h"
 #include "Cache.h"
 #include "ComponentInstance.h"
+#include "AnchorPoint.h"
 #include "ModelRef.h"
 #include "util.h"
 
@@ -150,5 +151,43 @@ namespace Metabot
         remove(output.c_str());
 
         return data;
+    }
+
+    ComponentInstance *Backend::fromJson(Json::Value json)
+    {
+        if (!json.isObject() || !json.isMember("component") 
+            || !json.isMember("parameters") || !json.isMember("anchors")
+            || !json["component"].isString() || !json["parameters"].isObject()
+            || !json["anchors"].isObject()) {
+            std::stringstream ss;
+            ss << "Malformed Json component";
+            throw ss.str();
+        }
+            
+        std::string component = json["component"].asString();
+
+        if (!components.count(component)) {
+            std::stringstream ss;
+            ss << "Unknown component " << component;
+            throw ss.str();
+        }
+
+        ComponentInstance *instance = getComponent(component)->instanciate();
+        instance->parametersFromJson(json["parameters"]);
+        instance->compile();
+
+        Json::Value &anchors = json["anchors"];
+        for (auto anchor : instance->anchors) {
+            std::stringstream ss;
+            ss << anchor->id;
+            std::string id = ss.str();
+            if (anchors.isMember(id)) {
+                int remote = anchors[id]["remote"].asInt();
+                ComponentInstance *instance = Backend::fromJson(anchors[id]["component"]);
+                anchor->attach(instance->getAnchor(remote));
+            }
+        }
+
+        return instance;
     }
 }

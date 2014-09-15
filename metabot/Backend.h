@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <3d/Model.h>
+#include <json/json.h>
 #include "Component.h"
 
 namespace Metabot
@@ -21,6 +22,7 @@ namespace Metabot
             void buildCache();
 
             Component *getComponent(std::string name);
+            ComponentInstance *fromJson(Json::Value json);
 
             std::string name;
             std::string directory;

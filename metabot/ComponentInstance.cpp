@@ -148,8 +148,11 @@ namespace Metabot
         parts = document->parts;
         models = document->models;
 
+        int index = 1;
         for (auto anchor : anchors) {
             anchor->instance = this;
+            anchor->id = index;
+            index++;
         }
 
         delete document;
@@ -203,5 +206,56 @@ namespace Metabot
     std::string ComponentInstance::stl()
     {
         return component->backend->openscad(component->filename, "stl", parameters());
+    }
+
+    Json::Value ComponentInstance::parametersJson()
+    {
+        Json::Value json(Json::objectValue);
+
+        for (auto value : values) {
+            json[value.first] = value.second;
+        }
+
+        return json;
+    }
+            
+    AnchorPoint *ComponentInstance::getAnchor(int id)
+    {
+        for (auto anchor : anchors) {
+            if (anchor->id == id) {
+                return anchor;
+            }
+        }
+
+        return NULL;
+    }
+            
+    void ComponentInstance::parametersFromJson(Json::Value json)
+    {
+        for (auto name : json.getMemberNames()) {
+            values[name] = json[name].asString();
+        }
+    }
+            
+    Json::Value ComponentInstance::toJson()
+    {
+        Json::Value json(Json::objectValue);
+
+        json["component"] = component->name;
+        json["parameters"] = parametersJson();
+        json["anchors"] = Json::Value(Json::objectValue);
+
+        for (auto anchor : anchors) {
+            if (anchor->anchor != NULL && anchor->above) {
+                std::stringstream ss;
+                ss << anchor->id;
+                std::string id = ss.str();
+                json["anchors"][id] = Json::Value(Json::objectValue);
+                json["anchors"][id]["remote"] = anchor->anchor->id;
+                json["anchors"][id]["component"] = anchor->anchor->instance->toJson();
+            }
+        }
+
+        return json;
     }
 }

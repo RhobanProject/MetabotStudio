@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <3d/Model.h>
+#include <json/json.h>
 
 namespace Metabot
 {
@@ -20,6 +21,10 @@ namespace Metabot
 
             Model toModel();
             bool isCompatible(AnchorPoint *anchor);
+
+            Json::Value parametersJson();
+            void parametersFromJson(Json::Value json);
+            Json::Value toJson();
 
             void compileAll();
             void compile();
@@ -45,6 +50,8 @@ namespace Metabot
 
             std::map<std::string, std::string> values;
             Component *component;
+
+            AnchorPoint *getAnchor(int id);
             
             std::vector<AnchorPoint *> anchors;
             std::vector<Part *> parts;

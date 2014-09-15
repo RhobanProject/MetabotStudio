@@ -6,6 +6,7 @@
 #include <QTreeWidgetItem>
 #include <QMessageBox>
 #include <QDebug>
+#include <QFileDialog>
 #include <metabot/AnchorPoint.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -14,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addComponent("Add component", this),
     editComponent("Edit", this),
     removeComponent("Remove", this),
-    robot(NULL), viewer(NULL), wizard(NULL)
+    robot(NULL), viewer(NULL), wizard(NULL),
+    filename("")
 {
     ui->setupUi(this);
     setWindowTitle("Metabot");
@@ -52,6 +54,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->tree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
 
+
+    QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(on_menu_open()));
+    QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(on_menu_save()));
+    QObject::connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(on_menu_save_as()));
     drawTree();
 }
 
@@ -211,6 +217,51 @@ void MainWindow::on_contextmenu_remove()
         robot->root = NULL;
     }
     drawTree();
+}
+
+void MainWindow::on_menu_open()
+{
+    QFileDialog dialog;
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setFilter("Robot (*.robot)");
+    if (dialog.exec()) {
+        QString fn = dialog.selectedFiles().first();
+        if (fn != "") {
+            ui->actionSave->setEnabled(true);
+            filename = fn;
+            robot->clear();
+            try {
+                robot->loadFromFile(fn.toStdString());
+            } catch (std::string error) {
+                QMessageBox::warning(this,"Erreur de chargement", QString::fromStdString(error));
+            }
+            drawTree();
+            viewer->updateRatio();
+        }
+    }
+}
+
+void MainWindow::on_menu_save()
+{
+    if (filename != "") {
+        robot->saveToFile(filename.toStdString());
+    }
+}
+
+void MainWindow::on_menu_save_as()
+{
+    QFileDialog dialog;
+    dialog.setFilter("Robot (*.robot)");
+    dialog.setDefaultSuffix("robot");
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (dialog.exec()) {
+        QString fn = dialog.selectedFiles().first();
+        if (fn != "") {
+            ui->actionSave->setEnabled(true);
+            filename = fn;
+            robot->saveToFile(filename.toStdString());
+        }
+    }
 }
 
 void MainWindow::on_clicked()

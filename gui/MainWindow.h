@@ -47,6 +47,10 @@ private slots:
     void on_contextmenu_edit();
     void on_contextmenu_remove();
 
+    void on_menu_open();
+    void on_menu_save();
+    void on_menu_save_as();
+
     void on_clicked();
 
     void on_close();
@@ -61,6 +65,7 @@ private:
     Metabot::Backend *backend;
     ComponentWizard *wizard;
     std::map<QTreeWidgetItem*, Metabot::AnchorPoint*> items;
+    QString filename;
 };
 
 #endif // MAINWINDOW_H

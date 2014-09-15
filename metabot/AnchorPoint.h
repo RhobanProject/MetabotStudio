@@ -29,6 +29,9 @@ namespace Metabot
             std::string model;
             TransformMatrix matrix;
 
+            // Anchor id
+            int id;
+
             // Anchor type
             bool female, male;
 
