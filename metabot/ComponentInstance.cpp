@@ -48,8 +48,17 @@ namespace Metabot
     }
             
 #ifdef OPENGL
-    void ComponentInstance::openGLDraw()
+    void ComponentInstance::openGLDraw(bool highlight)
     {
+        if (highlight) {
+            myModel.r = 0.4;
+            myModel.g = 1.0;
+            myModel.b = 0.3;
+        } else {
+            myModel.r = 0.9;
+            myModel.g = 0.9;
+            myModel.b = 0.9;
+        }
         myModel.openGLDraw(brightness);
 
         // Rendering models
@@ -83,6 +92,16 @@ namespace Metabot
                 if (anchor->anchor!=NULL && anchor->above) {
                     anchor->anchor->instance->setBrightness(brightness, recursive);
                 }
+            }
+        }
+    }
+            
+    void ComponentInstance::unHighlight()
+    {
+        for (auto anchor : anchors) {
+            anchor->highlight = false;
+            if (anchor->anchor != NULL && anchor->above) {
+                anchor->anchor->instance->unHighlight();
             }
         }
     }

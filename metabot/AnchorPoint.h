@@ -21,6 +21,7 @@ namespace Metabot
 
             Model toModel();
 #ifdef OPENGL
+            bool highlight;
             void openGLDraw();
 #endif
 

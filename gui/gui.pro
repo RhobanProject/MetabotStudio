@@ -16,13 +16,15 @@ SOURCES += main.cpp \
     ComponentWizard.cpp \
     ComponentItem.cpp \
     Viewer.cpp \
-    ParameterWidget.cpp
+    ParameterWidget.cpp \
+    ObjectsTree.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
     ComponentItem.h \
     Viewer.h \
-    ParameterWidget.h
+    ParameterWidget.h \
+    ObjectsTree.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \

@@ -29,6 +29,7 @@ public:
     void drawTreeRecursive(QTreeWidgetItem *parentItem, Metabot::ComponentInstance *instance);
 
     void runWizard(QTreeWidgetItem *item);
+
 public slots:
     void on_wizard_ok();
     void on_wizard_cancel();
@@ -38,11 +39,15 @@ private slots:
     void on_wizard_clicked();
 
     void on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*);
+    void on_tree_itemDeselected();
 
     void on_contextmenu_request(QPoint pt);
     void on_contextmenu_add();
     void on_contextmenu_edit();
     void on_contextmenu_remove();
+
+    void on_clicked();
 
     void on_close();
 

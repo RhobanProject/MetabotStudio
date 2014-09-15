@@ -47,5 +47,12 @@ namespace Metabot
             root->setBrightness(1.0, true);
         }
     }
+
+    void Robot::unHighlight()
+    {
+        if (root != NULL) {
+            root->unHighlight();
+        }
+    }
 #endif
 }

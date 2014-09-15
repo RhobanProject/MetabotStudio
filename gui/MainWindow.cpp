@@ -49,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&addComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_add()));
     QObject::connect(&editComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_edit()));
     QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
+    QObject::connect(ui->tree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
+    QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
 
     drawTree();
 }
@@ -69,7 +71,7 @@ void MainWindow::drawTreeRecursive(QTreeWidgetItem *parentItem,
             QTreeWidgetItem *item = new QTreeWidgetItem;
             items[item] = anchor;
             if (anchor->anchor == NULL) {
-                QString label = QString("anchor %1").arg(index);
+                QString label = QString("%1 %2").arg(QString::fromStdString(anchor->type)).arg(index);
                 item->setText(0, label);
                 item->setTextColor(0, QColor("#aaa"));
             } else {
@@ -137,6 +139,23 @@ void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
     ui->tree->blockSignals(false);
 }
 
+void MainWindow::on_tree_itemSelected(QTreeWidgetItem *item, QTreeWidgetItem *)
+{
+    robot->unHighlight();
+    if (item != NULL && items.count(item)) {
+        Metabot::AnchorPoint *anchor = items[item];
+
+        if (anchor != NULL) {
+            anchor->highlight = true;
+        }
+    }
+}
+
+void MainWindow::on_tree_itemDeselected()
+{
+    robot->unHighlight();
+}
+
 void MainWindow::on_contextmenu_request(QPoint pt)
 {
     QTreeWidgetItem *item = ui->tree->itemAt(pt);
@@ -192,6 +211,10 @@ void MainWindow::on_contextmenu_remove()
         robot->root = NULL;
     }
     drawTree();
+}
+
+void MainWindow::on_clicked()
+{
 }
 
 void MainWindow::on_contextmenu_edit()

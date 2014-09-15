@@ -26,8 +26,9 @@ namespace Metabot
             
             float brightness;
 #ifdef OPENGL
+            void unHighlight();
             void setBrightness(float brightness, bool recursive = false);
-            void openGLDraw();
+            void openGLDraw(bool highlight = false);
 #endif
     
             // Merge the anchors from another entity

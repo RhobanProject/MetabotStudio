@@ -13,6 +13,10 @@ namespace Metabot
             male = json["male"].asBool();
             female = json["female"].asBool();
         }
+
+#ifdef OPENGL
+        highlight = false;
+#endif
     }
             
     AnchorPoint::~AnchorPoint()
@@ -99,7 +103,7 @@ namespace Metabot
                 anchor->openGLDraw();
             } else {
                 matrix.invert().openGLMult();
-                instance->openGLDraw();
+                instance->openGLDraw(anchor->highlight);
             }
         }
     }
