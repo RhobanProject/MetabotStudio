@@ -1,5 +1,7 @@
+#include <math.h>
 #include <iostream>
 #include <sstream>
+#include "Backend.h"
 #include "AnchorPoint.h"
 #include "Component.h"
 
@@ -18,14 +20,14 @@ namespace Metabot
         highlight = false;
 #endif
     }
-            
+
     AnchorPoint::~AnchorPoint()
     {
         if (anchor != NULL && above) {
             delete anchor;
         }
     }
-            
+
     bool AnchorPoint::isCompatible(AnchorPoint *anchor)
     {
         if (anchor == NULL) {
@@ -39,22 +41,22 @@ namespace Metabot
 
         return false;
     }
-    
+
     void AnchorPoint::attach(AnchorPoint *anchor_, bool above_)
     {
         above = above_;
-        
+
         if (!isCompatible(anchor_)) {
             anchor = NULL;
             /*
-            std::stringstream ss;
-            if (anchor_ == NULL) {
-                ss << "Can't attach anchor (root) on an anchor " << type;
-            } else {
-                ss << "Can't attach anchor " << anchor_->type << " on an anchor " << type;
-            }
-            throw ss.str();
-            */
+               std::stringstream ss;
+               if (anchor_ == NULL) {
+               ss << "Can't attach anchor (root) on an anchor " << type;
+               } else {
+               ss << "Can't attach anchor " << anchor_->type << " on an anchor " << type;
+               }
+               throw ss.str();
+               */
             return;
         }
         anchor = anchor_;
@@ -93,7 +95,7 @@ namespace Metabot
 
         return m;
     }
-            
+
 #ifdef OPENGL
     void AnchorPoint::openGLDraw()
     {
@@ -104,6 +106,16 @@ namespace Metabot
             } else {
                 matrix.invert().openGLMult();
                 instance->openGLDraw(anchor->highlight);
+            }
+        } else {
+            if (above && highlight) {
+                matrix.openGLMult();
+                glColor3f(0.4, 1.0, 0.2);
+                Model m = instance->component->backend->getModel("anchor");
+                m.r = 0.4;
+                m.g = 1.0;
+                m.b = 0.3;
+                m.openGLDraw();
             }
         }
     }
