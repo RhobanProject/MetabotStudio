@@ -11,6 +11,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    addComponent("Add component", this),
+    editComponent("Edit", this),
+    removeComponent("Remove", this),
     robot(NULL), viewer(NULL), wizard(NULL)
 {
     ui->setupUi(this);
@@ -40,6 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
     wizard->show();
     */
     /////// /SIMPLE TEST //////
+
+    ui->tree->setContextMenuPolicy(Qt::CustomContextMenu);
+    QObject::connect(ui->tree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextmenu_request(QPoint)));
+    QObject::connect(&addComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_add()));
+    QObject::connect(&editComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_edit()));
+    QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
 
     drawTree();
 }
@@ -102,10 +111,8 @@ void MainWindow::on_wizard_clicked()
     wizard->show();
 }
 
-void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
+void MainWindow::runWizard(QTreeWidgetItem *item)
 {
-    ui->tree->blockSignals(true);
-
     if (wizard != NULL) {
         wizard->cancel();
         delete wizard;
@@ -119,8 +126,42 @@ void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
         QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
         QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
     }
+}
+
+void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    ui->tree->blockSignals(true);
+
+    runWizard(item);
 
     ui->tree->blockSignals(false);
+}
+
+void MainWindow::on_contextmenu_request(QPoint pt)
+{
+    QTreeWidgetItem *item = ui->tree->itemAt(pt);
+    if (item != NULL) {
+        QPoint pos = ui->tree->mapToGlobal(pt);
+        QPoint pos2(pos.x()+8, pos.y()+25);
+        Metabot::AnchorPoint *anchor = items[item];
+        menu.clear();
+        if ((anchor == NULL && robot->root == NULL) || (anchor != NULL && anchor->anchor == NULL)) {
+            menu.addAction(&addComponent);
+        } else {
+            menu.addAction(&editComponent);
+            menu.addAction(&removeComponent);
+        }
+        contextmenu_item = item;
+        menu.exec(pos2);
+    }
+}
+
+
+void MainWindow::on_close()
+{
+    if (wizard != NULL) {
+        wizard->close();
+    }
 }
 
 void MainWindow::on_wizard_ok()
@@ -135,4 +176,25 @@ void MainWindow::on_wizard_cancel()
 {
     delete wizard;
     wizard = NULL;
+}
+
+void MainWindow::on_contextmenu_add()
+{
+    runWizard(contextmenu_item);
+}
+
+void MainWindow::on_contextmenu_remove()
+{
+    Metabot::AnchorPoint *anchor = items[contextmenu_item];
+    if (anchor != NULL) {
+        anchor->detach();
+    } else {
+        robot->root = NULL;
+    }
+    drawTree();
+}
+
+void MainWindow::on_contextmenu_edit()
+{
+    runWizard(contextmenu_item);
 }

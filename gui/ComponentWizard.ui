@@ -40,6 +40,9 @@
        <height>0</height>
       </size>
      </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
     </widget>
    </item>
    <item>
@@ -134,7 +137,7 @@
          <number>0</number>
         </property>
         <item>
-         <layout class="QVBoxLayout" name="parameters_items" stretch="">
+         <layout class="QVBoxLayout" name="parameters_items">
           <property name="spacing">
            <number>0</number>
           </property>

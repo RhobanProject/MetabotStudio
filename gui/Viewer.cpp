@@ -164,13 +164,13 @@ void Viewer::paintGL()
     glBegin(GL_LINES);
     glColor3f(0.9, 0.0, 0.0);
     glVertex3f(0, 0, 0);
-    glVertex3f(10.0, 0, 0);
+    glVertex3f(100.0, 0, 0);
     glColor3f(0.0, 0.9, 0.0);
     glVertex3f(0, 0, 0);
-    glVertex3f(0.0, 10, 0);
+    glVertex3f(0.0, 100, 0);
     glColor3f(0.0, 0.0, 0.9);
     glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, 10);
+    glVertex3f(0, 0, 100);
     glEnd();
 }
 
