@@ -33,6 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
+    // Keyboard shortcuts
+    ui->actionOpen->setShortcut(QKeySequence("Ctrl+o"));
+    ui->actionSave->setShortcut(QKeySequence("Ctrl+s"));
+    ui->actionSave_as->setShortcut(QKeySequence("Ctrl+Shift+s"));
+
     /////// SIMPLE TEST //////
     /*
     Metabot::ComponentInstance *body = backend->getComponent("body")->instanciate();
