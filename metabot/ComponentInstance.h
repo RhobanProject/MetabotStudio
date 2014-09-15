@@ -24,10 +24,8 @@ namespace Metabot
             void compileAll();
             void compile();
             
-            float brightness;
 #ifdef OPENGL
             void unHighlight();
-            void setBrightness(float brightness, bool recursive = false);
             void openGLDraw(bool highlight = false);
 #endif
     

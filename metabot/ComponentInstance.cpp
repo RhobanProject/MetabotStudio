@@ -21,8 +21,7 @@
 namespace Metabot
 {
     ComponentInstance::ComponentInstance(Component *component_)
-        : brightness(1.0),
-        component(component_)
+        : component(component_)
     {
     }
 
@@ -59,7 +58,7 @@ namespace Metabot
             myModel.g = 0.9;
             myModel.b = 0.9;
         }
-        myModel.openGLDraw(brightness);
+        myModel.openGLDraw();
 
         // Rendering models
         for (auto ref : models) {
@@ -69,7 +68,7 @@ namespace Metabot
             model.r = ref->r;
             model.g = ref->g;
             model.b = ref->b;
-            model.openGLDraw(brightness);
+            model.openGLDraw();
             glPopMatrix();
         }
 
@@ -80,19 +79,6 @@ namespace Metabot
                 anchor->openGLDraw();
             }
             glPopMatrix();
-        }
-    }
-            
-    void ComponentInstance::setBrightness(float brightness_, bool recursive)
-    {
-        brightness = brightness_;
-
-        if (recursive) {
-            for (auto anchor : anchors) {
-                if (anchor->anchor!=NULL && anchor->above) {
-                    anchor->anchor->instance->setBrightness(brightness, recursive);
-                }
-            }
         }
     }
             
