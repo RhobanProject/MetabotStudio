@@ -117,6 +117,8 @@ void MainWindow::drawTree()
         drawTreeRecursive(item, robot->root);
         ui->tree->expandAll();
     }
+
+    robot->unHighlight();
 }
 
 void MainWindow::on_wizard_clicked()
@@ -157,7 +159,7 @@ void MainWindow::on_tree_itemSelected(QTreeWidgetItem *item, QTreeWidgetItem *)
         Metabot::AnchorPoint *anchor = items[item];
 
         if (anchor != NULL) {
-            anchor->highlight = true;
+           anchor->highlight = true;
         }
     }
 }

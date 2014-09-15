@@ -224,6 +224,9 @@ void ComponentWizard::cancel()
         instance->detachAll();
         delete instance;
     }
+    if (previousInstance) {
+        previousInstance->restore();
+    }
 
     this->close();
 }

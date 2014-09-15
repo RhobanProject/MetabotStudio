@@ -178,7 +178,7 @@
       "component" : "body",
       "parameters" : {
          "Legs" : "4",
-         "Size" : "20",
+         "Size" : "30",
          "Thickness" : "2.2"
       }
    }

@@ -159,7 +159,7 @@ namespace Metabot
     }
 
     void ComponentInstance::merge(ComponentInstance *other, bool detach)
-    { 
+    {
         for (unsigned int i=0; i<anchors.size(); i++) {
             if (i < other->anchors.size()) {
                 AnchorPoint *myAnchor = anchors[i];
@@ -167,12 +167,22 @@ namespace Metabot
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
                     myAnchor->anchor = otherAnchor->anchor;
+                    myAnchor->anchor->anchor = myAnchor;
                     myAnchor->above = otherAnchor->above;
                     
                     if (detach) {
                         otherAnchor->detach(false);
                     }
                 }
+            }
+        }
+    }
+            
+    void ComponentInstance::restore()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->anchor) {
+                anchor->anchor->anchor = anchor;
             }
         }
     }

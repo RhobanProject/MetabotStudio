@@ -38,6 +38,7 @@ namespace Metabot
             // If detach is true, anchor will be detached from the other objects, and thus
             // "taken" from it
             void merge(ComponentInstance *other, bool detach);
+            void restore();
             void detachAll();
 
             std::string getValue(std::string name);
