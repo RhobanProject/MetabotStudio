@@ -57,6 +57,13 @@ MainWindow::MainWindow(QWidget *parent) :
     sizes.append(100);
     ui->splitter->setSizes(sizes);
 
+    // File menu
+    QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(on_menu_open()));
+    QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(on_menu_save()));
+    QObject::connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(on_menu_save_as()));
+    QObject::connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+
+    // Tree
     ui->tree->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(ui->tree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextmenu_request(QPoint)));
     QObject::connect(&addComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_add()));
@@ -64,11 +71,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
     QObject::connect(ui->tree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
-
-
-    QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(on_menu_open()));
-    QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(on_menu_save()));
-    QObject::connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(on_menu_save_as()));
     drawTree();
 }
 
