@@ -261,11 +261,23 @@ namespace Metabot
                 ss << anchor->id;
                 std::string id = ss.str();
                 json["anchors"][id] = Json::Value(Json::objectValue);
+                json["anchors"][id]["zero"] = anchor->zero;
                 json["anchors"][id]["remote"] = anchor->anchor->id;
                 json["anchors"][id]["component"] = anchor->anchor->instance->toJson();
             }
         }
 
         return json;
+    }
+            
+    void ComponentInstance::foreach(std::function<void(ComponentInstance *instance)> method)
+    {
+        method(this);
+
+        for (auto anchor : anchors) {
+            if (anchor->anchor != NULL && anchor->above) {
+                anchor->anchor->instance->foreach(method);
+            }
+        }
     }
 }

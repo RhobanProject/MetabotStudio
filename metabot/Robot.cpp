@@ -3,6 +3,7 @@
 #include <json/json.h>
 #include "Backend.h"
 #include "Robot.h"
+#include "AnchorPoint.h"
 #include "ComponentInstance.h"
 #include "util.h"
 
@@ -101,4 +102,52 @@ namespace Metabot
         }
     }
 #endif
+    
+    void Robot::foreach(std::function<void(ComponentInstance *instance)> method)
+    {
+        if (root != NULL) {
+            root->foreach(method);
+        }
+    }
+
+    void Robot::foreachAnchor(std::function<void(AnchorPoint *anchor)> method)
+    {
+        foreach([method](ComponentInstance *component) {
+            for (auto anchor : component->anchors) {
+                if (anchor->above && anchor->type != "root") {
+                    method(anchor);
+                }
+            }
+        });
+    }
+            
+    std::vector<float> Robot::getZeros()
+    {
+        std::vector<float> zeros;
+        foreachAnchor([&zeros](AnchorPoint *anchor) {
+           zeros.push_back(anchor->zero);
+        });
+        return zeros;
+    }
+
+    void Robot::setZeros(std::vector<float> zeros)
+    {
+        unsigned int i = 0;
+        foreachAnchor([&i,&zeros](AnchorPoint *anchor) {
+            if (i < zeros.size()) {
+                anchor->zero = zeros[i++];
+            }
+        });
+    }
+            
+    void Robot::highlightNth(int nth)
+    {
+        unHighlight();
+        foreachAnchor([&nth](AnchorPoint *anchor) {
+            if (nth == 0) {
+                anchor->highlight = true;
+            }
+            nth--;
+        });
+    }
 }

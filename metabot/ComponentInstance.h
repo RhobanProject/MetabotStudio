@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef NOCPP11
 #include <functional>
+#endif
 #include <map>
 #include <vector>
 #include <string>
@@ -28,6 +30,10 @@ namespace Metabot
 
             void compileAll();
             void compile();
+
+#ifndef NOCPP11
+            void foreach(std::function<void(ComponentInstance *instance)> method);
+#endif
             
 #ifdef OPENGL
             void unHighlight();

@@ -20,7 +20,8 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "remote" : 1
+                              "remote" : 1,
+                              "zero" : -1.780235886573792
                            }
                         },
                         "component" : "side_to_side",
@@ -30,20 +31,24 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "remote" : 1
+                     "remote" : 1,
+                     "zero" : 0.5602506995201111
                   }
                },
                "component" : "double_u",
                "parameters" : {
+                  "Angle" : "90",
                   "Height" : "15",
                   "Radius" : "8",
                   "Screws" : "true",
+                  "ScrewsCount" : "8",
                   "ScrewsDiameter" : "2.6",
                   "ScrewsSpacing" : "10",
                   "Thickness" : "2.2"
                }
             },
-            "remote" : 1
+            "remote" : 1,
+            "zero" : 0.0
          },
          "3" : {
             "component" : {
@@ -63,7 +68,8 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "remote" : 1
+                              "remote" : 1,
+                              "zero" : -1.801179766654968
                            }
                         },
                         "component" : "side_to_side",
@@ -73,20 +79,24 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "remote" : 1
+                     "remote" : 1,
+                     "zero" : 0.6195918917655945
                   }
                },
                "component" : "double_u",
                "parameters" : {
+                  "Angle" : "90",
                   "Height" : "15",
                   "Radius" : "8",
                   "Screws" : "true",
+                  "ScrewsCount" : "8",
                   "ScrewsDiameter" : "2.6",
                   "ScrewsSpacing" : "10",
                   "Thickness" : "2.2"
                }
             },
-            "remote" : 1
+            "remote" : 1,
+            "zero" : 0.0
          },
          "4" : {
             "component" : {
@@ -106,7 +116,8 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "remote" : 1
+                              "remote" : 1,
+                              "zero" : -1.820378422737122
                            }
                         },
                         "component" : "side_to_side",
@@ -116,20 +127,24 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "remote" : 1
+                     "remote" : 1,
+                     "zero" : 0.6405358314514160
                   }
                },
                "component" : "double_u",
                "parameters" : {
+                  "Angle" : "90",
                   "Height" : "15",
                   "Radius" : "8",
                   "Screws" : "true",
+                  "ScrewsCount" : "8",
                   "ScrewsDiameter" : "2.6",
                   "ScrewsSpacing" : "10",
                   "Thickness" : "2.2"
                }
             },
-            "remote" : 1
+            "remote" : 1,
+            "zero" : 0.0
          },
          "5" : {
             "component" : {
@@ -149,7 +164,8 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "remote" : 1
+                              "remote" : 1,
+                              "zero" : -1.780235886573792
                            }
                         },
                         "component" : "side_to_side",
@@ -159,20 +175,24 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "remote" : 1
+                     "remote" : 1,
+                     "zero" : 0.6195918917655945
                   }
                },
                "component" : "double_u",
                "parameters" : {
+                  "Angle" : "90",
                   "Height" : "15",
                   "Radius" : "8",
                   "Screws" : "true",
+                  "ScrewsCount" : "8",
                   "ScrewsDiameter" : "2.6",
                   "ScrewsSpacing" : "10",
                   "Thickness" : "2.2"
                }
             },
-            "remote" : 1
+            "remote" : 1,
+            "zero" : 0.0
          }
       },
       "component" : "body",

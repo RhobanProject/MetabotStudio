@@ -1,3 +1,4 @@
+#include <math.h>
 #include <sstream>
 #include <json/json.h>
 #include "TransformMatrix.h"
@@ -269,5 +270,15 @@ namespace Metabot
         }
 
         return str.str();
+    }
+
+    TransformMatrix TransformMatrix::rotation(float alpha)
+    {
+        TransformMatrix m = TransformMatrix::identity();
+        m.values[XY(0,0)] = cos(alpha);
+        m.values[XY(1,0)] = -sin(alpha);
+        m.values[XY(0,1)] = sin(alpha);
+        m.values[XY(1,1)] = cos(alpha);
+        return m;
     }
 }

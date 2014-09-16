@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     editComponent("Edit", this),
     removeComponent("Remove", this),
     robot(NULL), wizard(NULL),
-    filename("")
+    filename(""),
+    zeros(NULL)
 {
     ui->setupUi(this);
     setWindowTitle("Metabot");
@@ -34,18 +35,14 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
-    /////// SIMPLE TEST //////
-    /*
-    Metabot::ComponentInstance *body = backend->getComponent("body")->instanciate();
-    body->compile();
-    robot->root = body;
-    viewer->updateRatio();
+     /*
+    // Debugging auto-open
+    filename = "/home/gregwar/Metabot/robots/spidey12.robot";
+    robot->loadFromFile(filename.toStdString());
+    ui->actionSave->setEnabled(true);
+     */
 
-    // Component wizard dialog
-    wizard = new ComponentWizard(viewer, robot, body->anchors[1]);
-    wizard->show();
-    */
-    /////// /SIMPLE TEST //////
+    viewer->updateRatio();
 
     QList<int> sizes;
     sizes.append(150);
@@ -137,6 +134,7 @@ void MainWindow::runWizard(QTreeWidgetItem *item)
         wizard = new ComponentWizard(viewer, robot, anchor);
         wizard->show();
         wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
+        wizard->adjustSize();
 
         QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
         QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
@@ -285,4 +283,16 @@ void MainWindow::on_actionSave_as_triggered()
 void MainWindow::on_actionQuit_triggered()
 {
     close();
+}
+
+void MainWindow::on_actionZeros_triggered()
+{
+    if (zeros != NULL) {
+        zeros->close();
+        delete zeros;
+    }
+    zeros = new ZerosEditor(robot, viewer);
+    zeros->show();
+    robot->unHighlight();
+    ui->tree->clearSelection();
 }

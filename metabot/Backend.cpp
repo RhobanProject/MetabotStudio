@@ -184,6 +184,7 @@ namespace Metabot
             if (anchors.isMember(id)) {
                 int remote = anchors[id]["remote"].asInt();
                 ComponentInstance *instance = Backend::fromJson(anchors[id]["component"]);
+                anchor->zero = anchors[id]["zero"].asFloat();
                 anchor->attach(instance->getAnchor(remote));
             }
         }

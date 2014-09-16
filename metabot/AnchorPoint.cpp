@@ -8,7 +8,7 @@
 namespace Metabot
 {
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
-        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0)
+        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0)
     {
         if (json.isObject()) {
             type = json["type"].asString();
@@ -83,7 +83,7 @@ namespace Metabot
         if (above) {
             if (anchor != NULL) {
                 m = anchor->toModel();
-                m.rotateZ(alpha);
+                m.rotateZ(-zero-alpha);
                 m.apply(matrix);
             }
         } else {
@@ -102,6 +102,7 @@ namespace Metabot
         if (anchor != NULL) {
             if (above) {
                 matrix.openGLMult();
+                TransformMatrix::rotation(zero+alpha).openGLMult();
                 anchor->openGLDraw();
             } else {
                 matrix.invert().openGLMult();

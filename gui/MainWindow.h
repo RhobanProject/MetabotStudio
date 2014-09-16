@@ -12,6 +12,7 @@
 #include <metabot/Backend.h>
 #include <metabot/Robot.h>
 #include "ComponentWizard.h"
+#include "ZerosEditor.h"
 
 namespace Ui {
 class MainWindow;
@@ -56,6 +57,8 @@ private slots:
     void on_actionSave_as_triggered();
     void on_actionQuit_triggered();
 
+    void on_actionZeros_triggered();
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
@@ -68,6 +71,7 @@ private:
     ComponentWizard *wizard;
     std::map<QTreeWidgetItem*, Metabot::AnchorPoint*> items;
     QString filename;
+    ZerosEditor *zeros;
 };
 
 #endif // MAINWINDOW_H

@@ -9,7 +9,7 @@ QT       += core gui opengl
 TARGET = Metabot
 TEMPLATE = app
 
-DEFINES += OPENGL
+DEFINES += OPENGL NOCPP11
 
 SOURCES += main.cpp \
     MainWindow.cpp \
@@ -17,18 +17,21 @@ SOURCES += main.cpp \
     ComponentItem.cpp \
     Viewer.cpp \
     ParameterWidget.cpp \
-    ObjectsTree.cpp
+    ObjectsTree.cpp \
+    ZerosEditor.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
     ComponentItem.h \
     Viewer.h \
     ParameterWidget.h \
-    ObjectsTree.h
+    ObjectsTree.h \
+    ZerosEditor.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \
-    ComponentItem.ui
+    ComponentItem.ui \
+    ZerosEditor.ui
 
 CONFIG += c++11
 
