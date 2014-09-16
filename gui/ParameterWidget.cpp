@@ -33,7 +33,8 @@ ParameterWidget::ParameterWidget(Metabot::ComponentInstance *instance_,
 
     this->layout()->setSpacing(0);
     this->layout()->setMargin(0);
-    this->updateGeometry();
+    this->layout()->update();
+    this->adjustSize();
     this->update();
     this->show();
 }

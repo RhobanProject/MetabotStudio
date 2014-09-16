@@ -48,12 +48,13 @@ private slots:
     void on_contextmenu_edit();
     void on_contextmenu_remove();
 
-    void on_menu_open();
-    void on_menu_save();
-    void on_menu_save_as();
-
     void on_clicked();
     void on_close();
+
+    void on_actionOpen_triggered();
+    void on_actionSave_triggered();
+    void on_actionSave_as_triggered();
+    void on_actionQuit_triggered();
 
 private:
     QSettings settings;

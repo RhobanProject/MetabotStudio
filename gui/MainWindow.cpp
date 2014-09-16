@@ -34,11 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
-    // Keyboard shortcuts
-    ui->actionOpen->setShortcut(QKeySequence("Ctrl+o"));
-    ui->actionSave->setShortcut(QKeySequence("Ctrl+s"));
-    ui->actionSave_as->setShortcut(QKeySequence("Ctrl+Shift+s"));
-
     /////// SIMPLE TEST //////
     /*
     Metabot::ComponentInstance *body = backend->getComponent("body")->instanciate();
@@ -56,12 +51,6 @@ MainWindow::MainWindow(QWidget *parent) :
     sizes.append(150);
     sizes.append(400);
     ui->splitter->setSizes(sizes);
-
-    // File menu
-    QObject::connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(on_menu_open()));
-    QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(on_menu_save()));
-    QObject::connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(on_menu_save_as()));
-    QObject::connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
     // Tree
     ui->tree->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -239,7 +228,16 @@ void MainWindow::on_contextmenu_remove()
     drawTree();
 }
 
-void MainWindow::on_menu_open()
+void MainWindow::on_clicked()
+{
+}
+
+void MainWindow::on_contextmenu_edit()
+{
+    runWizard(contextmenu_item);
+}
+
+void MainWindow::on_actionOpen_triggered()
 {
     QFileDialog dialog;
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -261,14 +259,14 @@ void MainWindow::on_menu_open()
     }
 }
 
-void MainWindow::on_menu_save()
+void MainWindow::on_actionSave_triggered()
 {
     if (filename != "") {
         robot->saveToFile(filename.toStdString());
     }
 }
 
-void MainWindow::on_menu_save_as()
+void MainWindow::on_actionSave_as_triggered()
 {
     QFileDialog dialog;
     dialog.setFilter("Robot (*.robot)");
@@ -284,11 +282,7 @@ void MainWindow::on_menu_save_as()
     }
 }
 
-void MainWindow::on_clicked()
+void MainWindow::on_actionQuit_triggered()
 {
-}
-
-void MainWindow::on_contextmenu_edit()
-{
-    runWizard(contextmenu_item);
+    close();
 }

@@ -89,14 +89,12 @@ void ComponentWizard::setupInstance()
     }
     buttonToAnchor.clear();
 
-    int index;
     std::vector<Metabot::AnchorPoint*>::iterator it;
     QRadioButton *first = NULL;
     for (it=instance->anchors.begin(); it!=instance->anchors.end(); it++) {
         Metabot::AnchorPoint *anchorPoint = *it;
         if (anchorPoint->isCompatible(anchor)) {
-            index++;
-            QString label = QString("%1").arg(index);
+            QString label = QString("%1").arg(anchorPoint->id);
             QRadioButton *btn = new QRadioButton();
             if (first == NULL) {
                 first = btn;
@@ -117,6 +115,8 @@ void ComponentWizard::setupInstance()
         ui->anchor->show();
     }
     }
+    ui->anchor->update();
+    ui->anchor->adjustSize();
 
     // Parameters
     {
@@ -135,13 +135,23 @@ void ComponentWizard::setupInstance()
         parameters.push_back(parameterWidget);
         ui->parameters_items->addWidget(parameterWidget);
     }
+    ui->parameters_items->update();
+    ui->parameters->adjustSize();
     ui->parameters->show();
+    ui->parameters->update();
     }
 
-    ui->generate->show();
+    ui->verticalLayout->update();
+
     ui->ok->setEnabled(true);
-    updateGeometry();
+    ui->generate->show();
+    ui->generate->update();
+
+    ui->centralWidget->adjustSize();
+    show();
     update();
+    updateGeometry();
+    adjustSize();
 }
 
 void ComponentWizard::on_listWidget_itemSelectionChanged()
