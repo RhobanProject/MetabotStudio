@@ -11,9 +11,11 @@ Radius = 8;
 // Parameter Put Screws?
 Screws = true;
 // Parameter Screws spacing
-ScrewsSpacing = 10;
+ScrewsSpacing = 14;
 // Parameter Screws diameter
 ScrewsDiameter = 2.6;
+// Parameter Number of screws
+ScrewsCount = 8;
 // Parameter Thickness
 Thickness = 2.2;
 // Parameter Angle
@@ -21,10 +23,10 @@ Angle = 90;
 
 metabot_anchor("motor", female=true);
 
-u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
+u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
 translate([0,(Height+Radius)*2,0]) {
     rotate([0,Angle,180]) {
-        u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, Screws);
+        u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
         metabot_anchor("motor", female=true);
         children();
     }

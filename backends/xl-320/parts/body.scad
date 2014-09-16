@@ -15,7 +15,7 @@ module body(size=20, legs=4, thickness=2.2) {
 
     module bodyHoles() {
         translate([0, size-5, 0]) {
-            threeOllo();
+            threeOllo(thickness*2);
         }
     }
 
