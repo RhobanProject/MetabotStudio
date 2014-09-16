@@ -51,6 +51,11 @@ MainWindow::MainWindow(QWidget *parent) :
     */
     /////// /SIMPLE TEST //////
 
+    QList<int> sizes;
+    sizes.append(150);
+    sizes.append(100);
+    ui->splitter->setSizes(sizes);
+
     ui->tree->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(ui->tree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextmenu_request(QPoint)));
     QObject::connect(&addComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_add()));
