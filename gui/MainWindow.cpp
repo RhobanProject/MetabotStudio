@@ -12,6 +12,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    settings("Rhoban", "Metabot"),
     addComponent("Add component", this),
     editComponent("Edit", this),
     removeComponent("Remove", this),
@@ -144,6 +145,8 @@ void MainWindow::runWizard(QTreeWidgetItem *item)
         Metabot::AnchorPoint *anchor = items[item];
         wizard = new ComponentWizard(viewer, robot, anchor);
         wizard->show();
+        wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
+
         QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
         QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
     }
@@ -205,6 +208,7 @@ void MainWindow::on_close()
 void MainWindow::on_wizard_ok()
 {
     drawTree();
+    settings.setValue("componentsWizard", wizard->saveGeometry());
     wizard->close();
     delete wizard;
     wizard = NULL;
@@ -212,6 +216,7 @@ void MainWindow::on_wizard_ok()
 
 void MainWindow::on_wizard_cancel()
 {
+    settings.setValue("componentsWizard", wizard->saveGeometry());
     delete wizard;
     wizard = NULL;
 }

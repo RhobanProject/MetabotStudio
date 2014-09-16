@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QMenu>
+#include <QSettings>
 #include <QPoint>
 #include <QMainWindow>
 #include <QTreeWidgetItem>
@@ -52,10 +53,10 @@ private slots:
     void on_menu_save_as();
 
     void on_clicked();
-
     void on_close();
 
 private:
+    QSettings settings;
     QTreeWidgetItem *contextmenu_item;
     QAction addComponent, editComponent, removeComponent;
     QMenu menu;
