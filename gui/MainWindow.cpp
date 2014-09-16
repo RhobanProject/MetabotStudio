@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     addComponent("Add component", this),
     editComponent("Edit", this),
     removeComponent("Remove", this),
-    robot(NULL), viewer(NULL), wizard(NULL),
+    robot(NULL), wizard(NULL),
     filename("")
 {
     ui->setupUi(this);
@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QList<int> sizes;
     sizes.append(150);
-    sizes.append(100);
+    sizes.append(400);
     ui->splitter->setSizes(sizes);
 
     // File menu

@@ -17,6 +17,12 @@ Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     pressed = false;
     t = 0.0;
     framesPerSecond = 30;
+
+    QSizePolicy policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    policy.setHorizontalStretch(1);
+    policy.setVerticalStretch(1);
+    this->setSizePolicy(policy);
+
     if(framesPerSecond == 0)
         t_Timer = NULL;
     else
