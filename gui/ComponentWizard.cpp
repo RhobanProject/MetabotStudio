@@ -241,6 +241,11 @@ void ComponentWizard::cancel()
     this->close();
 }
 
+void ComponentWizard::closeEvent(QCloseEvent *)
+{
+    cancel();
+}
+
 void ComponentWizard::on_cancel_clicked()
 {
     cancel();
@@ -251,6 +256,7 @@ void ComponentWizard::on_ok_clicked()
 {
     if (previousInstance != NULL && instance != previousInstance) {
         // XXX: memory leak
+        previousInstance->detachDiffAnchors(instance);
         previousInstance->detachAll();
         delete previousInstance;
     }

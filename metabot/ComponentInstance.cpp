@@ -182,6 +182,23 @@ namespace Metabot
         }
     }
             
+    void ComponentInstance::detachDiffAnchors(ComponentInstance *other)
+    {
+        std::map<AnchorPoint *, bool> otherAnchors;
+
+        for (auto anchor : other->anchors) {
+            if (anchor->anchor) {
+                otherAnchors[anchor->anchor] = true;
+            }
+        }
+
+        for (auto anchor : anchors) {
+            if (otherAnchors.count(anchor)) {
+                anchor->detach();
+            }
+        }
+    }
+            
     void ComponentInstance::restore()
     {
         for (auto anchor : anchors) {

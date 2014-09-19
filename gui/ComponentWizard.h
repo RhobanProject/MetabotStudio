@@ -33,6 +33,8 @@ public:
     // Cancel
     void cancel();
 
+    void closeEvent(QCloseEvent *);
+
 signals:
     void on_ok();
     void on_cancel();

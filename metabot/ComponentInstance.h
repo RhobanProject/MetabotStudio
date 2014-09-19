@@ -45,6 +45,7 @@ namespace Metabot
             // If detach is true, anchor will be detached from the other objects, and thus
             // "taken" from it
             void merge(ComponentInstance *other, bool detach);
+            void detachDiffAnchors(ComponentInstance *other);
             void restore();
             void detachAll();
 
