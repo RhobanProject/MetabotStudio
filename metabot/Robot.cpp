@@ -58,6 +58,8 @@ namespace Metabot
 
             root = backend->fromJson(json["tree"]);
         }
+
+        number();
     }
 
     void Robot::saveToFile(std::string filename)
@@ -149,6 +151,14 @@ namespace Metabot
                 anchor->highlight = true;
             }
             nth--;
+        });
+    }
+
+    void Robot::number()
+    {
+        int id = 1;
+        foreach([&id](ComponentInstance *component) {
+            component->id = (id++);
         });
     }
 }

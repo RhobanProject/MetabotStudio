@@ -39,6 +39,13 @@ namespace Metabot
             delete part;
         }
     }
+
+    std::string ComponentInstance::fullName()
+    {
+        std::stringstream ss;
+        ss << component->name << " #" << id;
+        return ss.str();
+    }
             
     bool ComponentInstance::isCompatible(AnchorPoint *anchor)
     {

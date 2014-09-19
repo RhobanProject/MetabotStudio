@@ -24,6 +24,8 @@ namespace Metabot
             Model toModel();
             bool isCompatible(AnchorPoint *anchor);
 
+            std::string fullName();
+
             Json::Value parametersJson();
             void parametersFromJson(Json::Value json);
             Json::Value toJson();
@@ -67,5 +69,7 @@ namespace Metabot
             std::vector<ModelRef *> models;
 
             Model myModel;
+
+            int id;
     };
 }

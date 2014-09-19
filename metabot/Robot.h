@@ -23,6 +23,7 @@ namespace Metabot
             void clear();
             void loadFromFile(std::string filename);
             void saveToFile(std::string filename);
+            void number();
 
 #ifndef NOCPP11
             void foreach(std::function<void(ComponentInstance *instance)> method);

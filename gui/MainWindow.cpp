@@ -35,12 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
-    /*
+    // /*
     // Debugging auto-open
     filename = "/home/gregwar/Metabot/robots/spidey12.robot";
     robot->loadFromFile(filename.toStdString());
     ui->actionSave->setEnabled(true);
-    */
+    // */
 
     viewer->updateRatio();
 
@@ -79,12 +79,12 @@ void MainWindow::drawTreeRecursive(QTreeWidgetItem *parentItem,
             QTreeWidgetItem *item = new QTreeWidgetItem;
             items[item] = anchor;
             if (anchor->anchor == NULL) {
-                QString label = QString("%1 %2").arg(QString::fromStdString(anchor->type)).arg(index);
+                QString label = QString("%1 #%2").arg(QString::fromStdString(anchor->type)).arg(index);
                 item->setText(0, label);
                 item->setTextColor(0, QColor("#aaa"));
             } else {
                 Metabot::ComponentInstance *subInstance = anchor->anchor->instance;
-                item->setText(0, QString::fromStdString(subInstance->component->name));
+                item->setText(0, QString::fromStdString(subInstance->fullName()));
                 drawTreeRecursive(item, subInstance);
             }
             parentItem->addChild(item);
@@ -105,7 +105,7 @@ void MainWindow::drawTree()
         item->setText(0, "root");
         item->setTextColor(0, QColor("#aaa"));
     } else {
-        item->setText(0, QString::fromStdString(robot->root->component->name));
+        item->setText(0, QString::fromStdString(robot->root->fullName()));
     }
     items[item] = NULL;
     ui->tree->addTopLevelItem(item);
@@ -175,7 +175,7 @@ void MainWindow::on_contextmenu_request(QPoint pt)
     QTreeWidgetItem *item = ui->tree->itemAt(pt);
     if (item != NULL) {
         QPoint pos = ui->tree->mapToGlobal(pt);
-        QPoint pos2(pos.x()+8, pos.y()+25);
+        QPoint pos2(pos.x(), pos.y());
         Metabot::AnchorPoint *anchor = items[item];
         menu.clear();
         if ((anchor == NULL && robot->root == NULL) || (anchor != NULL && anchor->anchor == NULL)) {
