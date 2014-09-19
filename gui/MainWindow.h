@@ -59,6 +59,12 @@ private slots:
 
     void on_actionZeros_triggered();
 
+    void on_actionReset_view_triggered();
+
+    void on_actionGrid_toggled(bool arg1);
+
+    void on_actionXYZ_toggled(bool arg1);
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;

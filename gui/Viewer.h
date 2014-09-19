@@ -17,7 +17,7 @@ public:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
-    void keyPressEvent( QKeyEvent *keyEvent );
+    void keyPressEvent(QKeyEvent *keyEvent);
 
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
@@ -34,6 +34,7 @@ public:
     float plateX1, plateY1;
     float plateX2, plateY2;
     float plateZ;
+    bool drawGrid, drawXYZ;
 
 public slots:
     virtual void timeOutSlot();
@@ -41,10 +42,19 @@ public slots:
 private:
     bool autorotate;
     float radius;
+
+    // Rotation
     float alpha, beta;
     float mAlpha, mBeta;
+
+    // Translation
+    float tX, tY;
+    float mTX, mTY;
+
+    // Mouse events
     float mX, mY;
-    bool pressed;
+    bool pressed, movePressed;
+
     QTimer *t_Timer;
 };
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sstream>
 #include "Viewer.h"
 #ifdef __APPLE__
@@ -13,10 +14,15 @@ using namespace Metabot;
 Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     : QGLWidget(parent), robot(NULL)
 {
+    drawXYZ = true;
+    drawGrid = true;
     alpha = 0;
     pressed = false;
+    movePressed = false;
     t = 0.0;
     framesPerSecond = 30;
+
+    setFocusPolicy(Qt::ClickFocus);
 
     QSizePolicy policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     policy.setHorizontalStretch(1);
@@ -42,6 +48,8 @@ void Viewer::setRobot(Robot *robot_)
 
 void Viewer::updateRatio()
 {
+    tX = 0;
+    tY = 0;
     autorotate = true;
     beta = M_PI/4.0;
     matrix = TransformMatrix::identity();
@@ -157,42 +165,73 @@ void Viewer::paintGL()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
     glColor4ub(250, 250, 250, 255);
 
+    glTranslatef(tX, tY, 0);
+
     glPushMatrix();
-    matrix.openGLMult();
     robot->openGLDraw();
     glPopMatrix();
 
     glDisable(GL_LIGHTING);
-    glLineWidth(1.0);
-    glBegin(GL_LINES);
-    glColor3f(0.3, 0.3, 0.3);
-    for (float x=plateX1; x<=plateX2; x+=10.0) {
-        glVertex3f(x, plateY1, plateZ);
-        glVertex3f(x, plateY2, plateZ);
-    }
-    for (float y=plateY1; y<=plateY2; y+=10.0) {
-        glVertex3f(plateX1, y, plateZ);
-        glVertex3f(plateX2, y, plateZ);
-    }
-    glEnd();
 
-    glDisable(GL_LIGHTING);
-    glLineWidth(1.0);
-    glBegin(GL_LINES);
-    glColor3f(0.9, 0.0, 0.0);
-    glVertex3f(0, 0, 0);
-    glVertex3f(100.0, 0, 0);
-    glColor3f(0.0, 0.9, 0.0);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0.0, 100, 0);
-    glColor3f(0.0, 0.0, 0.9);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, 100);
-    glEnd();
+    if (drawGrid) {
+        glLineWidth(1.0);
+        glBegin(GL_LINES);
+        glColor3f(0.3, 0.3, 0.3);
+        for (float x=plateX1; x<=plateX2; x+=10.0) {
+            glVertex3f(x, plateY1, plateZ);
+            glVertex3f(x, plateY2, plateZ);
+        }
+        for (float y=plateY1; y<=plateY2; y+=10.0) {
+            glVertex3f(plateX1, y, plateZ);
+            glVertex3f(plateX2, y, plateZ);
+        }
+        glEnd();
+    }
+
+    if (drawXYZ) {
+        glLineWidth(1.0);
+        glBegin(GL_LINES);
+        glColor3f(0.9, 0.0, 0.0);
+        glVertex3f(0, 0, 0);
+        glVertex3f(100.0, 0, 0);
+        glColor3f(0.0, 0.9, 0.0);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0.0, 100, 0);
+        glColor3f(0.0, 0.0, 0.9);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 0, 100);
+        glEnd();
+    }
 }
 
 void Viewer::keyPressEvent(QKeyEvent *keyEvent)
 {
+    if (keyEvent->key() == Qt::Key_Left) {
+        autorotate = false;
+        alpha -= 0.1;
+    }
+    if (keyEvent->key() == Qt::Key_Right) {
+        autorotate = false;
+        alpha += 0.1;
+    }
+    if (keyEvent->key() == Qt::Key_Up) {
+        autorotate = false;
+        beta += 0.1;
+    }
+    if (keyEvent->key() == Qt::Key_Down) {
+        autorotate = false;
+        beta -= 0.1;
+    }
+    if (keyEvent->key() == Qt::Key_PageUp) {
+        radius -= 15.0;
+        if (radius < 0.1) radius = 0.1;
+    }
+    if (keyEvent->key() == Qt::Key_PageDown) {
+        radius += 15.0;
+    }
+
+    if (beta > M_PI/2-0.01) beta = M_PI/2-0.01;
+    if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
 }
 
 void Viewer::mousePressEvent(QMouseEvent *evt)
@@ -204,12 +243,22 @@ void Viewer::mousePressEvent(QMouseEvent *evt)
         mAlpha = alpha;
         mBeta = beta;
     }
+    if (evt->button() == Qt::RightButton) {
+        movePressed = true;
+        mX = evt->x();
+        mY = evt->y();
+        mTX = tX;
+        mTY = tY;
+    }
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *evt)
 {
     if (evt->button() == Qt::LeftButton) {
         pressed = false;
+    }
+    if (evt->button() == Qt::RightButton) {
+        movePressed = false;
     }
 }
 
@@ -225,11 +274,22 @@ void Viewer::mouseMoveEvent(QMouseEvent *evt)
         if (beta > M_PI/2-0.01) beta = M_PI/2-0.01;
         if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
     }
+
+    if (movePressed) {
+        autorotate = false;
+        float dX = evt->x()-mX;
+        float dY = evt->y()-mY;
+
+        tX = mTX + dY*cos(alpha) + dX*cos(alpha+M_PI/2.0);
+        tY = mTY + dY*sin(alpha) + dX*sin(alpha+M_PI/2.0);
+    }
 }
 
 void Viewer::wheelEvent(QWheelEvent *evt)
 {
     radius -= evt->delta()*0.1;
+
+    if (radius < 0.1) radius = 0.1;
 }
 
 void Viewer::setPlateDimension(float x1, float y1, float x2, float y2, float z)

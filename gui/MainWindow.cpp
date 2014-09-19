@@ -35,12 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
-     /*
+
     // Debugging auto-open
     filename = "/home/gregwar/Metabot/robots/spidey12.robot";
     robot->loadFromFile(filename.toStdString());
     ui->actionSave->setEnabled(true);
-     */
+
 
     viewer->updateRatio();
 
@@ -58,6 +58,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->tree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
     drawTree();
+
+    ui->actionGrid->setChecked(true);
+    ui->actionXYZ->setChecked(true);
 }
 
 MainWindow::~MainWindow()
@@ -295,4 +298,21 @@ void MainWindow::on_actionZeros_triggered()
     zeros->show();
     robot->unHighlight();
     ui->tree->clearSelection();
+}
+
+void MainWindow::on_actionReset_view_triggered()
+{
+    if (viewer) {
+        viewer->updateRatio();
+    }
+}
+
+void MainWindow::on_actionGrid_toggled(bool drawGrid)
+{
+    viewer->drawGrid = drawGrid;
+}
+
+void MainWindow::on_actionXYZ_toggled(bool drawXYZ)
+{
+    viewer->drawXYZ = drawXYZ;
 }
