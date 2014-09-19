@@ -33,6 +33,7 @@ namespace Metabot
 
 #ifndef NOCPP11
             void foreach(std::function<void(ComponentInstance *instance)> method);
+            void foreachAnchor(std::function<void(AnchorPoint *instance)> method);
 #endif
             
 #ifdef OPENGL

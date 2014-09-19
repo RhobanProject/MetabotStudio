@@ -280,4 +280,17 @@ namespace Metabot
             }
         }
     }
+            
+    void ComponentInstance::foreachAnchor(std::function<void(AnchorPoint *instance)> method)
+    {
+        for (auto anchor : anchors) {
+            if (anchor->anchor != NULL && anchor->above) {
+                if (anchor->type != "root") {
+                    method(anchor);
+                }
+
+                anchor->anchor->instance->foreachAnchor(method);
+            }
+        }
+    }
 }

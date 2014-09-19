@@ -112,13 +112,9 @@ namespace Metabot
 
     void Robot::foreachAnchor(std::function<void(AnchorPoint *anchor)> method)
     {
-        foreach([method](ComponentInstance *component) {
-            for (auto anchor : component->anchors) {
-                if (anchor->above && anchor->type != "root") {
-                    method(anchor);
-                }
-            }
-        });
+        if (root != NULL) {
+            root->foreachAnchor(method);
+        }
     }
             
     std::vector<float> Robot::getZeros()
