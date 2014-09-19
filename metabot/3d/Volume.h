@@ -10,6 +10,7 @@ namespace Metabot
     class Volume
     {
         public:
+            virtual ~Volume();
 			vector<Face> faces;
 			Volume();
 			void addFace(Face f);

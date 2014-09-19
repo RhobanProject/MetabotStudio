@@ -19,11 +19,13 @@ namespace Metabot
 
     Model::~Model()
     {
+        volumes.clear();
     }
 
     Point3 Model::min(){
-    	if (volumes.size() < 1)
+    	if (volumes.size() < 1) {
             return Point3(0, 0, 0);
+        }
 
         Point3 min = volumes[0].min();
 

@@ -7,6 +7,10 @@ namespace Metabot
     {
     }
 
+    ComponentParameter::~ComponentParameter()
+    {
+    }
+
     bool ComponentParameter::isBool()
     {
         return (value=="true" || value == "false");

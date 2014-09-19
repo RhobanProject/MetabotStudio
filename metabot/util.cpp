@@ -131,3 +131,21 @@ void makedir(std::string path)
 {
     mkdir(path.c_str(), 0755);
 }
+
+std::vector<std::string> get_directory_listing(std::string path)
+{
+    std::vector<std::string> listing;
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir(path.c_str())) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            std::string entry = std::string(ent->d_name);
+            if (entry != "." && entry != "..") {
+                listing.push_back(entry);
+            }
+        }
+        closedir(dir);
+    }
+
+    return listing;
+}

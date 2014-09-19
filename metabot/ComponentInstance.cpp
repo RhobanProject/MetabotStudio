@@ -27,8 +27,13 @@ namespace Metabot
 
     ComponentInstance::~ComponentInstance()
     {
+        for (auto model : models) {
+            delete model;
+        }
         for (auto anchor : anchors) {
-            delete anchor;
+            if (anchor->above) {
+                delete anchor;
+            }
         }
         for (auto part : parts) {
             delete part;
@@ -143,7 +148,6 @@ namespace Metabot
         myModel = loadModelSTL_string(stl());
 
         CSG *document = CSG::parse(csg);
-        // XXX: todo: merge & release memory
         anchors = document->anchors;
         parts = document->parts;
         models = document->models;

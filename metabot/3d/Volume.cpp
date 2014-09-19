@@ -7,6 +7,10 @@ namespace Metabot
     {
     }
 
+    Volume::~Volume()
+    {
+    }
+
     void Volume::addFace(Face f){
         faces.push_back(f);
     }

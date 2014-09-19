@@ -14,6 +14,11 @@ namespace Metabot
     {
     }
 
+    Robot::~Robot()
+    {
+        clear();
+    }
+
     void Robot::clear()
     {
         delete root;

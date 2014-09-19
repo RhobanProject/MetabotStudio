@@ -23,7 +23,13 @@ namespace Metabot
 
     AnchorPoint::~AnchorPoint()
     {
-        if (anchor != NULL && above) {
+        bool iAmAbove = above;
+        above = false;
+
+        if (anchor != NULL && iAmAbove) {
+            if (anchor->instance != NULL) {
+                delete anchor->instance;
+            }
             delete anchor;
         }
     }

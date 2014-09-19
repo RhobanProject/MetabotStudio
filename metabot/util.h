@@ -26,6 +26,7 @@ std::string basename(std::string const pathname);
 std::string tempname();
 bool file_exists(std::string filename);
 bool is_directory(std::string path);
+std::vector<std::string> get_directory_listing(std::string path);
 void makedir(std::string path);
 void file_put_contents(std::string path, std::string contents);
 std::string file_get_contents(std::string path);

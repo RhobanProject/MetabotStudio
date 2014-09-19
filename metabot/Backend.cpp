@@ -1,6 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <dirent.h>
 #include <3d/stl.h>
 #include "Backend.h"
 #include "Cache.h"
@@ -54,10 +53,7 @@ namespace Metabot
 
     void Backend::load()
     {
-        DIR *test;
-        test = opendir(directory.c_str());
-        if (test != NULL) {
-            closedir(test);
+        if (is_directory(directory)) {
             loadComponents();
         } else {
             std::stringstream s;
@@ -68,17 +64,10 @@ namespace Metabot
 
     void Backend::loadComponents()
     {
-        DIR *dir;
-        struct dirent *ent;
         std::string dirname = directory + "/components";
-        if ((dir = opendir(dirname.c_str())) != NULL) {
-            while ((ent = readdir(dir)) != NULL) {
-                loadComponent(std::string(ent->d_name));
-            }
-        } else {
-            std::stringstream s;
-            s << "No components/ in backend " << name;
-            throw s.str();
+        std::vector<std::string> entries = get_directory_listing(dirname);
+        for (auto entry : entries) {
+            loadComponent(entry);
         }
 
         if (components.size() == 0) {

@@ -8,6 +8,8 @@ namespace Metabot
     class Face
     {
         public:
+            virtual ~Face();
+
 			Point3 v[3];
 			Face();
 			Face(Point3 v0, Point3 v1, Point3 v2);

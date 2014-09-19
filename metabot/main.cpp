@@ -43,7 +43,7 @@ int main()
             side->anchors[1]->attach(leg->anchors[0]);
             side->anchors[1]->alpha = DEG2RAD(110);
         }
-        
+       
         // Getting 3D model
         Model model = robot.toModel();
         saveModelToFileBinary("/tmp/demo.stl", &model);
