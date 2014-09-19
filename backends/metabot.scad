@@ -17,5 +17,9 @@ module metabot_parameter(name, value) {
 
 // Used to put an anchor point in the file
 module metabot_anchor(type, male=false, female=false) {
-    marker(str("metabot_anchor: {'type':'", type, "', 'male': ", male,", 'female':", female,"}"));
+    if (!male && !female) {
+        metabot_anchor(type, true, true);
+    } else {
+        marker(str("metabot_anchor: {'type':'", type, "', 'male': ", male,", 'female':", female,"}"));
+    }
 }
