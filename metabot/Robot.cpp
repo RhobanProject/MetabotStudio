@@ -94,21 +94,21 @@ namespace Metabot
         }
     }
             
+#ifdef OPENGL
     void Robot::openGLDraw()
     {
         if (root != NULL) {
             root->openGLDraw();
         }
     }
+#endif
             
-#ifdef OPENGL
     void Robot::unHighlight()
     {
         if (root != NULL) {
             root->unHighlight();
         }
     }
-#endif
     
     void Robot::foreach(std::function<void(ComponentInstance *instance)> method)
     {

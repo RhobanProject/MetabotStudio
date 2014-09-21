@@ -35,8 +35,8 @@ namespace Metabot
 
 #ifdef OPENGL
             void openGLDraw();
-            void unHighlight();
 #endif
+            void unHighlight();
             ComponentInstance *root;
 
             Backend *backend;

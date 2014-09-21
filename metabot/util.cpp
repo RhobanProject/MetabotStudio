@@ -129,7 +129,11 @@ bool is_directory(std::string path)
 
 void makedir(std::string path)
 {
+#ifdef WIN32
+	mkdir(path.c_str());
+#else
     mkdir(path.c_str(), 0755);
+#endif
 }
 
 std::vector<std::string> get_directory_listing(std::string path)

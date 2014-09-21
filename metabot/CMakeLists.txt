@@ -6,7 +6,11 @@ option (OPENGL "Enable OpenGL" OFF)
 
 if (OPENGL)
     add_definitions(-DOPENGL)
-endif ()
+endif()
+
+if (WIN32)
+	add_definitions(-DWIN32)
+endif()
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -pedantic -U__STRICT_ANSI__")
 
