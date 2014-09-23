@@ -66,6 +66,7 @@ private:
     std::vector<ParameterWidget*> parameters;
     std::map<QWidget*, Metabot::AnchorPoint*> buttonToAnchor;
 
+    bool isOk;
     Ui::ComponentWizard *ui;
 };
 

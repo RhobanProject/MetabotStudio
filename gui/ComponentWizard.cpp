@@ -23,6 +23,7 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     previousInstance(NULL),
     previousAnchor(NULL)
 {
+    isOk = false;
     ui->setupUi(this);
     setWindowTitle("Component wizard");
 
@@ -243,7 +244,9 @@ void ComponentWizard::cancel()
 
 void ComponentWizard::closeEvent(QCloseEvent *)
 {
-    cancel();
+    if (!isOk) {
+        cancel();
+    }
 }
 
 void ComponentWizard::on_cancel_clicked()
@@ -254,6 +257,7 @@ void ComponentWizard::on_cancel_clicked()
 
 void ComponentWizard::on_ok_clicked()
 {
+    isOk = true;
     if (previousInstance != NULL && instance != previousInstance) {
         // XXX: memory leak
         previousInstance->detachDiffAnchors(instance);

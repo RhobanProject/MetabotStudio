@@ -242,7 +242,7 @@ void MainWindow::on_actionOpen_triggered()
 {
     QFileDialog dialog;
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
-    dialog.setFilter("Robot (*.robot)");
+    dialog.setNameFilter("Robot (*.robot)");
     if (dialog.exec()) {
         QString fn = dialog.selectedFiles().first();
         if (fn != "") {
@@ -270,7 +270,7 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionSave_as_triggered()
 {
     QFileDialog dialog;
-    dialog.setFilter("Robot (*.robot)");
+    dialog.setNameFilter("Robot (*.robot)");
     dialog.setDefaultSuffix("robot");
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     if (dialog.exec()) {

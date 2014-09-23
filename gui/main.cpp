@@ -4,11 +4,11 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    
     try {
+        QApplication a(argc, argv);
+        MainWindow w;
+        w.show();
+    
         return a.exec();
     } catch (std::string error) {
         std::cerr << "Error: " << error << std::endl;
