@@ -35,12 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
-    // /*
+     /*
     // Debugging auto-open
     filename = "/home/gregwar/Metabot/robots/spidey12.robot";
     robot->loadFromFile(filename.toStdString());
     ui->actionSave->setEnabled(true);
-    // */
+     */
 
     viewer->updateRatio();
 

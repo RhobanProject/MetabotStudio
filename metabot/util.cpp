@@ -8,6 +8,7 @@
 #include "sha1.h"
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 std::vector<std::string> split(const std::string &s, char delim) {
     std::vector<std::string> parts;
