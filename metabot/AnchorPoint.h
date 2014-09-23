@@ -20,8 +20,8 @@ namespace Metabot
             void detach(bool remove=true);
 
             Model toModel();
-#ifdef OPENGL
             bool highlight;
+#ifdef OPENGL
             void openGLDraw();
 #endif
 

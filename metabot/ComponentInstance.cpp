@@ -93,6 +93,7 @@ namespace Metabot
             glPopMatrix();
         }
     }
+#endif
             
     void ComponentInstance::unHighlight()
     {
@@ -103,7 +104,6 @@ namespace Metabot
             }
         }
     }
-#endif
 
     Model ComponentInstance::toModel()
     {

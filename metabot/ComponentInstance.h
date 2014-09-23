@@ -38,8 +38,8 @@ namespace Metabot
             void foreachAnchor(std::function<void(AnchorPoint *instance)> method);
 #endif
             
+			void unHighlight();
 #ifdef OPENGL
-            void unHighlight();
             void openGLDraw(bool highlight = false);
 #endif
     
