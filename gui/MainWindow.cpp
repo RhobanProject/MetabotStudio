@@ -173,7 +173,9 @@ void MainWindow::on_tree_itemSelectionChanged()
                     anchor->anchor->instance->highlight = true;
                 }
             } else {
-                robot->root->highlight = true;
+                if (robot->root != NULL) {
+                    robot->root->highlight = true;
+                }
             }
         }
     }
