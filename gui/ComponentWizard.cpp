@@ -140,23 +140,15 @@ void ComponentWizard::setupInstance()
         parameters.push_back(parameterWidget);
         ui->parameters_items->addWidget(parameterWidget);
     }
-    ui->parameters_items->update();
-    ui->parameters->adjustSize();
     ui->parameters->show();
-    ui->parameters->update();
     }
 
     ui->verticalLayout->update();
 
     ui->ok->setEnabled(true);
     ui->generate->show();
-    ui->generate->update();
 
     ui->centralWidget->adjustSize();
-    show();
-    update();
-    updateGeometry();
-    adjustSize();
 }
 
 void ComponentWizard::on_listWidget_itemSelectionChanged()

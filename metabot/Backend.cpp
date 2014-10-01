@@ -125,9 +125,12 @@ namespace Metabot
 
         FILE *process = popen(command.c_str(), "r");
         if (pclose(process) != 0) {
+            return "";
+            /*
             std::stringstream error;
             error << "Compilation failed for file " << filename;
             throw error.str();
+            */
         }
 
         if (!file_exists(output)) {
