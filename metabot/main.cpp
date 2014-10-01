@@ -21,6 +21,8 @@ int main()
 
         // Making a robot
         Robot *robot = new Robot(&backend);
+
+        /*
         robot->root = backend.getComponent("body")->instanciate();
         robot->root->set("Size", "35");
         robot->root->set("Legs", "4");
@@ -43,13 +45,13 @@ int main()
             side->anchors[1]->attach(leg->anchors[0]);
             side->anchors[1]->alpha = DEG2RAD(110);
         }
+        */
+
+        robot->loadFromFile("/home/gregwar/Metabot/robots/spidey12.robot");
        
         // Getting 3D model
-        Robot *spider = robot->clone();
-        delete robot;
-        Model model = spider->toModel();
+        Model model = robot->toModel();
         saveModelToFileBinary("/tmp/demo.stl", &model);
-        delete spider;
 
     } catch (string error) {
         cerr << "[ERROR] " << error << endl;

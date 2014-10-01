@@ -22,7 +22,7 @@ namespace Metabot
     }
             
     AnchorPoint::AnchorPoint(std::string type_, bool male_, bool female_, TransformMatrix matrix_)
-        : type(type_), male(male_), female(female_), matrix(matrix_)
+        : type(type_), male(male_), female(female_), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0)
     {
     }
 
@@ -45,6 +45,15 @@ namespace Metabot
         anchorPoint->above = above;
 
         return anchorPoint;
+    }
+            
+    void AnchorPoint::revert()
+    {
+        if (anchor->anchor) {
+            anchor->anchor->instance->root();
+            above = true;
+            anchor->above = false;
+        }
     }
 
     bool AnchorPoint::isCompatible(AnchorPoint *anchor)

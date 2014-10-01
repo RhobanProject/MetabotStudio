@@ -21,6 +21,7 @@ namespace Metabot
             Model toModel();
 
             Robot *clone();
+            void setRoot(ComponentInstance *root);
 
             void clear();
             void loadFromFile(std::string filename);

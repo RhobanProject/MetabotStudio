@@ -22,8 +22,17 @@ namespace Metabot
     Robot *Robot::clone()
     {
         Robot *robot = new Robot(backend);
-        robot->root = root->clone();
+        if (root) {
+            robot->root = root->clone();
+        }
+
         return robot;
+    }
+            
+    void Robot::setRoot(ComponentInstance *root_)
+    {
+        root = root_;
+        root->root();
     }
 
     void Robot::clear()

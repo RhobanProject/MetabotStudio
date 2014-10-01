@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addComponent("Add component", this),
     editComponent("Edit", this),
     removeComponent("Remove", this),
-    robot(NULL), wizard(NULL),
+    rootComponent("Root", this),
+    robot(NULL), robotSave(NULL), wizard(NULL),
     filename(""),
     zeros(NULL)
 {
@@ -35,12 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     robot = new Metabot::Robot(backend);
     viewer->setRobot(robot);
 
-     /*
     // Debugging auto-open
+    /*
     filename = "/home/gregwar/Metabot/robots/spidey12.robot";
     robot->loadFromFile(filename.toStdString());
+    robot->number();
     ui->actionSave->setEnabled(true);
-     */
+    */
 
     viewer->updateRatio();
 
@@ -55,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&addComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_add()));
     QObject::connect(&editComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_edit()));
     QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
+    QObject::connect(&rootComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_root()));
     QObject::connect(ui->tree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
     drawTree();
@@ -103,7 +106,7 @@ void MainWindow::drawTree()
 
     if (robot->root == NULL) {
         item->setText(0, "root");
-        item->setTextColor(0, QColor("#aaa"));
+        item->setTextColor(0,    QColor("#aaa"));
     } else {
         item->setText(0, QString::fromStdString(robot->root->fullName()));
     }
@@ -127,13 +130,14 @@ void MainWindow::on_wizard_clicked()
 void MainWindow::runWizard(QTreeWidgetItem *item)
 {
     if (wizard != NULL) {
-        wizard->cancel();
+        wizard->close();
         delete wizard;
         wizard = NULL;
     }
 
     if (items.count(item)) {
         Metabot::AnchorPoint *anchor = items[item];
+        robotSave = robot->clone();
         wizard = new ComponentWizard(viewer, robot, anchor);
         wizard->show();
         wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
@@ -199,15 +203,22 @@ void MainWindow::on_close()
 
 void MainWindow::on_wizard_ok()
 {
+    robot->number();
     drawTree();
     settings.setValue("componentsWizard", wizard->saveGeometry());
     wizard->close();
     delete wizard;
+    delete robotSave;
     wizard = NULL;
 }
 
 void MainWindow::on_wizard_cancel()
 {
+    delete robot;
+    robot = robotSave;
+    robot->number();
+    viewer->robot = robot;
+    drawTree();
     settings.setValue("componentsWizard", wizard->saveGeometry());
     delete wizard;
     wizard = NULL;
@@ -227,6 +238,14 @@ void MainWindow::on_contextmenu_remove()
         robot->root = NULL;
     }
     drawTree();
+}
+
+void MainWindow::on_contextmenu_root()
+{
+    Metabot::AnchorPoint *anchor = items[contextmenu_item];
+    if (anchor->instance) {
+        robot->setRoot(anchor->instance);
+    }
 }
 
 void MainWindow::on_clicked()

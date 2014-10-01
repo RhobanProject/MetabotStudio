@@ -66,6 +66,15 @@ namespace Metabot
         return instance;
     }
 
+    void ComponentInstance::root()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->above == false) {
+                anchor->revert();
+            }
+        }
+    }
+
     std::string ComponentInstance::fullName()
     {
         std::stringstream ss;
@@ -202,7 +211,7 @@ namespace Metabot
         delete document;
     }
 
-    void ComponentInstance::merge(ComponentInstance *other, bool detach)
+    void ComponentInstance::moveAnchors(ComponentInstance *other)
     {
         for (unsigned int i=0; i<anchors.size(); i++) {
             if (i < other->anchors.size()) {
@@ -210,13 +219,8 @@ namespace Metabot
                 AnchorPoint *otherAnchor = other->anchors[i];
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
-                    myAnchor->anchor = otherAnchor->anchor;
-                    myAnchor->anchor->anchor = myAnchor;
-                    myAnchor->above = otherAnchor->above;
-
-                    if (detach) {
-                        otherAnchor->detach(false);
-                    }
+                    myAnchor->attach(otherAnchor->anchor);
+                    otherAnchor->detach(false);
                 }
             }
         }
@@ -346,10 +350,7 @@ namespace Metabot
     {
         for (auto anchor : anchors) {
             if (anchor->anchor != NULL && anchor->above) {
-                if (anchor->type != "root") {
-                    method(anchor);
-                }
-
+                method(anchor);
                 anchor->anchor->instance->foreachAnchor(method);
             }
         }

@@ -48,6 +48,7 @@ private slots:
     void on_contextmenu_add();
     void on_contextmenu_edit();
     void on_contextmenu_remove();
+    void on_contextmenu_root();
 
     void on_clicked();
     void on_close();
@@ -56,21 +57,18 @@ private slots:
     void on_actionSave_triggered();
     void on_actionSave_as_triggered();
     void on_actionQuit_triggered();
-
     void on_actionZeros_triggered();
-
     void on_actionReset_view_triggered();
-
     void on_actionGrid_toggled(bool arg1);
-
     void on_actionXYZ_toggled(bool arg1);
 
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
-    QAction addComponent, editComponent, removeComponent;
+    QAction addComponent, editComponent, removeComponent, rootComponent;
     QMenu menu;
     Metabot::Robot *robot;
+    Metabot::Robot *robotSave;
     Viewer *viewer;
     Ui::MainWindow *ui;
     Metabot::Backend *backend;

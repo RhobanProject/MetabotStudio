@@ -16,6 +16,8 @@ namespace Metabot
             AnchorPoint(std::string type, bool male, bool female, TransformMatrix matrix);
             virtual ~AnchorPoint();
             AnchorPoint *clone();
+
+            void revert();
             
             bool isCompatible(AnchorPoint *anchor);
             void attach(AnchorPoint *anchor, bool above=true);

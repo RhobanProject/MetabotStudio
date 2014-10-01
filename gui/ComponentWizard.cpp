@@ -20,29 +20,31 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     QDialog(parent),
     ui(new Ui::ComponentWizard),
     instance(NULL),
-    previousInstance(NULL),
     previousAnchor(NULL)
 {
     isOk = false;
     ui->setupUi(this);
     setWindowTitle("Component wizard");
 
+    // Showing welcome menu only
     ui->anchor->hide();
     ui->parameters->hide();
     ui->generate->hide();
     ui->ok->setEnabled(false);
 
     if (anchor == NULL) {
+        // We're working on root of the robot
         if (robot->root != NULL) {
-            previousInstance = instance = robot->root;
+            instance = robot->root;
             setupInstance();
         }
     } else {
+        // We're working on a specific anchor
         if (anchor->anchor != NULL) {
             previousAnchor = anchor->anchor;
             instance = previousAnchor->instance;
-            previousInstance = instance;
             setupInstance();
+            setAnchor(previousAnchor);
         }
     }
 
@@ -56,6 +58,7 @@ ComponentWizard::~ComponentWizard()
 
 void ComponentWizard::fill()
 {
+    // Populating components choice, based on anchor compatibility
     std::map<std::string, Metabot::Component*>::iterator it;
     for (it=robot->backend->components.begin();
          it!=robot->backend->components.end(); it++) {
@@ -63,6 +66,7 @@ void ComponentWizard::fill()
         Metabot::ComponentInstance *instance = component->instanciate();
         instance->compile();
 
+        // If we're working on the robot root, any instance is OK
         if (anchor == NULL || instance->isCompatible(anchor)) {
             QListWidgetItem *item = new QListWidgetItem();
             item->setData(ROLE_COMPONENT, QString::fromStdString((*it).first));
@@ -77,78 +81,87 @@ void ComponentWizard::fill()
 
 void ComponentWizard::setupInstance()
 {
-    setAnchor(NULL);
     ui->welcome->hide();
 
-    // Anchor points
-    {
-    std::map<QWidget*, Metabot::AnchorPoint*>::iterator rit;
-    for (rit=buttonToAnchor.begin(); rit!=buttonToAnchor.end(); rit++) {
-        QWidget *widget = rit->first;
-        ui->anchor_items->removeWidget(widget);
-        delete widget;
-    }
-    buttonToAnchor.clear();
-
-    std::vector<Metabot::AnchorPoint*>::iterator it;
-    QRadioButton *first = NULL;
-    for (it=instance->anchors.begin(); it!=instance->anchors.end(); it++) {
-        Metabot::AnchorPoint *anchorPoint = *it;
-        if (anchor != NULL && anchorPoint->isCompatible(anchor)) {
-            QString label = QString("%1").arg(anchorPoint->id);
-            QRadioButton *btn = new QRadioButton();
-            if (first == NULL) {
-                first = btn;
-            }
-            buttonToAnchor[btn] = *it;
-            btn->setText(label);
-            ui->anchor_items->addWidget(btn);
-            QObject::connect(btn, SIGNAL(clicked()), this, SLOT(on_anchorPoint_clicked()));
-        }
-    }
-    if (first != NULL) {
-        first->setChecked(true);
-        setAnchor(buttonToAnchor[first]);
-    }
     if (anchor == NULL) {
+        // We're working on robot root, anchor doesn't really matter
         robot->root = instance;
         viewer->updateRatio();
-    }
-    if (buttonToAnchor.size() <= 1) {
-        ui->anchor->hide();
-    } else {
-        ui->anchor->show();
-    }
+    } else  {
+        // Displaying anchor points
+        for (auto entry : buttonToAnchor) {
+            ui->anchor_items->removeWidget(entry.first);
+            delete entry.first;
+        }
+        buttonToAnchor.clear();
+
+        QRadioButton *first = NULL;
+        QRadioButton *previous = NULL;
+
+        for (auto anchorPoint : instance->anchors) {
+            if (anchor != NULL && anchorPoint->isCompatible(anchor)) {
+                QString label = QString("%1").arg(anchorPoint->id);
+                QRadioButton *btn = new QRadioButton();
+                if (first == NULL) {
+                    first = btn;
+                }
+                if (anchorPoint == previousAnchor) {
+                    previous = btn;
+                }
+                buttonToAnchor[btn] = anchorPoint;
+                btn->setText(label);
+                ui->anchor_items->addWidget(btn);
+                QObject::connect(btn, SIGNAL(clicked()), this, SLOT(on_anchorPoint_clicked()));
+            }
+        }
+        if (previous) {
+            // We're working on instance that already had an anchor point,
+            previous->setChecked(true);
+        } else {
+            // We're working on a fresh instance, let's take the first anchor
+            // point as reference
+            if (first != NULL) {
+                first->setChecked(true);
+                setAnchor(buttonToAnchor[first]);
+            }
+        }
+
+        // If there is only one anchor, we can hide the menu for selecting it
+        if (buttonToAnchor.size() <= 1) {
+            ui->anchor->hide();
+        } else {
+            ui->anchor->show();
+        }
     }
     ui->anchor->update();
     ui->anchor->adjustSize();
 
     // Parameters
     {
-    std::vector<ParameterWidget*>::iterator rit;
-    for (rit=parameters.begin(); rit!=parameters.end(); rit++) {
-        ui->parameters_items->removeWidget(*rit);
-        delete *rit;
-    }
-    parameters.clear();
+        for (auto parameter : parameters) {
+            ui->parameters_items->removeWidget(parameter);
+            delete parameter;
+        }
+        parameters.clear();
 
-    std::map<std::string, Metabot::ComponentParameter*>::iterator pit;
-    for (pit = instance->component->parameters.begin();
-         pit != instance->component->parameters.end(); pit++) {
-        std::string name = pit->first;
-        ParameterWidget *parameterWidget = new ParameterWidget(instance, name);
-        parameters.push_back(parameterWidget);
-        ui->parameters_items->addWidget(parameterWidget);
-    }
-    ui->parameters->show();
+        // Adding parameter widgets
+        for (auto parameter : instance->component->parameters) {
+            std::string name = parameter.first;
+            ParameterWidget *parameterWidget = new ParameterWidget(instance, name);
+            parameters.push_back(parameterWidget);
+            ui->parameters_items->addWidget(parameterWidget);
+        }
+        ui->parameters->show();
     }
 
+    // Enabling buttons and adjusting size
     ui->verticalLayout->update();
 
     ui->ok->setEnabled(true);
     ui->generate->show();
 
     ui->centralWidget->adjustSize();
+    adjustSize();
 }
 
 void ComponentWizard::on_listWidget_itemSelectionChanged()
@@ -159,7 +172,10 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         QListWidgetItem *item = items[0];
         QString data = item->data(ROLE_COMPONENT).toString();
 
-        if (instance != NULL && instance != previousInstance) {
+        if (anchor != NULL) {
+            anchor->detach(false);
+        }
+        if (instance != NULL) {
             delete instance;
         }
 
@@ -181,6 +197,10 @@ void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
             robot->root = NULL;
         }
     } else {
+        if (anchor->anchor != NULL) {
+            anchor->anchor->detach(false);
+            anchor->detach(false);
+        }
         anchor->attach(currentAnchor);
     }
 }
@@ -203,64 +223,28 @@ void ComponentWizard::on_generate_clicked()
         instance->values[parameter->name] = parameter->getValue();
     }
     instance->compile();
+    instance->moveAnchors(previous);
 
-    if (previousInstance) {
-        instance->merge(previousInstance, false);
-    } else {
-        instance->merge(previous, true);
-    }
+    previous->detachAll();
+    delete previous;
 
-    if (previous != previousInstance) {
-        previous->detachAll();
-        delete previous;
-    }
     setupInstance();
-}
-
-void ComponentWizard::cancel()
-{
-    isOk = true;
-
-    if (anchor != NULL) {
-        if (currentAnchor != previousAnchor) {
-            anchor->detach(false);
-            anchor->attach(previousAnchor);
-        }
-    } else {
-        robot->root = previousInstance;
-    }
-    if (instance != previousInstance) {
-        instance->detachAll();
-        delete instance;
-    }
-    if (previousInstance != NULL) {
-        previousInstance->restore();
-    }
-
-    this->close();
 }
 
 void ComponentWizard::closeEvent(QCloseEvent *)
 {
     if (!isOk) {
-        cancel();
+        on_cancel();
     }
 }
 
 void ComponentWizard::on_cancel_clicked()
 {
-    cancel();
-    on_cancel();
+    close();
 }
 
 void ComponentWizard::on_ok_clicked()
 {
     isOk = true;
-    if (previousInstance != NULL && instance != previousInstance) {
-        // XXX: memory leak
-        previousInstance->detachDiffAnchors(instance);
-        previousInstance->detachAll();
-        delete previousInstance;
-    }
     on_ok();
 }

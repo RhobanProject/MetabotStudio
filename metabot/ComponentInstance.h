@@ -22,6 +22,8 @@ namespace Metabot
             virtual ~ComponentInstance();
             ComponentInstance *clone();
 
+            void root();
+
             Model toModel();
             bool isCompatible(AnchorPoint *anchor);
 
@@ -47,7 +49,7 @@ namespace Metabot
             // Merge the anchors from another entity
             // If detach is true, anchor will be detached from the other objects, and thus
             // "taken" from it
-            void merge(ComponentInstance *other, bool detach);
+            void moveAnchors(ComponentInstance *other);
             void detachDiffAnchors(ComponentInstance *other);
             void restore();
             void detachAll();

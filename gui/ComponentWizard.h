@@ -30,9 +30,6 @@ public:
     // Fill the list of available components
     void fill();
 
-    // Cancel
-    void cancel();
-
     void closeEvent(QCloseEvent *);
 
 signals:
@@ -41,13 +38,9 @@ signals:
     
 private slots:
     void on_listWidget_itemSelectionChanged();
-
     void on_anchorPoint_clicked();
-
     void on_generate_clicked();
-
     void on_cancel_clicked();
-
     void on_ok_clicked();
 
 private:
