@@ -13,8 +13,6 @@ Legs = 4;
 // Parameter Thickness
 Thickness = 2.2;
 
-metabot_anchor("root");
-
 translate([0,0,-(MotorWidth+Thickness)/2-Thickness/2])
 	body(size=Size, legs=Legs, thickness=Thickness);
 translate([0,0,(MotorWidth+Thickness)/2-Thickness/2])

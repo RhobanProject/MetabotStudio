@@ -4,7 +4,7 @@ use <arm.scad>;
 
 NoModels = false;
 
-module motorArm() {
+module motorArm(counterArm=true) {
     if (NoModels) {
         metabot_model("motor", col=[0.4, 0.45, 0.4]);
         translate([0,0,MotorDepth/2]) {
@@ -17,8 +17,10 @@ module motorArm() {
         motor();
         translate([0,0,MotorDepth/2])
             arm(true);
-        translate([0,0,-MotorDepth/2-OlloWidth])
-            arm();
+        if (counterArm) {
+            translate([0,0,-MotorDepth/2-OlloWidth])
+                arm();
+        }
     } 
 }
 

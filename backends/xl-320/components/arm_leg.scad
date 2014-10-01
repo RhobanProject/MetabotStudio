@@ -16,10 +16,8 @@ SizeTop = 15;
 // Parameter Thickness of the part
 Thickness = 2.2;
 
-translate([40,0,0]) {
 metabot_anchor("motor", female=true);
 
 rotate([90,90,0]) {
     leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "arm", 0, Thickness);
-}
 }
