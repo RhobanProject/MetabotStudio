@@ -2,8 +2,6 @@ include <../../metabot.scad>;
 use <../models/ollo.scad>;
 use <../util/screws.scad>;
 
-$fn=16;
-
 module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.6, screwsCount=8, screws=true, olloScrew=false, thicknessSize=15, print=false) {
     metabot_part("u");
     metabot_parameter("height", height);
