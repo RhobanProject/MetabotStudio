@@ -4,10 +4,10 @@ use <../models/motor_arm.scad>;
 
 $fn=20;
 
-module arm_side(distance=40, radius=12, thickness=2.2, print=false)
+module arm_side(distance=40, radius=10, firstPart=12, thickness=2.2, print=false)
 {
   delta = ((MotorDepth+2*OlloWidth)-MotorWidth)/2.0;
-  lastD = (distance-radius-thickness/2)+OlloWidth*3/2;
+  lastD = (distance-firstPart-thickness/2)+OlloWidth*3/2;
 
   if (print) {
 	  translate([0,0,radius])
@@ -19,9 +19,9 @@ module arm_side(distance=40, radius=12, thickness=2.2, print=false)
 	    difference() {
 	      union() {
 		cylinder(r=radius,h=thickness);
-		translate([0,radius/2,thickness/2]) {
-		  cube([radius*2,radius,thickness], center=true);
-		  translate([0,thickness/2+radius/2,thickness/2-(delta+thickness)/2]) {
+		translate([0,firstPart/2,thickness/2]) {
+		  cube([radius*2,firstPart,thickness], center=true);
+		  translate([0,thickness/2+firstPart/2,thickness/2-(delta+thickness)/2]) {
 		     cube([radius*2,thickness,delta+thickness], center=true);
 		     translate([0,lastD/2,-delta/2]) {
 		       difference() {
@@ -45,7 +45,7 @@ module arm_side(distance=40, radius=12, thickness=2.2, print=false)
 
 /*
 distance=42;
-arm_side(radius=13,distance=distance);
+arm_side(firstPart=15);
 
 motorArm();
 translate([0,distance,0])

@@ -2,7 +2,7 @@ include <../../metabot.scad>;
 use <../models/ollo.scad>;
 use <../util/screws.scad>;
 
-module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.6, screwsCount=8, screws=true, olloScrew=false, thicknessSize=15, print=false) {
+module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.6, screwsCount=8, screws=true, olloArm=false, armAngle=0, thicknessSize=15, print=false) {
     metabot_part("u");
     metabot_parameter("height", height);
     metabot_parameter("radius", radius);
@@ -11,7 +11,8 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
     metabot_parameter("screwsDiameter", screwsDiameter);
     metabot_parameter("screwsCount", screwsCount);
     metabot_parameter("screws", screws);
-    metabot_parameter("olloScrew", olloScrew);
+    metabot_parameter("olloArm", olloArm);
+    metabot_parameter("armAngle", armAngle);
     metabot_parameter("thicknessSize", thicknessSize);
     metabot_parameter("print", true);
 
@@ -54,7 +55,7 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
     }
 
     module UOllo() {
-	rotate(-90, [1,0,0])
+	rotate([-90,armAngle,0])
 		servoArm(2*height);
     }
 
@@ -62,7 +63,7 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
         translate([0,0,10])
             rotate([0,90,0])
             u(height,radius,thickness,screwsSpacing,screwsDiameter,
-                screws,olloScrew,thicknessSize,false);
+                screws,olloArm,armAngle,thicknessSize,false);
     } else {
         difference() {
             translate([0,0,-thicknessSize-thickness]) {
@@ -73,11 +74,11 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
             if (screws) {
                 UScrews();
             }
-            if (olloScrew) {
+            if (olloArm) {
                 UOllo();
             }
         }
     }
 }
 
-u();
+u(olloArm=true, screws=false, armAngle=10);
