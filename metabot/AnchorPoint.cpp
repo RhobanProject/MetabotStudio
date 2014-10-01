@@ -36,13 +36,9 @@ namespace Metabot
 
     bool AnchorPoint::isCompatible(AnchorPoint *anchor)
     {
-        if (anchor == NULL) {
-            return type == "root";
-        } else {
-            if (type == anchor->type) {
-                return (male && anchor->female)
-                    || (female && anchor->male);
-            }
+        if (anchor != NULL && type == anchor->type) {
+            return (male && anchor->female)
+                || (female && anchor->male);
         }
 
         return false;

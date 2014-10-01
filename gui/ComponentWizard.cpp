@@ -63,7 +63,7 @@ void ComponentWizard::fill()
         Metabot::ComponentInstance *instance = component->instanciate();
         instance->compile();
 
-        if (instance->isCompatible(anchor)) {
+        if (anchor == NULL || instance->isCompatible(anchor)) {
             QListWidgetItem *item = new QListWidgetItem();
             item->setData(ROLE_COMPONENT, QString::fromStdString((*it).first));
             ComponentItem *widget = new ComponentItem();
@@ -94,7 +94,7 @@ void ComponentWizard::setupInstance()
     QRadioButton *first = NULL;
     for (it=instance->anchors.begin(); it!=instance->anchors.end(); it++) {
         Metabot::AnchorPoint *anchorPoint = *it;
-        if (anchorPoint->isCompatible(anchor)) {
+        if (anchor != NULL && anchorPoint->isCompatible(anchor)) {
             QString label = QString("%1").arg(anchorPoint->id);
             QRadioButton *btn = new QRadioButton();
             if (first == NULL) {
@@ -109,6 +109,10 @@ void ComponentWizard::setupInstance()
     if (first != NULL) {
         first->setChecked(true);
         setAnchor(buttonToAnchor[first]);
+    }
+    if (anchor == NULL) {
+        robot->root = instance;
+        viewer->updateRatio();
     }
     if (buttonToAnchor.size() <= 1) {
         ui->anchor->hide();
