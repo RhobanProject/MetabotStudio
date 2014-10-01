@@ -13,6 +13,8 @@ namespace Metabot
     {
         public:
             ModelRef(Json::Value json, TransformMatrix matrix);
+            ModelRef(std::string name_, float r, float g, float b, TransformMatrix matrix);
+            ModelRef *clone();
 
             std::string name;
             TransformMatrix matrix;

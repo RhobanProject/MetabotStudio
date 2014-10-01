@@ -8,4 +8,9 @@ namespace Metabot
     {
         // std::cout << "Part: " << name << ", " << params << std::endl;
     }
+            
+    Part *Part::clone()
+    {
+        return new Part(name, params);
+    }
 }

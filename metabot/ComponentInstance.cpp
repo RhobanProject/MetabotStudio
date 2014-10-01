@@ -40,13 +40,39 @@ namespace Metabot
         }
     }
 
+    ComponentInstance *ComponentInstance::clone()
+    {
+        ComponentInstance *instance = new ComponentInstance(component);
+        instance->myModel = myModel;
+
+        for (auto model : models) {
+            instance->models.push_back(model->clone());
+        }
+        for (auto anchor : anchors) {
+            AnchorPoint *anchorPoint = anchor->clone();
+            anchorPoint->instance = instance;
+            instance->anchors.push_back(anchorPoint);
+
+            AnchorPoint *remote = anchor->anchor;
+            if (anchor->above && remote != NULL) {
+                ComponentInstance *child = remote->instance->clone();
+                anchorPoint->attach(child->anchors[remote->id]);
+            }
+        }
+        for (auto part : parts) {
+            instance->parts.push_back(part->clone());
+        }
+
+        return instance;
+    }
+
     std::string ComponentInstance::fullName()
     {
         std::stringstream ss;
         ss << component->name << " #" << id;
         return ss.str();
     }
-            
+
     bool ComponentInstance::isCompatible(AnchorPoint *anchor)
     {
         for (auto my : anchors) {
@@ -57,7 +83,7 @@ namespace Metabot
 
         return false;
     }
-            
+
 #ifdef OPENGL
     void ComponentInstance::openGLDraw(bool highlight)
     {
@@ -77,9 +103,15 @@ namespace Metabot
             glPushMatrix();
             ref->matrix.openGLMult();
             Model model = component->backend->getModel(ref->name);
-            model.r = ref->r;
-            model.g = ref->g;
-            model.b = ref->b;
+            if (highlight) {
+                model.r = 0.4;
+                model.g = 1.0;
+                model.b = 0.3;
+            } else {
+                model.r = ref->r;
+                model.g = ref->g;
+                model.b = ref->b;
+            }
             model.openGLDraw();
             glPopMatrix();
         }
@@ -94,7 +126,7 @@ namespace Metabot
         }
     }
 #endif
-            
+
     void ComponentInstance::unHighlight()
     {
         for (auto anchor : anchors) {
@@ -107,7 +139,8 @@ namespace Metabot
 
     Model ComponentInstance::toModel()
     {
-        Model model = myModel;
+        Model model;
+        model = myModel;
 
         // Rendering models
         for (auto ref : models) {
@@ -126,7 +159,7 @@ namespace Metabot
 
         return model;
     }
-            
+
     std::string ComponentInstance::get(std::string name)
     {
         return values[name];
@@ -159,7 +192,7 @@ namespace Metabot
         parts = document->parts;
         models = document->models;
 
-        int index = 1;
+        int index = 0;
         for (auto anchor : anchors) {
             anchor->instance = this;
             anchor->id = index;
@@ -180,7 +213,7 @@ namespace Metabot
                     myAnchor->anchor = otherAnchor->anchor;
                     myAnchor->anchor->anchor = myAnchor;
                     myAnchor->above = otherAnchor->above;
-                    
+
                     if (detach) {
                         otherAnchor->detach(false);
                     }
@@ -188,7 +221,7 @@ namespace Metabot
             }
         }
     }
-            
+
     void ComponentInstance::detachDiffAnchors(ComponentInstance *other)
     {
         std::map<AnchorPoint *, bool> otherAnchors;
@@ -205,7 +238,7 @@ namespace Metabot
             }
         }
     }
-            
+
     void ComponentInstance::restore()
     {
         for (auto anchor : anchors) {
@@ -221,7 +254,7 @@ namespace Metabot
             anchor->detach(false);
         }
     }
-            
+
     std::string ComponentInstance::getValue(std::string name)
     {
         if (values.count(name)) {
@@ -256,7 +289,7 @@ namespace Metabot
 
         return json;
     }
-            
+
     AnchorPoint *ComponentInstance::getAnchor(int id)
     {
         for (auto anchor : anchors) {
@@ -267,14 +300,14 @@ namespace Metabot
 
         return NULL;
     }
-            
+
     void ComponentInstance::parametersFromJson(Json::Value json)
     {
         for (auto name : json.getMemberNames()) {
             values[name] = json[name].asString();
         }
     }
-            
+
     Json::Value ComponentInstance::toJson()
     {
         Json::Value json(Json::objectValue);
@@ -297,7 +330,7 @@ namespace Metabot
 
         return json;
     }
-            
+
     void ComponentInstance::foreach(std::function<void(ComponentInstance *instance)> method)
     {
         method(this);
@@ -308,7 +341,7 @@ namespace Metabot
             }
         }
     }
-            
+
     void ComponentInstance::foreachAnchor(std::function<void(AnchorPoint *instance)> method)
     {
         for (auto anchor : anchors) {

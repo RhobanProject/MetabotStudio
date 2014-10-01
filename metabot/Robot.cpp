@@ -18,6 +18,13 @@ namespace Metabot
     {
         clear();
     }
+            
+    Robot *Robot::clone()
+    {
+        Robot *robot = new Robot(backend);
+        robot->root = root->clone();
+        return robot;
+    }
 
     void Robot::clear()
     {

@@ -20,6 +20,7 @@ namespace Metabot
         public:
             ComponentInstance(Component *component);
             virtual ~ComponentInstance();
+            ComponentInstance *clone();
 
             Model toModel();
             bool isCompatible(AnchorPoint *anchor);

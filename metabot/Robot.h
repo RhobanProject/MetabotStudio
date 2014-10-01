@@ -20,6 +20,8 @@ namespace Metabot
             void compile();
             Model toModel();
 
+            Robot *clone();
+
             void clear();
             void loadFromFile(std::string filename);
             void saveToFile(std::string filename);

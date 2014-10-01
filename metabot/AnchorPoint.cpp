@@ -20,6 +20,11 @@ namespace Metabot
         highlight = false;
 #endif
     }
+            
+    AnchorPoint::AnchorPoint(std::string type_, bool male_, bool female_, TransformMatrix matrix_)
+        : type(type_), male(male_), female(female_), matrix(matrix_)
+    {
+    }
 
     AnchorPoint::~AnchorPoint()
     {
@@ -32,6 +37,14 @@ namespace Metabot
             }
             delete anchor;
         }
+    }
+            
+    AnchorPoint *AnchorPoint::clone()
+    {
+        AnchorPoint *anchorPoint = new AnchorPoint(type, male, female, matrix);
+        anchorPoint->above = above;
+
+        return anchorPoint;
     }
 
     bool AnchorPoint::isCompatible(AnchorPoint *anchor)
@@ -75,6 +88,7 @@ namespace Metabot
                 delete anchor;
             }
             anchor = NULL;
+            above = true;
         }
     }
 

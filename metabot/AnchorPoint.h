@@ -13,7 +13,9 @@ namespace Metabot
     {
         public:
             AnchorPoint(Json::Value json, TransformMatrix matrix);
+            AnchorPoint(std::string type, bool male, bool female, TransformMatrix matrix);
             virtual ~AnchorPoint();
+            AnchorPoint *clone();
             
             bool isCompatible(AnchorPoint *anchor);
             void attach(AnchorPoint *anchor, bool above=true);

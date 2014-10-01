@@ -20,16 +20,16 @@ int main()
         backend.buildCache();
 
         // Making a robot
-        Robot robot(&backend);
-        robot.root = backend.getComponent("body")->instanciate();
-        robot.root->set("Size", "35");
-        robot.root->set("Legs", "4");
-        robot.root->compile();
+        Robot *robot = new Robot(&backend);
+        robot->root = backend.getComponent("body")->instanciate();
+        robot->root->set("Size", "35");
+        robot->root->set("Legs", "4");
+        robot->root->compile();
 
         for (int i=0; i<4; i++) {
             ComponentInstance *double_u = backend.getComponent("double_u")->instanciate();
             double_u->compile();
-            robot.root->anchors[1+i]->attach(double_u->anchors[0]);
+            robot->root->anchors[i]->attach(double_u->anchors[0]);
 
             ComponentInstance *side = backend.getComponent("side_to_side")->instanciate();
             side->compile();
@@ -45,8 +45,11 @@ int main()
         }
        
         // Getting 3D model
-        Model model = robot.toModel();
+        Robot *spider = robot->clone();
+        delete robot;
+        Model model = spider->toModel();
         saveModelToFileBinary("/tmp/demo.stl", &model);
+        delete spider;
 
     } catch (string error) {
         cerr << "[ERROR] " << error << endl;

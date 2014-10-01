@@ -17,4 +17,14 @@ namespace Metabot
             }
         }
     }
+    
+    ModelRef::ModelRef(std::string name_, float r_, float g_, float b_, TransformMatrix matrix_)
+        : name(name_), r(r_), g(g_), b(b_), matrix(matrix_)
+    {
+    }
+            
+    ModelRef *ModelRef::clone()
+    {
+        return new ModelRef(name, r, g, b, matrix);
+    }
 }
