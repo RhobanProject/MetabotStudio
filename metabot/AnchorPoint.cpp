@@ -49,10 +49,13 @@ namespace Metabot
             
     void AnchorPoint::revert()
     {
-        if (anchor->anchor) {
-            anchor->anchor->instance->root();
+        if (anchor) {
+            anchor->instance->root();
             above = true;
             anchor->above = false;
+            float tmp = anchor->zero;
+            anchor->zero = zero;
+            zero = tmp;
         }
     }
 

@@ -185,6 +185,7 @@ void MainWindow::on_contextmenu_request(QPoint pt)
         } else {
             menu.addAction(&editComponent);
             menu.addAction(&removeComponent);
+            menu.addAction(&rootComponent);
         }
         contextmenu_item = item;
         menu.exec(pos2);
@@ -241,8 +242,9 @@ void MainWindow::on_contextmenu_remove()
 void MainWindow::on_contextmenu_root()
 {
     Metabot::AnchorPoint *anchor = items[contextmenu_item];
-    if (anchor->instance) {
-        robot->setRoot(anchor->instance);
+    if (anchor->anchor && anchor->anchor->instance) {
+        robot->setRoot(anchor->anchor->instance);
+        drawTree();
     }
 }
 
