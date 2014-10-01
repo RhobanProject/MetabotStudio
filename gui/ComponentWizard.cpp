@@ -227,6 +227,8 @@ void ComponentWizard::on_generate_clicked()
 
 void ComponentWizard::cancel()
 {
+    isOk = true;
+
     if (anchor != NULL) {
         if (currentAnchor != previousAnchor) {
             anchor->detach(false);
