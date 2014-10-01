@@ -1,5 +1,6 @@
 include <../../metabot.scad>;
 use <../models/ollo.scad>;
+use <../util/screws.scad>;
 
 $fn=16;
 
@@ -49,11 +50,9 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
     }
 
     module UScrews() {
-	for (screw=[1:screwsCount]) {
-	    rotate([270,screw*360/screwsCount,0])
-	        translate([screwsSpacing/2,0,0])
-		        cylinder(d=screwsDiameter, h=100);
-        }
+	rotate([270,0,0]) {
+	  screws(screwsCount, screwsSpacing, screwsDiameter);
+	}
     }
 
     module UOllo() {
