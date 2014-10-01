@@ -21,8 +21,8 @@ namespace Metabot
 #endif
     }
             
-    AnchorPoint::AnchorPoint(std::string type_, bool male_, bool female_, TransformMatrix matrix_)
-        : type(type_), male(male_), female(female_), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0)
+    AnchorPoint::AnchorPoint(std::string type_, bool male_, bool female_, TransformMatrix matrix_, float zero_)
+        : type(type_), male(male_), female(female_), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(zero_)
     {
     }
 
@@ -41,7 +41,7 @@ namespace Metabot
             
     AnchorPoint *AnchorPoint::clone()
     {
-        AnchorPoint *anchorPoint = new AnchorPoint(type, male, female, matrix);
+        AnchorPoint *anchorPoint = new AnchorPoint(type, male, female, matrix, zero);
         anchorPoint->above = above;
 
         return anchorPoint;

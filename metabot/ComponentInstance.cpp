@@ -44,13 +44,16 @@ namespace Metabot
     {
         ComponentInstance *instance = new ComponentInstance(component);
         instance->myModel = myModel;
+        instance->values = values;
 
         for (auto model : models) {
             instance->models.push_back(model->clone());
         }
+        int index = 0;
         for (auto anchor : anchors) {
             AnchorPoint *anchorPoint = anchor->clone();
             anchorPoint->instance = instance;
+            anchorPoint->id = index++;
             instance->anchors.push_back(anchorPoint);
 
             AnchorPoint *remote = anchor->anchor;
