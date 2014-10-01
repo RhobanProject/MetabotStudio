@@ -21,7 +21,7 @@
 namespace Metabot
 {
     ComponentInstance::ComponentInstance(Component *component_)
-        : component(component_)
+        : component(component_), highlight(false)
     {
     }
 
@@ -97,7 +97,7 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void ComponentInstance::openGLDraw(bool highlight)
+    void ComponentInstance::openGLDraw()
     {
         if (highlight) {
             myModel.r = 0.4;
@@ -141,6 +141,7 @@ namespace Metabot
 
     void ComponentInstance::unHighlight()
     {
+        highlight = false;
         for (auto anchor : anchors) {
             anchor->highlight = false;
             if (anchor->anchor != NULL && anchor->above) {

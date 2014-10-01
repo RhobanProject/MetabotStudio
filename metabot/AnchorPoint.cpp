@@ -134,7 +134,7 @@ namespace Metabot
                 anchor->openGLDraw();
             } else {
                 matrix.invert().openGLMult();
-                instance->openGLDraw(anchor->highlight);
+                instance->openGLDraw();
             }
         } else {
             if (above && highlight) {

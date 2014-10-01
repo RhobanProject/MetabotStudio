@@ -41,7 +41,7 @@ private slots:
     void on_wizard_clicked();
 
     void on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column);
-    void on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*);
+    void on_tree_itemSelectionChanged();
     void on_tree_itemDeselected();
 
     void on_contextmenu_request(QPoint pt);

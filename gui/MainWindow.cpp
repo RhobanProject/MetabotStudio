@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&editComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_edit()));
     QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
     QObject::connect(&rootComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_root()));
-    QObject::connect(ui->tree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(on_tree_itemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
+    QObject::connect(ui->tree, SIGNAL(itemSelectionChanged()), this, SLOT(on_tree_itemSelectionChanged()));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
     drawTree();
 
@@ -118,6 +118,7 @@ void MainWindow::drawTree()
 
     robot->unHighlight();
     viewer->updatePlate();
+    ui->tree->clearSelection();
 }
 
 void MainWindow::on_wizard_clicked()
@@ -155,14 +156,23 @@ void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
     ui->tree->blockSignals(false);
 }
 
-void MainWindow::on_tree_itemSelected(QTreeWidgetItem *item, QTreeWidgetItem *)
+void MainWindow::on_tree_itemSelectionChanged()
 {
     robot->unHighlight();
-    if (item != NULL && items.count(item)) {
-        Metabot::AnchorPoint *anchor = items[item];
+    auto selectedItems = ui->tree->selectedItems();
+    if (selectedItems.count() == 1) {
+        QTreeWidgetItem *item = selectedItems.first();
+        if (item != NULL && items.count(item)) {
+            Metabot::AnchorPoint *anchor = items[item];
 
-        if (anchor != NULL) {
-           anchor->highlight = true;
+            if (anchor != NULL) {
+                anchor->highlight = true;
+                if (anchor->anchor) {
+                    anchor->anchor->instance->highlight = true;
+                }
+            } else {
+                robot->root->highlight = true;
+            }
         }
     }
 }

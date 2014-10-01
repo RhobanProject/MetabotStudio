@@ -43,8 +43,9 @@ namespace Metabot
             
 			void unHighlight();
 #ifdef OPENGL
-            void openGLDraw(bool highlight = false);
+            void openGLDraw();
 #endif
+            bool highlight;
     
             // Merge the anchors from another entity
             // If detach is true, anchor will be detached from the other objects, and thus
