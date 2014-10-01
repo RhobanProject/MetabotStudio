@@ -2,13 +2,13 @@
    "backend" : "xl-320",
    "tree" : {
       "anchors" : {
-         "2" : {
+         "0" : {
             "component" : {
                "anchors" : {
-                  "2" : {
+                  "1" : {
                      "component" : {
                         "anchors" : {
-                           "2" : {
+                           "1" : {
                               "component" : {
                                  "anchors" : {},
                                  "component" : "arm_leg",
@@ -20,8 +20,8 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "remote" : 1,
-                              "zero" : -1.780235886573792
+                              "remote" : 0,
+                              "zero" : -2.054252624511719
                            }
                         },
                         "component" : "side_to_side",
@@ -31,8 +31,104 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "remote" : 1,
-                     "zero" : 0.5602506995201111
+                     "remote" : 0,
+                     "zero" : 0.6126105785369873
+                  }
+               },
+               "component" : "double_u",
+               "parameters" : {
+                  "Angle" : "90",
+                  "Height" : "15",
+                  "Radius" : "8",
+                  "Screws" : "true",
+                  "ScrewsCount" : "8",
+                  "ScrewsDiameter" : "2.6",
+                  "ScrewsSpacing" : "14",
+                  "Thickness" : "2.2"
+               }
+            },
+            "remote" : 0,
+            "zero" : 0.01919862255454063
+         },
+         "1" : {
+            "component" : {
+               "anchors" : {
+                  "1" : {
+                     "component" : {
+                        "anchors" : {
+                           "1" : {
+                              "component" : {
+                                 "anchors" : {},
+                                 "component" : "arm_leg",
+                                 "parameters" : {
+                                    "SizeA" : "60",
+                                    "SizeB" : "20",
+                                    "SizeC" : "20",
+                                    "SizeTop" : "15",
+                                    "Thickness" : "2.2"
+                                 }
+                              },
+                              "remote" : 0,
+                              "zero" : -2.035053968429565
+                           }
+                        },
+                        "component" : "side_to_side",
+                        "parameters" : {
+                           "HolesToBorder" : "5",
+                           "Size" : "40",
+                           "Thickness" : "2.2"
+                        }
+                     },
+                     "remote" : 0,
+                     "zero" : 0.6527531147003174
+                  }
+               },
+               "component" : "double_u",
+               "parameters" : {
+                  "Angle" : "90",
+                  "Height" : "15",
+                  "Radius" : "8",
+                  "Screws" : "true",
+                  "ScrewsCount" : "8",
+                  "ScrewsDiameter" : "2.6",
+                  "ScrewsSpacing" : "14",
+                  "Thickness" : "2.2"
+               }
+            },
+            "remote" : 0,
+            "zero" : 0.0
+         },
+         "2" : {
+            "component" : {
+               "anchors" : {
+                  "0" : {
+                     "component" : {
+                        "anchors" : {
+                           "1" : {
+                              "component" : {
+                                 "anchors" : {},
+                                 "component" : "arm_leg",
+                                 "parameters" : {
+                                    "SizeA" : "60",
+                                    "SizeB" : "20",
+                                    "SizeC" : "20",
+                                    "SizeTop" : "15",
+                                    "Thickness" : "2.2"
+                                 }
+                              },
+                              "remote" : 0,
+                              "zero" : -2.015855312347412
+                           }
+                        },
+                        "component" : "side_to_side",
+                        "parameters" : {
+                           "HolesToBorder" : "5",
+                           "Size" : "40",
+                           "Thickness" : "2.2"
+                        }
+                     },
+                     "remote" : 0,
+                     "zero" : 0.6318091750144958
                   }
                },
                "component" : "double_u",
@@ -53,10 +149,10 @@
          "3" : {
             "component" : {
                "anchors" : {
-                  "2" : {
+                  "0" : {
                      "component" : {
                         "anchors" : {
-                           "2" : {
+                           "1" : {
                               "component" : {
                                  "anchors" : {},
                                  "component" : "arm_leg",
@@ -68,8 +164,8 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "remote" : 1,
-                              "zero" : -1.801179766654968
+                              "remote" : 0,
+                              "zero" : -2.035053968429565
                            }
                         },
                         "component" : "side_to_side",
@@ -79,104 +175,8 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "remote" : 1,
-                     "zero" : 0.6195918917655945
-                  }
-               },
-               "component" : "double_u",
-               "parameters" : {
-                  "Angle" : "90",
-                  "Height" : "15",
-                  "Radius" : "8",
-                  "Screws" : "true",
-                  "ScrewsCount" : "8",
-                  "ScrewsDiameter" : "2.6",
-                  "ScrewsSpacing" : "10",
-                  "Thickness" : "2.2"
-               }
-            },
-            "remote" : 1,
-            "zero" : 0.0
-         },
-         "4" : {
-            "component" : {
-               "anchors" : {
-                  "2" : {
-                     "component" : {
-                        "anchors" : {
-                           "2" : {
-                              "component" : {
-                                 "anchors" : {},
-                                 "component" : "arm_leg",
-                                 "parameters" : {
-                                    "SizeA" : "60",
-                                    "SizeB" : "20",
-                                    "SizeC" : "20",
-                                    "SizeTop" : "15",
-                                    "Thickness" : "2.2"
-                                 }
-                              },
-                              "remote" : 1,
-                              "zero" : -1.820378422737122
-                           }
-                        },
-                        "component" : "side_to_side",
-                        "parameters" : {
-                           "HolesToBorder" : "5",
-                           "Size" : "40",
-                           "Thickness" : "2.2"
-                        }
-                     },
-                     "remote" : 1,
-                     "zero" : 0.6405358314514160
-                  }
-               },
-               "component" : "double_u",
-               "parameters" : {
-                  "Angle" : "90",
-                  "Height" : "15",
-                  "Radius" : "8",
-                  "Screws" : "true",
-                  "ScrewsCount" : "8",
-                  "ScrewsDiameter" : "2.6",
-                  "ScrewsSpacing" : "10",
-                  "Thickness" : "2.2"
-               }
-            },
-            "remote" : 1,
-            "zero" : 0.0
-         },
-         "5" : {
-            "component" : {
-               "anchors" : {
-                  "2" : {
-                     "component" : {
-                        "anchors" : {
-                           "2" : {
-                              "component" : {
-                                 "anchors" : {},
-                                 "component" : "arm_leg",
-                                 "parameters" : {
-                                    "SizeA" : "60",
-                                    "SizeB" : "20",
-                                    "SizeC" : "20",
-                                    "SizeTop" : "15",
-                                    "Thickness" : "2.2"
-                                 }
-                              },
-                              "remote" : 1,
-                              "zero" : -1.780235886573792
-                           }
-                        },
-                        "component" : "side_to_side",
-                        "parameters" : {
-                           "HolesToBorder" : "5",
-                           "Size" : "40",
-                           "Thickness" : "2.2"
-                        }
-                     },
-                     "remote" : 1,
-                     "zero" : 0.6195918917655945
+                     "remote" : 0,
+                     "zero" : 0.5724679827690125
                   }
                },
                "component" : "double_u",
