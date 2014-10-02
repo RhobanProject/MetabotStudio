@@ -11,7 +11,7 @@ namespace Metabot
             Cache();
             void setDirectory(std::string directory);
 
-            std::string get(std::string key, std::function<std::string(void)> generate);
+            std::string get(std::string key, std::function<std::string(void)> generate, std::string older="");
 
             std::string directory;
     };

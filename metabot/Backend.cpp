@@ -104,7 +104,7 @@ namespace Metabot
         if (cache != NULL) {
             return cache->get(key, [this, format, filename, parameters]() {
                 return this->doOpenscad(filename, format, parameters);
-            });
+            }, filename);
         } else {
             return doOpenscad(filename, format);
         }

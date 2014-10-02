@@ -154,3 +154,13 @@ std::vector<std::string> get_directory_listing(std::string path)
 
     return listing;
 }
+
+int filemtime(std::string path)
+{
+    struct stat fstat;
+    if (stat(path.c_str(), &fstat) == 0) {
+        return fstat.st_mtime;
+    }
+
+    return 0;
+}

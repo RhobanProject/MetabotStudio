@@ -30,3 +30,4 @@ std::vector<std::string> get_directory_listing(std::string path);
 void makedir(std::string path);
 void file_put_contents(std::string path, std::string contents);
 std::string file_get_contents(std::string path);
+int filemtime(std::string path);

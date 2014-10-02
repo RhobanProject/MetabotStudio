@@ -16,15 +16,15 @@ namespace Metabot
         }
     }
 
-    std::string Cache::get(std::string key, std::function<std::string(void)> generate)
+    std::string Cache::get(std::string key, std::function<std::string(void)> generate, std::string older)
     {
         std::string filename = directory + "/" + key;
 
-        if (!file_exists(filename)) {
+        if (!file_exists(filename) || older=="" || filemtime(filename) < filemtime(older)) {
             std::string data = generate();
             file_put_contents(filename, data);
         }
-        
+ 
         return file_get_contents(filename);
     }
 }
