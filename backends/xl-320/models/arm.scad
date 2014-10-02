@@ -1,13 +1,17 @@
 include <ollo.scad>;
 
-module arm(black=false) {
-    c=black?[0.3,0.3,0.3]:[0.6,0.6,0.6];
+module arm(pulley=false) {
+    c=pulley?[0.6,0.6,0.6]:[0.3,0.3,0.3];
     color(c) {
         difference() {
             cylinder(d=20, h=OlloWidth);
             servoArm(OlloWidth);
         }
     }
+}
+
+module pulley() {
+    arm(true);
 }
 
 arm();

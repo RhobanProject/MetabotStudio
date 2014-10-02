@@ -16,10 +16,10 @@ module motorArm(counterArm=true) {
     } else {
         motor();
         translate([0,0,MotorDepth/2])
-            arm(true);
+            arm();
         if (counterArm) {
             translate([0,0,-MotorDepth/2-OlloWidth])
-                arm();
+                pulley();
         }
     } 
 }
