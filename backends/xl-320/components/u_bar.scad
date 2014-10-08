@@ -4,6 +4,8 @@ use <../../metabot.scad>;
 use <../parts/u.scad>;
 use <../parts/bar.scad>;
 
+$fn=25;
+
 // Parameter Bar length
 BarLength = 60;
 // Parameter Bar radius
@@ -34,5 +36,7 @@ translate([0, UHeight+URadius, 0]) {
 		screwsSpacing=ScrewsSpacing, screwsDiameter=ScrewsDiameter,
  screwsCount=ScrewsCount, thickness=Thickness
 		);
+		translate([0,0,Thickness+BarLength])
+		sphere(r=BarRadius);
 	}
 }
