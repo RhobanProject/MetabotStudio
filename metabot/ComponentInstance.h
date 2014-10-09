@@ -25,6 +25,7 @@ namespace Metabot
             void root();
 
             Model toModel();
+            AnchorPoint *findCompatible(AnchorPoint *anchor);
             bool isCompatible(AnchorPoint *anchor);
 
             std::string fullName();
@@ -62,12 +63,12 @@ namespace Metabot
             // Accessing parameter values
             std::string get(std::string name);
             void set(std::string name, std::string value);
+            
+            AnchorPoint *getAnchor(int id);
 
             std::map<std::string, std::string> values;
             Component *component;
-
-            AnchorPoint *getAnchor(int id);
-            
+ 
             std::vector<AnchorPoint *> anchors;
             std::vector<Part *> parts;
             std::vector<ModelRef *> models;

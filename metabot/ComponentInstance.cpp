@@ -85,15 +85,20 @@ namespace Metabot
         return ss.str();
     }
 
-    bool ComponentInstance::isCompatible(AnchorPoint *anchor)
+    AnchorPoint *ComponentInstance::findCompatible(AnchorPoint *anchor)
     {
         for (auto my : anchors) {
-            if (my->isCompatible(anchor)) {
-                return true;
+            if (my->isCompatible(anchor) && my->anchor==NULL) {
+                return my;
             }
         }
 
-        return false;
+        return NULL;
+    }
+
+    bool ComponentInstance::isCompatible(AnchorPoint *anchor)
+    {
+        return findCompatible(anchor) != NULL;
     }
 
 #ifdef OPENGL
@@ -217,14 +222,34 @@ namespace Metabot
 
     void ComponentInstance::moveAnchors(ComponentInstance *other)
     {
+        // First step:
+        // Trying to take the items that matches *exactly* the anchor from the
+        // old component
         for (unsigned int i=0; i<anchors.size(); i++) {
             if (i < other->anchors.size()) {
                 AnchorPoint *myAnchor = anchors[i];
                 AnchorPoint *otherAnchor = other->anchors[i];
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
+                    std::cout << "Taking other anchor!" << std::endl;
                     myAnchor->attach(otherAnchor->anchor);
                     otherAnchor->detach(false);
+                }
+            }
+        }
+
+        // Second step:
+        // Trying to get the anchors 
+        for (auto anchor : other->anchors) {
+            AnchorPoint *remote = anchor->anchor;
+            std::cout << "Other anchor, remote=" << remote << std::endl;
+            if (remote != NULL) {
+                AnchorPoint *candidate = findCompatible(remote);
+                std::cout << "* Old anchor, candidate=" << candidate << std::endl;
+
+                if (candidate != NULL) {
+                    candidate->attach(remote);
+                    anchor->detach(false);
                 }
             }
         }

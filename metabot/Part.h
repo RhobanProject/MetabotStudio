@@ -10,6 +10,9 @@ namespace Metabot
             Part(std::string name, std::string params);
             Part *clone();
 
+            std::string hash();
+
+            int quantity;
             std::string name, params;
     };
 }

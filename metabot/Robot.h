@@ -20,6 +20,8 @@ namespace Metabot
             void compile();
             Model toModel();
 
+            void build(std::string directory);
+
             Robot *clone();
             void setRoot(ComponentInstance *root);
 

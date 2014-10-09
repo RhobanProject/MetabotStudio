@@ -1,3 +1,5 @@
+#include <map>
+#include <vector>
 #include <sstream>
 #include <iostream>
 #include <json/json.h>
@@ -5,6 +7,7 @@
 #include "Robot.h"
 #include "AnchorPoint.h"
 #include "ComponentInstance.h"
+#include "Part.h"
 #include "util.h"
 
 namespace Metabot
@@ -17,6 +20,33 @@ namespace Metabot
     Robot::~Robot()
     {
         clear();
+    }
+            
+    void Robot::build(std::string directory)
+    {
+        if (!is_directory(directory)) {
+            makedir(directory);
+        }
+
+        std::map<std::string, std::vector<Part*> > allParts;
+        foreach([&allParts](ComponentInstance *instance) {
+            for (auto part : instance->parts) {
+                allParts[part->hash()].push_back(part);
+            }
+        });
+        std::map<std::string, std::vector<Part*> > parts;
+        for (auto sameParts : allParts) {
+            Part *part = sameParts.second.front();
+            part->quantity = sameParts.second.size();
+
+            parts[part->name].push_back(part);
+        }
+        for (auto part : parts) {
+            std::cout << part.first << ": " << std::endl;
+            for (auto spart : part.second) {
+                std::cout << spart->params << " quantity:"<< spart->quantity << std::endl;
+            }
+        }
     }
             
     Robot *Robot::clone()

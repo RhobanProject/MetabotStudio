@@ -96,14 +96,16 @@ void ComponentWizard::setupInstance()
         buttonToAnchor.clear();
 
         QRadioButton *first = NULL;
+        bool firstBusy = false;
         QRadioButton *previous = NULL;
 
         for (auto anchorPoint : instance->anchors) {
             if (anchor != NULL && anchorPoint->isCompatible(anchor)) {
                 QString label = QString("%1").arg(anchorPoint->id);
                 QRadioButton *btn = new QRadioButton();
-                if (first == NULL) {
+                if (first == NULL || firstBusy) {
                     first = btn;
+                    firstBusy = anchorPoint->anchor != NULL;
                 }
                 if (anchorPoint == previousAnchor) {
                     previous = btn;
@@ -169,19 +171,23 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
     QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
 
     if (items.size() == 1) {
+        auto oldInstance = instance;
         QListWidgetItem *item = items[0];
         QString data = item->data(ROLE_COMPONENT).toString();
 
         if (anchor != NULL) {
             anchor->detach(false);
         }
-        if (instance != NULL) {
-            delete instance;
-        }
 
         // Create the instance
         instance = robot->backend->getComponent(data.toStdString())->instanciate();
         instance->compile();
+
+        if (oldInstance != NULL) {
+            instance->moveAnchors(oldInstance);
+            delete oldInstance;
+        }
+
         setupInstance();
     }
 }
@@ -189,6 +195,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
 void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
 {
     currentAnchor = newAnchor;
+
     if (anchor == NULL) {
         if (currentAnchor != NULL) {
             robot->root = currentAnchor->instance;
@@ -197,11 +204,31 @@ void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
             robot->root = NULL;
         }
     } else {
+        Metabot::AnchorPoint *orphan = NULL;
+
+        orphan = newAnchor->anchor;
+        if (orphan != NULL) {
+            if (orphan == anchor) {
+                orphan = NULL;
+            } else {
+                orphan->detach(false);
+            }
+        }
+
         if (anchor->anchor != NULL) {
             anchor->anchor->detach(false);
             anchor->detach(false);
         }
         anchor->attach(currentAnchor);
+
+        if (orphan != NULL) {
+            auto candidate = instance->findCompatible(orphan);
+            if (candidate) {
+                candidate->attach(orphan);
+            } else {
+                delete orphan;
+            }
+        }
     }
 }
 

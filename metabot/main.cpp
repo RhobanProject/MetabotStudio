@@ -50,8 +50,11 @@ int main()
         robot->loadFromFile("/home/gregwar/Metabot/robots/spidey12.robot");
        
         // Getting 3D model
-        Model model = robot->toModel();
-        saveModelToFileBinary("/tmp/demo.stl", &model);
+        // Model model = robot->toModel();
+        // saveModelToFileBinary("/tmp/demo.stl", &model);
+        
+        // Running the build
+        robot->build("/tmp/metabot");
 
     } catch (string error) {
         cerr << "[ERROR] " << error << endl;
