@@ -231,7 +231,6 @@ namespace Metabot
                 AnchorPoint *otherAnchor = other->anchors[i];
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
-                    std::cout << "Taking other anchor!" << std::endl;
                     myAnchor->attach(otherAnchor->anchor);
                     otherAnchor->detach(false);
                 }
@@ -242,10 +241,8 @@ namespace Metabot
         // Trying to get the anchors 
         for (auto anchor : other->anchors) {
             AnchorPoint *remote = anchor->anchor;
-            std::cout << "Other anchor, remote=" << remote << std::endl;
             if (remote != NULL) {
                 AnchorPoint *candidate = findCompatible(remote);
-                std::cout << "* Old anchor, candidate=" << candidate << std::endl;
 
                 if (candidate != NULL) {
                     candidate->attach(remote);
