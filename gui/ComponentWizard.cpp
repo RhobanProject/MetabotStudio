@@ -161,9 +161,6 @@ void ComponentWizard::setupInstance()
 
     ui->ok->setEnabled(true);
     ui->generate->show();
-
-    ui->centralWidget->adjustSize();
-    adjustSize();
 }
 
 void ComponentWizard::on_listWidget_itemSelectionChanged()

@@ -36,8 +36,13 @@ public:
     float plateZ;
     bool drawGrid, drawXYZ;
 
+    void setAutorotate(bool value);
+
 public slots:
     virtual void timeOutSlot();
+
+signals:
+    void autorotate_changed(bool value);
 
 private:
     bool autorotate;

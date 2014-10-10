@@ -37,6 +37,7 @@ public slots:
     void on_wizard_cancel();
 
 private slots:
+    void on_viewer_autorotate_change(bool value);
 
     void on_wizard_clicked();
 
@@ -61,6 +62,8 @@ private slots:
     void on_actionReset_view_triggered();
     void on_actionGrid_toggled(bool arg1);
     void on_actionXYZ_toggled(bool arg1);
+
+    void on_actionAutorotate_triggered();
 
 private:
     QSettings settings;

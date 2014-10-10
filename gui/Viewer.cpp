@@ -50,7 +50,7 @@ void Viewer::updateRatio()
 {
     tX = 0;
     tY = 0;
-    autorotate = true;
+    setAutorotate(true);
     beta = M_PI/4.0;
     matrix = TransformMatrix::identity();
 
@@ -207,19 +207,19 @@ void Viewer::paintGL()
 void Viewer::keyPressEvent(QKeyEvent *keyEvent)
 {
     if (keyEvent->key() == Qt::Key_Left) {
-        autorotate = false;
+        setAutorotate(false);
         alpha -= 0.1;
     }
     if (keyEvent->key() == Qt::Key_Right) {
-        autorotate = false;
+        setAutorotate(false);
         alpha += 0.1;
     }
     if (keyEvent->key() == Qt::Key_Up) {
-        autorotate = false;
+        setAutorotate(false);
         beta += 0.1;
     }
     if (keyEvent->key() == Qt::Key_Down) {
-        autorotate = false;
+        setAutorotate(false);
         beta -= 0.1;
     }
     if (keyEvent->key() == Qt::Key_PageUp) {
@@ -265,7 +265,7 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
 void Viewer::mouseMoveEvent(QMouseEvent *evt)
 {
     if (pressed) {
-        autorotate = false;
+        setAutorotate(false);
         float dX = evt->x()-mX;
         float dY = evt->y()-mY;
         alpha = mAlpha - 0.01*dX;
@@ -276,7 +276,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *evt)
     }
 
     if (movePressed) {
-        autorotate = false;
+        setAutorotate(false);
         float dX = evt->x()-mX;
         float dY = evt->y()-mY;
 
@@ -299,6 +299,12 @@ void Viewer::setPlateDimension(float x1, float y1, float x2, float y2, float z)
     plateX2 = x2;
     plateY2 = y2;
     plateZ = z;
+}
+
+void Viewer::setAutorotate(bool value)
+{
+    autorotate = value;
+    autorotate_changed(value);
 }
 
 void Viewer::timeOutSlot()

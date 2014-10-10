@@ -37,13 +37,15 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer->setRobot(robot);
 
     // Debugging auto-open
-
+/*
     filename = "/home/gregwar/Metabot/robots/spidey12.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
     ui->actionSave->setEnabled(true);
+    */
 
-
+    // Viewer
+    QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
     viewer->updateRatio();
 
     QList<int> sizes;
@@ -237,6 +239,11 @@ void MainWindow::on_wizard_cancel()
     wizard = NULL;
 }
 
+void MainWindow::on_viewer_autorotate_change(bool value)
+{
+    ui->actionAutorotate->setChecked(value);
+}
+
 void MainWindow::on_contextmenu_add()
 {
     runWizard(contextmenu_item);
@@ -348,4 +355,9 @@ void MainWindow::on_actionGrid_toggled(bool drawGrid)
 void MainWindow::on_actionXYZ_toggled(bool drawXYZ)
 {
     viewer->drawXYZ = drawXYZ;
+}
+
+void MainWindow::on_actionAutorotate_triggered()
+{
+    viewer->setAutorotate(ui->actionAutorotate->isChecked());
 }

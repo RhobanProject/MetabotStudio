@@ -132,6 +132,7 @@
     <addaction name="actionReset_view"/>
     <addaction name="actionGrid"/>
     <addaction name="actionXYZ"/>
+    <addaction name="actionAutorotate"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -221,6 +222,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionAutorotate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Autorotate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>
