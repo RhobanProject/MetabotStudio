@@ -288,7 +288,7 @@ namespace Metabot
     AnchorPoint *ComponentInstance::belowAnchor()
     {
         for (auto anchor : anchors) {
-            if (anchor->above == false) {
+            if (anchor->above == false && anchor->anchor) {
                 return anchor;
             }
         }

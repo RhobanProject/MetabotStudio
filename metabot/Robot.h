@@ -26,7 +26,7 @@ namespace Metabot
 
             Robot *clone();
             void setRoot(ComponentInstance *root);
-            Vector getPoint(AnchorPoint *point, Vector pt);
+            Vector getPoint(ComponentInstance *instance, Vector pt);
 
             void clear();
             void loadFromFile(std::string filename);

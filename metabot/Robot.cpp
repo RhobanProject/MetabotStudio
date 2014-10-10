@@ -208,27 +208,20 @@ namespace Metabot
         });
     }
             
-    Vector Robot::getPoint(AnchorPoint *anchor, Vector v)
+    Vector Robot::getPoint(ComponentInstance *instance, Vector v)
     {
         TransformMatrix m = TransformMatrix::identity();
 
-        if (anchor != NULL) {
-            while (true) {
-                m = m.multiply(anchor->transformationBackward());
-                ComponentInstance *instance = anchor->instance;
-                AnchorPoint *remote = instance->belowAnchor();
-                if (remote == NULL) {
-                    break;
-                }
-                m = m.multiply(remote->transformationForward());
-                anchor = remote->anchor;
-            }
+        AnchorPoint *anchor = NULL;
+        while ((anchor = instance->belowAnchor()) != NULL) {
+            m = m.multiply(anchor->transformationForward());
+            m = m.multiply(anchor->anchor->transformationBackward());
+            instance = anchor->anchor->instance;
         }
 
         m = m.invert();
         std::cout << m.toString() << std::endl;
         Vector p = m.apply(v);
-//        std::cout << p.toString() << std::endl;
         return p;
     }
 }

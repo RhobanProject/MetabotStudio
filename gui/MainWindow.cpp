@@ -275,8 +275,14 @@ void MainWindow::on_contextmenu_root()
 void MainWindow::on_contextmenu_center()
 {
     Metabot::AnchorPoint *anchor = items[contextmenu_item];
+    Metabot::ComponentInstance *instance;
+    if (anchor == NULL) {
+        instance = robot->root;
+    } else {
+        instance = anchor->anchor->instance;
+    }
     Metabot::Vector v(0, 0, 0);
-    v = robot->getPoint(anchor, v);
+    v = robot->getPoint(instance, v);
     viewer->tX = -v.values[0];
     viewer->tY = -v.values[1];
 }
