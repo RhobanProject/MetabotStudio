@@ -22,6 +22,9 @@ namespace Metabot
             bool isCompatible(AnchorPoint *anchor);
             void attach(AnchorPoint *anchor, bool above=true);
             void detach(bool remove=true);
+            
+            TransformMatrix transformationForward();
+            TransformMatrix transformationBackward();
 
             Model toModel();
             bool highlight;

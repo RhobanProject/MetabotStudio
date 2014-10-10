@@ -55,6 +55,7 @@ namespace Metabot
             void detachDiffAnchors(ComponentInstance *other);
             void restore();
             void detachAll();
+            AnchorPoint *belowAnchor();
 
             std::string getValue(std::string name);
             std::string stl();

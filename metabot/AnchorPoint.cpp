@@ -124,6 +124,21 @@ namespace Metabot
         return m;
     }
 
+    TransformMatrix AnchorPoint::transformationForward()
+    {
+        if (above) {
+            TransformMatrix rotation = TransformMatrix::rotation(zero+alpha);
+            return matrix.multiply(rotation);
+        } else {
+            return matrix;
+        }
+    }
+    
+    TransformMatrix AnchorPoint::transformationBackward()
+    {
+        return transformationForward().invert();
+    }
+
 #ifdef OPENGL
     void AnchorPoint::openGLDraw()
     {

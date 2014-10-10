@@ -3,6 +3,8 @@
 #include <string>
 #include <functional>
 #include <3d/Model.h>
+#include <3d/Point3.h>
+#include "Vector.h"
 #ifndef NOCPP11
 #include <functional>
 #endif
@@ -24,6 +26,7 @@ namespace Metabot
 
             Robot *clone();
             void setRoot(ComponentInstance *root);
+            Vector getPoint(AnchorPoint *point, Vector pt);
 
             void clear();
             void loadFromFile(std::string filename);

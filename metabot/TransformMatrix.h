@@ -16,7 +16,7 @@ namespace Metabot
     {
         public:
             TransformMatrix();
-            TransformMatrix multiply(TransformMatrix &other);
+            TransformMatrix multiply(TransformMatrix other);
             TransformMatrix invert();
             std::string toString();
 

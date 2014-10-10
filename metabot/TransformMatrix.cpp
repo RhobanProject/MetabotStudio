@@ -226,7 +226,7 @@ namespace Metabot
         return matrix;
     }
 
-    TransformMatrix TransformMatrix::multiply(TransformMatrix &other)
+    TransformMatrix TransformMatrix::multiply(TransformMatrix other)
     {
         TransformMatrix result;
 

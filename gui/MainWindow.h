@@ -50,6 +50,7 @@ private slots:
     void on_contextmenu_edit();
     void on_contextmenu_remove();
     void on_contextmenu_root();
+    void on_contextmenu_center();
 
     void on_clicked();
     void on_close();
@@ -68,7 +69,7 @@ private slots:
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
-    QAction addComponent, editComponent, removeComponent, rootComponent;
+    QAction addComponent, editComponent, removeComponent, rootComponent, centerComponent;
     QMenu menu;
     Metabot::Robot *robot;
     Metabot::Robot *robotSave;

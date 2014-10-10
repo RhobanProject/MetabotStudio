@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     editComponent("Edit", this),
     removeComponent("Remove", this),
     rootComponent("Root", this),
+    centerComponent("Center", this),
     robot(NULL), robotSave(NULL), wizard(NULL),
     filename(""),
     zeros(NULL)
@@ -37,12 +38,12 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer->setRobot(robot);
 
     // Debugging auto-open
-/*
+
     filename = "/home/gregwar/Metabot/robots/spidey12.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
     ui->actionSave->setEnabled(true);
-    */
+
 
     // Viewer
     QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
@@ -60,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&editComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_edit()));
     QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
     QObject::connect(&rootComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_root()));
+    QObject::connect(&centerComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_center()));
     QObject::connect(ui->tree, SIGNAL(itemSelectionChanged()), this, SLOT(on_tree_itemSelectionChanged()));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
     drawTree();
@@ -202,6 +204,7 @@ void MainWindow::on_contextmenu_request(QPoint pt)
             menu.addAction(&editComponent);
             menu.addAction(&removeComponent);
             menu.addAction(&rootComponent);
+            menu.addAction(&centerComponent);
         }
         contextmenu_item = item;
         menu.exec(pos2);
@@ -267,6 +270,15 @@ void MainWindow::on_contextmenu_root()
         robot->setRoot(anchor->anchor->instance);
         drawTree();
     }
+}
+
+void MainWindow::on_contextmenu_center()
+{
+    Metabot::AnchorPoint *anchor = items[contextmenu_item];
+    Metabot::Vector v(0, 0, 0);
+    v = robot->getPoint(anchor, v);
+    viewer->tX = -v.values[0];
+    viewer->tY = -v.values[1];
 }
 
 void MainWindow::on_clicked()

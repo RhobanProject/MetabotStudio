@@ -38,6 +38,10 @@ public:
 
     void setAutorotate(bool value);
 
+    // Translation
+    float tX, tY;
+    float mTX, mTY;
+
 public slots:
     virtual void timeOutSlot();
 
@@ -51,10 +55,6 @@ private:
     // Rotation
     float alpha, beta;
     float mAlpha, mBeta;
-
-    // Translation
-    float tX, tY;
-    float mTX, mTY;
 
     // Mouse events
     float mX, mY;

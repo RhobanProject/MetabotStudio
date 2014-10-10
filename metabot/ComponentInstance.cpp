@@ -284,6 +284,17 @@ namespace Metabot
             anchor->detach(false);
         }
     }
+            
+    AnchorPoint *ComponentInstance::belowAnchor()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->above == false) {
+                return anchor;
+            }
+        }
+
+        return NULL;
+    }
 
     std::string ComponentInstance::getValue(std::string name)
     {
