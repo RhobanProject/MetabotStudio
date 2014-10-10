@@ -23,7 +23,7 @@ if (Legs>0) {
 		rotate([0, 0, 360*i/Legs])
 		translate([0,Size,0]) {
 			rotate([0,0,180]) {
-				motorArm();
+				// motorArm();
 				metabot_anchor("motor", female=true);
 			}
 	    }
