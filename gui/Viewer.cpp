@@ -113,7 +113,7 @@ void Viewer::resizeGL(int width, int height)
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 1000.0f);
+    gluPerspective(45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 1000000.0f);
 
     // gluLookAt(2.0, 2.0, 2.0, 0, 0, 0, 0, 0, 1);
     glEnable(GL_LIGHTING);
