@@ -1,5 +1,5 @@
 // Component Body
-// Description Simple star body
+// Description Star body
 include <../../metabot.scad>;
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
