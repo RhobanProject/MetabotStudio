@@ -80,7 +80,7 @@
                         }
                      },
                      "remote" : 0,
-                     "zero" : 0.6527531147003174
+                     "zero" : 0.6510078310966492
                   }
                },
                "component" : "double_u",
@@ -128,7 +128,7 @@
                         }
                      },
                      "remote" : 0,
-                     "zero" : 0.6318091750144958
+                     "zero" : 0.5724679827690125
                   }
                },
                "component" : "double_u",
@@ -139,7 +139,7 @@
                   "Screws" : "true",
                   "ScrewsCount" : "8",
                   "ScrewsDiameter" : "2.6",
-                  "ScrewsSpacing" : "10",
+                  "ScrewsSpacing" : "14",
                   "Thickness" : "2.2"
                }
             },
@@ -187,7 +187,7 @@
                   "Screws" : "true",
                   "ScrewsCount" : "8",
                   "ScrewsDiameter" : "2.6",
-                  "ScrewsSpacing" : "10",
+                  "ScrewsSpacing" : "14",
                   "Thickness" : "2.2"
                }
             },
