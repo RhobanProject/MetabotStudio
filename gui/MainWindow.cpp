@@ -379,3 +379,9 @@ void MainWindow::on_actionAutorotate_triggered()
 {
     viewer->setAutorotate(ui->actionAutorotate->isChecked());
 }
+
+void MainWindow::on_actionNew_triggered()
+{
+    robot->clear();
+    drawTree();
+}

@@ -66,6 +66,8 @@ private slots:
 
     void on_actionAutorotate_triggered();
 
+    void on_actionNew_triggered();
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;

@@ -112,6 +112,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
@@ -122,7 +123,6 @@
     <property name="title">
      <string>Robot</string>
     </property>
-    <addaction name="actionClear"/>
     <addaction name="actionZeros"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -186,14 +186,6 @@
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="actionClear">
-   <property name="text">
-    <string>Clear</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Backspace</string>
-   </property>
-  </action>
   <action name="actionReset_view">
    <property name="text">
     <string>Reset view</string>
@@ -233,6 +225,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>
