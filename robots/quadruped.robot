@@ -20,7 +20,9 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "orientation" : 0.0,
+                              "orientationX" : 0.0,
+                              "orientationY" : 0.0,
+                              "orientationZ" : 0.0,
                               "remote" : 0,
                               "zero" : 0.5724679827690125
                            }
@@ -32,7 +34,9 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "orientation" : 0.0,
+                     "orientationX" : 0.0,
+                     "orientationY" : 0.0,
+                     "orientationZ" : 0.0,
                      "remote" : 0,
                      "zero" : -0.1588249653577805
                   }
@@ -45,7 +49,9 @@
                   "Thickness" : "2.2"
                }
             },
-            "orientation" : 3.141592741012573,
+            "orientationX" : 0.0,
+            "orientationY" : 3.141592741012573,
+            "orientationZ" : 0.0,
             "remote" : 1,
             "zero" : 0.0
          },
@@ -67,7 +73,9 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "orientation" : 0.0,
+                              "orientationX" : 0.0,
+                              "orientationY" : 0.0,
+                              "orientationZ" : 0.0,
                               "remote" : 0,
                               "zero" : -0.6527531147003174
                            }
@@ -79,7 +87,9 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "orientation" : 0.0,
+                     "orientationX" : 0.0,
+                     "orientationY" : 0.0,
+                     "orientationZ" : 0.0,
                      "remote" : 0,
                      "zero" : 0.1378810107707977
                   }
@@ -92,7 +102,9 @@
                   "Thickness" : "2.2"
                }
             },
-            "orientation" : 3.141592741012573,
+            "orientationX" : 0.0,
+            "orientationY" : 3.141592741012573,
+            "orientationZ" : 0.0,
             "remote" : 1,
             "zero" : 0.04014257341623306
          },
@@ -114,7 +126,9 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "orientation" : 0.0,
+                              "orientationX" : 0.0,
+                              "orientationY" : 0.0,
+                              "orientationZ" : 0.0,
                               "remote" : 0,
                               "zero" : 0.4153883755207062
                            }
@@ -126,7 +140,9 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "orientation" : 0.0,
+                     "orientationX" : 0.0,
+                     "orientationY" : 0.0,
+                     "orientationZ" : 0.0,
                      "remote" : 0,
                      "zero" : -0.1186823919415474
                   }
@@ -139,7 +155,9 @@
                   "Thickness" : "2.2"
                }
             },
-            "orientation" : 3.141592741012573,
+            "orientationX" : 0.0,
+            "orientationY" : 3.141592741012573,
+            "orientationZ" : 0.0,
             "remote" : 1,
             "zero" : 0.0
          },
@@ -161,7 +179,9 @@
                                     "Thickness" : "2.2"
                                  }
                               },
-                              "orientation" : 0.0,
+                              "orientationX" : 0.0,
+                              "orientationY" : 0.0,
+                              "orientationZ" : 0.0,
                               "remote" : 0,
                               "zero" : -0.5532693862915039
                            }
@@ -173,7 +193,9 @@
                            "Thickness" : "2.2"
                         }
                      },
-                     "orientation" : 0.0,
+                     "orientationX" : 0.0,
+                     "orientationY" : 0.0,
+                     "orientationZ" : 0.0,
                      "remote" : 0,
                      "zero" : 0.05934119597077370
                   }
@@ -186,7 +208,9 @@
                   "Thickness" : "2.2"
                }
             },
-            "orientation" : 3.141592741012573,
+            "orientationX" : 0.0,
+            "orientationY" : 3.141592741012573,
+            "orientationZ" : 0.0,
             "remote" : 1,
             "zero" : 0.0
          }
