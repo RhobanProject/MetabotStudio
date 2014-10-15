@@ -37,6 +37,12 @@ namespace Metabot
             std::string model;
             TransformMatrix matrix;
 
+            // Matrixes caches
+            TransformMatrix forwardAbove, backwardAbove;
+            TransformMatrix forward, backward;
+            bool cached;
+            void computeMatrixes();
+
             // Anchor id
             int id;
 

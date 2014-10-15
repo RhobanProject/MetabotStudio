@@ -56,6 +56,7 @@ namespace Metabot
         orientationZ = other->orientationZ;
         alpha = other->alpha;
         zero = other->zero;
+        computeMatrixes();
     }
             
     void AnchorPoint::revert()
@@ -70,6 +71,7 @@ namespace Metabot
             float tmp = anchor->zero;
             anchor->zero = zero;
             zero = tmp;
+            computeMatrixes();
         }
     }
 
@@ -141,23 +143,41 @@ namespace Metabot
         return m;
     }
 
-    TransformMatrix AnchorPoint::transformationForward()
+    void AnchorPoint::computeMatrixes()
     {
-        if (above) {
+        {
             TransformMatrix rotation = TransformMatrix::identity();
             if (orientationX) rotation = rotation.multiply(TransformMatrix::rotationX(orientationX));
             if (orientationY) rotation = rotation.multiply(TransformMatrix::rotationY(orientationY));
             if (orientationZ) rotation = rotation.multiply(TransformMatrix::rotationZ(orientationZ));
             rotation = rotation.multiply(TransformMatrix::rotationZ(zero+alpha));
-            return matrix.multiply(rotation);
-        } else {
-            return matrix;
+            forwardAbove = matrix.multiply(rotation);
+            backwardAbove = forwardAbove.invert();
         }
+        {
+            forward = matrix;
+            backward = forward.invert();
+        }
+            
+        cached = true;
+    }
+
+    TransformMatrix AnchorPoint::transformationForward()
+    {
+        if (!cached) {
+            computeMatrixes();
+        }
+
+        return above ? forwardAbove : forward;
     }
     
     TransformMatrix AnchorPoint::transformationBackward()
     {
-        return transformationForward().invert();
+        if (!cached) {
+            computeMatrixes();
+        }
+
+        return above ? backwardAbove : backward;
     }
 
 #ifdef OPENGL
@@ -165,14 +185,10 @@ namespace Metabot
     {
         if (anchor != NULL) {
             if (above) {
-                matrix.openGLMult();
-                if (orientationX) TransformMatrix::rotationX(orientationX).openGLMult();
-                if (orientationY) TransformMatrix::rotationY(orientationY).openGLMult();
-                if (orientationZ) TransformMatrix::rotationZ(orientationZ).openGLMult();
-                TransformMatrix::rotationZ(zero+alpha).openGLMult();
+                transformationForward().openGLMult();
                 anchor->openGLDraw();
             } else {
-                matrix.invert().openGLMult();
+                transformationBackward().openGLMult();
                 instance->openGLDraw();
             }
         } else {

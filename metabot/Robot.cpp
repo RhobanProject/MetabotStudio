@@ -185,6 +185,7 @@ namespace Metabot
         foreachAnchor([&i,&zeros](AnchorPoint *anchor) {
             if (i < zeros.size()) {
                 anchor->zero = zeros[i++];
+                anchor->computeMatrixes();
             }
         });
     }

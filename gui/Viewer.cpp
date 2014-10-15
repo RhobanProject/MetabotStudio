@@ -260,6 +260,32 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
     if (evt->button() == Qt::RightButton) {
         movePressed = false;
     }
+
+    int window_height = height();
+    int x = evt->x();
+    int y = evt->y();
+    GLbyte color[4];
+    GLfloat depth;
+    GLuint index;
+
+    glReadPixels(x, window_height - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+    glReadPixels(x, window_height - y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+    glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+    GLint viewport[4];
+    GLdouble modelview[16];
+    GLdouble projection[16];
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
+         x, y, color[0], color[1], color[2], color[3], depth, index);
+    GLdouble ox,oy,oz;
+    gluUnProject(x, y, depth, modelview, projection, viewport, &ox, &oy, &oz);
+    printf("Unprojected: %f %f %f\n", ox, oy, oz);
+    fflush(stdout);
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *evt)
