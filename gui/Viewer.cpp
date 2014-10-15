@@ -172,6 +172,7 @@ void Viewer::paintGL()
     glPushMatrix();
     robot->openGLDraw();
     glPopMatrix();
+    glStencilFunc(GL_ALWAYS, 255, -1);
 
     glDisable(GL_LIGHTING);
 
