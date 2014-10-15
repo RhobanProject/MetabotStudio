@@ -8,7 +8,7 @@
 namespace Metabot
 {
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
-        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0)
+        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0), orientation(0)
     {
         if (json.isObject()) {
             type = json["type"].asString();
@@ -43,6 +43,8 @@ namespace Metabot
     {
         AnchorPoint *anchorPoint = new AnchorPoint(type, male, female, matrix, zero);
         anchorPoint->above = above;
+        anchorPoint->orientation = orientation;
+        anchorPoint->alpha = alpha;
 
         return anchorPoint;
     }
@@ -52,6 +54,7 @@ namespace Metabot
         if (anchor) {
             anchor->instance->root();
             above = true;
+            orientation = anchor->orientation;
             anchor->above = false;
             float tmp = anchor->zero;
             anchor->zero = zero;
@@ -111,6 +114,9 @@ namespace Metabot
         if (above) {
             if (anchor != NULL) {
                 m = anchor->toModel();
+                if (orientation != 0) {
+                    m.rotateY(orientation);
+                }
                 m.rotateZ(-zero-alpha);
                 m.apply(matrix);
             }
@@ -127,7 +133,7 @@ namespace Metabot
     TransformMatrix AnchorPoint::transformationForward()
     {
         if (above) {
-            TransformMatrix rotation = TransformMatrix::rotation(zero+alpha);
+            TransformMatrix rotation = TransformMatrix::rotationZ(zero+alpha);
             return matrix.multiply(rotation);
         } else {
             return matrix;
@@ -145,7 +151,8 @@ namespace Metabot
         if (anchor != NULL) {
             if (above) {
                 matrix.openGLMult();
-                TransformMatrix::rotation(zero+alpha).openGLMult();
+                TransformMatrix::rotationY(orientation).openGLMult();
+                TransformMatrix::rotationZ(zero+alpha).openGLMult();
                 anchor->openGLDraw();
             } else {
                 matrix.invert().openGLMult();

@@ -54,5 +54,8 @@ namespace Metabot
             // Rotate angle
             float alpha;
             float zero;
+
+            // Orientation
+            float orientation;
     };
 }

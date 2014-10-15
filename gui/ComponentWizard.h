@@ -43,6 +43,10 @@ private slots:
     void on_cancel_clicked();
     void on_ok_clicked();
 
+    void on_orientation_back_clicked();
+
+    void on_orientation_normal_clicked();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;

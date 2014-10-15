@@ -176,7 +176,12 @@ namespace Metabot
             if (anchors.isMember(id)) {
                 int remote = anchors[id]["remote"].asInt();
                 ComponentInstance *instance = Backend::fromJson(anchors[id]["component"]);
-                anchor->zero = anchors[id]["zero"].asFloat();
+                if (anchors[id].isMember("zero")) {
+                    anchor->zero = anchors[id]["zero"].asFloat();
+                }
+                if (anchors[id].isMember("orientation")) {
+                    anchor->orientation = anchors[id]["orientation"].asFloat();
+                }
                 anchor->attach(instance->getAnchor(remote));
             }
         }

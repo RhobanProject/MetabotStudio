@@ -364,6 +364,7 @@ namespace Metabot
                 std::string id = ss.str();
                 json["anchors"][id] = Json::Value(Json::objectValue);
                 json["anchors"][id]["zero"] = anchor->zero;
+                json["anchors"][id]["orientation"] = anchor->orientation;
                 json["anchors"][id]["remote"] = anchor->anchor->id;
                 json["anchors"][id]["component"] = anchor->anchor->instance->toJson();
             }

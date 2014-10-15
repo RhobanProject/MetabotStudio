@@ -27,7 +27,9 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     setWindowTitle("Component wizard");
 
     // Showing welcome menu only
+    ui->scrollArea->hide();
     ui->anchor->hide();
+    ui->orientation->hide();
     ui->parameters->hide();
     ui->generate->hide();
     ui->ok->setEnabled(false);
@@ -81,6 +83,7 @@ void ComponentWizard::fill()
 
 void ComponentWizard::setupInstance()
 {
+    ui->scrollArea->show();
     ui->welcome->hide();
 
     if (anchor == NULL) {
@@ -133,6 +136,16 @@ void ComponentWizard::setupInstance()
             ui->anchor->hide();
         } else {
             ui->anchor->show();
+        }
+
+        // Orientation
+        ui->orientation->show();
+        if (anchor->orientation == 0) {
+            ui->orientation_normal->setChecked(true);
+            ui->orientation_back->setChecked(false);
+        } else {
+            ui->orientation_normal->setChecked(false);
+            ui->orientation_back->setChecked(true);
         }
     }
     ui->anchor->update();
@@ -271,4 +284,14 @@ void ComponentWizard::on_ok_clicked()
 {
     isOk = true;
     on_ok();
+}
+
+void ComponentWizard::on_orientation_back_clicked()
+{
+    anchor->orientation = M_PI;
+}
+
+void ComponentWizard::on_orientation_normal_clicked()
+{
+    anchor->orientation = 0;
 }
