@@ -38,6 +38,7 @@ public:
     bool drawGrid, drawXYZ;
 
     void setAutorotate(bool value);
+    void dontMove();
 
     // Translation
     float tX, tY;

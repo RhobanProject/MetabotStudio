@@ -31,6 +31,7 @@ public:
     void drawTree();
     void drawTreeRecursive(QTreeWidgetItem *parentItem, Metabot::ComponentInstance *instance);
 
+    void showContextMenu(QPoint pos, QTreeWidgetItem *item);
     void runWizard(Metabot::AnchorPoint *anchor);
     void highlightAnchor(Metabot::AnchorPoint *anchor);
     void deselectAll();
@@ -51,6 +52,7 @@ private slots:
     void on_tree_itemSelectionChanged();
     void on_tree_itemDeselected();
 
+    void on_viewer_contextmenu_request(QPoint pt);
     void on_contextmenu_request(QPoint pt);
     void on_contextmenu_add();
     void on_contextmenu_edit();

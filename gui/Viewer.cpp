@@ -361,6 +361,11 @@ void Viewer::setAutorotate(bool value)
     autorotate_changed(value);
 }
 
+void Viewer::dontMove()
+{
+    movePressed = false;
+}
+
 void Viewer::timeOutSlot()
 {
     updateGL();

@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_clicked(Metabot::ComponentInstance*)));
     QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_doubleclicked(Metabot::ComponentInstance*)));
     QObject::connect(viewer, SIGNAL(nowhere_clicked()), this, SLOT(on_viewer_nowhere_clicked()));
+    viewer->setContextMenuPolicy(Qt::CustomContextMenu);
+    QObject::connect(viewer, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_viewer_contextmenu_request(QPoint)));
     viewer->updateRatio();
 
     QList<int> sizes;
@@ -200,27 +202,39 @@ void MainWindow::on_tree_itemDeselected()
     robot->unHighlight();
 }
 
+void MainWindow::on_viewer_contextmenu_request(QPoint pt)
+{
+    auto items = ui->tree->selectedItems();
+    if (items.size()) {
+        viewer->dontMove();
+        showContextMenu(viewer->mapToGlobal(pt), items[0]);
+    }
+}
+
 void MainWindow::on_contextmenu_request(QPoint pt)
 {
     QTreeWidgetItem *item = ui->tree->itemAt(pt);
     if (item != NULL) {
         QPoint pos = ui->tree->mapToGlobal(pt);
-        QPoint pos2(pos.x(), pos.y());
-        Metabot::AnchorPoint *anchor = items[item];
-        menu.clear();
-        if ((anchor == NULL && robot->root == NULL) || (anchor != NULL && anchor->anchor == NULL)) {
-            menu.addAction(&addComponent);
-        } else {
-            menu.addAction(&editComponent);
-            menu.addAction(&removeComponent);
-            menu.addAction(&rootComponent);
-            menu.addAction(&centerComponent);
-        }
-        contextmenu_item = item;
-        menu.exec(pos2);
+        showContextMenu(pos, item);
     }
 }
 
+void MainWindow::showContextMenu(QPoint pos, QTreeWidgetItem *item)
+{
+    Metabot::AnchorPoint *anchor = items[item];
+    menu.clear();
+    if ((anchor == NULL && robot->root == NULL) || (anchor != NULL && anchor->anchor == NULL)) {
+        menu.addAction(&addComponent);
+    } else {
+        menu.addAction(&editComponent);
+        menu.addAction(&removeComponent);
+        menu.addAction(&rootComponent);
+        menu.addAction(&centerComponent);
+    }
+    contextmenu_item = item;
+    menu.exec(pos);
+}
 
 void MainWindow::on_close()
 {
