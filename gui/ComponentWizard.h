@@ -44,9 +44,7 @@ private slots:
     void on_ok_clicked();
 
     void on_orientationX_editingFinished();
-
     void on_orientationY_editingFinished();
-
     void on_orientationZ_editingFinished();
 
 private:

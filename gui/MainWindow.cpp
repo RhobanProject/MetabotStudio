@@ -138,18 +138,16 @@ void MainWindow::on_wizard_clicked()
 void MainWindow::runWizard(Metabot::AnchorPoint *anchor)
 {
     if (wizard != NULL) {
-        wizard->close();
-        delete wizard;
-        wizard = NULL;
+        wizard->activateWindow();
+    } else {
+        robotSave = robot->clone();
+        wizard = new ComponentWizard(viewer, robot, anchor);
+        wizard->show();
+        wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
+
+        QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
+        QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
     }
-
-    robotSave = robot->clone();
-    wizard = new ComponentWizard(viewer, robot, anchor);
-    wizard->show();
-    wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
-
-    QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
-    QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
 }
 
 void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
@@ -271,7 +269,8 @@ void MainWindow::on_viewer_clicked(Metabot::ComponentInstance *instance)
 
 void MainWindow::on_viewer_doubleclicked(Metabot::ComponentInstance *instance)
 {
-    runWizard(instance->aboveAnchor());
+    Metabot::AnchorPoint *anchor = instance->aboveAnchor();
+    runWizard(anchor);
 }
 
 void MainWindow::on_viewer_nowhere_clicked()
