@@ -6,11 +6,11 @@ include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/square_body.scad>;
 
-// Width of the body
+// Parameter Width of the body
 Width = 40;
-// Length of the body
+// Parameter Length of the body
 Length = 70;
-// Spacing between legs
+// Parameter Spacing between legs
 LegsSpacing = 40;
 // Parameter Number of legs (multiple of 2)
 Legs = 4;
