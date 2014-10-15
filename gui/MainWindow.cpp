@@ -146,7 +146,6 @@ void MainWindow::runWizard(QTreeWidgetItem *item)
         wizard = new ComponentWizard(viewer, robot, anchor);
         wizard->show();
         wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
-        wizard->adjustSize();
 
         QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
         QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
