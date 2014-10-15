@@ -69,8 +69,8 @@ namespace Metabot
             orientationZ = anchor->orientationZ;
             anchor->above = false;
             float tmp = anchor->zero;
-            anchor->zero = zero;
-            zero = tmp;
+            anchor->zero = -zero;
+            zero = -tmp;
             computeMatrixes();
         }
     }
