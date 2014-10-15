@@ -43,9 +43,11 @@ private slots:
     void on_cancel_clicked();
     void on_ok_clicked();
 
-    void on_orientation_back_clicked();
+    void on_orientationX_editingFinished();
 
-    void on_orientation_normal_clicked();
+    void on_orientationY_editingFinished();
+
+    void on_orientationZ_editingFinished();
 
 private:
     // Robot and anchor we're working on

@@ -6,6 +6,7 @@
 #include <metabot/ComponentParameter.h>
 #include <metabot/AnchorPoint.h>
 #include <metabot/Backend.h>
+#include <metabot/util.h>
 #include <QRadioButton>
 
 #define ROLE_COMPONENT  1002
@@ -140,13 +141,9 @@ void ComponentWizard::setupInstance()
 
         // Orientation
         ui->orientation->show();
-        if (anchor->orientation == 0) {
-            ui->orientation_normal->setChecked(true);
-            ui->orientation_back->setChecked(false);
-        } else {
-            ui->orientation_normal->setChecked(false);
-            ui->orientation_back->setChecked(true);
-        }
+        ui->orientationX->setText(QString("%1").arg(RAD2DEG(anchor->orientationX)));
+        ui->orientationY->setText(QString("%1").arg(RAD2DEG(anchor->orientationY)));
+        ui->orientationZ->setText(QString("%1").arg(RAD2DEG(anchor->orientationZ)));
     }
     ui->anchor->update();
     ui->anchor->adjustSize();
@@ -286,12 +283,17 @@ void ComponentWizard::on_ok_clicked()
     on_ok();
 }
 
-void ComponentWizard::on_orientation_back_clicked()
+void ComponentWizard::on_orientationX_editingFinished()
 {
-    anchor->orientation = M_PI;
+    anchor->orientationX = DEG2RAD(ui->orientationX->text().toFloat());
 }
 
-void ComponentWizard::on_orientation_normal_clicked()
+void ComponentWizard::on_orientationY_editingFinished()
 {
-    anchor->orientation = 0;
+    anchor->orientationY = DEG2RAD(ui->orientationY->text().toFloat());
+}
+
+void ComponentWizard::on_orientationZ_editingFinished()
+{
+    anchor->orientationZ = DEG2RAD(ui->orientationZ->text().toFloat());
 }

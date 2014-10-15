@@ -8,7 +8,8 @@
 namespace Metabot
 {
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
-        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0), orientation(0)
+        : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0), 
+        orientationX(0), orientationY(0), orientationZ(0)
     {
         if (json.isObject()) {
             type = json["type"].asString();
@@ -43,7 +44,9 @@ namespace Metabot
     {
         AnchorPoint *anchorPoint = new AnchorPoint(type, male, female, matrix, zero);
         anchorPoint->above = above;
-        anchorPoint->orientation = orientation;
+        anchorPoint->orientationX = orientationX;
+        anchorPoint->orientationY = orientationY;
+        anchorPoint->orientationZ = orientationZ;
         anchorPoint->alpha = alpha;
 
         return anchorPoint;
@@ -54,7 +57,9 @@ namespace Metabot
         if (anchor) {
             anchor->instance->root();
             above = true;
-            orientation = anchor->orientation;
+            orientationX = anchor->orientationX;
+            orientationY = anchor->orientationY;
+            orientationZ = anchor->orientationZ;
             anchor->above = false;
             float tmp = anchor->zero;
             anchor->zero = zero;
@@ -114,9 +119,9 @@ namespace Metabot
         if (above) {
             if (anchor != NULL) {
                 m = anchor->toModel();
-                if (orientation != 0) {
-                    m.rotateY(orientation);
-                }
+                if (orientationX) m.rotateX(orientationX);
+                if (orientationY) m.rotateY(orientationY);
+                if (orientationZ) m.rotateZ(orientationZ);
                 m.rotateZ(-zero-alpha);
                 m.apply(matrix);
             }
@@ -133,7 +138,11 @@ namespace Metabot
     TransformMatrix AnchorPoint::transformationForward()
     {
         if (above) {
-            TransformMatrix rotation = TransformMatrix::rotationZ(zero+alpha);
+            TransformMatrix rotation = TransformMatrix::identity();
+            if (orientationX) rotation = rotation.multiply(TransformMatrix::rotationX(orientationX));
+            if (orientationY) rotation = rotation.multiply(TransformMatrix::rotationY(orientationY));
+            if (orientationZ) rotation = rotation.multiply(TransformMatrix::rotationZ(orientationZ));
+            rotation = rotation.multiply(TransformMatrix::rotationZ(zero+alpha));
             return matrix.multiply(rotation);
         } else {
             return matrix;
@@ -151,7 +160,9 @@ namespace Metabot
         if (anchor != NULL) {
             if (above) {
                 matrix.openGLMult();
-                TransformMatrix::rotationY(orientation).openGLMult();
+                if (orientationX) TransformMatrix::rotationX(orientationX).openGLMult();
+                if (orientationY) TransformMatrix::rotationY(orientationY).openGLMult();
+                if (orientationZ) TransformMatrix::rotationZ(orientationZ).openGLMult();
                 TransformMatrix::rotationZ(zero+alpha).openGLMult();
                 anchor->openGLDraw();
             } else {

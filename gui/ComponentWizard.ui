@@ -149,19 +149,23 @@
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
-                <widget class="QRadioButton" name="orientation_normal">
+                <widget class="QLineEdit" name="orientationX">
                  <property name="text">
-                  <string>Original</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
+                  <string>0</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="orientation_back">
+                <widget class="QLineEdit" name="orientationY">
                  <property name="text">
-                  <string>Backward</string>
+                  <string>0</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="orientationZ">
+                 <property name="text">
+                  <string>0</string>
                  </property>
                 </widget>
                </item>

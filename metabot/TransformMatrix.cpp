@@ -272,13 +272,13 @@ namespace Metabot
         return str.str();
     }
 
-    TransformMatrix TransformMatrix::rotationZ(float alpha)
+    TransformMatrix TransformMatrix::rotationX(float alpha)
     {
         TransformMatrix m = TransformMatrix::identity();
-        m.values[XY(0,0)] = cos(alpha);
-        m.values[XY(1,0)] = -sin(alpha);
-        m.values[XY(0,1)] = sin(alpha);
         m.values[XY(1,1)] = cos(alpha);
+        m.values[XY(2,1)] = -sin(alpha);
+        m.values[XY(1,2)] = sin(alpha);
+        m.values[XY(2,2)] = cos(alpha);
         return m;
     }
     TransformMatrix TransformMatrix::rotationY(float alpha)
@@ -288,6 +288,15 @@ namespace Metabot
         m.values[XY(2,0)] = -sin(alpha);
         m.values[XY(0,2)] = sin(alpha);
         m.values[XY(2,2)] = cos(alpha);
+        return m;
+    }
+    TransformMatrix TransformMatrix::rotationZ(float alpha)
+    {
+        TransformMatrix m = TransformMatrix::identity();
+        m.values[XY(0,0)] = cos(alpha);
+        m.values[XY(1,0)] = -sin(alpha);
+        m.values[XY(0,1)] = sin(alpha);
+        m.values[XY(1,1)] = cos(alpha);
         return m;
     }
 }

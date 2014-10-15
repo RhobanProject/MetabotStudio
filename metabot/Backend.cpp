@@ -179,8 +179,14 @@ namespace Metabot
                 if (anchors[id].isMember("zero")) {
                     anchor->zero = anchors[id]["zero"].asFloat();
                 }
-                if (anchors[id].isMember("orientation")) {
-                    anchor->orientation = anchors[id]["orientation"].asFloat();
+                if (anchors[id].isMember("orientationX")) {
+                    anchor->orientationX = anchors[id]["orientationX"].asFloat();
+                }
+                if (anchors[id].isMember("orientationY")) {
+                    anchor->orientationY = anchors[id]["orientationY"].asFloat();
+                }
+                if (anchors[id].isMember("orientationZ")) {
+                    anchor->orientationZ = anchors[id]["orientationZ"].asFloat();
                 }
                 anchor->attach(instance->getAnchor(remote));
             }

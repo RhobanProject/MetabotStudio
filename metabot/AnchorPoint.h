@@ -56,6 +56,6 @@ namespace Metabot
             float zero;
 
             // Orientation
-            float orientation;
+            float orientationX, orientationY, orientationZ;
     };
 }
