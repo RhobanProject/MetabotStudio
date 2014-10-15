@@ -125,9 +125,9 @@ namespace Metabot
         if (above) {
             if (anchor != NULL) {
                 m = anchor->toModel();
-                if (orientationX) m.rotateX(orientationX);
-                if (orientationY) m.rotateY(orientationY);
-                if (orientationZ) m.rotateZ(orientationZ);
+                if (orientationX) m.rotateX(-orientationX);
+                if (orientationY) m.rotateY(-orientationY);
+                if (orientationZ) m.rotateZ(-orientationZ);
                 m.rotateZ(-zero-alpha);
                 m.apply(matrix);
             }
