@@ -27,7 +27,7 @@
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "65",
                            "Thickness" : "2.2"
                         }
                      },
@@ -75,7 +75,7 @@
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "65",
                            "Thickness" : "2.2"
                         }
                      },
@@ -123,7 +123,7 @@
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "65",
                            "Thickness" : "2.2"
                         }
                      },
@@ -171,7 +171,7 @@
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "65",
                            "Thickness" : "2.2"
                         }
                      },
