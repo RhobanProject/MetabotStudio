@@ -143,10 +143,6 @@ void MainWindow::runWizard(Metabot::AnchorPoint *anchor)
         wizard = NULL;
     }
 
-    if (robotSave != NULL) {
-        delete robotSave;
-    }
-
     robotSave = robot->clone();
     wizard = new ComponentWizard(viewer, robot, anchor);
     wizard->show();
