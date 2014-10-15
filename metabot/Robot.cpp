@@ -221,8 +221,35 @@ namespace Metabot
         }
 
         m = m.invert();
-        std::cout << m.toString() << std::endl;
         Vector p = m.apply(v);
         return p;
+    }
+            
+    ComponentInstance *Robot::nearest(Vector pt)
+    {
+        ComponentInstance *bestInstance = NULL;
+        float bestDistance = -1;
+
+        foreach([this, pt, &bestInstance, &bestDistance](ComponentInstance *instance) {
+            Vector v(0, 0, 0);
+            auto partPoint = this->getPoint(instance, v);
+            float distance = partPoint.distance(pt);
+            if (bestDistance < 0 || distance<bestDistance) {
+                bestInstance = instance;
+                bestDistance = distance;
+            }
+        });
+
+        return bestInstance;
+    }
+            
+    ComponentInstance *Robot::getComponentById(int id)
+    {
+        ComponentInstance *componentInstance = NULL;
+        foreach([id, &componentInstance](ComponentInstance *instance) {
+            if (instance->id == id) componentInstance = instance;
+        });
+
+        return componentInstance;
     }
 }

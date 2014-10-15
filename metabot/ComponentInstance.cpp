@@ -104,6 +104,8 @@ namespace Metabot
 #ifdef OPENGL
     void ComponentInstance::openGLDraw()
     {
+        glStencilFunc(GL_ALWAYS, id, -1);
+
         if (highlight) {
             myModel.r = 0.4;
             myModel.g = 1.0;

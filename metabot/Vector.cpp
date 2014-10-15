@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cmath>
 #include "Vector.h"
 
 namespace Metabot
@@ -24,5 +25,15 @@ namespace Metabot
         }
 
         return str.str();
+    }
+            
+    float Vector::distance(const Vector &other)
+    {
+        float s = 0;
+        for (int i=0; i<3; i++) {
+            s += pow(other.values[i]-values[i],2);
+        }
+
+        return sqrt(s);
     }
 }

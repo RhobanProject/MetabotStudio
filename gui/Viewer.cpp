@@ -85,8 +85,10 @@ void Viewer::initializeGL()
 
     glShadeModel(GL_SMOOTH);
     glClearColor(0.0f, 0.0f, 0.0f, 0.2f);
-    // glClearStencil(0);
+    glClearStencil(0);
     glClearDepth(1.0f);
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -236,6 +238,7 @@ void Viewer::keyPressEvent(QKeyEvent *keyEvent)
 
 void Viewer::mousePressEvent(QMouseEvent *evt)
 {
+    moved = false;
     if (evt->button() == Qt::LeftButton) {
         pressed = true;
         mX = evt->x();
@@ -261,35 +264,40 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
         movePressed = false;
     }
 
-    int window_height = height();
-    int x = evt->x();
-    int y = evt->y();
-    GLbyte color[4];
-    GLfloat depth;
-    GLuint index;
+    if (!moved) {
+        int window_height = height();
+        int x = evt->x();
+        int y = evt->y();
+        GLbyte color[4];
+        GLfloat depth;
+        GLuint index;
 
-    glReadPixels(x, window_height - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-    glReadPixels(x, window_height - y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-    glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+        glReadPixels(x, window_height - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+        glReadPixels(x, window_height - y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+        glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
 
-    GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
+        GLint viewport[4];
+        GLdouble modelview[16];
+        GLdouble projection[16];
 
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    glGetIntegerv(GL_VIEWPORT, viewport);
+        glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+        glGetDoublev(GL_PROJECTION_MATRIX, projection);
+        glGetIntegerv(GL_VIEWPORT, viewport);
 
-    printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
-         x, y, color[0], color[1], color[2], color[3], depth, index);
-    GLdouble ox,oy,oz;
-    gluUnProject(x, y, depth, modelview, projection, viewport, &ox, &oy, &oz);
-    printf("Unprojected: %f %f %f\n", ox, oy, oz);
-    fflush(stdout);
+         printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
+             x, y, color[0], color[1], color[2], color[3], depth, index);
+
+        auto instance = robot->getComponentById(index);
+
+        if (instance) {
+            component_clicked(instance);
+        }
+    }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *evt)
 {
+    moved = true;
     if (pressed) {
         setAutorotate(false);
         float dX = evt->x()-mX;

@@ -10,6 +10,7 @@ namespace Metabot
             Vector(float x, float y, float z);
             Vector();
 
+            float distance(const Vector &other);
             float values[4];
 
             std::string toString();
