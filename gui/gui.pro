@@ -50,3 +50,6 @@ else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../metabot/build/liblibmetabot.a $$P
 win32: LIBS += -lglu32
 mac: LIBS += -framework OpenGL
 else:unix: LIBS += -lGLU
+
+RESOURCES += \
+    icons.qrc

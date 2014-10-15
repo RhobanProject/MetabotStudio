@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/imgs/imgs/spidey.png</normaloff>:/imgs/imgs/spidey.png</iconset>
+  </property>
   <widget class="QWidget" name="main">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -244,6 +248,8 @@
    <header>ObjectsTree.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

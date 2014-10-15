@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>526</width>
+    <width>770</width>
     <height>433</height>
    </rect>
   </property>
@@ -18,6 +18,10 @@
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/imgs/imgs/spidey.png</normaloff>:/imgs/imgs/spidey.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
@@ -94,8 +98,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>250</width>
-             <height>268</height>
+             <width>494</width>
+             <height>285</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -276,6 +280,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

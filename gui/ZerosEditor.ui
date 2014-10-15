@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>321</width>
+    <width>378</width>
     <height>91</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/imgs/imgs/spidey.png</normaloff>:/imgs/imgs/spidey.png</iconset>
   </property>
   <property name="modal">
    <bool>false</bool>
@@ -69,6 +73,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
