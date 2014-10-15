@@ -300,6 +300,16 @@ namespace Metabot
         return NULL;
     }
 
+    AnchorPoint *ComponentInstance::aboveAnchor()
+    {
+        AnchorPoint *below = belowAnchor();
+        if (below != NULL) {
+            return below->anchor;
+        }
+
+        return NULL;
+    }
+
     std::string ComponentInstance::getValue(std::string name)
     {
         if (values.count(name)) {

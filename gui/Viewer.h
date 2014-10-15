@@ -22,7 +22,7 @@ public:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
-//    void mouseDoubleClickEvent(QMouseEvent *);
+    void mouseDoubleClickEvent(QMouseEvent *);
     void wheelEvent(QWheelEvent *);
     void updateRatio();
     void updatePlate();
@@ -49,6 +49,7 @@ public slots:
 signals:
     void autorotate_changed(bool value);
     void component_clicked(Metabot::ComponentInstance *instance);
+    void component_double_clicked(Metabot::ComponentInstance *instance);
 
 private:
     bool autorotate;

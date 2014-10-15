@@ -247,7 +247,10 @@ namespace Metabot
     {
         ComponentInstance *componentInstance = NULL;
         foreach([id, &componentInstance](ComponentInstance *instance) {
-            if (instance->id == id) componentInstance = instance;
+            if (instance->id == id) {
+                std::cout << instance->fullName() << std::endl;
+                componentInstance = instance;
+            }
         });
 
         return componentInstance;

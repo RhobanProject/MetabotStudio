@@ -44,9 +44,10 @@ MainWindow::MainWindow(QWidget *parent) :
     robot->number();
     ui->actionSave->setEnabled(true);
 
-
     // Viewer
     QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
+    QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_clicked(Metabot::ComponentInstance*)));
+    QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_doubleclicked(Metabot::ComponentInstance*)));
     viewer->updateRatio();
 
     QList<int> sizes;
@@ -132,7 +133,7 @@ void MainWindow::on_wizard_clicked()
     wizard->show();
 }
 
-void MainWindow::runWizard(QTreeWidgetItem *item)
+void MainWindow::runWizard(Metabot::AnchorPoint *anchor)
 {
     if (wizard != NULL) {
         wizard->close();
@@ -140,23 +141,26 @@ void MainWindow::runWizard(QTreeWidgetItem *item)
         wizard = NULL;
     }
 
-    if (items.count(item)) {
-        Metabot::AnchorPoint *anchor = items[item];
-        robotSave = robot->clone();
-        wizard = new ComponentWizard(viewer, robot, anchor);
-        wizard->show();
-        wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
-
-        QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
-        QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
+    if (robotSave != NULL) {
+        delete robotSave;
     }
+
+    robotSave = robot->clone();
+    wizard = new ComponentWizard(viewer, robot, anchor);
+    wizard->show();
+    wizard->restoreGeometry(settings.value("componentsWizard").toByteArray());
+
+    QObject::connect(wizard, SIGNAL(on_ok()), this, SLOT(on_wizard_ok()));
+    QObject::connect(wizard, SIGNAL(on_cancel()), this, SLOT(on_wizard_cancel()));
 }
 
 void MainWindow::on_tree_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     ui->tree->blockSignals(true);
 
-    runWizard(item);
+    if (items.count(item)) {
+        runWizard(items[item]);
+    }
 
     ui->tree->blockSignals(false);
 }
@@ -169,17 +173,22 @@ void MainWindow::on_tree_itemSelectionChanged()
         QTreeWidgetItem *item = selectedItems.first();
         if (item != NULL && items.count(item)) {
             Metabot::AnchorPoint *anchor = items[item];
+            highlightAnchor(anchor);
+        }
+    }
+}
 
-            if (anchor != NULL) {
-                anchor->highlight = true;
-                if (anchor->anchor) {
-                    anchor->anchor->instance->highlight = true;
-                }
-            } else {
-                if (robot->root != NULL) {
-                    robot->root->highlight = true;
-                }
-            }
+void MainWindow::highlightAnchor(Metabot::AnchorPoint *anchor)
+{
+    robot->unHighlight();
+    if (anchor != NULL) {
+        anchor->highlight = true;
+        if (anchor->anchor) {
+            anchor->anchor->instance->highlight = true;
+        }
+    } else {
+        if (robot->root != NULL) {
+            robot->root->highlight = true;
         }
     }
 }
@@ -241,6 +250,26 @@ void MainWindow::on_wizard_cancel()
     wizard = NULL;
 }
 
+void MainWindow::on_viewer_clicked(Metabot::ComponentInstance *instance)
+{
+    // Highlight it
+    Metabot::AnchorPoint *anchor = instance->aboveAnchor();
+    highlightAnchor(anchor);
+
+    // Change the selection in the tree
+    for (auto entry : items) {
+        if (entry.second == anchor) {
+            ui->tree->clearSelection();
+            ui->tree->setItemSelected(entry.first, true);
+        }
+    }
+}
+
+void MainWindow::on_viewer_doubleclicked(Metabot::ComponentInstance *instance)
+{
+    runWizard(instance->aboveAnchor());
+}
+
 void MainWindow::on_viewer_autorotate_change(bool value)
 {
     ui->actionAutorotate->setChecked(value);
@@ -248,7 +277,9 @@ void MainWindow::on_viewer_autorotate_change(bool value)
 
 void MainWindow::on_contextmenu_add()
 {
-    runWizard(contextmenu_item);
+    if (items.count(contextmenu_item)) {
+        runWizard(items[contextmenu_item]);
+    }
 }
 
 void MainWindow::on_contextmenu_remove()
@@ -292,7 +323,9 @@ void MainWindow::on_clicked()
 
 void MainWindow::on_contextmenu_edit()
 {
-    runWizard(contextmenu_item);
+    if (items.count(contextmenu_item)) {
+        runWizard(items[contextmenu_item]);
+    }
 }
 
 void MainWindow::on_actionOpen_triggered()
