@@ -8,7 +8,7 @@
                   "0" : {
                      "component" : {
                         "anchors" : {
-                           "1" : {
+                           "0" : {
                               "component" : {
                                  "anchors" : {},
                                  "component" : "arm_leg",
@@ -24,20 +24,20 @@
                               "orientationY" : 0.0,
                               "orientationZ" : 0.0,
                               "remote" : 0,
-                              "zero" : 0.5724679827690125
+                              "zero" : 0.3159045875072479
                            }
                         },
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "60",
                            "Thickness" : "2.2"
                         }
                      },
                      "orientationX" : 0.0,
                      "orientationY" : 0.0,
                      "orientationZ" : 0.0,
-                     "remote" : 0,
+                     "remote" : 1,
                      "zero" : -0.1588249653577805
                   }
                },
@@ -61,7 +61,7 @@
                   "0" : {
                      "component" : {
                         "anchors" : {
-                           "1" : {
+                           "0" : {
                               "component" : {
                                  "anchors" : {},
                                  "component" : "arm_leg",
@@ -77,20 +77,20 @@
                               "orientationY" : 0.0,
                               "orientationZ" : 0.0,
                               "remote" : 0,
-                              "zero" : -0.6527531147003174
+                              "zero" : -0.3351032137870789
                            }
                         },
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "60",
                            "Thickness" : "2.2"
                         }
                      },
                      "orientationX" : 0.0,
                      "orientationY" : 0.0,
                      "orientationZ" : 0.0,
-                     "remote" : 0,
+                     "remote" : 1,
                      "zero" : 0.1378810107707977
                   }
                },
@@ -114,7 +114,7 @@
                   "0" : {
                      "component" : {
                         "anchors" : {
-                           "1" : {
+                           "0" : {
                               "component" : {
                                  "anchors" : {},
                                  "component" : "arm_leg",
@@ -130,20 +130,20 @@
                               "orientationY" : 0.0,
                               "orientationZ" : 0.0,
                               "remote" : 0,
-                              "zero" : 0.4153883755207062
+                              "zero" : 0.3560471534729004
                            }
                         },
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "60",
                            "Thickness" : "2.2"
                         }
                      },
                      "orientationX" : 0.0,
                      "orientationY" : 0.0,
                      "orientationZ" : 0.0,
-                     "remote" : 0,
+                     "remote" : 1,
                      "zero" : -0.1186823919415474
                   }
                },
@@ -167,7 +167,7 @@
                   "0" : {
                      "component" : {
                         "anchors" : {
-                           "1" : {
+                           "0" : {
                               "component" : {
                                  "anchors" : {},
                                  "component" : "arm_leg",
@@ -183,20 +183,20 @@
                               "orientationY" : 0.0,
                               "orientationZ" : 0.0,
                               "remote" : 0,
-                              "zero" : -0.5532693862915039
+                              "zero" : -0.3560471534729004
                            }
                         },
                         "component" : "side_to_side",
                         "parameters" : {
                            "HolesToBorder" : "5",
-                           "Size" : "40",
+                           "Size" : "60",
                            "Thickness" : "2.2"
                         }
                      },
                      "orientationX" : 0.0,
                      "orientationY" : 0.0,
                      "orientationZ" : 0.0,
-                     "remote" : 0,
+                     "remote" : 1,
                      "zero" : 0.05934119597077370
                   }
                },
