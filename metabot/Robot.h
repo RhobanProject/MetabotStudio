@@ -40,6 +40,7 @@ namespace Metabot
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);
 #endif
             std::vector<float> getZeros();
+            std::vector<AnchorPoint*> getAnchors();
             void setZeros(std::vector<float> zeros);
             void highlightNth(int nth);
 

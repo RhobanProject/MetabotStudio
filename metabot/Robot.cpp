@@ -178,6 +178,16 @@ namespace Metabot
         });
         return zeros;
     }
+    
+    std::vector<AnchorPoint*> Robot::getAnchors()
+    {
+        std::vector<AnchorPoint*> anchors;
+        foreachAnchor([&anchors](AnchorPoint *anchor) {
+           anchors.push_back(anchor);
+        });
+
+        return anchors;
+    }
 
     void Robot::setZeros(std::vector<float> zeros)
     {
@@ -248,7 +258,6 @@ namespace Metabot
         ComponentInstance *componentInstance = NULL;
         foreach([id, &componentInstance](ComponentInstance *instance) {
             if (instance->id == id) {
-                std::cout << instance->fullName() << std::endl;
                 componentInstance = instance;
             }
         });

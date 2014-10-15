@@ -1,3 +1,4 @@
+#include <iostream>
 #include <math.h>
 #include "ZerosEditor.h"
 #include "ui_ZerosEditor.h"
@@ -13,6 +14,8 @@ ZerosEditor::ZerosEditor(Metabot::Robot *robot_, Viewer *viewer_, QWidget *paren
 
     previous = robot->getZeros();
     setWindowTitle("Zeros editor");
+
+    QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_instance_clicked(Metabot::ComponentInstance*)));
 
     init();
 }
@@ -70,6 +73,26 @@ void ZerosEditor::changed()
         zeros.push_back(angle);
     }
     robot->setZeros(zeros);
+}
+
+void ZerosEditor::on_instance_clicked(Metabot::ComponentInstance *instance)
+{
+    auto anchor = instance->aboveAnchor();
+    if (anchor) {
+        auto anchors = robot->getAnchors();
+        int n = 0;
+        for (auto robotAnchor : anchors) {
+            if (robotAnchor == anchor) {
+                if (n < sliders.size()) {
+                    this->activateWindow();
+                    this->setFocus();
+                    QSlider *slider = sliders[n];
+                    slider->setFocus();
+                }
+            }
+            n++;
+        }
+    }
 }
 
 void ZerosEditor::on_ok_clicked()
