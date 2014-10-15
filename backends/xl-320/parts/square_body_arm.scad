@@ -2,9 +2,9 @@ include <../../metabot.scad>;
 include <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
-module square_body(width=40, length=70, legs=4, legsSpacing=40, thickness=2.2) {
+module square_body_arm(width=40, length=70, legs=4, legsSpacing=40, thickness=2.2) {
 
-    metabot_part("square_body");
+    metabot_part("square_body_arm");
     metabot_parameter("width", width);
     metabot_parameter("length", length);
     metabot_parameter("legs", legs);
@@ -34,4 +34,4 @@ module square_body(width=40, length=70, legs=4, legsSpacing=40, thickness=2.2) {
     }
 }
 
-square_body(size=30);
+square_body_arm(size=30);
