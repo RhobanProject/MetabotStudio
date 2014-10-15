@@ -89,8 +89,12 @@ void ComponentWizard::setupInstance()
 
     if (anchor == NULL) {
         // We're working on robot root, anchor doesn't really matter
+        bool setRatio = (robot->root == NULL);
         robot->root = instance;
-        viewer->updateRatio();
+
+        if (setRatio) {
+            viewer->updateRatio();
+        }
     } else  {
         // Displaying anchor points
         for (auto entry : buttonToAnchor) {
