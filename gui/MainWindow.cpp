@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
     QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_clicked(Metabot::ComponentInstance*)));
     QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_doubleclicked(Metabot::ComponentInstance*)));
+    QObject::connect(viewer, SIGNAL(nowhere_clicked()), this, SLOT(on_viewer_nowhere_clicked()));
     viewer->updateRatio();
 
     QList<int> sizes;
@@ -193,6 +194,12 @@ void MainWindow::highlightAnchor(Metabot::AnchorPoint *anchor)
     }
 }
 
+void MainWindow::deselectAll()
+{
+    robot->unHighlight();
+    ui->tree->clearSelection();
+}
+
 void MainWindow::on_tree_itemDeselected()
 {
     robot->unHighlight();
@@ -268,6 +275,11 @@ void MainWindow::on_viewer_clicked(Metabot::ComponentInstance *instance)
 void MainWindow::on_viewer_doubleclicked(Metabot::ComponentInstance *instance)
 {
     runWizard(instance->aboveAnchor());
+}
+
+void MainWindow::on_viewer_nowhere_clicked()
+{
+    deselectAll();
 }
 
 void MainWindow::on_viewer_autorotate_change(bool value)

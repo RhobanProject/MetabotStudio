@@ -32,12 +32,14 @@ public:
 
     void runWizard(Metabot::AnchorPoint *anchor);
     void highlightAnchor(Metabot::AnchorPoint *anchor);
+    void deselectAll();
 
 public slots:
     void on_wizard_ok();
     void on_wizard_cancel();
     void on_viewer_clicked(Metabot::ComponentInstance *instance);
     void on_viewer_doubleclicked(Metabot::ComponentInstance *instance);
+    void on_viewer_nowhere_clicked();
 
 private slots:
     void on_viewer_autorotate_change(bool value);

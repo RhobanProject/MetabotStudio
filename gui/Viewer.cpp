@@ -295,6 +295,8 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
 
         if (instance) {
             component_clicked(instance);
+        } else {
+            nowhere_clicked();
         }
     }
 }

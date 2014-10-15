@@ -48,6 +48,7 @@ public slots:
 
 signals:
     void autorotate_changed(bool value);
+    void nowhere_clicked();
     void component_clicked(Metabot::ComponentInstance *instance);
     void component_double_clicked(Metabot::ComponentInstance *instance);
 
