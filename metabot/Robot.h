@@ -42,7 +42,6 @@ namespace Metabot
             std::vector<float> getZeros();
             std::vector<AnchorPoint*> getAnchors();
             void setZeros(std::vector<float> zeros);
-            void highlightNth(int nth);
 
 #ifdef OPENGL
             void openGLDraw();

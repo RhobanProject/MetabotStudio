@@ -12,11 +12,12 @@
 #include <metabot/Backend.h>
 #include <metabot/Robot.h>
 #include "ComponentWizard.h"
-#include "ZerosEditor.h"
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
+
+class ZerosEditor;
 
 class MainWindow : public QMainWindow
 {

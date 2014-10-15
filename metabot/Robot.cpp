@@ -200,17 +200,6 @@ namespace Metabot
         });
     }
             
-    void Robot::highlightNth(int nth)
-    {
-        unHighlight();
-        foreachAnchor([&nth](AnchorPoint *anchor) {
-            if (nth == 0) {
-                anchor->highlight = true;
-            }
-            nth--;
-        });
-    }
-
     void Robot::number()
     {
         int id = 1;

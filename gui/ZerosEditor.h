@@ -8,15 +8,17 @@
 #include "Viewer.h"
 
 namespace Ui {
-class ZerosEditor;
+    class ZerosEditor;
 }
+
+class MainWindow;
 
 class ZerosEditor : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit ZerosEditor(Metabot::Robot *robot, Viewer *viewer, QWidget *parent = 0);
+    explicit ZerosEditor(MainWindow *main, Metabot::Robot *robot, Viewer *viewer, QWidget *parent = 0);
     ~ZerosEditor();
 
     void init();
@@ -34,6 +36,7 @@ private slots:
     void focus();
 
 private:
+    MainWindow *main;
     Ui::ZerosEditor *ui;
     Metabot::Robot *robot;
     Viewer *viewer;

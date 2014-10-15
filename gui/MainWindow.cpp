@@ -2,6 +2,7 @@
 #include "MainWindow.h"
 #include "ComponentWizard.h"
 #include "ui_MainWindow.h"
+#include "ZerosEditor.h"
 #include <QFileDialog>
 #include <QTreeWidgetItem>
 #include <QMessageBox>
@@ -396,7 +397,7 @@ void MainWindow::on_actionZeros_triggered()
         zeros->close();
         delete zeros;
     }
-    zeros = new ZerosEditor(robot, viewer);
+    zeros = new ZerosEditor(this, robot, viewer);
     zeros->show();
     robot->unHighlight();
     ui->tree->clearSelection();

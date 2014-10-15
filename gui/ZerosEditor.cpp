@@ -2,10 +2,12 @@
 #include <math.h>
 #include "ZerosEditor.h"
 #include "ui_ZerosEditor.h"
+#include "MainWindow.h"
 #include <metabot/util.h>
 
-ZerosEditor::ZerosEditor(Metabot::Robot *robot_, Viewer *viewer_, QWidget *parent)
-    : robot(robot_),
+ZerosEditor::ZerosEditor(MainWindow *main_, Metabot::Robot *robot_, Viewer *viewer_, QWidget *parent)
+    : main(main_),
+      robot(robot_),
       viewer(viewer_),
     QDialog(parent),
     ui(new Ui::ZerosEditor)
@@ -59,7 +61,10 @@ void ZerosEditor::focus()
     for (int i=0; i<sliders.size(); i++) {
         QSlider *slider = sliders[i];
         if (slider == sender()) {
-            robot->highlightNth(i);
+            auto anchors = robot->getAnchors();
+            if (i < anchors.size()) {
+                main->highlightAnchor(anchors[i]);
+            }
         }
     }
 }
