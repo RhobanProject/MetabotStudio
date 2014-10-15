@@ -2,7 +2,7 @@ include <../../metabot.scad>;
 include <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
-module side(size=40, holesToBorder=5, thickness=2.2, print=false) {
+module side(size=65, holesToBorder=5, thickness=2.2, print=false) {
     metabot_part("side");
     metabot_parameter("size", size);
     metabot_parameter("holesToBorder", holesToBorder);
@@ -13,17 +13,14 @@ module side(size=40, holesToBorder=5, thickness=2.2, print=false) {
         translate([0,-size+holesToBorder,0])
             side(size,holesToBorder,thickness,false);
     } else {
-        echo("[PART] side");
-        translate([0,size-holesToBorder,0]) {
-            difference() {
-                rounded(20, size*2, thickness, 5, true);
-                for (y=[size-holesToBorder,	 -size+holesToBorder,
-                        size-holesToBorder-3*OlloSpacing, -size+holesToBorder+3*OlloSpacing]) {
-                    translate([0, y, 0])
-                        threeOllo();
-                }
-            }
-        }
+    difference() {
+	translate([0,size/2,0])
+	rounded(20, size+2*holesToBorder, thickness, 5, center=true);
+	for (y=[0, 3*OlloSpacing, size, size-3*OlloSpacing]) {
+	    translate([0, y, 0])
+		threeOllo();
+	}
+    }
     }
 }
 
