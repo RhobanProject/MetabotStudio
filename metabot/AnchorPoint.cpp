@@ -44,12 +44,18 @@ namespace Metabot
     {
         AnchorPoint *anchorPoint = new AnchorPoint(type, male, female, matrix, zero);
         anchorPoint->above = above;
-        anchorPoint->orientationX = orientationX;
-        anchorPoint->orientationY = orientationY;
-        anchorPoint->orientationZ = orientationZ;
-        anchorPoint->alpha = alpha;
+        anchorPoint->copyData(this);
 
         return anchorPoint;
+    }
+            
+    void AnchorPoint::copyData(AnchorPoint *other)
+    {
+        orientationX = other->orientationX;
+        orientationY = other->orientationY;
+        orientationZ = other->orientationZ;
+        alpha = other->alpha;
+        zero = other->zero;
     }
             
     void AnchorPoint::revert()

@@ -231,6 +231,7 @@ namespace Metabot
                 AnchorPoint *otherAnchor = other->anchors[i];
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
+                    myAnchor->copyData(otherAnchor);
                     myAnchor->attach(otherAnchor->anchor);
                     otherAnchor->detach(false);
                 }
@@ -245,6 +246,7 @@ namespace Metabot
                 AnchorPoint *candidate = findCompatible(remote);
 
                 if (candidate != NULL) {
+                    candidate->copyData(remote);
                     candidate->attach(remote);
                     anchor->detach(false);
                 }
