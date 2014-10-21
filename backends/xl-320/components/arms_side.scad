@@ -1,6 +1,7 @@
 // Component Arms to side
 // Description Motor arms to another sides
 use <../../metabot.scad>;
+use <../models/rivets.scad>
 use <../models/motor_arm.scad>
 use <../parts/arm_side.scad>;
 
@@ -10,6 +11,8 @@ FirstPart = 17;
 Distance = 45;
 // Parameter Thickness
 Thickness = 2.2;
+
+rivets(21);
 
 // motorArm();
 metabot_anchor("motor", female=true);

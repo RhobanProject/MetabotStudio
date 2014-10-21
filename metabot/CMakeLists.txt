@@ -26,6 +26,7 @@ set(ALL_SOURCES
     
     AnchorPoint.cpp
     Backend.cpp
+    BOM.cpp
     Cache.cpp
     Component.cpp
     ComponentInstance.cpp

@@ -6,7 +6,7 @@
 namespace Metabot
 {
     CSGNode::CSGNode(std::string name_, std::string value_)
-        : name(name_), value(value_), anchor(false), model(false), part(false), parameter(false)
+        : name(name_), value(value_), anchor(false), model(false), part(false), parameter(false), bom(false)
     {
         if (isMatrix()) {
             matrix = TransformMatrix::fromJSON(value);
@@ -30,6 +30,10 @@ namespace Metabot
             if (startswith(noquote, "metabot_parameter: ")) {
                 parameter = true;
                 data = trim(removestart(noquote, "metabot_parameter: "));
+            }
+            if (startswith(noquote, "metabot_bom: ")) {
+                bom = true;
+                data = trim(removestart(noquote, "metabot_bom: "));
             }
         }
     }

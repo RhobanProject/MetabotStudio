@@ -1,6 +1,7 @@
 // Component Block
 // Description Two DOF block
 use <../../metabot.scad>;
+use <../models/rivets.scad>
 include <../models/ollo.scad>;
 include <../models/motor_values.scad>;
 use <../models/motor_arm.scad>;
@@ -12,6 +13,8 @@ use <../parts/tie_bar.scad>;
 Thickness = 2.2;
 // Internal box? (harder)
 Internal = false;
+
+rivets(12);
 
 motorArm();
 rotate([180,0,0]) {

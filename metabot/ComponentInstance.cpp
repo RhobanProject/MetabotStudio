@@ -202,6 +202,7 @@ namespace Metabot
         anchors = document->anchors;
         parts = document->parts;
         models = document->models;
+        bom = document->bom;
 
         int index = 0;
         for (auto anchor : anchors) {

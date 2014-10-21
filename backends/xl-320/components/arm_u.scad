@@ -1,6 +1,7 @@
 // Component Arm U
 // Description An U on the arm
 use <../../metabot.scad>;
+use <../models/rivets.scad>
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
@@ -16,6 +17,8 @@ Radius = 8;
 Thickness = 2.2;
 // Parameter Static angle
 Angle = 0;
+
+rivets(13);
 
 metabot_anchor("motor", female=true);
 // motorArm();

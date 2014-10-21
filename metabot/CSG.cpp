@@ -118,6 +118,10 @@ namespace Metabot
             parts.push_back(part);
         }
 
+        if (node->bom) {
+            bom.append(BOMEntry(node->json()));
+        }
+
         for (auto child : node->children) {
             walk(matrix, child);
         }

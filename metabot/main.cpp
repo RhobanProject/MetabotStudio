@@ -33,6 +33,9 @@ void needRobot()
         try {
             robot = new Robot(backend);
             robot->loadFromFile(robotFile);
+        } catch (string err) {
+            cerr << "Error: unable to open " << robotFile << " (" << err << ")" << endl;
+            exit(EXIT_FAILURE);
         } catch (...) {
             cerr << "Error: unable to open " << robotFile << endl;
             exit(EXIT_FAILURE);
@@ -46,22 +49,23 @@ void needRobot()
 int main(int argc, char *argv[])
 {
     int index;
-    bool cacheClear = false;
-    bool cacheWarmup = false;
-    bool stlExport = false;
+    string mode = "";
     string output;
 
-    while ((index = getopt(argc, argv, "cws:")) != -1) {
+    while ((index = getopt(argc, argv, "bcws:")) != -1) {
         switch (index) {
             case 'c':
-                cacheClear = true;
+                mode = "cacheClear";
                 break;
             case 'w':
-                cacheWarmup = true;
+                mode = "cacheWarmup";
                 break;
             case 's':
-                stlExport = true;
+                mode = "stlExport";
                 output = string(optarg);
+                break;
+            case 'b':
+                mode = "bom";
                 break;
         }
     }
@@ -76,20 +80,24 @@ int main(int argc, char *argv[])
         backend->load();
 
         // Cache handling
-        if (cacheClear) {
+        if (mode == "cacheClear") {
             cout << "Clearing the cache" << endl;
             int n = backend->clearCache();
             cout << "Done, removed " << n << " files." << endl;
-        } else if (cacheWarmup) {
+        } else if (mode == "cacheWarmup") {
             cout << "Generating the cache..." << endl;
             backend->buildCache();
             cout << "Cache generated (" << backend->cacheFiles() << " files)." << endl;
         // Robot handling
-        } else if (stlExport) {
+        } else if (mode == "stlExport") {
             needRobot();
             cout << "Saving robot to " << output << endl;
             auto model = robot->toModel();
             saveModelToFileBinary(output.c_str(), &model);
+        } else if (mode == "bom") {
+            needRobot();
+            cout << "Bill of materials" << endl;
+            cout << robot->getBOM().toString() << endl;
         } else {
             usage();
         }

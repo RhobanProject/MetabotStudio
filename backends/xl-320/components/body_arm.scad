@@ -1,6 +1,7 @@
 // Component Body arms
 // Description Star body arms
 include <../../metabot.scad>;
+use <../models/rivets.scad>
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
@@ -23,6 +24,7 @@ if (Legs>0) {
 		rotate([0, 0, 360*i/Legs])
 		translate([0,Size,0]) {
 			rotate([0,0,180]) {
+				rivets(9);
 				// motorArm();
 				metabot_anchor("motor", female=true);
 			}

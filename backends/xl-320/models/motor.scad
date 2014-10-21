@@ -1,8 +1,15 @@
 include <ollo.scad>;
 include <motor_values.scad>;
 use <../util/rounded.scad>;
+include <../../metabot.scad>;
+
+NoModels = false;
 
 module motor(thickness=2.2) {
+  metabot_bom("XL-320 Servo", price=21.9, url="http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1611");
+  if (NoModels) {
+    metabot_model("motor", col=[0.4, 0.45, 0.4]);
+  } else {
   translate([0,-MotorArmOffset,-MotorDepth/2]) {
   color([0.25,0.25,0.25]) {
 	 difference() {
@@ -32,6 +39,7 @@ module motor(thickness=2.2) {
 	 }
   }
 	}
+    }
 }
 
 motor();

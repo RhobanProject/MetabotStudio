@@ -283,4 +283,14 @@ namespace Metabot
 
         return componentInstance;
     }
+
+    BOM Robot::getBOM()
+    {
+        BOM bom;
+        foreach([&bom](ComponentInstance *instance) {
+            bom.merge(instance->bom);
+        });
+
+        return bom;
+    }
 }

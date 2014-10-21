@@ -6,6 +6,7 @@
 #include "AnchorPoint.h"
 #include "Part.h"
 #include "ModelRef.h"
+#include "BOM.h"
 
 namespace Metabot
 {
@@ -22,6 +23,7 @@ namespace Metabot
             std::vector<AnchorPoint*> anchors;
             std::vector<Part*> parts;
             std::vector<ModelRef*> models;
+            BOM bom;
 
             CSGNode *root;
     };

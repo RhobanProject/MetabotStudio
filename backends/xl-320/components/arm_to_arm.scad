@@ -1,6 +1,7 @@
 // Component Arm to arm
 // Description Can links two servos
 use <../../metabot.scad>;
+use <../models/rivets.scad>
 use <../parts/arm_to_arm.scad>;
 include <../models/ollo.scad>;
 include <../models/motor_values.scad>
@@ -10,6 +11,8 @@ use <../models/motor_arm.scad>
 Distance = 50;
 // Parameter Thickness
 Thickness = 2.2;
+
+rivets(18);
 
 translate([0,-Distance/2,0]) {
 	// motorArm();

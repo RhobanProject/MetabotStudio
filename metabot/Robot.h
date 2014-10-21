@@ -5,9 +5,7 @@
 #include <3d/Model.h>
 #include <3d/Point3.h>
 #include "Vector.h"
-#ifndef NOCPP11
-#include <functional>
-#endif
+#include "BOM.h"
 
 namespace Metabot
 {
@@ -37,10 +35,8 @@ namespace Metabot
             void saveToFile(std::string filename);
             void number();
 
-#ifndef NOCPP11
             void foreach(std::function<void(ComponentInstance *instance)> method);
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);
-#endif
             std::vector<float> getZeros();
             std::vector<AnchorPoint*> getAnchors();
             void setZeros(std::vector<float> zeros);
@@ -53,5 +49,7 @@ namespace Metabot
             ComponentInstance *root;
 
             Backend *backend;
+            
+            BOM getBOM();
     };
 }

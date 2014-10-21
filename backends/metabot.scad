@@ -23,3 +23,8 @@ module metabot_anchor(type, male=false, female=false) {
         marker(str("metabot_anchor: {'type':'", type, "', 'male': ", male,", 'female':", female,"}"));
     }
 }
+
+// Adding something to the BOM
+module metabot_bom(name, quantity=1, price=0, url="") {
+    marker(str("metabot_bom: {'name':'", name, "', 'quantity': ", quantity, ", 'price': ", price, ", 'url': '", url, "'}"));
+}

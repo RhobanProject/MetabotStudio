@@ -26,6 +26,6 @@ namespace Metabot
             std::string name, value;
             std::vector<CSGNode*> children;
             std::vector<std::string> parameters;
-            bool anchor, model, part, parameter;
+            bool anchor, model, part, parameter, bom;
     };
 }

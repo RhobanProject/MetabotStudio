@@ -8,6 +8,7 @@
 #include <string>
 #include <3d/Model.h>
 #include <json/json.h>
+#include "BOM.h"
 
 namespace Metabot
 {
@@ -81,5 +82,7 @@ namespace Metabot
             Model myModel;
 
             int id;
+
+            BOM bom;
     };
 }
