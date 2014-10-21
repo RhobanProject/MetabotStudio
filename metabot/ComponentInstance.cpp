@@ -21,7 +21,7 @@
 namespace Metabot
 {
     ComponentInstance::ComponentInstance(Component *component_)
-        : component(component_), highlight(false)
+        : component(component_), highlight(false), hover(false)
     {
     }
 
@@ -136,26 +136,17 @@ namespace Metabot
         }
 
         // Rendering sub-components
+        int anchorId = 1;
         for (auto anchor : anchors) {
             glPushMatrix();
             if (anchor->above) {
-                anchor->openGLDraw();
+                anchor->openGLDraw(anchorId);
             }
             glPopMatrix();
+            anchorId++;
         }
     }
 #endif
-
-    void ComponentInstance::unHighlight()
-    {
-        highlight = false;
-        for (auto anchor : anchors) {
-            anchor->highlight = false;
-            if (anchor->anchor != NULL && anchor->above) {
-                anchor->anchor->instance->unHighlight();
-            }
-        }
-    }
 
     Model ComponentInstance::toModel()
     {
@@ -407,6 +398,14 @@ namespace Metabot
                 method(anchor);
                 anchor->anchor->instance->foreachAnchor(method);
             }
+        }
+    }
+
+    void ComponentInstance::onHover()
+    {
+        hover = true;
+        for (auto anchor : anchors) {
+            anchor->hover = true;
         }
     }
 }

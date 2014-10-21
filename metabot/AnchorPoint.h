@@ -29,8 +29,10 @@ namespace Metabot
 
             Model toModel();
             bool highlight;
+            bool hover;
+
 #ifdef OPENGL
-            void openGLDraw();
+            void openGLDraw(int id=1);
 #endif
 
             std::string type;

@@ -19,6 +19,7 @@ namespace Metabot
 
 #ifdef OPENGL
         highlight = false;
+        hover = false;
 #endif
     }
             
@@ -181,8 +182,10 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void AnchorPoint::openGLDraw()
+    void AnchorPoint::openGLDraw(int id)
     {
+        glStencilFunc(GL_ALWAYS, 200+id, -1);
+
         if (anchor != NULL) {
             if (above) {
                 transformationForward().openGLMult();
@@ -192,7 +195,7 @@ namespace Metabot
                 instance->openGLDraw();
             }
         } else {
-            if (above && highlight) {
+            if (above && (highlight || hover)) {
                 matrix.openGLMult();
                 Model m = instance->component->backend->getModel("anchor");
                 m.r = 0.4;

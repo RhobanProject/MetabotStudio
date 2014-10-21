@@ -28,7 +28,9 @@ namespace Metabot
             void setRoot(ComponentInstance *root);
             Vector getPoint(ComponentInstance *instance, Vector pt);
             ComponentInstance *nearest(Vector pt);
+
             ComponentInstance *getComponentById(int id);
+            AnchorPoint *getHoveredAnchor(int id);
 
             void clear();
             void loadFromFile(std::string filename);
@@ -47,6 +49,7 @@ namespace Metabot
             void openGLDraw();
 #endif
             void unHighlight();
+            void unHover();
             ComponentInstance *root;
 
             Backend *backend;

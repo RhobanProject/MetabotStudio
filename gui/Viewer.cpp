@@ -21,6 +21,7 @@ Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     movePressed = false;
     t = 0.0;
     framesPerSecond = 30;
+    setMouseTracking(true);
 
     setFocusPolicy(Qt::ClickFocus);
 
@@ -237,7 +238,7 @@ void Viewer::keyPressEvent(QKeyEvent *keyEvent)
     if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
 }
 
-ComponentInstance *Viewer::getInstanceAt(int x, int y)
+ComponentInstance *Viewer::getInstanceAt(int x, int y, int *id)
 {
         /*
     GLbyte color[4];
@@ -264,6 +265,9 @@ ComponentInstance *Viewer::getInstanceAt(int x, int y)
     int window_height = height();
     GLint index;
     glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+    if (id != NULL) {
+        *id = index;
+    }
 
     return robot->getComponentById(index);
 }
@@ -313,6 +317,7 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
 void Viewer::mouseMoveEvent(QMouseEvent *evt)
 {
     moved = true;
+
     if (pressed) {
         setAutorotate(false);
         float dX = evt->x()-mX;
@@ -322,23 +327,37 @@ void Viewer::mouseMoveEvent(QMouseEvent *evt)
 
         if (beta > M_PI/2-0.01) beta = M_PI/2-0.01;
         if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
-    }
-
-    if (movePressed) {
+    } else if (movePressed) {
         setAutorotate(false);
         float dX = evt->x()-mX;
         float dY = evt->y()-mY;
 
         tX = mTX + dY*cos(alpha) + dX*cos(alpha+M_PI/2.0);
         tY = mTY + dY*sin(alpha) + dX*sin(alpha+M_PI/2.0);
+    } else {
+       int id;
+       auto instance = getInstanceAt(evt->x(), evt->y(), &id);
+       if (id < 200 && id!=255) {
+           robot->unHover();
+           if (instance) {
+             instance->onHover();
+           }
+       }
     }
 }
 
 void Viewer::mouseDoubleClickEvent(QMouseEvent *evt)
 {
-    auto instance = getInstanceAt(evt->x(), evt->y());
+    int id;
+    auto instance = getInstanceAt(evt->x(), evt->y(), &id);
+
     if (instance) {
         component_double_clicked(instance);
+    } else {
+        auto anchor = robot->getHoveredAnchor(id);
+        if (anchor) {
+            anchor_clicked(anchor);
+        }
     }
 }
 

@@ -42,11 +42,12 @@ namespace Metabot
             void foreachAnchor(std::function<void(AnchorPoint *instance)> method);
 #endif
             
-			void unHighlight();
 #ifdef OPENGL
             void openGLDraw();
 #endif
             bool highlight;
+            bool hover;
+            void onHover();
     
             // Merge the anchors from another entity
             // If detach is true, anchor will be detached from the other objects, and thus

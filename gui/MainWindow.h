@@ -43,6 +43,7 @@ public slots:
     void on_wizard_cancel();
     void on_viewer_clicked(Metabot::ComponentInstance *instance);
     void on_viewer_doubleclicked(Metabot::ComponentInstance *instance);
+    void on_viewer_anchor_clicked(Metabot::AnchorPoint *anchor);
     void on_viewer_nowhere_clicked();
 
 private slots:

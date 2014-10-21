@@ -47,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Viewer
     QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
+    QObject::connect(viewer, SIGNAL(anchor_clicked(Metabot::AnchorPoint*)), this, SLOT(on_viewer_anchor_clicked(Metabot::AnchorPoint*)));
     QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_clicked(Metabot::ComponentInstance*)));
     QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_doubleclicked(Metabot::ComponentInstance*)));
     QObject::connect(viewer, SIGNAL(nowhere_clicked()), this, SLOT(on_viewer_nowhere_clicked()));
@@ -139,6 +140,12 @@ void MainWindow::on_wizard_clicked()
 
 void MainWindow::runWizard(Metabot::AnchorPoint *anchor)
 {
+    if (zeros) {
+        zeros->close();
+        delete zeros;
+        zeros = NULL;
+    }
+
     if (wizard != NULL) {
         wizard->activateWindow();
     } else {
@@ -294,6 +301,11 @@ void MainWindow::on_viewer_clicked(Metabot::ComponentInstance *instance)
 void MainWindow::on_viewer_doubleclicked(Metabot::ComponentInstance *instance)
 {
     Metabot::AnchorPoint *anchor = instance->aboveAnchor();
+    runWizard(anchor);
+}
+
+void MainWindow::on_viewer_anchor_clicked(Metabot::AnchorPoint *anchor)
+{
     runWizard(anchor);
 }
 

@@ -151,9 +151,39 @@ namespace Metabot
             
     void Robot::unHighlight()
     {
-        if (root != NULL) {
-            root->unHighlight();
-        }
+        foreach([](ComponentInstance *instance) {
+            instance->highlight = false;
+            for (auto anchor : instance->anchors) {
+                anchor->highlight = false;
+            }
+        });
+    }
+
+    void Robot::unHover()
+    {
+        foreach([](ComponentInstance *instance) {
+            instance->hover = false;
+            for (auto anchor : instance->anchors) {
+                anchor->hover = false;
+            }
+        });
+    }
+            
+    AnchorPoint *Robot::getHoveredAnchor(int id)
+    {
+        AnchorPoint *anchor = NULL;
+        id -= 200;
+
+        foreach([&anchor, id](ComponentInstance *instance) {
+            if (instance->hover) {
+                int n = 1;
+                for (auto a : instance->anchors) {
+                    if (n++ == id) anchor = a;
+                }
+            }
+        });
+
+        return anchor;
     }
     
     void Robot::foreach(std::function<void(ComponentInstance *instance)> method)
