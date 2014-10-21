@@ -114,7 +114,7 @@ namespace Metabot
         }
 
         if (node->part) {
-            Part *part = new Part(node->data, implode(node->parameters, " "));
+            Part *part = new Part(node->data, implode(node->parameters, " "), matrix);
             parts.push_back(part);
         }
 
