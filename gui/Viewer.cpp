@@ -158,6 +158,8 @@ void Viewer::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    drawBackground();
+
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,
                 mat_amb_diff);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,
@@ -169,7 +171,6 @@ void Viewer::paintGL()
     glColor4ub(250, 250, 250, 255);
 
     glTranslatef(tX, tY, 0);
-
     glPushMatrix();
     robot->openGLDraw();
     glPopMatrix();
@@ -178,33 +179,11 @@ void Viewer::paintGL()
     glDisable(GL_LIGHTING);
 
     if (drawGrid) {
-        glLineWidth(1.0);
-        glBegin(GL_LINES);
-        glColor3f(0.3, 0.3, 0.3);
-        for (float x=plateX1; x<=plateX2; x+=10.0) {
-            glVertex3f(x, plateY1, plateZ);
-            glVertex3f(x, plateY2, plateZ);
-        }
-        for (float y=plateY1; y<=plateY2; y+=10.0) {
-            glVertex3f(plateX1, y, plateZ);
-            glVertex3f(plateX2, y, plateZ);
-        }
-        glEnd();
+        drawGridLines();
     }
 
     if (drawXYZ) {
-        glLineWidth(1.0);
-        glBegin(GL_LINES);
-        glColor3f(0.9, 0.0, 0.0);
-        glVertex3f(0, 0, 0);
-        glVertex3f(100.0, 0, 0);
-        glColor3f(0.0, 0.9, 0.0);
-        glVertex3f(0, 0, 0);
-        glVertex3f(0.0, 100, 0);
-        glColor3f(0.0, 0.0, 0.9);
-        glVertex3f(0, 0, 0);
-        glVertex3f(0, 0, 100);
-        glEnd();
+        drawAxis();
     }
 }
 
@@ -270,6 +249,67 @@ ComponentInstance *Viewer::getInstanceAt(int x, int y, int *id)
     }
 
     return robot->getComponentById(index);
+}
+
+void Viewer::drawBackground()
+{
+    glMatrixMode (GL_MODELVIEW);
+    glPushMatrix ();
+    glLoadIdentity ();
+    glMatrixMode (GL_PROJECTION);
+    glPushMatrix ();
+    glLoadIdentity ();
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+
+    glBegin (GL_QUADS);
+    glColor3f(0.0,0.0,0.0);
+    glVertex3f (-1.0f, -1.0f, -1.0f);
+    glVertex3f (1.0f, -1.0f, -1.0f);
+
+    glColor3f(0.1,0.1,0.1);
+    glVertex3f (1.0f, 1.0f, -1.0f);
+    glVertex3f (-1.0f, 1.0f, -1.0f);
+    glEnd ();
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+void Viewer::drawGridLines()
+{
+    glLineWidth(1.0);
+    glBegin(GL_LINES);
+    glColor3f(0.3, 0.1, 0.3);
+    for (float x=plateX1; x<=plateX2; x+=10.0) {
+        glVertex3f(x, plateY1, plateZ);
+        glVertex3f(x, plateY2, plateZ);
+    }
+    for (float y=plateY1; y<=plateY2; y+=10.0) {
+        glVertex3f(plateX1, y, plateZ);
+        glVertex3f(plateX2, y, plateZ);
+    }
+    glEnd();
+}
+
+void Viewer::drawAxis()
+{
+    glLineWidth(1.0);
+    glBegin(GL_LINES);
+    glColor3f(0.9, 0.0, 0.0);
+    glVertex3f(0, 0, 0);
+    glVertex3f(100.0, 0, 0);
+    glColor3f(0.0, 0.9, 0.0);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0.0, 100, 0);
+    glColor3f(0.0, 0.0, 0.9);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, 0, 100);
+    glEnd();
 }
 void Viewer::mousePressEvent(QMouseEvent *evt)
 {

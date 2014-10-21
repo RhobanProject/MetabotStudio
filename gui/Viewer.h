@@ -21,6 +21,10 @@ public:
 
     Metabot::ComponentInstance *getInstanceAt(int x, int y, int *id=NULL);
 
+    void drawBackground();
+    void drawGridLines();
+    void drawAxis();
+
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
