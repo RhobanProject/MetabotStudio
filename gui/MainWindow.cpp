@@ -384,7 +384,7 @@ void MainWindow::on_contextmenu_edit()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QFileDialog dialog;
+    QFileDialog dialog(this);
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
     dialog.setNameFilter("Robot (*.robot)");
     if (dialog.exec()) {
@@ -413,7 +413,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSave_as_triggered()
 {
-    QFileDialog dialog;
+    QFileDialog dialog(this);
     dialog.setNameFilter("Robot (*.robot)");
     dialog.setDefaultSuffix("robot");
     dialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -474,7 +474,7 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionExport_STL_triggered()
 {
-    QFileDialog dialog;
+    QFileDialog dialog(this);
     dialog.setNameFilter("STL (*.stl)");
     dialog.setDefaultSuffix("stl");
     dialog.setAcceptMode(QFileDialog::AcceptSave);
