@@ -9,6 +9,8 @@
 #include <3d/Model.h>
 #include <json/json.h>
 #include "BOM.h"
+#include "Parts.h"
+#include "ModelRefs.h"
 
 namespace Metabot
 {
@@ -39,7 +41,7 @@ namespace Metabot
             void compile();
 
 #ifndef NOCPP11
-            void foreach(std::function<void(ComponentInstance *instance)> method);
+            void foreachComponent(std::function<void(ComponentInstance *instance)> method);
             void foreachAnchor(std::function<void(AnchorPoint *instance)> method);
 #endif
             
@@ -76,13 +78,13 @@ namespace Metabot
             Component *component;
  
             std::vector<AnchorPoint *> anchors;
-            std::vector<Part *> parts;
-            std::vector<ModelRef *> models;
+            ModelRefs models;
+            Parts parts;
+            BOM bom;
 
             Model myModel;
 
             int id;
 
-            BOM bom;
     };
 }

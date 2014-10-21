@@ -7,7 +7,7 @@
 #include "Robot.h"
 #include "AnchorPoint.h"
 #include "ComponentInstance.h"
-#include "Part.h"
+#include "Parts.h"
 #include "util.h"
 
 namespace Metabot
@@ -28,25 +28,7 @@ namespace Metabot
             makedir(directory);
         }
 
-        std::map<std::string, std::vector<Part*> > allParts;
-        foreach([&allParts](ComponentInstance *instance) {
-            for (auto part : instance->parts) {
-                allParts[part->hash()].push_back(part);
-            }
-        });
-        std::map<std::string, std::vector<Part*> > parts;
-        for (auto sameParts : allParts) {
-            Part *part = sameParts.second.front();
-            part->quantity = sameParts.second.size();
-
-            parts[part->name].push_back(part);
-        }
-        for (auto part : parts) {
-            std::cout << part.first << ": " << std::endl;
-            for (auto spart : part.second) {
-                std::cout << spart->params << " quantity:"<< spart->quantity << std::endl;
-            }
-        }
+        Parts parts = getParts();
     }
             
     Robot *Robot::clone()
@@ -151,7 +133,7 @@ namespace Metabot
             
     void Robot::unHighlight()
     {
-        foreach([](ComponentInstance *instance) {
+        foreachComponent([](ComponentInstance *instance) {
             instance->highlight = false;
             for (auto anchor : instance->anchors) {
                 anchor->highlight = false;
@@ -161,7 +143,7 @@ namespace Metabot
 
     void Robot::unHover()
     {
-        foreach([](ComponentInstance *instance) {
+        foreachComponent([](ComponentInstance *instance) {
             instance->hover = false;
             for (auto anchor : instance->anchors) {
                 anchor->hover = false;
@@ -174,7 +156,7 @@ namespace Metabot
         AnchorPoint *anchor = NULL;
         id -= 200;
 
-        foreach([&anchor, id](ComponentInstance *instance) {
+        foreachComponent([&anchor, id](ComponentInstance *instance) {
             if (instance->hover) {
                 int n = 1;
                 for (auto a : instance->anchors) {
@@ -186,10 +168,10 @@ namespace Metabot
         return anchor;
     }
     
-    void Robot::foreach(std::function<void(ComponentInstance *instance)> method)
+    void Robot::foreachComponent(std::function<void(ComponentInstance *instance)> method)
     {
         if (root != NULL) {
-            root->foreach(method);
+            root->foreachComponent(method);
         }
     }
 
@@ -233,7 +215,7 @@ namespace Metabot
     void Robot::number()
     {
         int id = 1;
-        foreach([&id](ComponentInstance *component) {
+        foreachComponent([&id](ComponentInstance *component) {
             component->id = (id++);
         });
     }
@@ -259,7 +241,7 @@ namespace Metabot
         ComponentInstance *bestInstance = NULL;
         float bestDistance = -1;
 
-        foreach([this, pt, &bestInstance, &bestDistance](ComponentInstance *instance) {
+        foreachComponent([this, pt, &bestInstance, &bestDistance](ComponentInstance *instance) {
             Vector v(0, 0, 0);
             auto partPoint = this->getPoint(instance, v);
             float distance = partPoint.distance(pt);
@@ -275,7 +257,7 @@ namespace Metabot
     ComponentInstance *Robot::getComponentById(int id)
     {
         ComponentInstance *componentInstance = NULL;
-        foreach([id, &componentInstance](ComponentInstance *instance) {
+        foreachComponent([id, &componentInstance](ComponentInstance *instance) {
             if (instance->id == id) {
                 componentInstance = instance;
             }
@@ -283,11 +265,20 @@ namespace Metabot
 
         return componentInstance;
     }
+    
+    Parts Robot::getParts()
+    {
+        Parts parts;
+        foreachComponent([&parts](ComponentInstance *instance) {
+            parts.merge(instance->parts);
+        });
+        return parts;
+    }
 
     BOM Robot::getBOM()
     {
         BOM bom;
-        foreach([&bom](ComponentInstance *instance) {
+        foreachComponent([&bom](ComponentInstance *instance) {
             bom.merge(instance->bom);
         });
 

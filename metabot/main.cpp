@@ -21,9 +21,14 @@ void usage()
     cerr << "Metabot v1.0 - Rhoban System" << endl;
     cerr << "Usage: metabot [option] [file.robot]" << endl;
     cerr << "" << endl;
+    cerr << "Cache operations" << endl;
     cerr << "   -c: Clears the cache" << endl;
     cerr << "   -w: Warmup/generates the cache" << endl;
+    cerr << "" << endl;
+    cerr << "Robot operations (needs a .robot)" << endl;
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
+    cerr << "   -p: shows the list of parts to print (stl and quantity)" << endl;
+    cerr << "   -b: shows the BOM" << endl;
     exit(EXIT_FAILURE);
 }
 
@@ -52,7 +57,7 @@ int main(int argc, char *argv[])
     string mode = "";
     string output;
 
-    while ((index = getopt(argc, argv, "bcws:")) != -1) {
+    while ((index = getopt(argc, argv, "pbcws:")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -66,6 +71,9 @@ int main(int argc, char *argv[])
                 break;
             case 'b':
                 mode = "bom";
+                break;
+            case 'p':
+                mode = "parts";
                 break;
         }
     }
@@ -97,7 +105,11 @@ int main(int argc, char *argv[])
         } else if (mode == "bom") {
             needRobot();
             cout << "Bill of materials" << endl;
-            cout << robot->getBOM().toString() << endl;
+            cout << robot->getBOM().toString();
+        } else if (mode == "parts") {
+            needRobot();
+            cout << "Parts" << endl;
+            cout << robot->getParts().group().toString();
         } else {
             usage();
         }

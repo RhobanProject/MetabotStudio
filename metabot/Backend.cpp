@@ -5,7 +5,7 @@
 #include "Cache.h"
 #include "ComponentInstance.h"
 #include "AnchorPoint.h"
-#include "ModelRef.h"
+#include "ModelRefs.h"
 #include "util.h"
 
 namespace Metabot
@@ -36,8 +36,8 @@ namespace Metabot
             auto instance = component.second->instanciate();
             instance->compile();
 
-            for (auto ref : instance->models) {
-                getModel(ref->name);
+            for (auto ref : instance->models.models) {
+                getModel(ref.name);
             }
 
             delete instance;

@@ -6,6 +6,7 @@
 #include <3d/Point3.h>
 #include "Vector.h"
 #include "BOM.h"
+#include "Parts.h"
 
 namespace Metabot
 {
@@ -35,7 +36,7 @@ namespace Metabot
             void saveToFile(std::string filename);
             void number();
 
-            void foreach(std::function<void(ComponentInstance *instance)> method);
+            void foreachComponent(std::function<void(ComponentInstance *instance)> method);
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);
             std::vector<float> getZeros();
             std::vector<AnchorPoint*> getAnchors();
@@ -49,7 +50,8 @@ namespace Metabot
             ComponentInstance *root;
 
             Backend *backend;
-            
+
+            Parts getParts();
             BOM getBOM();
     };
 }

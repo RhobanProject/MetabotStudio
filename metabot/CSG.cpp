@@ -109,13 +109,11 @@ namespace Metabot
         }
 
         if (node->model) {
-            ModelRef *model = new ModelRef(node->json(), matrix);
-            models.push_back(model);
+            models.add(ModelRef(node->json(), matrix));
         }
 
         if (node->part) {
-            Part *part = new Part(node->data, implode(node->parameters, " "), matrix);
-            parts.push_back(part);
+            parts.add(Part(node->data, implode(node->parameters, " "), matrix));
         }
 
         if (node->bom) {

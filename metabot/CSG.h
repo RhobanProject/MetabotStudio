@@ -4,8 +4,8 @@
 #include <string>
 #include "TransformMatrix.h"
 #include "AnchorPoint.h"
-#include "Part.h"
-#include "ModelRef.h"
+#include "Parts.h"
+#include "ModelRefs.h"
 #include "BOM.h"
 
 namespace Metabot
@@ -21,8 +21,8 @@ namespace Metabot
             void walk(TransformMatrix matrix, CSGNode *node);
 
             std::vector<AnchorPoint*> anchors;
-            std::vector<Part*> parts;
-            std::vector<ModelRef*> models;
+            ModelRefs models;
+            Parts parts;
             BOM bom;
 
             CSGNode *root;

@@ -11,8 +11,8 @@
 #include "Component.h"
 #include "ComponentInstance.h"
 #include "AnchorPoint.h"
-#include "Part.h"
-#include "ModelRef.h"
+#include "Parts.h"
+#include "ModelRefs.h"
 #include "Backend.h"
 #include "Cache.h"
 #include "CSG.h"
@@ -27,16 +27,10 @@ namespace Metabot
 
     ComponentInstance::~ComponentInstance()
     {
-        for (auto model : models) {
-            delete model;
-        }
         for (auto anchor : anchors) {
             if (anchor->above) {
                 delete anchor;
             }
-        }
-        for (auto part : parts) {
-            delete part;
         }
     }
 
@@ -46,9 +40,6 @@ namespace Metabot
         instance->myModel = myModel;
         instance->values = values;
 
-        for (auto model : models) {
-            instance->models.push_back(model->clone());
-        }
         int index = 0;
         for (auto anchor : anchors) {
             AnchorPoint *anchorPoint = anchor->clone();
@@ -62,9 +53,10 @@ namespace Metabot
                 anchorPoint->attach(child->anchors[remote->id]);
             }
         }
-        for (auto part : parts) {
-            instance->parts.push_back(part->clone());
-        }
+
+        instance->models = models;
+        instance->parts = parts;
+        instance->bom = bom;
 
         return instance;
     }
@@ -118,18 +110,18 @@ namespace Metabot
         myModel.openGLDraw();
 
         // Rendering models
-        for (auto ref : models) {
+        for (auto ref : models.models) {
             glPushMatrix();
-            ref->matrix.openGLMult();
-            Model model = component->backend->getModel(ref->name);
+            ref.matrix.openGLMult();
+            Model model = component->backend->getModel(ref.name);
             if (highlight) {
                 model.r = 0.4;
                 model.g = 1.0;
                 model.b = 0.3;
             } else {
-                model.r = ref->r;
-                model.g = ref->g;
-                model.b = ref->b;
+                model.r = ref.r;
+                model.g = ref.g;
+                model.b = ref.b;
             }
             model.openGLDraw();
             glPopMatrix();
@@ -154,9 +146,9 @@ namespace Metabot
         model = myModel;
 
         // Rendering models
-        for (auto ref : models) {
-            Model m = component->backend->getModel(ref->name);
-            m.apply(ref->matrix);
+        for (auto ref : models.models) {
+            Model m = component->backend->getModel(ref.name);
+            m.apply(ref.matrix);
             model.merge(m);
         }
 
@@ -381,13 +373,13 @@ namespace Metabot
         return json;
     }
 
-    void ComponentInstance::foreach(std::function<void(ComponentInstance *instance)> method)
+    void ComponentInstance::foreachComponent(std::function<void(ComponentInstance *instance)> method)
     {
         method(this);
 
         for (auto anchor : anchors) {
             if (anchor->anchor != NULL && anchor->above) {
-                anchor->anchor->instance->foreach(method);
+                anchor->anchor->instance->foreachComponent(method);
             }
         }
     }

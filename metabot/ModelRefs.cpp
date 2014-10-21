@@ -1,4 +1,4 @@
-#include "ModelRef.h"
+#include "ModelRefs.h"
 
 namespace Metabot
 {
@@ -23,8 +23,8 @@ namespace Metabot
     {
     }
             
-    ModelRef *ModelRef::clone()
+    void ModelRefs::add(const ModelRef &model)
     {
-        return new ModelRef(name, r, g, b, matrix);
+        models.push_back(model);
     }
 }
