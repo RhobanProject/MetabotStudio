@@ -196,8 +196,8 @@ namespace Metabot
                 matrix.openGLMult();
                 Model m = instance->component->backend->getModel("anchor");
                 m.r = 0.4;
-                m.g = 1.0;
-                m.b = 0.3;
+                m.g = 0.3;
+                m.b = 1.0;
                 m.openGLDraw();
             }
         }

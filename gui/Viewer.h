@@ -19,6 +19,8 @@ public:
     void paintGL();
     void keyPressEvent(QKeyEvent *keyEvent);
 
+    Metabot::ComponentInstance *getInstanceAt(int x, int y);
+
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);

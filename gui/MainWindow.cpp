@@ -205,6 +205,12 @@ void MainWindow::on_tree_itemDeselected()
 void MainWindow::on_viewer_contextmenu_request(QPoint pt)
 {
     auto items = ui->tree->selectedItems();
+
+    auto instance = viewer->getInstanceAt(pt.x(), pt.y());
+    if (instance) {
+        on_viewer_clicked(instance);
+    }
+
     if (items.size()) {
         viewer->dontMove();
         showContextMenu(viewer->mapToGlobal(pt), items[0]);

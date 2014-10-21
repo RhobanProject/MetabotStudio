@@ -237,6 +237,14 @@ void Viewer::keyPressEvent(QKeyEvent *keyEvent)
     if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
 }
 
+ComponentInstance *Viewer::getInstanceAt(int x, int y)
+{
+    int window_height = height();
+    GLint index;
+    glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+    return robot->getComponentById(index);
+}
 void Viewer::mousePressEvent(QMouseEvent *evt)
 {
     moved = false;
@@ -327,13 +335,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *evt)
 
 void Viewer::mouseDoubleClickEvent(QMouseEvent *evt)
 {
-    int x = evt->x();
-    int y = evt->y();
-    int window_height = height();
-    GLint index;
-    glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
-    auto instance = robot->getComponentById(index);
-
+    auto instance = getInstanceAt(evt->x(), evt->y());
     if (instance) {
         component_double_clicked(instance);
     }
