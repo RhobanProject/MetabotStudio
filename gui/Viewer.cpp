@@ -303,6 +303,10 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
         } else {
             nowhere_clicked();
         }
+
+        if (evt->button() == Qt::RightButton) {
+            viewer_contextmenu_request(QPoint(evt->x(), evt->y()));
+        }
     }
 }
 

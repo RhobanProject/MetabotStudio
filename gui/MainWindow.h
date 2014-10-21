@@ -36,6 +36,8 @@ public:
     void highlightAnchor(Metabot::AnchorPoint *anchor);
     void deselectAll();
 
+    Metabot::AnchorPoint *selectedAnchor();
+
 public slots:
     void on_wizard_ok();
     void on_wizard_cancel();
@@ -73,7 +75,6 @@ private slots:
     void on_actionXYZ_toggled(bool arg1);
 
     void on_actionAutorotate_triggered();
-
     void on_actionNew_triggered();
 
 private:

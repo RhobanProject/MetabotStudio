@@ -50,6 +50,7 @@ public slots:
     virtual void timeOutSlot();
 
 signals:
+    void viewer_contextmenu_request(QPoint);
     void autorotate_changed(bool value);
     void nowhere_clicked();
     void component_clicked(Metabot::ComponentInstance *instance);

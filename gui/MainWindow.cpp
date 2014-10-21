@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_doubleclicked(Metabot::ComponentInstance*)));
     QObject::connect(viewer, SIGNAL(nowhere_clicked()), this, SLOT(on_viewer_nowhere_clicked()));
     viewer->setContextMenuPolicy(Qt::CustomContextMenu);
-    QObject::connect(viewer, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_viewer_contextmenu_request(QPoint)));
+    QObject::connect(viewer, SIGNAL(viewer_contextmenu_request(QPoint)), this, SLOT(on_viewer_contextmenu_request(QPoint)));
     viewer->updateRatio();
 
     QList<int> sizes;
@@ -212,8 +212,11 @@ void MainWindow::on_viewer_contextmenu_request(QPoint pt)
     }
 
     if (items.size()) {
-        viewer->dontMove();
         showContextMenu(viewer->mapToGlobal(pt), items[0]);
+    } else {
+        if (robot->root == NULL) {
+            showContextMenu(viewer->mapToGlobal(pt), NULL);
+        }
     }
 }
 
@@ -228,9 +231,10 @@ void MainWindow::on_contextmenu_request(QPoint pt)
 
 void MainWindow::showContextMenu(QPoint pos, QTreeWidgetItem *item)
 {
-    Metabot::AnchorPoint *anchor = items[item];
+    Metabot::AnchorPoint *anchor = item==NULL ? NULL : items[item];
     menu.clear();
-    if ((anchor == NULL && robot->root == NULL) || (anchor != NULL && anchor->anchor == NULL)) {
+    if ((anchor == NULL && robot->root == NULL)
+     || (anchor != NULL && anchor->anchor == NULL)) {
         menu.addAction(&addComponent);
     } else {
         menu.addAction(&editComponent);
@@ -305,26 +309,27 @@ void MainWindow::on_viewer_autorotate_change(bool value)
 
 void MainWindow::on_contextmenu_add()
 {
-    if (items.count(contextmenu_item)) {
-        runWizard(items[contextmenu_item]);
-    }
+    auto anchor = selectedAnchor();
+    runWizard(anchor);
 }
 
 void MainWindow::on_contextmenu_remove()
 {
-    Metabot::AnchorPoint *anchor = items[contextmenu_item];
+    auto anchor = selectedAnchor();
+
     if (anchor != NULL) {
         anchor->detach();
     } else {
-        robot->root = NULL;
+        robot->clear();
     }
     drawTree();
 }
 
 void MainWindow::on_contextmenu_root()
 {
-    Metabot::AnchorPoint *anchor = items[contextmenu_item];
-    if (anchor->anchor && anchor->anchor->instance) {
+    auto anchor = selectedAnchor();
+
+    if (anchor != NULL && anchor->anchor && anchor->anchor->instance) {
         robot->setRoot(anchor->anchor->instance);
         drawTree();
     }
@@ -332,7 +337,8 @@ void MainWindow::on_contextmenu_root()
 
 void MainWindow::on_contextmenu_center()
 {
-    Metabot::AnchorPoint *anchor = items[contextmenu_item];
+    auto anchor = selectedAnchor();
+
     Metabot::ComponentInstance *instance;
     if (anchor == NULL) {
         instance = robot->root;
@@ -349,11 +355,18 @@ void MainWindow::on_clicked()
 {
 }
 
+Metabot::AnchorPoint *MainWindow::selectedAnchor()
+{
+    if (contextmenu_item != NULL && items.count(contextmenu_item)) {
+        return items[contextmenu_item];
+    }
+
+    return NULL;
+}
+
 void MainWindow::on_contextmenu_edit()
 {
-    if (items.count(contextmenu_item)) {
-        runWizard(items[contextmenu_item]);
-    }
+    runWizard(selectedAnchor());
 }
 
 void MainWindow::on_actionOpen_triggered()
