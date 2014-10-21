@@ -1,6 +1,5 @@
 // Component Double U
 // Description Two Us
-use <../models/rivets.scad>
 include <../../metabot.scad>;
 use <../parts/u.scad>;
 use <../models/motor_arm.scad>;
@@ -21,8 +20,6 @@ ScrewsCount = 8;
 Thickness = 2.2;
 // Parameter Angle
 Angle = 90;
-
-rivets(18);
 
 metabot_anchor("motor", female=true);
 

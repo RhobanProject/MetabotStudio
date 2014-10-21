@@ -1,3 +1,5 @@
+use <../../metabot.scad>;
+
 // Diameter of plastic ollo holes
 OlloHoles = 4.3;
 
@@ -10,6 +12,7 @@ OlloSpacing = 6;
 // Do an Ollo hole on the part
 module olloHole(depth=2.2)
 {
+    metabot_bom("Ollo rivet", price=0.05, url="http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1605");
     translate([0,0,-0.1])
       cylinder(depth+0.2, OlloHoles/2, OlloHoles/2);
 }

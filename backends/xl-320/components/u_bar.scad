@@ -3,7 +3,6 @@
 use <../../metabot.scad>;
 use <../parts/u.scad>;
 use <../parts/bar.scad>;
-use <../models/rivets.scad>
 
 $fn=25;
 
@@ -25,8 +24,6 @@ ScrewsSpacing = 14;
 ScrewsDiameter = 2.6;
 // Parameter Number of screws
 ScrewsCount = 8;
-
-rivets(9);
 
 metabot_anchor("motor", female=true);
 u(height=UHeight, radius=URadius, thickness=Thickness,

@@ -1,6 +1,5 @@
 // Component Bottom leg
 // Description Leg on motor bottom
-use <../models/rivets.scad>
 use <../parts/leg.scad>;
 use <../models/motor_arm.scad>;
 
@@ -21,8 +20,6 @@ Thickness = 2.2;
 
 metabot_anchor("motor", male=true);
 motorArm();
-
-rivets(6);
 
 translate([0,-(24),0]) {
     rotate([180,0,0]) {

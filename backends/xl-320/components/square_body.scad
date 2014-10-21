@@ -3,7 +3,6 @@
 include <../../metabot.scad>;
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
-use <../models/rivets.scad>
 use <../models/motor_arm.scad>;
 use <../parts/square_body.scad>;
 
@@ -30,7 +29,6 @@ for (leg=[1:(Legs/2)]) {
 	translate([-side*(Width/2),LegsDistance/2-(leg-1)*LegsSpacing,0])
 	rotate([0,0,side*90])
 	translate([0,OlloSpacing*4,0]) {
-		rivets(6);
 		motorArm();
 		metabot_anchor("motor", male=true);
 	}

@@ -1,6 +1,5 @@
 // Component Side to side
 // Description To motors tied on side
-use <../models/rivets.scad>
 include <../../metabot.scad>;
 include <../models/motor_values.scad>;
 use <../models/motor_arm.scad>;
@@ -12,8 +11,6 @@ Size = 65;
 HolesToBorder = 5;
 // Parameter Thickness
 Thickness = 2.2;
-
-rivets(22);
 
 translate([0,Size/2,0]) {
 	metabot_anchor("motor", male=true);

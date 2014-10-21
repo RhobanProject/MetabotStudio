@@ -1,6 +1,5 @@
 // Component Square Body arm
 // Description Square body arm
-use <../models/rivets.scad>
 include <../../metabot.scad>;
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
@@ -30,7 +29,6 @@ for (leg=[1:(Legs/2)]) {
 	translate([-side*(Width/2),LegsDistance/2-(leg-1)*LegsSpacing,0])
 	rotate([0,0,90+(side==1?180:0)]) {
 		// motorArm();
-		rivets(9);
 		metabot_anchor("motor", female=true);
 	}
     }
