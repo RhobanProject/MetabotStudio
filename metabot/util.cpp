@@ -164,3 +164,8 @@ int filemtime(std::string path)
 
     return 0;
 }
+
+void remove_file(std::string filename)
+{
+    unlink(filename.c_str());
+}

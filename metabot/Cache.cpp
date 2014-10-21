@@ -16,6 +16,21 @@ namespace Metabot
         }
     }
 
+    int Cache::clear()
+    {
+        auto listing = get_directory_listing(directory);
+        for (auto entry : listing) {
+            std::string filename = directory + "/" + entry;
+            remove_file(filename);
+        }
+        return listing.size();
+    }
+
+    int Cache::files()
+    {
+        return get_directory_listing(directory).size();
+    }
+
     std::string Cache::get(std::string key, std::function<std::string(void)> generate, std::string older)
     {
         std::string filename = directory + "/" + key;

@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <3d/stl.h>
+#include <getopt.h>
 #include "util.h"
 #include "Backend.h"
 #include "AnchorPoint.h"
@@ -11,50 +12,48 @@
 using namespace std;
 using namespace Metabot;
 
-int main()
+void usage()
 {
+    cerr << "Metabot v1.0 - Rhoban System" << endl;
+    cerr << "" << endl;
+    cerr << "   -c: Clears the cache" << endl;
+    cerr << "   -w: Warmup/generates the cache" << endl;
+}
+
+int main(int argc, char *argv[])
+{
+    int index;
+    bool cacheClear = false;
+    bool cacheWarmup = false;
+
+    while ((index = getopt(argc, argv, "cw")) != -1) {
+        switch (index) {
+            case 'c':
+                cacheClear = true;
+                break;
+            case 'w':
+                cacheWarmup = true;
+                break;
+        }
+    }
+
     try {
         // Loading the backend
         Backend backend("xl-320");
         backend.load();
-        backend.buildCache();
 
-        // Making a robot
-        Robot *robot = new Robot(&backend);
-
-        /*
-        robot->root = backend.getComponent("body")->instanciate();
-        robot->root->set("Size", "35");
-        robot->root->set("Legs", "4");
-        robot->root->compile();
-
-        for (int i=0; i<4; i++) {
-            ComponentInstance *double_u = backend.getComponent("double_u")->instanciate();
-            double_u->compile();
-            robot->root->anchors[i]->attach(double_u->anchors[0]);
-
-            ComponentInstance *side = backend.getComponent("side_to_side")->instanciate();
-            side->compile();
-            double_u->anchors[1]->attach(side->anchors[0]);
-            double_u->anchors[1]->alpha = -DEG2RAD(30);
-
-            ComponentInstance *leg = backend.getComponent("arm_leg")->instanciate();
-            leg->compile();
-            leg->set("SizeB", "40");
-            leg->set("SizeC", "40");
-            side->anchors[1]->attach(leg->anchors[0]);
-            side->anchors[1]->alpha = DEG2RAD(110);
+        // Cache warmup
+        if (cacheClear) {
+            cout << "Clearing the cache" << endl;
+            int n = backend.clearCache();
+            cout << "Done, removed " << n << " files." << endl;
+        } else if (cacheWarmup) {
+            cout << "Generating the cache..." << endl;
+            backend.buildCache();
+            cout << "Cache generated (" << backend.cacheFiles() << " files)." << endl;
+        } else {
+            usage();
         }
-        */
-
-        robot->loadFromFile("/home/gregwar/Metabot/robots/spidey12.robot");
-       
-        // Getting 3D model
-        // Model model = robot->toModel();
-        // saveModelToFileBinary("/tmp/demo.stl", &model);
-        
-        // Running the build
-        robot->build("/tmp/metabot");
 
     } catch (string error) {
         cerr << "[ERROR] " << error << endl;

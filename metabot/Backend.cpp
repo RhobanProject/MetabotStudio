@@ -35,11 +35,23 @@ namespace Metabot
         for (auto component : components) {
             auto instance = component.second->instanciate();
             instance->compile();
+
             for (auto ref : instance->models) {
                 getModel(ref->name);
             }
+
             delete instance;
         }
+    }
+
+    int Backend::clearCache()
+    {
+        return cache->clear();
+    }
+
+    int Backend::cacheFiles()
+    {
+        return cache->files();
     }
             
     Component *Backend::getComponent(std::string name)

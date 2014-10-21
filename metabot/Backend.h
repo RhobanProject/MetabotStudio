@@ -20,6 +20,8 @@ namespace Metabot
             void loadComponents();
             void loadComponent(std::string name);
             void buildCache();
+            int clearCache();
+            int cacheFiles();
 
             Component *getComponent(std::string name);
             ComponentInstance *fromJson(Json::Value json);
