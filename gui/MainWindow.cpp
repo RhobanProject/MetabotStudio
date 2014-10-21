@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <metabot/AnchorPoint.h>
+#include <metabot/3d/stl.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -469,4 +470,19 @@ void MainWindow::on_actionNew_triggered()
 {
     robot->clear();
     drawTree();
+}
+
+void MainWindow::on_actionExport_STL_triggered()
+{
+    QFileDialog dialog;
+    dialog.setNameFilter("STL (*.stl)");
+    dialog.setDefaultSuffix("stl");
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (dialog.exec()) {
+        QString fn = dialog.selectedFiles().first();
+        if (fn != "") {
+            auto model = robot->toModel();
+            saveModelToFileBinary(fn.toStdString().c_str(), &model);
+        }
+    }
 }

@@ -121,6 +121,8 @@
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
     <addaction name="separator"/>
+    <addaction name="actionExport_STL"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuRobot">
@@ -237,6 +239,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionExport_STL">
+   <property name="text">
+    <string>Export STL</string>
    </property>
   </action>
  </widget>
