@@ -9,7 +9,7 @@ namespace Metabot
 {
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
         : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0), 
-        orientationX(0), orientationY(0), orientationZ(0)
+        orientationX(0), orientationY(0), orientationZ(0), cached(false)
     {
         if (json.isObject()) {
             type = json["type"].asString();
