@@ -1,10 +1,10 @@
-// Component Motor
-// Description A motor
-use <../../metabot.scad>;
 use <../models/motor_arm.scad>;
 
-// Parameter Counter arm?
-CounterArm=true;
-
-metabot_anchor("motor", male=true);
-motorArm(CounterArm);
+//:Component Motor
+//:Description A motor
+//:ParameterBool CounterArm Counter arm?
+module motor(CounterArm=true)
+{
+    //:Anchor motor male
+    motorArm(CounterArm);
+}

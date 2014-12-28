@@ -1,27 +1,24 @@
-// Component Arms to side
-// Description Motor arms to another sides
-use <../../metabot.scad>;
-use <../models/motor_arm.scad>
+use <../models/motor_arm.scad>;
 use <../parts/arm_side.scad>;
 
-// Parameter First part
-FirstPart = 17;
-// Parameter Motors distance
-Distance = 45;
-// Parameter Thickness
-Thickness = 2.2;
+//:Component Arms to side
+//:Description Motor arms to another sides
+//:Parameter FirstPart First part
+//:Parameter Distance The distance
+//:Parameter Thickness part thicknedd
+module arm_to_side(FirstPart=17, Distance=45, Thickness=2.2)
+{
+    //:Anchor motor female
 
-// motorArm();
-metabot_anchor("motor", female=true);
+    arm_side(firstPart=FirstPart , distance=Distance, thickness=Thickness);
+    rotate([0,180,0]) {
+        arm_side(firstPart=FirstPart , distance=Distance, thickness=Thickness);
+    }
 
-arm_side(firstPart=FirstPart , distance=Distance, thickness=Thickness);
-rotate([0,180,0]) {
-  arm_side(firstPart=FirstPart , distance=Distance, thickness=Thickness);
-}
-
-translate([0,Distance,0]) {
-  rotate([0,90,0]) {
-    motorArm();
-    metabot_anchor("motor", male=true);
-  }
+    translate([0,Distance,0]) {
+        rotate([0,90,0]) {
+            motorArm();
+            //:Anchor motor male
+        }
+    }
 }

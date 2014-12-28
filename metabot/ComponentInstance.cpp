@@ -103,9 +103,9 @@ namespace Metabot
             myModel.g = 1.0;
             myModel.b = 0.3;
         } else {
-            myModel.r = 0.9;
-            myModel.g = 0.9;
-            myModel.b = 0.9;
+            myModel.r = 0.95;
+            myModel.g = 0.95;
+            myModel.b = 0.95;
         }
         myModel.openGLDraw();
 

@@ -101,6 +101,11 @@ bool startswith(std::string str, std::string start)
     return str.substr(0, start.length())==start;
 }
 
+bool endswith(std::string str, std::string end)
+{
+    return str.substr(str.length()-end.length(), end.length())==end;
+}
+
 std::string removestart(std::string str, std::string start)
 {
     return str.substr(start.length());
@@ -114,6 +119,23 @@ std::string hash_sha1(std::string str)
     sha1::toHexString(hash, hexstring);
 
     return std::string(hexstring, 41);
+}
+
+std::string replaceStr(std::string& str, const std::string& from, const std::string& to) {
+    std::string output = str;
+    size_t start_pos = output.find(from);
+    if (start_pos != std::string::npos) {
+        output.replace(start_pos, from.length(), to);
+    }
+    return output;
+}
+
+std::string strtolower(std::string input)
+{
+    for (unsigned int i=0; i<input.length(); i++) {
+        input[i] = tolower(input[i]);
+    }
+    return input;
 }
 
 bool is_directory(std::string path)
@@ -131,7 +153,7 @@ bool is_directory(std::string path)
 void makedir(std::string path)
 {
 #ifdef WIN32
-	mkdir(path.c_str());
+    mkdir(path.c_str());
 #else
     mkdir(path.c_str(), 0755);
 #endif

@@ -34,8 +34,10 @@ set(ALL_SOURCES
     CSG.cpp
     CSGNode.cpp
     ModelRefs.cpp
+    Module.cpp
     Parts.cpp
     Robot.cpp
+    SCAD.cpp
     TransformMatrix.cpp
     Vector.cpp
     )

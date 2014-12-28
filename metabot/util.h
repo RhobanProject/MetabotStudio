@@ -18,8 +18,11 @@ std::string ltrim(std::string s);
 std::string rtrim(std::string s);
 std::string trim(std::string s);
 bool startswith(std::string str, std::string start);
+bool endswith(std::string str, std::string end);
 std::string removestart(std::string str, std::string start);
 std::string hash_sha1(std::string str);
+std::string replaceStr(std::string& str, const std::string& from, const std::string& to);
+std::string strtolower(std::string input);
 
 // Path manipulation
 std::string basename(std::string const pathname);

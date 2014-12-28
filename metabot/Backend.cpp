@@ -6,6 +6,7 @@
 #include "ComponentInstance.h"
 #include "AnchorPoint.h"
 #include "ModelRefs.h"
+#include "SCAD.h"
 #include "util.h"
 
 namespace Metabot
@@ -66,7 +67,7 @@ namespace Metabot
     void Backend::load()
     {
         if (is_directory(directory)) {
-            loadComponents();
+            loadComponents(directory);
         } else {
             std::stringstream s;
             s << "Unable to open directory: " << directory;
@@ -74,8 +75,22 @@ namespace Metabot
         }
     }
 
-    void Backend::loadComponents()
+    void Backend::loadComponents(std::string dir)
     {
+        auto listing = get_directory_listing(dir);
+
+        for (auto entry : listing) {
+            std::string fullPath = dir+"/"+entry;
+            if (is_directory(fullPath)) {
+                loadComponents(fullPath);
+            } else {
+                if (endswith(fullPath, ".scad") && !endswith(fullPath, ".metabot.scad")) {
+                    parse(fullPath);
+                }
+            }
+        }
+
+        /*
         std::string dirname = directory + "/components";
         std::vector<std::string> entries = get_directory_listing(dirname);
         for (auto entry : entries) {
@@ -85,6 +100,12 @@ namespace Metabot
         if (components.size() == 0) {
             throw std::string("There is no component");
         }
+        */
+    }
+
+    void Backend::parse(std::string path)
+    {
+        SCAD::load(path);
     }
 
     void Backend::loadComponent(std::string name)

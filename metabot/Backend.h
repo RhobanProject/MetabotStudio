@@ -17,11 +17,12 @@ namespace Metabot
             virtual ~Backend();
 
             void load();
-            void loadComponents();
+            void loadComponents(std::string directory);
             void loadComponent(std::string name);
             void buildCache();
             int clearCache();
             int cacheFiles();
+            void parse(std::string path);
 
             Component *getComponent(std::string name);
             ComponentInstance *fromJson(Json::Value json);

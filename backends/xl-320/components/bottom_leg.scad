@@ -1,30 +1,26 @@
-// Component Bottom leg
-// Description Leg on motor bottom
 use <../parts/leg.scad>;
 use <../models/motor_arm.scad>;
 
-// Parameter Size of the first part
-SizeA = 60;
-// Parameter Size of the second part
-SizeB = 20;
-// Parameter Size of the third part
-SizeC = 20;
-// Parmaeter Size of the bottom
-SizeBottom = 10;
-// Parameter Size of the top
-SizeTop = 15;
-// Parameter Fixation angle
-FixationAngle = 0;
-// Parameter Thickness of the part
-Thickness = 2.2;
+//:Component Bottom leg
+//:Description leg on motor bottom
+//:Parameter SizeA Size of the first part
+//:Parameter SizeB Size of the second part
+//:Parameter SizeC Size of the third part
+//:Parmaeter SizeBottom Size of the bottom
+//:Parameter SizeTop Size of the top
+//:Parameter FixationAngle Fixation angle
+//:Parameter Thickness Thickness of the part
+module bottom_leg(SizeA=60, SizeB=20, SizeC=20, SizeBottom=10,
+        SizeTop=15, FixationAngle=0, Thickness=2.2)
+{
+    //:Anchor motor male
+    motorArm();
 
-metabot_anchor("motor", male=true);
-motorArm();
-
-translate([0,-(24),0]) {
-    rotate([180,0,0]) {
-        rotate([180,90,FixationAngle]) {
-            leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "side", FixationAngle, Thickness);
+    translate([0,-(24),0]) {
+        rotate([180,0,0]) {
+            rotate([180,90,FixationAngle]) {
+                leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "side", FixationAngle, Thickness);
+            }
         }
     }
 }

@@ -1,21 +1,10 @@
-include <../../metabot.scad>;
 use <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
+//:Part
 module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
         sizeTop=15, mode="arm", fixationAngle=0, thickness=2.2, print=false)
 {
-    metabot_part("leg");
-    metabot_parameter("sizeA", sizeA);
-    metabot_parameter("sizeB", sizeB);
-    metabot_parameter("sizeC", sizeC);
-    metabot_parameter("sizeBottom", sizeBottom);
-    metabot_parameter("sizeTop", sizeTop);
-    metabot_parameter("mode", mode);
-    metabot_parameter("fixationAngle", fixationAngle);
-    metabot_parameter("thickness", thickness);
-    metabot_parameter("print", true);
-
     xOffset = (mode == "side") ? -10 : 0;
     spacing = (mode == "side") ? 24 : 30;
 
