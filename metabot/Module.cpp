@@ -104,10 +104,13 @@ namespace Metabot
                         auto iterator = parameters.begin();
                         last--;
 
+                        // Adding type marker
                         oss << "marker(\"metabot_" << type << ": " << name << "\");" << std::endl;
+                        // Adding parameters markers
                         for (auto entry : parameters) {
                             oss << "marker(\"metabot_parameter: " << entry.first << " \", " << entry.first << ");" << std::endl;
                         }
+                        // Adding forwarding to the _ module
                         oss << "if (NoModels == false) {" << std::endl;
                         oss << "_" << name << "(";
                         for (iterator=parameters.begin(); iterator!=parameters.end(); iterator++) {
@@ -136,8 +139,7 @@ namespace Metabot
                 }
                 break;
             case STATE_CONTENTS: {
-                // Module contents, waiting it to finish, counting
-                // the brackets
+                // Module contents, waiting it to finish, counting the brackets
                 if (c == '{') {
                     brackets++;
                 } 

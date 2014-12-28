@@ -12,6 +12,11 @@ namespace Metabot
     class SCAD
     {
         public:
+            /**
+             * Reading a .scad file, this will generate the associated
+             * .metabot.scad file and generate the list of all modules 
+             * found.
+             */
             static std::vector<Module> load(std::string filename);
     };
 }
