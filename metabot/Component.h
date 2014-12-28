@@ -1,27 +1,95 @@
 #pragma once
 
+#ifndef NOCPP11
+#include <functional>
+#endif
 #include <map>
 #include <vector>
 #include <string>
-#include "ComponentParameter.h"
+#include <3d/Model.h>
+#include <json/json.h>
+#include "BOM.h"
+#include "Parts.h"
+#include "ModelRefs.h"
 
 namespace Metabot
 {
     class Backend;
-    class ComponentInstance;
+    class AnchorPoint;
+    class Part;
+    class ModelRef;
+    class Module;
+
     class Component
     {
         public:
-            Component(std::string name, std::string filename);
+            Component(Backend *backend, Module *module);
             virtual ~Component();
+            Component *clone();
 
-            ComponentInstance *instanciate();
+            void root();
 
-            std::string name, filename;
-            std::string prettyName, description;
-            std::map<std::string, ComponentParameter *> parameters;
-           
+            Model toModel();
+            AnchorPoint *findCompatible(AnchorPoint *anchor);
+            bool isCompatible(AnchorPoint *anchor);
+
+            std::string fullName();
+
+            Json::Value parametersJson();
+            void parametersFromJson(Json::Value json);
+            Json::Value toJson();
+
+            void compileAll();
+            void compile();
+
+#ifndef NOCPP11
+            void foreachComponent(std::function<void(Component *instance)> method);
+            void foreachAnchor(std::function<void(AnchorPoint *instance)> method);
+#endif
+            
+#ifdef OPENGL
+            void openGLDraw();
+#endif
+            bool highlight;
+            bool hover;
+            void onHover();
+    
+            // Merge the anchors from another entity
+            // If detach is true, anchor will be detached from the other objects, and thus
+            // "taken" from it
+            void moveAnchors(Component *other);
+            void detachDiffAnchors(Component *other);
+            void restore();
+            void detachAll();
+
+            // Gets the point that is attached with the robot upper
+            AnchorPoint *belowAnchor();
+            AnchorPoint *aboveAnchor();
+
+            std::string getValue(std::string name);
+            std::string stl();
+            std::string parameters();
+
+            // Backend and module
             Backend *backend;
-            static Component *load(std::string filename);
+            Module *module;
+
+            // Accessing parameter values
+            std::string get(std::string name);
+            void set(std::string name, std::string value);
+            
+            AnchorPoint *getAnchor(int id);
+
+            std::map<std::string, std::string> values;
+            Component *component;
+ 
+            std::vector<AnchorPoint *> anchors;
+            ModelRefs models;
+            Parts parts;
+            BOM bom;
+
+            Model myModel;
+
+            int id;
     };
 }

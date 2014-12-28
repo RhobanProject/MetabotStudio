@@ -34,8 +34,8 @@ namespace Metabot
         above = false;
 
         if (anchor != NULL && iAmAbove) {
-            if (anchor->instance != NULL) {
-                delete anchor->instance;
+            if (anchor->component != NULL) {
+                delete anchor->component;
             }
             delete anchor;
         }
@@ -63,7 +63,7 @@ namespace Metabot
     void AnchorPoint::revert()
     {
         if (anchor) {
-            anchor->instance->root();
+            anchor->component->root();
             above = true;
             orientationX = anchor->orientationX;
             orientationY = anchor->orientationY;
@@ -131,8 +131,8 @@ namespace Metabot
                 m.apply(transformationForward());
             }
         } else {
-            if (instance != NULL) {
-                m = instance->toModel();
+            if (component != NULL) {
+                m = component->toModel();
                 m.apply(transformationBackward());
             }
         }
@@ -188,12 +188,12 @@ namespace Metabot
                 anchor->openGLDraw();
             } else {
                 transformationBackward().openGLMult();
-                instance->openGLDraw();
+                component->openGLDraw();
             }
         } else {
             if (above && (highlight || hover)) {
                 matrix.openGLMult();
-                Model m = instance->component->backend->getModel("anchor");
+                Model m = component->backend->getModel("anchor");
                 m.r = 0.4;
                 m.g = 0.3;
                 m.b = 1.0;

@@ -3,7 +3,7 @@
 #include <3d/stl.h>
 #include "Backend.h"
 #include "Cache.h"
-#include "ComponentInstance.h"
+#include "Component.h"
 #include "AnchorPoint.h"
 #include "ModelRefs.h"
 #include "SCAD.h"
@@ -22,10 +22,6 @@ namespace Metabot
 
     Backend::~Backend()
     {
-        for (auto component : components) {
-            delete component.second;
-        }
-
         if (cache != NULL) {
             delete cache;
         }
@@ -33,15 +29,11 @@ namespace Metabot
             
     void Backend::buildCache()
     {
-        for (auto component : components) {
-            auto instance = component.second->instanciate();
-            instance->compile();
-
-            for (auto ref : instance->models.models) {
-                getModel(ref.name);
+        for (auto module : modules) {
+            if (module.second.getType() == "component") {
+                auto component = instanciate(module.second.getName());
+                delete component;
             }
-
-            delete instance;
         }
     }
 
@@ -53,15 +45,6 @@ namespace Metabot
     int Backend::cacheFiles()
     {
         return cache->files();
-    }
-            
-    Component *Backend::getComponent(std::string name)
-    {
-        if (components.count(name)) {
-            return components[name];
-        }
-
-        return NULL;
     }
 
     void Backend::load()
@@ -89,36 +72,17 @@ namespace Metabot
                 }
             }
         }
-
-        /*
-        std::string dirname = directory + "/components";
-        std::vector<std::string> entries = get_directory_listing(dirname);
-        for (auto entry : entries) {
-            loadComponent(entry);
-        }
-
-        if (components.size() == 0) {
-            throw std::string("There is no component");
-        }
-        */
     }
 
     void Backend::parse(std::string path)
     {
-        SCAD::load(path);
-    }
+        auto scadModules = SCAD::load(path);
 
-    void Backend::loadComponent(std::string name)
-    {
-        std::string filename = directory + "/components/" + name;
-        if (filename.length()>5 && filename.substr(filename.length()-5)==".scad") {
-            Component *component = Component::load(filename);
-            if (component != NULL) {
-                component->backend = this;
-                components[component->name] = component;
-            }
+        for (auto module : scadModules) {
+            module.setCache(cache);
+            modules[module.getName()] = module;
         }
-    }            
+    }
 
     Model Backend::getModel(std::string name)
     {
@@ -177,8 +141,20 @@ namespace Metabot
 
         return data;
     }
+            
+    Component *Backend::instanciate(std::string name)
+    {
+        if (modules.count(name)) {
+            Module *module = &modules[name];
+            Component *component = new Component(this, module);
 
-    ComponentInstance *Backend::fromJson(Json::Value json)
+            return component;
+        }
+
+        return NULL;
+    }
+
+    Component *Backend::fromJson(Json::Value json)
     {
         if (!json.isObject() || !json.isMember("component") 
             || !json.isMember("parameters") || !json.isMember("anchors")
@@ -191,13 +167,13 @@ namespace Metabot
             
         std::string component = json["component"].asString();
 
-        if (!components.count(component)) {
+        if (!modules.count(component)) {
             std::stringstream ss;
             ss << "Unknown component " << component;
             throw ss.str();
         }
 
-        ComponentInstance *instance = getComponent(component)->instanciate();
+        Component *instance = instanciate(component);
         instance->parametersFromJson(json["parameters"]);
         instance->compile();
 
@@ -208,7 +184,7 @@ namespace Metabot
             std::string id = ss.str();
             if (anchors.isMember(id)) {
                 int remote = anchors[id]["remote"].asInt();
-                ComponentInstance *instance = Backend::fromJson(anchors[id]["component"]);
+                Component *instance = Backend::fromJson(anchors[id]["component"]);
                 if (anchors[id].isMember("zero")) {
                     anchor->zero = anchors[id]["zero"].asFloat();
                 }

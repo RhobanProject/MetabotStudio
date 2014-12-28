@@ -5,7 +5,7 @@
 #include "util.h"
 #include "Backend.h"
 #include "AnchorPoint.h"
-#include "ComponentInstance.h"
+#include "Component.h"
 #include "Robot.h"
 #include "util.h"
 

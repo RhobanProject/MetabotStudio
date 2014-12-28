@@ -6,6 +6,7 @@
 #include <3d/Model.h>
 #include <json/json.h>
 #include "Component.h"
+#include "Module.h"
 
 namespace Metabot
 {
@@ -24,12 +25,12 @@ namespace Metabot
             int cacheFiles();
             void parse(std::string path);
 
-            Component *getComponent(std::string name);
-            ComponentInstance *fromJson(Json::Value json);
+            Component *fromJson(Json::Value json);
+            Component *instanciate(std::string name);
 
             std::string name;
             std::string directory;
-            std::map<std::string, Component *> components;
+            std::map<std::string, Module> modules;
 
             Cache *cache;
 

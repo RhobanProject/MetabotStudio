@@ -4,7 +4,7 @@
 #include <3d/Model.h>
 #include <json/json.h>
 #include "TransformMatrix.h"
-#include "ComponentInstance.h"
+#include "Component.h"
 
 namespace Metabot
 {
@@ -52,7 +52,7 @@ namespace Metabot
             bool female, male;
 
             // Component instance related to this anchor
-            ComponentInstance *instance;
+            Component *component;
 
             // Other anchor which is connected to this
             AnchorPoint *anchor;

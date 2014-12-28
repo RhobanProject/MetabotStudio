@@ -1,84 +1,403 @@
+#include <sstream>
 #include <iostream>
-#include <fstream>
-#include "util.h"
+#include <3d/stl.h>
+#ifdef OPENGL
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
+#endif
 #include "Component.h"
-#include "ComponentInstance.h"
+#include "AnchorPoint.h"
+#include "Parts.h"
+#include "ModelRefs.h"
+#include "Backend.h"
+#include "Cache.h"
+#include "CSG.h"
+#include "util.h"
 
 namespace Metabot
 {
-    Component::Component(std::string name_, std::string filename_)
-        : name(name_), filename(filename_),
-        prettyName(name), description(""),
-        backend(NULL)
+    Component::Component(Backend *backend_, Module *module_)
+        : backend(backend_), module(module_), highlight(false), hover(false)
     {
     }
-            
+
     Component::~Component()
     {
-        for (auto parameter : parameters) {
-            delete parameter.second;
+        for (auto anchor : anchors) {
+            if (anchor->above) {
+                delete anchor;
+            }
         }
     }
-    
-    ComponentInstance *Component::instanciate()
+
+    Component *Component::clone()
     {
-        ComponentInstance *instance = new ComponentInstance(this);
-        for (auto parameter : parameters) {
-            instance->values[parameter.first] = parameter.second->value;
-        }
+        Component *component = new Component(backend, module);
+        component->myModel = myModel;
+        component->values = values;
 
-        return instance;
-    }
+        int index = 0;
+        for (auto anchor : anchors) {
+            AnchorPoint *anchorPoint = anchor->clone();
+            anchorPoint->component = component;
+            anchorPoint->id = index++;
+            component->anchors.push_back(anchorPoint);
 
-    Component *Component::load(std::string filename)
-    {
-        bool isOk = false;
-        std::ifstream f(filename);
-        std::string line;
-        std::string description;
-        int state = 0;
-        std::string name = basename(filename);
-        Component *component = new Component(name, filename);
-
-        while (std::getline(f, line)) {
-            switch (state) {
-                case 0: {
-                    if (line.substr(0, 12) == "// Component") {
-                        isOk = true;
-                        std::string value = trim(line.substr(12));
-                        if (value != "") {
-                            component->prettyName = value;
-                        }
-                    } else if (line.substr(0, 14) == "// Description") {
-                        component->description = trim(line.substr(14));
-                    } else if (line.substr(0, 12) == "// Parameter") {
-                        description = trim(line.substr(12));
-                        state = 1;
-                    }
-                }
-                break;
-                case 1: {
-                    std::vector<std::string> parts = split(line, '=');
-                    if (parts.size() == 2) {
-                        std::string param = trim(parts[0]);
-                        std::string value = trim(parts[1]);
-                        if (value[value.length()-1] == ';') {
-                            value = value.substr(0, value.length()-1);
-                        }
-                        ComponentParameter *parameter = new ComponentParameter(param, value, description);
-                        component->parameters[parameter->name] = parameter;
-                    }
-                    state = 0;
-                }
-                break;
+            AnchorPoint *remote = anchor->anchor;
+            if (anchor->above && remote != NULL) {
+                Component *child = remote->component->clone();
+                anchorPoint->attach(child->anchors[remote->id]);
             }
         }
 
-        if (isOk) {
-            return component;
+        component->models = models;
+        component->parts = parts;
+        component->bom = bom;
+
+        return component;
+    }
+
+    void Component::root()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->above == false) {
+                anchor->revert();
+            }
+        }
+    }
+
+    std::string Component::fullName()
+    {
+        std::stringstream ss;
+        ss << module->getName() << " #" << id;
+        return ss.str();
+    }
+
+    AnchorPoint *Component::findCompatible(AnchorPoint *anchor)
+    {
+        for (auto my : anchors) {
+            if (my->isCompatible(anchor) && my->anchor==NULL) {
+                return my;
+            }
+        }
+
+        return NULL;
+    }
+
+    bool Component::isCompatible(AnchorPoint *anchor)
+    {
+        return findCompatible(anchor) != NULL;
+    }
+
+#ifdef OPENGL
+    void Component::openGLDraw()
+    {
+        glStencilFunc(GL_ALWAYS, id, -1);
+
+        if (highlight) {
+            myModel.r = 0.4;
+            myModel.g = 1.0;
+            myModel.b = 0.3;
         } else {
-            delete component;
-            return NULL;
+            myModel.r = 0.95;
+            myModel.g = 0.95;
+            myModel.b = 0.95;
+        }
+        myModel.openGLDraw();
+
+        // Rendering models
+        for (auto ref : models.models) {
+            glPushMatrix();
+            ref.matrix.openGLMult();
+            Model model = backend->getModel(ref.name);
+            if (highlight) {
+                model.r = 0.4;
+                model.g = 1.0;
+                model.b = 0.3;
+            } else {
+                model.r = ref.r;
+                model.g = ref.g;
+                model.b = ref.b;
+            }
+            model.openGLDraw();
+            glPopMatrix();
+        }
+
+        // Rendering sub-components
+        int anchorId = 1;
+        for (auto anchor : anchors) {
+            glPushMatrix();
+            if (anchor->above) {
+                anchor->openGLDraw(anchorId);
+            }
+            glPopMatrix();
+            anchorId++;
+        }
+    }
+#endif
+
+    Model Component::toModel()
+    {
+        Model model;
+        model = myModel;
+
+        // Rendering models
+        for (auto ref : models.models) {
+            Model m = backend->getModel(ref.name);
+            m.apply(ref.matrix);
+            model.merge(m);
+        }
+
+        // Rendering sub-components
+        for (auto anchor : anchors) {
+            if (anchor->above) {
+                Model component = anchor->toModel();
+                model.merge(component);
+            }
+        }
+
+        return model;
+    }
+
+    std::string Component::get(std::string name)
+    {
+        return values[name];
+    }
+
+    void Component::set(std::string name, std::string value)
+    {
+        values[name] = value;
+    }
+
+    void Component::compileAll()
+    {
+        compile();
+
+        for (auto anchor : anchors) {
+            if (anchor->component != NULL) {
+                anchor->component->compileAll();
+            }
+        }
+    }
+
+    void Component::compile()
+    {
+        std::string filename = module->getFilename();
+        std::string csg = backend->openscad(filename, "csg", parameters());
+        myModel = loadModelSTL_string(stl());
+
+        CSG *document = CSG::parse(csg);
+        anchors = document->anchors;
+        parts = document->parts;
+        models = document->models;
+        bom = document->bom;
+
+        int index = 0;
+        for (auto anchor : anchors) {
+            anchor->component = this;
+            anchor->id = index;
+            index++;
+        }
+
+        delete document;
+    }
+
+    void Component::moveAnchors(Component *other)
+    {
+        // First step:
+        // Trying to take the items that matches *exactly* the anchor from the
+        // old component
+        for (unsigned int i=0; i<anchors.size(); i++) {
+            if (i < other->anchors.size()) {
+                AnchorPoint *myAnchor = anchors[i];
+                AnchorPoint *otherAnchor = other->anchors[i];
+
+                if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
+                    myAnchor->copyData(otherAnchor);
+                    myAnchor->attach(otherAnchor->anchor);
+                    otherAnchor->detach(false);
+                }
+            }
+        }
+
+        // Second step:
+        // Trying to get the anchors 
+        for (auto anchor : other->anchors) {
+            AnchorPoint *remote = anchor->anchor;
+            if (remote != NULL) {
+                AnchorPoint *candidate = findCompatible(remote);
+
+                if (candidate != NULL) {
+                    candidate->copyData(remote);
+                    candidate->attach(remote);
+                    anchor->detach(false);
+                }
+            }
+        }
+    }
+
+    void Component::detachDiffAnchors(Component *other)
+    {
+        std::map<AnchorPoint *, bool> otherAnchors;
+
+        for (auto anchor : other->anchors) {
+            if (anchor->anchor) {
+                otherAnchors[anchor->anchor] = true;
+            }
+        }
+
+        for (auto anchor : anchors) {
+            if (otherAnchors.count(anchor)) {
+                anchor->detach();
+            }
+        }
+    }
+
+    void Component::restore()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->anchor) {
+                anchor->anchor->anchor = anchor;
+            }
+        }
+    }
+
+    void Component::detachAll()
+    {
+        for (auto anchor : anchors) {
+            anchor->detach(false);
+        }
+    }
+            
+    AnchorPoint *Component::belowAnchor()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->above == false && anchor->anchor) {
+                return anchor;
+            }
+        }
+
+        return NULL;
+    }
+
+    AnchorPoint *Component::aboveAnchor()
+    {
+        AnchorPoint *below = belowAnchor();
+        if (below != NULL) {
+            return below->anchor;
+        }
+
+        return NULL;
+    }
+
+    std::string Component::getValue(std::string name)
+    {
+        if (values.count(name)) {
+            return values[name];
+        }
+
+        return "";
+    }
+
+    std::string Component::parameters()
+    {
+        std::stringstream cmd;
+        cmd << "-DNoModels=true ";
+        for (auto value : values) {
+            cmd << "-D" << value.first << "=" << value.second << " ";
+        }
+        return cmd.str();
+    }
+
+    std::string Component::stl()
+    {
+        return backend->openscad(module->getFilename(), "stl", parameters());
+    }
+
+    Json::Value Component::parametersJson()
+    {
+        Json::Value json(Json::objectValue);
+
+        for (auto value : values) {
+            json[value.first] = value.second;
+        }
+
+        return json;
+    }
+
+    AnchorPoint *Component::getAnchor(int id)
+    {
+        for (auto anchor : anchors) {
+            if (anchor->id == id) {
+                return anchor;
+            }
+        }
+
+        return NULL;
+    }
+
+    void Component::parametersFromJson(Json::Value json)
+    {
+        for (auto name : json.getMemberNames()) {
+            values[name] = json[name].asString();
+        }
+    }
+
+    Json::Value Component::toJson()
+    {
+        Json::Value json(Json::objectValue);
+
+        json["component"] = module->getName();
+        json["parameters"] = parametersJson();
+        json["anchors"] = Json::Value(Json::objectValue);
+
+        for (auto anchor : anchors) {
+            if (anchor->anchor != NULL && anchor->above) {
+                std::stringstream ss;
+                ss << anchor->id;
+                std::string id = ss.str();
+                json["anchors"][id] = Json::Value(Json::objectValue);
+                json["anchors"][id]["zero"] = anchor->zero;
+                json["anchors"][id]["orientationX"] = anchor->orientationX;
+                json["anchors"][id]["orientationY"] = anchor->orientationY;
+                json["anchors"][id]["orientationZ"] = anchor->orientationZ;
+                json["anchors"][id]["remote"] = anchor->anchor->id;
+                json["anchors"][id]["component"] = anchor->anchor->component->toJson();
+            }
+        }
+
+        return json;
+    }
+
+    void Component::foreachComponent(std::function<void(Component *component)> method)
+    {
+        method(this);
+
+        for (auto anchor : anchors) {
+            if (anchor->anchor != NULL && anchor->above) {
+                anchor->anchor->component->foreachComponent(method);
+            }
+        }
+    }
+
+    void Component::foreachAnchor(std::function<void(AnchorPoint *component)> method)
+    {
+        for (auto anchor : anchors) {
+            if (anchor->anchor != NULL && anchor->above) {
+                method(anchor);
+                anchor->anchor->component->foreachAnchor(method);
+            }
+        }
+    }
+
+    void Component::onHover()
+    {
+        hover = true;
+        for (auto anchor : anchors) {
+            anchor->hover = true;
         }
     }
 }

@@ -2,13 +2,19 @@
 
 #include <string>
 #include <map>
+#include "Cache.h"
 
 namespace Metabot
 {
     class Module
     {
         public:
+            Module();
             Module(std::string file);
+
+            void setCache(Cache *cache);
+
+            std::string getFilename();
 
             void setName(std::string name);
             std::string getName();
@@ -35,6 +41,8 @@ namespace Metabot
             std::string file, name, type, description;
             std::map<std::string, std::string> parameters;
             int state;
+
+            Cache *cache;
         
             int brackets, equals;
             std::string tmpName, tmpValue;

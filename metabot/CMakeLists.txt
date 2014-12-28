@@ -29,7 +29,6 @@ set(ALL_SOURCES
     BOM.cpp
     Cache.cpp
     Component.cpp
-    ComponentInstance.cpp
     ComponentParameter.cpp
     CSG.cpp
     CSGNode.cpp

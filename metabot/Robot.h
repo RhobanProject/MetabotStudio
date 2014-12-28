@@ -12,7 +12,7 @@ namespace Metabot
 {
     class Backend;
     class AnchorPoint;
-    class ComponentInstance;
+    class Component;
     class Robot
     {
         public:
@@ -24,11 +24,11 @@ namespace Metabot
             void build(std::string directory);
 
             Robot *clone();
-            void setRoot(ComponentInstance *root);
-            Vector getPoint(ComponentInstance *instance, Vector pt);
-            ComponentInstance *nearest(Vector pt);
+            void setRoot(Component *root);
+            Vector getPoint(Component *instance, Vector pt);
+            Component *nearest(Vector pt);
 
-            ComponentInstance *getComponentById(int id);
+            Component *getComponentById(int id);
             AnchorPoint *getHoveredAnchor(int id);
 
             void clear();
@@ -36,7 +36,7 @@ namespace Metabot
             void saveToFile(std::string filename);
             void number();
 
-            void foreachComponent(std::function<void(ComponentInstance *instance)> method);
+            void foreachComponent(std::function<void(Component *instance)> method);
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);
             std::vector<float> getZeros();
             std::vector<AnchorPoint*> getAnchors();
@@ -47,7 +47,7 @@ namespace Metabot
 #endif
             void unHighlight();
             void unHover();
-            ComponentInstance *root;
+            Component *root;
 
             Backend *backend;
 

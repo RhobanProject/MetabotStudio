@@ -12,12 +12,26 @@
 
 namespace Metabot
 {
+    Module::Module()
+    {
+    }
+
     Module::Module(std::string file_)
-        : file(file_)
+        : file(file_), cache(NULL)
     {
         state = STATE_MODULE;
         equals = 0;
         brackets = 1;
+    }
+            
+    std::string Module::getFilename()
+    {
+        return file;
+    }
+
+    void Module::setCache(Cache *cache_)
+    {
+        cache = cache_;
     }
 
     void Module::setName(std::string name_)

@@ -6,7 +6,7 @@
 #include "Backend.h"
 #include "Robot.h"
 #include "AnchorPoint.h"
-#include "ComponentInstance.h"
+#include "Component.h"
 #include "Parts.h"
 #include "util.h"
 
@@ -41,7 +41,7 @@ namespace Metabot
         return robot;
     }
             
-    void Robot::setRoot(ComponentInstance *root_)
+    void Robot::setRoot(Component *root_)
     {
         root = root_;
         root->root();
@@ -133,7 +133,7 @@ namespace Metabot
             
     void Robot::unHighlight()
     {
-        foreachComponent([](ComponentInstance *instance) {
+        foreachComponent([](Component *instance) {
             instance->highlight = false;
             for (auto anchor : instance->anchors) {
                 anchor->highlight = false;
@@ -143,7 +143,7 @@ namespace Metabot
 
     void Robot::unHover()
     {
-        foreachComponent([](ComponentInstance *instance) {
+        foreachComponent([](Component *instance) {
             instance->hover = false;
             for (auto anchor : instance->anchors) {
                 anchor->hover = false;
@@ -156,7 +156,7 @@ namespace Metabot
         AnchorPoint *anchor = NULL;
         id -= 200;
 
-        foreachComponent([&anchor, id](ComponentInstance *instance) {
+        foreachComponent([&anchor, id](Component *instance) {
             if (instance->hover) {
                 int n = 1;
                 for (auto a : instance->anchors) {
@@ -168,7 +168,7 @@ namespace Metabot
         return anchor;
     }
     
-    void Robot::foreachComponent(std::function<void(ComponentInstance *instance)> method)
+    void Robot::foreachComponent(std::function<void(Component *instance)> method)
     {
         if (root != NULL) {
             root->foreachComponent(method);
@@ -215,12 +215,12 @@ namespace Metabot
     void Robot::number()
     {
         int id = 1;
-        foreachComponent([&id](ComponentInstance *component) {
+        foreachComponent([&id](Component *component) {
             component->id = (id++);
         });
     }
             
-    Vector Robot::getPoint(ComponentInstance *instance, Vector v)
+    Vector Robot::getPoint(Component *instance, Vector v)
     {
         TransformMatrix m = TransformMatrix::identity();
 
@@ -228,7 +228,7 @@ namespace Metabot
         while ((anchor = instance->belowAnchor()) != NULL) {
             m = m.multiply(anchor->transformationForward());
             m = m.multiply(anchor->anchor->transformationBackward());
-            instance = anchor->anchor->instance;
+            instance = anchor->anchor->component;
         }
 
         m = m.invert();
@@ -236,12 +236,12 @@ namespace Metabot
         return p;
     }
             
-    ComponentInstance *Robot::nearest(Vector pt)
+    Component *Robot::nearest(Vector pt)
     {
-        ComponentInstance *bestInstance = NULL;
+        Component *bestInstance = NULL;
         float bestDistance = -1;
 
-        foreachComponent([this, pt, &bestInstance, &bestDistance](ComponentInstance *instance) {
+        foreachComponent([this, pt, &bestInstance, &bestDistance](Component *instance) {
             Vector v(0, 0, 0);
             auto partPoint = this->getPoint(instance, v);
             float distance = partPoint.distance(pt);
@@ -254,10 +254,10 @@ namespace Metabot
         return bestInstance;
     }
             
-    ComponentInstance *Robot::getComponentById(int id)
+    Component *Robot::getComponentById(int id)
     {
-        ComponentInstance *componentInstance = NULL;
-        foreachComponent([id, &componentInstance](ComponentInstance *instance) {
+        Component *componentInstance = NULL;
+        foreachComponent([id, &componentInstance](Component *instance) {
             if (instance->id == id) {
                 componentInstance = instance;
             }
@@ -269,7 +269,7 @@ namespace Metabot
     Parts Robot::getParts()
     {
         Parts parts;
-        foreachComponent([&parts](ComponentInstance *instance) {
+        foreachComponent([&parts](Component *instance) {
             parts.merge(instance->parts);
         });
         return parts;
@@ -278,7 +278,7 @@ namespace Metabot
     BOM Robot::getBOM()
     {
         BOM bom;
-        foreachComponent([&bom](ComponentInstance *instance) {
+        foreachComponent([&bom](Component *instance) {
             bom.merge(instance->bom);
         });
 
