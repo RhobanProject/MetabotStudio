@@ -33,7 +33,7 @@ namespace Metabot
                 auto component = instanciate(module.second.getName());
                 component->compile();
                 delete component;
-                break;
+                // break;
             }
         }
     }
