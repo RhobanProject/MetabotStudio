@@ -31,6 +31,40 @@ std::vector<std::string> split(const std::string &s, char delim, int limit) {
     return parts;
 }
 
+std::vector<std::string> splitCSV(const std::string s, char delim, char enclosure)
+{
+    std::vector<std::string> parts;
+    std::string buffer;
+    bool in_enclosure;
+
+    for (unsigned int i=0; i<s.size(); i++) {
+        char c = s[i];
+
+        // XXX: This implementation is little bit naive
+        if (c == enclosure) {
+            in_enclosure = !in_enclosure;
+        } else {
+            if (in_enclosure) {
+                buffer += c;
+            } else {
+                if (c == delim) {
+                    if (buffer != "") {
+                        parts.push_back(buffer);
+                        buffer = "";
+                    }
+                } else {
+                    buffer += c;
+                }
+            }
+        }
+    }
+    if (buffer != "") {
+        parts.push_back(buffer);
+    }
+
+    return parts;
+}
+
 std::string implode(std::vector<std::string> strs, std::string separator)
 {
     std::stringstream str;
