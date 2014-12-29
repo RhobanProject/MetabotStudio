@@ -5,7 +5,6 @@
 #include "Cache.h"
 #include "Component.h"
 #include "AnchorPoint.h"
-#include "ModelRefs.h"
 #include "SCAD.h"
 #include "util.h"
 

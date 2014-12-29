@@ -1,11 +1,11 @@
 #include <iostream>
 #include <sstream>
-#include "Parts.h"
+#include "Ref.h"
 #include "util.h"
 
 namespace Metabot
 {
-    Part::Part(Json::Value json, TransformMatrix matrix_)
+    Ref::Ref(Json::Value json, TransformMatrix matrix_)
         : quantity(1), matrix(matrix_)
     {
         if (json.isObject()) {
@@ -34,32 +34,32 @@ namespace Metabot
         }
     }
             
-    std::string Part::hash()
+    std::string Ref::hash()
     {
         return hash_sha1(name+"//"+parameters.toArgs());
     }
 
-    void Parts::add(const Part &part)
+    void Refs::add(const Ref &ref)
     {
-        parts.push_back(part);
+        push_back(ref);
     }
             
-    void Parts::merge(const Parts &parts)
+    void Refs::merge(const Refs &refs)
     {
-        for (auto part : parts.parts) {
-            add(part);
+        for (auto ref : refs) {
+            add(ref);
         }
     }
             
-    PartsGrouped Parts::group()
+    RefsGrouped Refs::group()
     {
         std::map<std::string, std::string> hashToName;
         std::map<std::string, int> counts;
-        PartsGrouped grouped;
+        RefsGrouped grouped;
 
-        for (auto part: parts) {
-            auto hash = part.hash();
-            auto name = part.name;
+        for (auto ref: *this) {
+            auto hash = ref.hash();
+            auto name = ref.name;
 
             if (!hashToName.count(hash)) {
                 if (!counts.count(name)) {
@@ -73,18 +73,18 @@ namespace Metabot
                 }
             }
 
-            grouped.add(hashToName[hash], part);
+            grouped.add(hashToName[hash], ref);
         }
 
         return grouped;
     }
             
-    void PartsGrouped::add(std::string name, Part part)
+    void RefsGrouped::add(std::string name, Ref ref)
     {
-        groups[name].add(part);
+        groups[name].add(ref);
     }
 
-    std::string PartsGrouped::toString()
+    std::string RefsGrouped::toString()
     {
         std::ostringstream oss;
 
@@ -92,8 +92,8 @@ namespace Metabot
         int unique = 0;
         for (auto entry : groups) {
             auto name = entry.first;
-            auto parts = entry.second;
-            auto count = parts.parts.size();
+            auto refs = entry.second;
+            auto count = refs.size();
             oss << "* " << name << ".stl " << count << std::endl;
             total += count;
             unique++;

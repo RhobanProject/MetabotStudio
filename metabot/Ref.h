@@ -1,22 +1,18 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <map>
+#include <vector>
 #include <json/json.h>
-#include "Parameters.h"
 #include "TransformMatrix.h"
+#include "Parameters.h"
 
 namespace Metabot
 {
-    class Part;
-    class Parts;
-    class PartsGrouped;
-
-    class Part
+    class Ref
     {
         public:
-            Part(Json::Value json, TransformMatrix matrix);
+            Ref(Json::Value json, TransformMatrix matrix);
 
             /**
              * This hash is used to group the unique parts
@@ -29,23 +25,22 @@ namespace Metabot
             float r, g, b;
             TransformMatrix matrix;
     };
-
-    class Parts
+    
+    class RefsGrouped;
+    class Refs : public std::vector<Ref>
     {
         public:
-            void add(const Part &other);
-            void merge(const Parts &parts);
-            PartsGrouped group();
-
-            std::vector<Part> parts;
+            void add(const Ref &other);
+            void merge(const Refs &parts);
+            RefsGrouped group();
     };
 
-    class PartsGrouped
+    class RefsGrouped
     {
         public:
-            void add(std::string name, Part part);
+            void add(std::string name, Ref part);
             std::string toString();
 
-            std::map<std::string, Parts> groups;
+            std::map<std::string, Refs> groups;
     };
 }

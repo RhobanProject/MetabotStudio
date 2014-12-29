@@ -9,16 +9,13 @@
 #include <3d/Model.h>
 #include <json/json.h>
 #include "BOM.h"
-#include "Parts.h"
+#include "Ref.h"
 #include "Parameters.h"
-#include "ModelRefs.h"
 
 namespace Metabot
 {
     class Backend;
     class AnchorPoint;
-    class Part;
-    class ModelRef;
     class Module;
 
     class Component
@@ -85,8 +82,8 @@ namespace Metabot
             Component *component;
  
             std::vector<AnchorPoint *> anchors;
-            ModelRefs models;
-            Parts parts;
+            Refs models;
+            Refs parts;
             BOM bom;
 
             Model myModel;

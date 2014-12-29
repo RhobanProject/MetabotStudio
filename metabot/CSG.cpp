@@ -101,11 +101,11 @@ namespace Metabot
         }
 
         if (node->is("model")) {
-            models.add(ModelRef(node->json, matrix));
+            models.add(Ref(node->json, matrix));
         }
 
         if (node->is("part")) {
-            parts.add(Part(node->json, matrix));
+            parts.add(Ref(node->json, matrix));
         }
 
         if (node->is("bom")) {

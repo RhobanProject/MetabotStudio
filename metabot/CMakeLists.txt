@@ -31,11 +31,10 @@ set(ALL_SOURCES
     Component.cpp
     CSG.cpp
     CSGNode.cpp
-    ModelRefs.cpp
     Module.cpp
     Parameter.cpp
     Parameters.cpp
-    Parts.cpp
+    Ref.cpp
     Robot.cpp
     SCAD.cpp
     TransformMatrix.cpp

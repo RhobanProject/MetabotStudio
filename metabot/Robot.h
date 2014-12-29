@@ -6,7 +6,6 @@
 #include <3d/Point3.h>
 #include "Vector.h"
 #include "BOM.h"
-#include "Parts.h"
 
 namespace Metabot
 {
@@ -51,7 +50,7 @@ namespace Metabot
 
             Backend *backend;
 
-            Parts getParts();
+            Refs getParts();
             BOM getBOM();
     };
 }

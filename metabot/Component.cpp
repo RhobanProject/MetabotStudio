@@ -10,8 +10,6 @@
 #endif
 #include "Component.h"
 #include "AnchorPoint.h"
-#include "Parts.h"
-#include "ModelRefs.h"
 #include "Backend.h"
 #include "Cache.h"
 #include "CSG.h"
@@ -109,7 +107,7 @@ namespace Metabot
         myModel.openGLDraw();
 
         // Rendering models
-        for (auto ref : models.models) {
+        for (auto ref : models) {
             glPushMatrix();
             ref.matrix.openGLMult();
             Model model = backend->getModel(ref.name);
@@ -145,7 +143,7 @@ namespace Metabot
         model = myModel;
 
         // Rendering models
-        for (auto ref : models.models) {
+        for (auto ref : models) {
             Model m = backend->getModel(ref.name);
             m.apply(ref.matrix);
             model.merge(m);
@@ -196,11 +194,11 @@ namespace Metabot
         models = document.models;
         bom = document.bom;
 
-        for (auto part : parts.parts) {
-            backend->getModule(part.name).openscad("stl", part.parameters);
+        for (auto ref : parts) {
+            backend->getModule(ref.name).openscad("stl", ref.parameters);
         }
-        for (auto model : models.models) {
-            backend->getModule(model.name).openscad("stl", model.parameters);
+        for (auto ref : models) {
+            backend->getModule(ref.name).openscad("stl", ref.parameters);
         }
 
         int index = 0;

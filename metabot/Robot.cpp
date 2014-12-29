@@ -7,7 +7,7 @@
 #include "Robot.h"
 #include "AnchorPoint.h"
 #include "Component.h"
-#include "Parts.h"
+#include "Ref.h"
 #include "util.h"
 
 namespace Metabot
@@ -28,7 +28,7 @@ namespace Metabot
             makedir(directory);
         }
 
-        Parts parts = getParts();
+        auto parts = getParts();
     }
             
     Robot *Robot::clone()
@@ -266,9 +266,9 @@ namespace Metabot
         return componentInstance;
     }
     
-    Parts Robot::getParts()
+    Refs Robot::getParts()
     {
-        Parts parts;
+        Refs parts;
         foreachComponent([&parts](Component *instance) {
             parts.merge(instance->parts);
         });
