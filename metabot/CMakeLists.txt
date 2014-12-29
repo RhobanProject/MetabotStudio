@@ -34,6 +34,7 @@ set(ALL_SOURCES
     ModelRefs.cpp
     Module.cpp
     Parameter.cpp
+    Parameters.cpp
     Parts.cpp
     Robot.cpp
     SCAD.cpp

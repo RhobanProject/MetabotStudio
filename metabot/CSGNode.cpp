@@ -6,36 +6,60 @@
 namespace Metabot
 {
     CSGNode::CSGNode(std::string name_, std::string value_)
-        : name(name_), value(value_), anchor(false), model(false), part(false), parameter(false), bom(false)
+        : name(name_), value(value_)
     {
         if (isMatrix()) {
             matrix = TransformMatrix::fromJSON(value);
         }
 
         if (isMarker()) {
-            std::string noquote = value.substr(1, value.length()-2);
+            std::string noquote = value.substr(1, value.length()-1);
 
-            if (startswith(noquote, "metabot_model: ")) {
-                model = true;
-                data = trim(removestart(noquote, "metabot_model: "));
-            }
-            if (startswith(noquote, "metabot_anchor: ")) {
-                anchor = true;
-                data = trim(removestart(noquote, "metabot_anchor: "));
-            }
-            if (startswith(noquote, "metabot_part: ")) {
-                part = true;
-                data = trim(removestart(noquote, "metabot_part: "));
-            }
-            if (startswith(noquote, "metabot_parameter: ")) {
-                parameter = true;
-                data = trim(removestart(noquote, "metabot_parameter: "));
-            }
-            if (startswith(noquote, "metabot_bom: ")) {
-                bom = true;
-                data = trim(removestart(noquote, "metabot_bom: "));
+            if (startswith(noquote, "metabot: ")) {
+                process(removestart(noquote, "metabot: "));
             }
         }
+    }
+
+    void CSGNode::process(std::string data)
+    {
+        data = fix(data);
+
+        Json::Reader reader;
+        reader.parse(data, json);
+    }
+
+    std::string CSGNode::fix(std::string data)
+    {
+        bool in_enclosure = true;
+        std::string buffer, out;
+
+        for (unsigned int i=0; i<data.size(); i++) {
+            char c = data[i];
+            if (c == '"') {
+                if (!in_enclosure) {
+                    out += trim(buffer);
+                }
+                in_enclosure = !in_enclosure;
+                buffer = "";
+            } else {
+                if (in_enclosure) {
+                    out += c;
+                } else {
+                    if (c != ',') {
+                        buffer += c;
+                    }
+                }
+            }
+        }
+
+        for (unsigned int i=0; i<out.size(); i++) {
+            if (out[i] == '\'') {
+                out[i] = '"';
+            }
+        }
+
+        return out;
     }
     
     CSGNode::~CSGNode()
@@ -55,18 +79,9 @@ namespace Metabot
     {
         return (name == "marker");
     }
-
-    Json::Value CSGNode::json()
+            
+    bool CSGNode::is(std::string type)
     {
-        std::string doc = data;
-        Json::Value value;
-        Json::Reader reader;
-        for (unsigned int i=0; i<doc.length(); i++) {
-            if (doc[i] == '\'') doc[i] = '"';
-        }
-        reader.parse(doc, value);
-        // std::cout << doc << std::endl;
-        // std::cout << value << std::endl;
-        return value;
+        return json["type"]==type;
     }
 }

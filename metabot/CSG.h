@@ -16,7 +16,7 @@ namespace Metabot
         public:
             CSG();
             virtual ~CSG();
-            static CSG *parse(std::string data);
+            static CSG parse(std::string data);
 
             void walk(TransformMatrix matrix, CSGNode *node);
 

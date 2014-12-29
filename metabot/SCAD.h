@@ -17,5 +17,10 @@ namespace Metabot
              * found.
              */
             static std::vector<Module> load(std::string filename);
+
+            /**
+             * Generating a metabot marker from json
+             */
+            static std::string jsonMarker(Json::Value json);
     };
 }

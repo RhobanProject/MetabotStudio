@@ -18,16 +18,15 @@ namespace Metabot
         }
     }
 
-    CSG *CSG::parse(std::string data)
+    CSG CSG::parse(std::string data)
     {
-        CSG *document = new CSG;
+        CSG document;
         int state = 0;
         unsigned int n = data.length();
         std::vector<CSGNode *> stack;
         std::string name;
         std::string value;
-        stack.push_back(document->root);
-        CSGNode *lastMarker = NULL;
+        stack.push_back(document.root);
 
         for (unsigned int i=0; i<n; i++) {
             char c = data[i];
@@ -68,13 +67,6 @@ namespace Metabot
                         CSGNode *last = stack[stack.size()-1];
                         last->children.push_back(node);
 
-                        if (node->isMarker() && !node->parameter) {
-                            lastMarker = node;
-                        }
-                        if (node->parameter && lastMarker != NULL) {
-                            lastMarker->parameters.push_back(node->data);
-                        }
-                        
                         if (c == '{') { 
                             stack.push_back(node);
                         }
@@ -92,7 +84,7 @@ namespace Metabot
         }
 
         auto matrix = TransformMatrix::identity();
-        document->walk(matrix, document->root);
+        document.walk(matrix, document.root);
 
         return document;
     }
@@ -103,21 +95,21 @@ namespace Metabot
             matrix = matrix.multiply(node->matrix);
         }
 
-        if (node->anchor) {
-            AnchorPoint *anchor = new AnchorPoint(node->json(), matrix);
+        if (node->is("anchor")) {
+            AnchorPoint *anchor = new AnchorPoint(node->json, matrix);
             anchors.push_back(anchor);
         }
 
-        if (node->model) {
-            models.add(ModelRef(node->json(), matrix));
+        if (node->is("model")) {
+            models.add(ModelRef(node->json, matrix));
         }
 
-        if (node->part) {
-            parts.add(Part(node->data, implode(node->parameters, " "), matrix));
+        if (node->is("part")) {
+            parts.add(Part(node->json, matrix));
         }
 
-        if (node->bom) {
-            bom.append(BOMEntry(node->json()));
+        if (node->is("bom")) {
+            bom.append(BOMEntry(node->json));
         }
 
         for (auto child : node->children) {

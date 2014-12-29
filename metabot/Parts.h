@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <json/json.h>
+#include "Parameters.h"
 #include "TransformMatrix.h"
 
 namespace Metabot
@@ -14,12 +16,13 @@ namespace Metabot
     class Part
     {
         public:
-            Part(std::string name, std::string params, TransformMatrix matrix);
+            Part(Json::Value json, TransformMatrix matrix);
 
             std::string hash();
 
             int quantity;
-            std::string name, params;
+            std::string name;
+            Parameters parameters;
             TransformMatrix matrix;
     };
 

@@ -5,15 +5,27 @@
 
 namespace Metabot
 {
-    Part::Part(std::string name_, std::string params_, TransformMatrix matrix_)
-        : name(name_), params(params_), quantity(1), matrix(matrix_)
+    Part::Part(Json::Value json, TransformMatrix matrix_)
+        : quantity(1), matrix(matrix_)
     {
-        // std::cout << "Part: " << name << ", " << params << std::endl;
+        if (json.isObject()) {
+            if (json.isMember("name") && json["name"].isString()) {
+                // Reading name
+                name = json["name"].asString();
+            }
+
+            if (json.isMember("parameters") && json["parameters"].isObject()) {
+                // Reading parameters
+                for (auto key : json["parameters"].getMemberNames()) {
+                    parameters.set(key, json["parameters"][key].asString());
+                }
+            }
+        }
     }
             
     std::string Part::hash()
     {
-        return hash_sha1(name+"//"+params);
+        return hash_sha1(name+"//"+parameters.toArgs());
     }
 
     void Parts::add(const Part &part)

@@ -32,7 +32,9 @@ namespace Metabot
         for (auto module : modules) {
             if (module.second.getType() == "component") {
                 auto component = instanciate(module.second.getName());
+                component->compile();
                 delete component;
+                break;
             }
         }
     }
@@ -79,13 +81,21 @@ namespace Metabot
         auto scadModules = SCAD::load(path);
 
         for (auto module : scadModules) {
-            module.setCache(cache);
+            module.setBackend(this);
             modules[module.getName()] = module;
         }
+    }
+            
+    Module &Backend::getModule(std::string name)
+    {
+        return modules[name];
     }
 
     Model Backend::getModel(std::string name)
     {
+        Model m;
+        return m;
+        /*
         if (!models.count(name)) {
             std::string filename = directory + "/models/" + name + ".scad";
             Model model = loadModelSTL_string(openscad(filename, "stl"));
@@ -93,53 +103,7 @@ namespace Metabot
         }
 
         return models[name];
-    }
-   
-    std::string Backend::openscad(std::string filename, std::string format, std::string parameters)
-    {
-        std::string key = hash_sha1(filename + "." + format + " w/ " + parameters);
-        if (cache != NULL) {
-            return cache->get(key, [this, format, filename, parameters]() {
-                return this->doOpenscad(filename, format, parameters);
-            }, filename);
-        } else {
-            return doOpenscad(filename, format);
-        }
-    }
-    
-    std::string Backend::doOpenscad(std::string filename, std::string format, std::string parameters)
-    {
-        std::stringstream cmd;
-        cmd << "openscad -D\\$fn=15 ";
-        cmd << parameters;
-        std::string output = tempname() + "." + format;
-        cmd << filename << " -o " << output;
-        // cmd << " >/dev/null 2>/dev/null";
-        std::string command = cmd.str();
-        
-        // Uncomment that to see the compile command called
-        std::cout << "compile(): " << command << std::endl;
-
-        FILE *process = popen(command.c_str(), "r");
-        if (pclose(process) != 0) {
-            return "";
-            /*
-            std::stringstream error;
-            error << "Compilation failed for file " << filename;
-            throw error.str();
-            */
-        }
-
-        if (!file_exists(output)) {
-            std::stringstream error;
-            error << "Compilation did not produced the output file";
-            throw error.str();
-        }
-
-        std::string data = file_get_contents(output);
-        remove(output.c_str());
-
-        return data;
+        */
     }
             
     Component *Backend::instanciate(std::string name)

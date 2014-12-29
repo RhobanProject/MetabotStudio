@@ -1,6 +1,8 @@
 #include <sstream>
 #include <iostream>
+#include "Cache.h"
 #include "Module.h"
+#include "SCAD.h"
 #include "util.h"
 
 #define STATE_MODULE    0
@@ -16,8 +18,8 @@ namespace Metabot
     {
     }
 
-    Module::Module(std::string file_)
-        : file(file_), cache(NULL)
+    Module::Module(std::string filename_)
+        : filename(filename_), backend(NULL)
     {
         state = STATE_MODULE;
         equals = 0;
@@ -26,12 +28,12 @@ namespace Metabot
             
     std::string Module::getFilename()
     {
-        return file;
+        return filename;
     }
 
-    void Module::setCache(Cache *cache_)
+    void Module::setBackend(Backend *backend_)
     {
-        cache = cache_;
+        backend = backend_;
     }
 
     void Module::setName(std::string name_)
@@ -66,7 +68,7 @@ namespace Metabot
             
     Parameter &Module::getParameter(std::string name)
     {
-        return parameters[name];
+        return parameters.get(name);
     }
 
     std::string Module::push(unsigned char c)
@@ -92,14 +94,13 @@ namespace Metabot
                 // Parsing parameters of the module
                 if (c == ')') {
                     if (trim(tmpName) != "") {
-                        parameters[trim(tmpName)].name = trim(tmpName);
-                        parameters[trim(tmpName)].value = trim(tmpValue);
+                        parameters.get(trim(tmpName)).value = trim(tmpValue);
                     }
                     state = STATE_WAITING;
                 } else if (c == ',') {
                     equals = 0;
                     if (trim(tmpName) != "") {
-                        parameters[trim(tmpName)] = trim(tmpValue);
+                        parameters.get(trim(tmpName)).value = trim(tmpValue);
                         tmpName = "";
                         tmpValue = "";
                     }
@@ -120,20 +121,39 @@ namespace Metabot
                     std::ostringstream oss;
                     oss << "// metabot: Begining module " << name << std::endl;
                     if (type != "component") {
-                        auto last = parameters.end();
-                        auto iterator = parameters.begin();
-                        last--;
+                        auto allParameters = parameters.getAll();
+                        auto last = allParameters.end();
+                        auto iterator = allParameters.begin();
+                        if (last != allParameters.begin()) {
+                            last--;
+                        }
 
                         // Adding type marker
-                        oss << "marker(\"metabot_" << type << ": " << name << "\");" << std::endl;
-                        // Adding parameters markers
-                        for (auto entry : parameters) {
-                            oss << "marker(\"metabot_parameter: " << entry.first << " \", " << entry.first << ");" << std::endl;
+                        oss << "marker(\"metabot: {";
+                        oss << "'type': '" << type << "',";
+                        oss << "'name': '" << name << "',";
+                        oss << "'parameters': {";
+                        for (iterator=allParameters.begin(); iterator!=allParameters.end(); iterator++) {
+                            auto entry = *iterator;
+                            oss << "'" << entry.first << "':";
+                            if (entry.second.isString()) {
+                                oss << "'";
+                            }
+                            oss << "\",";
+                            oss << entry.first << ",\"";
+                            if (entry.second.isString()) {
+                                oss << "'";
+                            }
+                            if (iterator != last) {
+                                oss << ",";
+                            }
                         }
+                        oss << "}}\");" << std::endl;
+
                         // Adding forwarding to the _ module
                         oss << "if (NoModels == false) {" << std::endl;
                         oss << "_" << name << "(";
-                        for (iterator=parameters.begin(); iterator!=parameters.end(); iterator++) {
+                        for (iterator=allParameters.begin(); iterator!=allParameters.end(); iterator++) {
                             auto entry = *iterator;
                             oss << entry.first << "=" << entry.first;
                             if (iterator != last) {
@@ -146,11 +166,11 @@ namespace Metabot
 
                         // Creating forward module
                         oss << "module _" << name << "(";
-                        for (iterator=parameters.begin(); iterator!=parameters.end(); iterator++) {
+                        for (iterator=allParameters.begin(); iterator!=allParameters.end(); iterator++) {
                             auto entry = *iterator;
                             oss << entry.first << "=" << entry.second.value;
                             if (iterator != last) {
-                                oss << ", ";
+                                oss << ",";
                             }
                         }
                         oss << ") {" << std::endl;
@@ -194,5 +214,74 @@ namespace Metabot
     bool Module::finished()
     {
         return state == STATE_FINISHED;
+    }
+  
+    std::string Module::openscad(std::string format, Parameters parameters)
+    {
+        std::string key = hash_sha1(filename + "." + format + " w/ " + parameters.toArgs());
+        if (backend->cache != NULL) {
+            return backend->cache->get(key, [this, format, parameters]() {
+                return this->doOpenscad(format, parameters);
+            }, filename);
+        } else {
+            return doOpenscad(format, parameters);
+        }
+    }
+    
+    std::string Module::doOpenscad(std::string format, Parameters parameters)
+    {
+        std::stringstream cmd;
+        cmd << "openscad ";
+        std::string input = tempname() + ".scad";
+        std::string output = tempname() + "." + format;
+        cmd << input << " -o " << output;
+        // cmd << " >/dev/null 2>/dev/null";
+        std::string command = cmd.str();
+
+        std::stringstream scad;
+        scad << "use <" << current_dir() << "/" << filename << ">;" << std::endl;
+        scad << std::endl;
+        scad << name << "(";
+        auto allParameters = parameters.getAll();
+        auto last = allParameters.end();
+        if (last != allParameters.begin()) {
+            last--;
+        }
+        auto iterator = allParameters.begin();
+        for (iterator=allParameters.begin(); iterator!=allParameters.end(); iterator++) {
+            auto entry = *iterator;
+            scad << entry.first << "=" << entry.second.value;
+            if (iterator != last) {
+                scad << ", ";
+            }
+        }
+        scad << ");" << std::endl;
+        std::cout << input << std::endl;
+        file_put_contents(input, scad.str());
+        
+        // Uncomment that to see the compile command called
+        std::cout << "compile(): " << command << std::endl;
+
+        FILE *process = popen(command.c_str(), "r");
+        if (pclose(process) != 0) {
+            return "";
+            /*
+            std::stringstream error;
+            error << "Compilation failed for file " << filename;
+            throw error.str();
+            */
+        }
+
+        if (!file_exists(output)) {
+            std::stringstream error;
+            error << "Compilation did not produced the output file";
+            throw error.str();
+        }
+
+        std::string data = file_get_contents(output);
+        remove(output.c_str());
+        remove(input.c_str());
+
+        return data;
     }
 }

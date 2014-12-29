@@ -185,15 +185,16 @@ namespace Metabot
 
     void Component::compile()
     {
-        std::string filename = module->getFilename();
-        std::string csg = backend->openscad(filename, "csg", parameters());
+        // Creating CSG 
+        std::string csg = module->openscad("csg", parameters(true));
+        // Creating STL and storing it to the model
         myModel = loadModelSTL_string(stl());
-
-        CSG *document = CSG::parse(csg);
-        anchors = document->anchors;
-        parts = document->parts;
-        models = document->models;
-        bom = document->bom;
+        // Parsing the CSG document
+        CSG document = CSG::parse(csg);
+        anchors = document.anchors;
+        parts = document.parts;
+        models = document.models;
+        bom = document.bom;
 
         int index = 0;
         for (auto anchor : anchors) {
@@ -201,8 +202,6 @@ namespace Metabot
             anchor->id = index;
             index++;
         }
-
-        delete document;
     }
 
     void Component::moveAnchors(Component *other)
@@ -302,19 +301,23 @@ namespace Metabot
         return "";
     }
 
-    std::string Component::parameters()
+    Parameters Component::parameters(bool noModels)
     {
-        std::stringstream cmd;
-        cmd << "-DNoModels=true ";
+        Parameters params;
+
         for (auto value : values) {
-            cmd << "-D" << value.first << "=" << value.second << " ";
+            params.set(value.first, value.second);
         }
-        return cmd.str();
+        if (noModels) {
+            params.set("NoModels", "true");
+        }
+
+        return params;
     }
 
     std::string Component::stl()
     {
-        return backend->openscad(module->getFilename(), "stl", parameters());
+        return module->openscad("stl", parameters());
     }
 
     Json::Value Component::parametersJson()

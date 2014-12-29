@@ -2,8 +2,8 @@
 
 #include <string>
 #include <map>
-#include "Cache.h"
-#include "Parameter.h"
+#include "Backend.h"
+#include "Parameters.h"
 
 namespace Metabot
 {
@@ -13,7 +13,7 @@ namespace Metabot
             Module();
             Module(std::string file);
 
-            void setCache(Cache *cache);
+            void setBackend(Backend *backend);
 
             std::string getFilename();
 
@@ -39,13 +39,16 @@ namespace Metabot
             std::string push(unsigned char c);
 
             bool finished();
+            
+            std::string openscad(std::string format, Parameters parameters);
+            std::string doOpenscad(std::string format, Parameters parameters);
 
         protected:
-            std::string file, name, type, description;
-            std::map<std::string, Parameter> parameters;
+            std::string filename, name, type, description;
+            Parameters parameters;
             int state;
 
-            Cache *cache;
+            Backend *backend;
         
             int brackets, equals;
             std::string tmpName, tmpValue;

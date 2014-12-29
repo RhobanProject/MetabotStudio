@@ -21,11 +21,13 @@ namespace Metabot
             std::string data;
             bool isMarker();
 
-            Json::Value json();
+            bool is(std::string type);
 
+            std::string fix(std::string data);
+            void process(std::string data);
+
+            Json::Value json;
             std::string name, value;
             std::vector<CSGNode*> children;
-            std::vector<std::string> parameters;
-            bool anchor, model, part, parameter, bom;
     };
 }

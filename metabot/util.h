@@ -36,3 +36,4 @@ void file_put_contents(std::string path, std::string contents);
 std::string file_get_contents(std::string path);
 int filemtime(std::string path);
 void remove_file(std::string filename);
+std::string current_dir();

@@ -10,6 +10,7 @@
 #include <json/json.h>
 #include "BOM.h"
 #include "Parts.h"
+#include "Parameters.h"
 #include "ModelRefs.h"
 
 namespace Metabot
@@ -68,7 +69,7 @@ namespace Metabot
 
             std::string getValue(std::string name);
             std::string stl();
-            std::string parameters();
+            Parameters parameters(bool noModels=false);
 
             // Backend and module
             Backend *backend;

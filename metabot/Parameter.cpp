@@ -19,4 +19,9 @@ namespace Metabot
     {
         return (value=="true" || value == "false");
     }
+
+    bool Parameter::isString()
+    {
+        return value.size() && value[0] == '"';
+    }
 }

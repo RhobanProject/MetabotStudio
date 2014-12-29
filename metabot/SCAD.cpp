@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <json/json.h>
 #include "util.h"
 #include "SCAD.h"
 
@@ -71,11 +72,19 @@ namespace Metabot
                         auto parts = splitCSV(line.substr(3));
                         std::string annotation = strtolower(parts[0]);
                         if (annotation == "anchor" && parts.size()==3) {
-                            oss << "marker(\"metabot_anchor: " << parts[1] << " " << parts[2] << "\");" << std::endl;
+                            Json::Value json;
+                            json["type"] = "anchor";
+                            json["male"] = (parts[2] == "male");
+                            json["female"] = (parts[2] == "female");
+                            oss << jsonMarker(json);
                         }
-                        if (annotation == "bom") {
-                            // XXX: Todo, store the BOM entry and marks its id here
-                            oss << "marker(\"metabot_bom: TODO\");" << std::endl;
+                        if (annotation == "bom" && parts.size()==4) {
+                            Json::Value json;
+                            json["type"] = "bom";
+                            json["name"] = parts[1];
+                            json["quantity"] = parts[2];
+                            json["url"] = parts[3];
+                            oss << jsonMarker(json);
                         }
                     } else {
                         oss << line << std::endl;
@@ -96,5 +105,21 @@ namespace Metabot
         }
 
         return modules;
+    }
+
+    std::string SCAD::jsonMarker(Json::Value json)
+    {
+        Json::FastWriter writer;
+        std::string value = writer.write(json);
+
+        for (unsigned int i=0; i<value.size(); i++) {
+            if (value[i] == '"') {
+                value[i] = '\'';
+            }
+        }
+
+        std::stringstream ss;
+        ss << "marker(\"metabot: " << trim(value) << "\");" << std::endl;
+        return ss.str();
     }
 }

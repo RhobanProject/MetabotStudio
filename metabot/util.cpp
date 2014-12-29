@@ -235,3 +235,8 @@ void remove_file(std::string filename)
 {
     unlink(filename.c_str());
 }
+
+std::string current_dir()
+{
+    return std::string(get_current_dir_name());
+}

@@ -28,6 +28,7 @@ namespace Metabot
                 price = json["price"].asFloat();
             }
         }
+        std::cout << "BOM:: " << name << " // " << quantity << " // " << url << std::endl;
     }
 
     BOM::BOM()
