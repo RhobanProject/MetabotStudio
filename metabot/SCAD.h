@@ -3,7 +3,6 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "ComponentParameter.h"
 #include "Module.h"
 
 namespace Metabot

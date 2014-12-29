@@ -4,11 +4,12 @@
 
 namespace Metabot
 {
-    class ComponentParameter
+    class Parameter
     {
         public:
-            ComponentParameter(std::string name, std::string value, std::string description);
-            virtual ~ComponentParameter();
+            Parameter();
+            Parameter(std::string name, std::string value="", std::string description="");
+            virtual ~Parameter();
             bool isBool();
 
             std::string name;

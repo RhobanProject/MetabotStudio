@@ -29,11 +29,11 @@ set(ALL_SOURCES
     BOM.cpp
     Cache.cpp
     Component.cpp
-    ComponentParameter.cpp
     CSG.cpp
     CSGNode.cpp
     ModelRefs.cpp
     Module.cpp
+    Parameter.cpp
     Parts.cpp
     Robot.cpp
     SCAD.cpp

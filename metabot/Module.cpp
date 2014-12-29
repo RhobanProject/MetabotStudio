@@ -63,6 +63,11 @@ namespace Metabot
     {
         return description;
     }
+            
+    Parameter &Module::getParameter(std::string name)
+    {
+        return parameters[name];
+    }
 
     std::string Module::push(unsigned char c)
     {
@@ -87,7 +92,8 @@ namespace Metabot
                 // Parsing parameters of the module
                 if (c == ')') {
                     if (trim(tmpName) != "") {
-                        parameters[trim(tmpName)] = trim(tmpValue);
+                        parameters[trim(tmpName)].name = trim(tmpName);
+                        parameters[trim(tmpName)].value = trim(tmpValue);
                     }
                     state = STATE_WAITING;
                 } else if (c == ',') {
@@ -142,7 +148,7 @@ namespace Metabot
                         oss << "module _" << name << "(";
                         for (iterator=parameters.begin(); iterator!=parameters.end(); iterator++) {
                             auto entry = *iterator;
-                            oss << entry.first << "=" << entry.second;
+                            oss << entry.first << "=" << entry.second.value;
                             if (iterator != last) {
                                 oss << ", ";
                             }

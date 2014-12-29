@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "Cache.h"
+#include "Parameter.h"
 
 namespace Metabot
 {
@@ -25,6 +26,8 @@ namespace Metabot
             void setDescription(std::string description);
             std::string getDescription();
 
+            Parameter &getParameter(std::string name);
+
             /**
              * Pushes a new line of module header
              */
@@ -39,7 +42,7 @@ namespace Metabot
 
         protected:
             std::string file, name, type, description;
-            std::map<std::string, std::string> parameters;
+            std::map<std::string, Parameter> parameters;
             int state;
 
             Cache *cache;

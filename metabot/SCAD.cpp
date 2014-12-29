@@ -36,7 +36,7 @@ namespace Metabot
                 case PARSER_TAGGED:
                     if (startswith(line, "//:")) {
                         line = line.substr(3);
-                        auto parts = split(line, ' ');
+                        auto parts = split(line, ' ', 3);
                         std::string annotation = strtolower(parts[0]);
 
                         if (annotation == "model" || annotation == "part" || annotation == "component") {
@@ -46,6 +46,16 @@ namespace Metabot
                         }
                         if (annotation == "description") {
                             module.setDescription(line.substr(12)); 
+                        }
+                        if (annotation == "parameter") {
+                            if (parts.size() > 1) {
+                                std::string name = parts[1];
+                                std::string description = name;
+                                if (parts.size() == 3) {
+                                    description = parts[2];
+                                }
+                                module.getParameter(name).description = description;
+                            }
                         }
                     } else {
                         oss << line << std::endl;
