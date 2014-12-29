@@ -1,5 +1,3 @@
-use <../../metabot.scad>;
-
 // Diameter of plastic ollo holes
 OlloHoles = 4.3;
 

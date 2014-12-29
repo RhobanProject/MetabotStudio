@@ -1,4 +1,3 @@
-use <../../metabot.scad>;
 use <../parts/leg.scad>;
 
 //:Component Arm leg

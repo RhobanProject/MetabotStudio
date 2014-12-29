@@ -4,15 +4,12 @@ use <../util/rounded.metabot.scad>;
 
 module body(size=20, legs=4, thickness=2.2) {
 // metabot: Begining module body
-marker("metabot_part: body");
-marker("metabot_parameter: legs ", legs);
-marker("metabot_parameter: size ", size);
-marker("metabot_parameter: thickness ", thickness);
+marker("metabot: {'type': 'part','name': 'body','parameters': {'legs':",legs,",'size':",size,",'thickness':",thickness,"}}");
 if (NoModels == false) {
 _body(legs=legs,size=size,thickness=thickness);
 }
 }
-module _body(legs=4, size=20, thickness=2.2) {
+module _body(legs=4,size=20,thickness=2.2) {
 module bodyPart() {
 translate([-10,0,0])
 rounded(20, size, thickness, 5);

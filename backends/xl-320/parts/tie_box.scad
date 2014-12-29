@@ -29,7 +29,6 @@ module tie_box(thickness=2.2, print=false)
             translate([thickness, thickness, 0]) {
                 cube([SX-2*thickness, SY-2*thickness, SZ]);
             }
-            echo((SY-2*thickness)/2);
         }
 }
 

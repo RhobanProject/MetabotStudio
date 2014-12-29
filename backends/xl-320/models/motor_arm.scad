@@ -1,4 +1,3 @@
-include <../../metabot.scad>;
 include <motor.scad>;
 use <arm.scad>;
 

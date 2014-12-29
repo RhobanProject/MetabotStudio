@@ -15,21 +15,21 @@ $fn=25;
 //:Parameter ScrewsDiameter "Screws diameter"
 //:Parameter ScrewsCount "Number of screws"
 module u_bar(BarLength=60, BarRadius=3, BarBottomRadius=10, UHeight=15, URadius=8,
-    Thickness=2.3, ScrewsSpacing=14, ScrewsDiameter=2.6, ScrewsCount=8)
+        Thickness=2.3, ScrewsSpacing=14, ScrewsDiameter=2.6, ScrewsCount=8)
 {
-metabot_anchor("motor", female=true);
-u(height=UHeight, radius=URadius, thickness=Thickness,
- screwsSpacing=ScrewsSpacing, screwsDiameter=ScrewsDiameter,
- screwsCount=ScrewsCount, thickness=Thickness);
-translate([0, UHeight+URadius, 0]) {
-	rotate([-90,0,0]) {
-		bar(
-        height=BarLength, barRadius=BarRadius, bottomRadius=BarBottomRadius,
-		screwsSpacing=ScrewsSpacing, screwsDiameter=ScrewsDiameter,
- screwsCount=ScrewsCount, thickness=Thickness
-		);
-		translate([0,0,Thickness+BarLength])
-		sphere(r=BarRadius);
-	}
-}
+    //:Anchor motor female
+    u(height=UHeight, radius=URadius, thickness=Thickness,
+            screwsSpacing=ScrewsSpacing, screwsDiameter=ScrewsDiameter,
+            screwsCount=ScrewsCount, thickness=Thickness);
+    translate([0, UHeight+URadius, 0]) {
+        rotate([-90,0,0]) {
+            bar(
+                    height=BarLength, barRadius=BarRadius, bottomRadius=BarBottomRadius,
+                    screwsSpacing=ScrewsSpacing, screwsDiameter=ScrewsDiameter,
+                    screwsCount=ScrewsCount, thickness=Thickness
+               );
+            translate([0,0,Thickness+BarLength])
+                sphere(r=BarRadius);
+        }
+    }
 }

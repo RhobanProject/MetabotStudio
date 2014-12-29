@@ -58,7 +58,6 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
             leg(sizeA, sizeB, sizeC, sizeBottom,
                     sizeTop, mode, fixationAngle, thickness, false);
     } else {
-        echo("[PART] leg");
         translate([0,xOffset,-sizeA+15]) {
             cube([spacing+thickness*2, 20, thickness], center=true);
 
