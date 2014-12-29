@@ -3,7 +3,7 @@ include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/square_body_arm.scad>;
 
-//:Component Square "Body arm"
+//:Component "Square Body arm"
 //:Description "Square body arm"
 //:Parameter Width "Width of the body"
 //:Parameter Length "Length of the body"
