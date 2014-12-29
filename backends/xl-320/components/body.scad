@@ -11,9 +11,9 @@ use <../parts/body.scad>;
 module body(Size=20, Legs=4, Thickness=2.2)
 {
     translate([0,0,-(MotorWidth+Thickness)/2-Thickness/2])
-        body(size=Size, legs=Legs, thickness=Thickness);
+        body_plate(size=Size, legs=Legs, thickness=Thickness);
     translate([0,0,(MotorWidth+Thickness)/2-Thickness/2])
-        body(size=Size, legs=Legs, thickness=Thickness);
+        body_plate(size=Size, legs=Legs, thickness=Thickness);
 
     if (Legs>0) {
         for (i=[1:Legs]) {

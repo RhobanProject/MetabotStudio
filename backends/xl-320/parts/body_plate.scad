@@ -2,7 +2,7 @@ use <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 //:Part
-module body(size=20, legs=4, thickness=2.2) {
+module body_plate(size=20, legs=4, thickness=2.2) {
     module bodyPart() {
         translate([-10,0,0])
             rounded(20, size, thickness, 5);

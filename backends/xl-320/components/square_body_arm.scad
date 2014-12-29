@@ -12,12 +12,11 @@ use <../parts/square_body_arm.scad>;
 //:Parameter Thickness
 module square_body_arm(Width=40, Length=70, LegsSpacing=40, Legs=4, Thickness=2.2)
 {
-
     translate([0,0,MotorDepth/2+OlloWidth])
-        square_body_arm(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
+        square_body_arm_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
 
     translate([0,0,-Thickness-MotorDepth/2])
-        square_body_arm(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
+        square_body_arm_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
 
     LegsDistance = LegsSpacing*(Legs/2-1);
     for (leg=[1:(Legs/2)]) {
