@@ -23,7 +23,6 @@ namespace Metabot
 
         // Parser variables
         int state = PARSER_NORMAL;
-        int level = 0;
         std::ifstream f(filename);
         std::string line;
 
@@ -35,8 +34,7 @@ namespace Metabot
                 case PARSER_NORMAL:
                 case PARSER_TAGGED:
                     if (startswith(line, "//:")) {
-                        line = line.substr(3);
-                        auto parts = split(line, ' ', 3);
+                        auto parts = splitCSV(line.substr(3));
                         std::string annotation = strtolower(parts[0]);
 
                         if (annotation == "model" || annotation == "part" || annotation == "component") {
@@ -69,12 +67,24 @@ namespace Metabot
                 break;
                 case PARSER_MODULE:
                     // Analyzing the module
-                    oss << line << std::endl;
-                    oss << module.pushLine(line);
-                    if (module.finished()) {
-                        state = PARSER_NORMAL;
-                        modules.push_back(module);
-                        module = Module(filename_out);
+                    if (startswith(line, "//:")) {
+                        auto parts = splitCSV(line.substr(3));
+                        std::string annotation = strtolower(parts[0]);
+                        if (annotation == "anchor" && parts.size()==3) {
+                            oss << "marker(\"metabot_anchor: " << parts[1] << " " << parts[2] << "\");" << std::endl;
+                        }
+                        if (annotation == "bom") {
+                            // XXX: Todo, store the BOM entry and marks its id here
+                            oss << "marker(\"metabot_bom: TODO\");" << std::endl;
+                        }
+                    } else {
+                        oss << line << std::endl;
+                        oss << module.pushLine(line);
+                        if (module.finished()) {
+                            state = PARSER_NORMAL;
+                            modules.push_back(module);
+                            module = Module(filename_out);
+                        }
                     }
                 break;
             }
