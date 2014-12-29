@@ -2,10 +2,10 @@ include <../models/motor_values.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/side.scad>;
 
-//:Component Side to side
-//:Description To motors tied on side
+//:Component "Side to side"
+//:Description "Two motors tied on side"
 //:Parameter Size Size
-//:Parameter HolesToBorder Holes to border distance
+//:Parameter HolesToBorder "Holes to border distance"
 //:Parameter Thickness
 module side_to_side(Size=65, HolesToBorder=5, Thickness=2.2)
 {

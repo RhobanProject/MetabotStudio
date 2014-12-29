@@ -6,9 +6,9 @@ use <../parts/tie_box.scad>;
 use <../parts/tie_bar.scad>;
 
 //:Component Block
-//:Description Two DOF block
+//:Description "Two DOF block"
 //:Parameter Thickness Thickness 
-//:ParameterBool Internal Internal box? (harder to mount)
+//:ParameterBool Internal "Internal box? (harder to mount)"
 module block(Thickness=2.2, Internal=false)
 {
     motorArm();

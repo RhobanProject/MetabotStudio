@@ -4,9 +4,9 @@ use <../models/motor_arm.scad>;
 use <../parts/body.scad>;
 
 //:Component Body
-//:Description Star body
-//:Parameter Size Size of the body
-//:Parameter Legs Number of legs
+//:Description "Star body"
+//:Parameter Size "Size of the body"
+//:Parameter Legs "Number of legs"
 //:Parameter Thickness Thickness
 module body(Size=20, Legs=4, Thickness=2.2)
 {

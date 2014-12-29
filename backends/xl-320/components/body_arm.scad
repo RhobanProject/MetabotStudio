@@ -3,10 +3,10 @@ include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
 use <../parts/body_arm.scad>;
 
-//:Component Body arms
-//:Description Star body arms
-//:Parameter Size Size of the body
-//:Parameter Legs number of legs
+//:Component "Body arms"
+//:Description "Star body arms"
+//:Parameter Size "Size of the body"
+//:Parameter Legs "Number of legs"
 //:Parameter Thickness Thickness
 module body_arms(Size=25, Legs=4, Thickness=2.2)
 {

@@ -3,8 +3,8 @@ include <motor_values.scad>;
 use <../util/rounded.scad>;
 
 //:Model [0.4,0.45,0.4]
-//:BOM "XL-320 Servo" 21.9 http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1611
 module motor(thickness=2.2) {
+    //:BOM "XL-320 Servo" 21.9 http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1611
     translate([0,-MotorArmOffset,-MotorDepth/2]) {
         color([0.25,0.25,0.25]) {
             difference() {
