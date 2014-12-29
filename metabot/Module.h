@@ -40,8 +40,8 @@ namespace Metabot
 
             bool finished();
             
-            std::string openscad(std::string format, Parameters parameters);
-            std::string doOpenscad(std::string format, Parameters parameters);
+            std::string openscad(std::string format, Parameters parameters, bool noModels=false);
+            std::string doOpenscad(std::string format, Parameters parameters, bool noModels=false);
 
         protected:
             std::string filename, name, type, description;

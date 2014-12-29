@@ -186,7 +186,7 @@ namespace Metabot
     void Component::compile()
     {
         // Creating CSG 
-        std::string csg = module->openscad("csg", parameters(true));
+        std::string csg = module->openscad("csg", parameters());
         // Creating STL and storing it to the model
         myModel = loadModelSTL_string(stl());
         // Parsing the CSG document
@@ -301,15 +301,12 @@ namespace Metabot
         return "";
     }
 
-    Parameters Component::parameters(bool noModels)
+    Parameters Component::parameters()
     {
         Parameters params;
 
         for (auto value : values) {
             params.set(value.first, value.second);
-        }
-        if (noModels) {
-            params.set("NoModels", "true");
         }
 
         return params;
@@ -317,7 +314,7 @@ namespace Metabot
 
     std::string Component::stl()
     {
-        return module->openscad("stl", parameters());
+        return module->openscad("stl", parameters(), true);
     }
 
     Json::Value Component::parametersJson()

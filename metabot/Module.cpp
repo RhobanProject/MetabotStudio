@@ -216,24 +216,27 @@ namespace Metabot
         return state == STATE_FINISHED;
     }
   
-    std::string Module::openscad(std::string format, Parameters parameters)
+    std::string Module::openscad(std::string format, Parameters parameters, bool noModels)
     {
-        std::string key = hash_sha1(filename + "." + format + " w/ " + parameters.toArgs());
+        std::string key = hash_sha1(filename + "." + format + " [" + (noModels ? "y" : "n") + "] w/ " + parameters.toArgs());
         if (backend->cache != NULL) {
-            return backend->cache->get(key, [this, format, parameters]() {
-                return this->doOpenscad(format, parameters);
+            return backend->cache->get(key, [this, format, parameters, noModels]() {
+                return this->doOpenscad(format, parameters, noModels);
             }, filename);
         } else {
-            return doOpenscad(format, parameters);
+            return doOpenscad(format, parameters, noModels);
         }
     }
     
-    std::string Module::doOpenscad(std::string format, Parameters parameters)
+    std::string Module::doOpenscad(std::string format, Parameters parameters, bool noModels)
     {
         std::stringstream cmd;
         cmd << "openscad ";
         std::string input = tempname() + ".scad";
         std::string output = tempname() + "." + format;
+        if (noModels) {
+            cmd << "-DNoModels=true ";
+        }
         cmd << input << " -o " << output;
         // cmd << " >/dev/null 2>/dev/null";
         std::string command = cmd.str();

@@ -69,7 +69,7 @@ namespace Metabot
 
             std::string getValue(std::string name);
             std::string stl();
-            Parameters parameters(bool noModels=false);
+            Parameters parameters();
 
             // Backend and module
             Backend *backend;
