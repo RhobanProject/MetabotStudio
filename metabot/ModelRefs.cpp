@@ -15,6 +15,12 @@ namespace Metabot
                 g = json["color"][1].asFloat();
                 b = json["color"][2].asFloat();
             }
+            if (json.isMember("parameters") && json["parameters"].isObject()) {
+                // Reading parameters
+                for (auto key : json["parameters"].getMemberNames()) {
+                    parameters.set(key, json["parameters"][key].asString());
+                }
+            }
         }
     }
     

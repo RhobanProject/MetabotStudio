@@ -9,15 +9,26 @@ namespace Metabot
         : quantity(1), matrix(matrix_)
     {
         if (json.isObject()) {
-            if (json.isMember("name") && json["name"].isString()) {
+            if (json.isMember("name")) {
                 // Reading name
                 name = json["name"].asString();
             }
-
+            if (json.isMember("color") && json["color"].isArray()
+                    && json["color"].size() == 3) {
+                r = json["color"][0].asFloat();
+                g = json["color"][1].asFloat();
+                b = json["color"][2].asFloat();
+            }
             if (json.isMember("parameters") && json["parameters"].isObject()) {
                 // Reading parameters
                 for (auto key : json["parameters"].getMemberNames()) {
-                    parameters.set(key, json["parameters"][key].asString());
+                    if (json["parameters"][key].isString()) {
+                        std::stringstream ss;
+                        ss << "\"" << json["parameters"][key].asString() << "\"";
+                        parameters.set(key, ss.str());
+                    } else {
+                        parameters.set(key, json["parameters"][key].asString());
+                    }
                 }
             }
         }

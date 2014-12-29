@@ -18,11 +18,15 @@ namespace Metabot
         public:
             Part(Json::Value json, TransformMatrix matrix);
 
+            /**
+             * This hash is used to group the unique parts
+             */
             std::string hash();
 
             int quantity;
             std::string name;
             Parameters parameters;
+            float r, g, b;
             TransformMatrix matrix;
     };
 

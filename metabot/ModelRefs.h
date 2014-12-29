@@ -4,6 +4,7 @@
 #include <string>
 #include <3d/Model.h>
 #include <json/json.h>
+#include "Parameters.h"
 #include "TransformMatrix.h"
 
 namespace Metabot
@@ -16,8 +17,8 @@ namespace Metabot
 
             std::string name;
             TransformMatrix matrix;
-
             float r, g, b;
+            Parameters parameters;
     };
 
     class ModelRefs

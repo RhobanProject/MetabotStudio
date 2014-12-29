@@ -259,14 +259,15 @@ namespace Metabot
             }
         }
         scad << ");" << std::endl;
-        std::cout << input << std::endl;
         file_put_contents(input, scad.str());
         
         // Uncomment that to see the compile command called
         std::cout << "compile(): " << command << std::endl;
 
         FILE *process = popen(command.c_str(), "r");
-        if (pclose(process) != 0) {
+        int result = pclose(process);
+        remove(input.c_str());
+        if (result != 0) {
             return "";
             /*
             std::stringstream error;
@@ -283,7 +284,6 @@ namespace Metabot
 
         std::string data = file_get_contents(output);
         remove(output.c_str());
-        remove(input.c_str());
 
         return data;
     }

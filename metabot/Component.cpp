@@ -196,6 +196,13 @@ namespace Metabot
         models = document.models;
         bom = document.bom;
 
+        for (auto part : parts.parts) {
+            backend->getModule(part.name).openscad("stl", part.parameters);
+        }
+        for (auto model : models.models) {
+            backend->getModule(model.name).openscad("stl", model.parameters);
+        }
+
         int index = 0;
         for (auto anchor : anchors) {
             anchor->component = this;

@@ -40,6 +40,11 @@ namespace Metabot
 
                         if (annotation == "model" || annotation == "part" || annotation == "component") {
                             module.setType(annotation);
+                            /*
+                            if (parts.size() > 1) {
+                                std::cout << "COLOR: " << parts[1] << std::endl;
+                            }
+                            */
                             // The module is tagged, we should analyze it
                             state = PARSER_TAGGED;
                         }
