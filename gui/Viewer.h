@@ -5,7 +5,7 @@
 #include <QGLWidget>
 #include <3d/Model.h>
 #include <metabot/Robot.h>
-#include <metabot/ComponentInstance.h>
+#include <metabot/Component.h>
 #include <metabot/TransformMatrix.h>
 
 class Viewer : public QGLWidget
@@ -19,7 +19,7 @@ public:
     void paintGL();
     void keyPressEvent(QKeyEvent *keyEvent);
 
-    Metabot::ComponentInstance *getInstanceAt(int x, int y, int *id=NULL);
+    Metabot::Component *getInstanceAt(int x, int y, int *id=NULL);
 
     void drawBackground();
     void drawGridLines();
@@ -58,8 +58,8 @@ signals:
     void autorotate_changed(bool value);
     void nowhere_clicked();
     void anchor_clicked(Metabot::AnchorPoint *anchor);
-    void component_clicked(Metabot::ComponentInstance *instance);
-    void component_double_clicked(Metabot::ComponentInstance *instance);
+    void component_clicked(Metabot::Component *instance);
+    void component_double_clicked(Metabot::Component *instance);
 
 private:
     bool autorotate;

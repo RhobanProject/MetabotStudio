@@ -217,7 +217,7 @@ void Viewer::keyPressEvent(QKeyEvent *keyEvent)
     if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
 }
 
-ComponentInstance *Viewer::getInstanceAt(int x, int y, int *id)
+Component *Viewer::getInstanceAt(int x, int y, int *id)
 {
         /*
     GLbyte color[4];
@@ -343,13 +343,13 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
         auto instance = getInstanceAt(evt->x(), evt->y());
 
         if (instance) {
-            component_clicked(instance);
+            emit component_clicked(instance);
         } else {
-            nowhere_clicked();
+            emit nowhere_clicked();
         }
 
         if (evt->button() == Qt::RightButton) {
-            viewer_contextmenu_request(QPoint(evt->x(), evt->y()));
+            emit viewer_contextmenu_request(QPoint(evt->x(), evt->y()));
         }
     }
 }
@@ -392,11 +392,11 @@ void Viewer::mouseDoubleClickEvent(QMouseEvent *evt)
     auto instance = getInstanceAt(evt->x(), evt->y(), &id);
 
     if (instance) {
-        component_double_clicked(instance);
+        emit component_double_clicked(instance);
     } else {
         auto anchor = robot->getHoveredAnchor(id);
         if (anchor) {
-            anchor_clicked(anchor);
+            emit anchor_clicked(anchor);
         }
     }
 }

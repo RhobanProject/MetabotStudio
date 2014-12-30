@@ -29,7 +29,7 @@ public:
 
     void connectItem(QTreeWidgetItem *item, Metabot::AnchorPoint *anchor);
     void drawTree();
-    void drawTreeRecursive(QTreeWidgetItem *parentItem, Metabot::ComponentInstance *instance);
+    void drawTreeRecursive(QTreeWidgetItem *parentItem, Metabot::Component *instance);
 
     void showContextMenu(QPoint pos, QTreeWidgetItem *item);
     void runWizard(Metabot::AnchorPoint *anchor);
@@ -41,8 +41,8 @@ public:
 public slots:
     void on_wizard_ok();
     void on_wizard_cancel();
-    void on_viewer_clicked(Metabot::ComponentInstance *instance);
-    void on_viewer_doubleclicked(Metabot::ComponentInstance *instance);
+    void on_viewer_clicked(Metabot::Component *instance);
+    void on_viewer_doubleclicked(Metabot::Component *instance);
     void on_viewer_anchor_clicked(Metabot::AnchorPoint *anchor);
     void on_viewer_nowhere_clicked();
 

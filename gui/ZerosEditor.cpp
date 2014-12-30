@@ -17,7 +17,7 @@ ZerosEditor::ZerosEditor(MainWindow *main_, Metabot::Robot *robot_, Viewer *view
     previous = robot->getZeros();
     setWindowTitle("Zeros editor");
 
-    QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_instance_clicked(Metabot::ComponentInstance*)));
+    QObject::connect(viewer, SIGNAL(component_clicked(Metabot::Component*)), this, SLOT(on_instance_clicked(Metabot::Component*)));
 
     init();
 }
@@ -80,7 +80,7 @@ void ZerosEditor::changed()
     robot->setZeros(zeros);
 }
 
-void ZerosEditor::on_instance_clicked(Metabot::ComponentInstance *instance)
+void ZerosEditor::on_instance_clicked(Metabot::Component *instance)
 {
     auto anchor = instance->aboveAnchor();
     if (anchor) {

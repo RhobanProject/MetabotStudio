@@ -49,8 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Viewer
     QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
     QObject::connect(viewer, SIGNAL(anchor_clicked(Metabot::AnchorPoint*)), this, SLOT(on_viewer_anchor_clicked(Metabot::AnchorPoint*)));
-    QObject::connect(viewer, SIGNAL(component_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_clicked(Metabot::ComponentInstance*)));
-    QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::ComponentInstance*)), this, SLOT(on_viewer_doubleclicked(Metabot::ComponentInstance*)));
+    QObject::connect(viewer, SIGNAL(component_clicked(Metabot::Component*)), this, SLOT(on_viewer_clicked(Metabot::Component*)));
+    QObject::connect(viewer, SIGNAL(component_double_clicked(Metabot::Component*)), this, SLOT(on_viewer_doubleclicked(Metabot::Component*)));
     QObject::connect(viewer, SIGNAL(nowhere_clicked()), this, SLOT(on_viewer_nowhere_clicked()));
     viewer->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(viewer, SIGNAL(viewer_contextmenu_request(QPoint)), this, SLOT(on_viewer_contextmenu_request(QPoint)));
@@ -82,7 +82,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::drawTreeRecursive(QTreeWidgetItem *parentItem,
-                                   Metabot::ComponentInstance *instance
+                                   Metabot::Component *instance
                                    )
 {
     int index = 1;
@@ -97,7 +97,7 @@ void MainWindow::drawTreeRecursive(QTreeWidgetItem *parentItem,
                 item->setText(0, label);
                 item->setTextColor(0, QColor("#aaa"));
             } else {
-                Metabot::ComponentInstance *subInstance = anchor->anchor->instance;
+                Metabot::Component *subInstance = anchor->anchor->component;
                 item->setText(0, QString::fromStdString(subInstance->fullName()));
                 drawTreeRecursive(item, subInstance);
             }
@@ -187,10 +187,11 @@ void MainWindow::on_tree_itemSelectionChanged()
 void MainWindow::highlightAnchor(Metabot::AnchorPoint *anchor)
 {
     robot->unHighlight();
+
     if (anchor != NULL) {
         anchor->highlight = true;
         if (anchor->anchor) {
-            anchor->anchor->instance->highlight = true;
+            anchor->anchor->component->highlight = true;
         }
     } else {
         if (robot->root != NULL) {
@@ -284,7 +285,7 @@ void MainWindow::on_wizard_cancel()
     wizard = NULL;
 }
 
-void MainWindow::on_viewer_clicked(Metabot::ComponentInstance *instance)
+void MainWindow::on_viewer_clicked(Metabot::Component *instance)
 {
     // Highlight it
     Metabot::AnchorPoint *anchor = instance->aboveAnchor();
@@ -299,7 +300,7 @@ void MainWindow::on_viewer_clicked(Metabot::ComponentInstance *instance)
     }
 }
 
-void MainWindow::on_viewer_doubleclicked(Metabot::ComponentInstance *instance)
+void MainWindow::on_viewer_doubleclicked(Metabot::Component *instance)
 {
     Metabot::AnchorPoint *anchor = instance->aboveAnchor();
     runWizard(anchor);
@@ -342,8 +343,8 @@ void MainWindow::on_contextmenu_root()
 {
     auto anchor = selectedAnchor();
 
-    if (anchor != NULL && anchor->anchor && anchor->anchor->instance) {
-        robot->setRoot(anchor->anchor->instance);
+    if (anchor != NULL && anchor->anchor && anchor->anchor->component) {
+        robot->setRoot(anchor->anchor->component);
         drawTree();
     }
 }
@@ -352,11 +353,11 @@ void MainWindow::on_contextmenu_center()
 {
     auto anchor = selectedAnchor();
 
-    Metabot::ComponentInstance *instance;
+    Metabot::Component *instance;
     if (anchor == NULL) {
         instance = robot->root;
     } else {
-        instance = anchor->anchor->instance;
+        instance = anchor->anchor->component;
     }
     Metabot::Vector v(0, 0, 0);
     v = robot->getPoint(instance, v);

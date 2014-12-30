@@ -28,7 +28,7 @@ public slots:
     void changed();
     
 private slots:
-    void on_instance_clicked(Metabot::ComponentInstance *instance);
+    void on_instance_clicked(Metabot::Component *instance);
     void on_ok_clicked();
     void on_reset_clicked();
     void on_cancel_clicked();

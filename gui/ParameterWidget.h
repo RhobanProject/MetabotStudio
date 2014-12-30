@@ -5,17 +5,17 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QWidget>
-#include <metabot/ComponentInstance.h>
+#include <metabot/Component.h>
 
 class ParameterWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ParameterWidget(Metabot::ComponentInstance *instance, std::string name, QWidget *parent = 0);
+    explicit ParameterWidget(Metabot::Component *instance, std::string name, QWidget *parent = 0);
     virtual ~ParameterWidget();
     std::string getValue();
 
-    Metabot::ComponentInstance *instance;
+    Metabot::Component *instance;
     std::string name;
 
 protected:

@@ -2,8 +2,8 @@
 #include "ComponentItem.h"
 #include "ComponentWizard.h"
 #include "ui_ComponentWizard.h"
-#include <metabot/ComponentInstance.h>
-#include <metabot/ComponentParameter.h>
+#include <metabot/Component.h>
+#include <metabot/Parameter.h>
 #include <metabot/AnchorPoint.h>
 #include <metabot/Backend.h>
 #include <metabot/util.h>
@@ -45,7 +45,7 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
         // We're working on a specific anchor
         if (anchor->anchor != NULL) {
             previousAnchor = anchor->anchor;
-            instance = previousAnchor->instance;
+            instance = previousAnchor->component;
             setupInstance();
             setAnchor(previousAnchor);
         }
@@ -62,22 +62,25 @@ ComponentWizard::~ComponentWizard()
 void ComponentWizard::fill()
 {
     // Populating components choice, based on anchor compatibility
-    std::map<std::string, Metabot::Component*>::iterator it;
-    for (it=robot->backend->components.begin();
-         it!=robot->backend->components.end(); it++) {
-        Metabot::Component *component = (*it).second;
-        Metabot::ComponentInstance *instance = component->instanciate();
-        instance->compile();
+    auto modules = robot->backend->getModules();
 
-        // If we're working on the robot root, any instance is OK
-        if (anchor == NULL || instance->isCompatible(anchor)) {
-            QListWidgetItem *item = new QListWidgetItem();
-            item->setData(ROLE_COMPONENT, QString::fromStdString((*it).first));
-            ComponentItem *widget = new ComponentItem();
-            widget->setInfo(component->prettyName, component->description);
-            item->setSizeHint(widget->size());
-            ui->listWidget->addItem(item);
-            ui->listWidget->setItemWidget(item, widget);
+    for (auto module : modules) {
+        if (module.getType() == "component") {
+            auto *instance = robot->backend->instanciate(module.getName());
+            instance->compile();
+
+            // If we're working on the robot root, any instance is OK
+            if (anchor == NULL || instance->isCompatible(anchor)) {
+                QListWidgetItem *item = new QListWidgetItem();
+                item->setData(ROLE_COMPONENT, QString::fromStdString(module.getName()));
+                ComponentItem *widget = new ComponentItem();
+                widget->setInfo(module.getPrettyName(), module.getDescription());
+                item->setSizeHint(widget->size());
+                ui->listWidget->addItem(item);
+                ui->listWidget->setItemWidget(item, widget);
+            }
+
+            delete instance;
         }
     }
 }
@@ -161,9 +164,9 @@ void ComponentWizard::setupInstance()
         parameters.clear();
 
         // Adding parameter widgets
-        for (auto parameter : instance->component->parameters) {
-            std::string name = parameter.first;
-            ParameterWidget *parameterWidget = new ParameterWidget(instance, name);
+        for (auto entry : instance->module->getParameters()) {
+            auto parameter = entry.second;
+            ParameterWidget *parameterWidget = new ParameterWidget(instance, parameter.name);
             parameters.push_back(parameterWidget);
             ui->parameters_items->addWidget(parameterWidget);
         }
@@ -191,7 +194,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         }
 
         // Create the instance
-        instance = robot->backend->getComponent(data.toStdString())->instanciate();
+        instance = robot->backend->instanciate(data.toStdString());
         instance->compile();
 
         if (oldInstance != NULL) {
@@ -209,7 +212,7 @@ void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
 
     if (anchor == NULL) {
         if (currentAnchor != NULL) {
-            robot->root = currentAnchor->instance;
+            robot->root = currentAnchor->component;
             viewer->updateRatio();
         } else {
             robot->root = NULL;
@@ -250,16 +253,15 @@ void ComponentWizard::on_anchorPoint_clicked()
 
 void ComponentWizard::on_generate_clicked()
 {
-    Metabot::ComponentInstance *previous = instance;
+    auto previous = instance;
 
-    std::string name = instance->component->name;
-    instance = robot->backend->getComponent(name)->instanciate();
+    std::string name = instance->module->getName();
+    instance = robot->backend->instanciate(name);
 
-    std::vector<ParameterWidget*>::iterator rit;
-    for (rit=parameters.begin(); rit!=parameters.end(); rit++) {
-        ParameterWidget *parameter = *rit;
+    for (auto parameter : parameters) {
         instance->values[parameter->name] = parameter->getValue();
     }
+
     instance->compile();
     instance->moveAnchors(previous);
 

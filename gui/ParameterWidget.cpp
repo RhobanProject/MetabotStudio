@@ -3,25 +3,26 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <metabot/Component.h>
-#include <metabot/ComponentParameter.h>
+#include <metabot/Parameter.h>
+#include <metabot/Module.h>
 
-ParameterWidget::ParameterWidget(Metabot::ComponentInstance *instance_,
+ParameterWidget::ParameterWidget(Metabot::Component *instance_,
                                  std::string name_, QWidget *parent) :
     instance(instance_),
     name(name_),
     QWidget(parent),
     label(NULL), line(NULL), checkbox(NULL)
 {
-    Metabot::ComponentParameter *param = instance->component->parameters[name];
-    std::string value = instance->getValue(param->name);
+    auto param = instance->module->getParameter(name);
+    std::string value = instance->getValue(param.name);
 
     label = new QLabel;
-    label->setText(QString::fromStdString(param->description));
+    label->setText(QString::fromStdString(param.description));
 
     this->setLayout(new QVBoxLayout());
     this->layout()->addWidget(label);
 
-    if (param->isBool()) {
+    if (param.isBool()) {
         checkbox = new QCheckBox;
         checkbox->setChecked(value=="true");
         this->layout()->addWidget(checkbox);

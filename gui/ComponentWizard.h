@@ -54,8 +54,8 @@ private:
     Metabot::AnchorPoint *anchor;
 
     // Candidate new instance and its anchor
-    Metabot::ComponentInstance *instance;
-    Metabot::ComponentInstance *previousInstance;
+    Metabot::Component *instance;
+    Metabot::Component *previousInstance;
     Metabot::AnchorPoint *previousAnchor;
     Metabot::AnchorPoint *currentAnchor;
 

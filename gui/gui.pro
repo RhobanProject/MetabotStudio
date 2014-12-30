@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui opengl
+CONFIG += c++-11
 
 TARGET = Metabot
 TEMPLATE = app
