@@ -2,7 +2,7 @@ include <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 //:Part
-module arm_to_arm(distance=50, thickness=2.2)
+module arm_to_arm_plate(distance=50, thickness=2.2)
 {	
     translate([0,distance/2,0])
         difference() {

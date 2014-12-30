@@ -1,4 +1,4 @@
-use <../parts/arm_to_arm.scad>;
+use <../parts/arm_to_arm_plate.scad>;
 include <../models/ollo.scad>;
 include <../models/motor_values.scad>
 use <../models/motor_arm.scad>
@@ -13,10 +13,10 @@ module arm_to_arm(Distance=50, Thickness=2.2)
         //:Anchor motor female
 
         translate([0,0,OlloWidth+MotorDepth/2]) {
-            arm_to_arm(distance=Distance,thickness=Thickness);
+            arm_to_arm_plate(distance=Distance,thickness=Thickness);
         }
         translate([0,0,-Thickness-OlloWidth-MotorDepth/2]) {
-            arm_to_arm(distance=Distance,thickness=Thickness);
+            arm_to_arm_plate(distance=Distance,thickness=Thickness);
         }
 
         translate([0,Distance,0]) {

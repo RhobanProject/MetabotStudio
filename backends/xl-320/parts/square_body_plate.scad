@@ -2,7 +2,7 @@ include <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 //:Part
-module square_body(width=40, length=70, legs=4, legsSpacing=40, thickness=2.2)
+module square_body_plate(width=40, length=70, legs=4, legsSpacing=40, thickness=2.2)
 {	
     legsDistance = ((legs/2)-1)*legsSpacing;
     difference() {

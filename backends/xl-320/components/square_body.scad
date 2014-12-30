@@ -1,7 +1,7 @@
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
-use <../parts/square_body.scad>;
+use <../parts/square_body_plate.scad>;
 
 //:Component "Square Body"
 //:Description "Square body"
@@ -13,10 +13,10 @@ use <../parts/square_body.scad>;
 module square_body(Width=40, Length=70, LegsSpacing=40, Legs=4, Thickness=2.2)
 {
     translate([0,0,MotorDepth/2])
-        square_body(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
+        square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
 
     translate([0,0,-Thickness-MotorDepth/2])
-        square_body(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
+        square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
 
     LegsDistance = LegsSpacing*(Legs/2-1);
     for (leg=[1:(Legs/2)]) {
