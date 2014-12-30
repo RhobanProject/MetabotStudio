@@ -12,6 +12,8 @@ namespace Metabot
             virtual ~Parameter();
             bool isBool();
             bool isString();
+            void updateValue(std::string value);
+            std::string getValue();
 
             std::string name;
             std::string value;

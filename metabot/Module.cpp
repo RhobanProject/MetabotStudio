@@ -10,6 +10,7 @@ namespace Metabot
     Module::Module()
     {
         prettyName = "";
+        description = "";
     }
 
     Module::~Module()
@@ -66,12 +67,21 @@ namespace Metabot
 
     void Module::setDescription(std::string description_)
     {
-        description = description_;
+        description = trim(description_);
     }
 
     std::string Module::getDescription()
     {
-        return description;
+        if (description != "") {
+            return description;
+        } else {
+            return name;
+        }
+    }
+
+    bool Module::hasParameter(std::string name)
+    {
+        return parameters.count(name);
     }
 
     Parameters &Module::getParameters()

@@ -20,6 +20,9 @@ namespace Metabot
     Component::Component(Backend *backend_, Module *module_)
         : backend(backend_), module(module_), highlight(false), hover(false)
     {
+        for (auto param : module->getParameters()) {
+            values[param.second.name] = param.second.getValue();
+        }
     }
 
     Component::~Component()
@@ -316,10 +319,10 @@ namespace Metabot
 
     Parameters Component::parameters()
     {
-        Parameters params;
+        Parameters params = module->getParameters();
 
         for (auto value : values) {
-            params.set(value.first, value.second);
+            params.update(value.first, value.second);
         }
 
         return params;

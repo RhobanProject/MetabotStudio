@@ -11,6 +11,11 @@ namespace Metabot
     {
         get(name).value = value;
     }
+    
+    void Parameters::update(std::string name, std::string value)
+    {
+        get(name).updateValue(value);
+    }
 
     Parameter &Parameters::get(std::string name)
     {

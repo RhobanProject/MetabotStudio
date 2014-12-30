@@ -92,8 +92,8 @@ namespace Metabot
                         // The module is tagged, we should analyze it
                         state = PARSER_TAGGED;
                     }
-                    if (annotation == "description") {
-                        module.setDescription(line.substr(12)); 
+                    if (annotation == "description" && parts.size()>=2) {
+                        module.setDescription(parts[1]);
                     }
                     if (annotation == "parameter") {
                         if (parts.size() > 1) {

@@ -34,6 +34,7 @@ namespace Metabot
 
             Parameters &getParameters();
             Parameter &getParameter(std::string name);
+            bool hasParameter(std::string name);
 
             std::string openscad(std::string format, Parameters parameters=Parameters(), bool noModels=false);
             std::string doOpenscad(std::string format, Parameters parameters=Parameters(), bool noModels=false);
