@@ -11,14 +11,18 @@ namespace Metabot
     {
         public:
             Module();
-            Module(std::string file);
+            virtual ~Module();
 
             void setBackend(Backend *backend);
 
+            void setFilename(std::string filename);
             std::string getFilename();
 
             void setName(std::string name);
             std::string getName();
+
+            void setPrettyName(std::string prettyName);
+            std::string getPrettyName();
             
             void setType(std::string type);
             std::string getType();
@@ -26,31 +30,23 @@ namespace Metabot
             void setDescription(std::string description);
             std::string getDescription();
 
+            void setColor(std::string color);
+
+            Parameters &getParameters();
             Parameter &getParameter(std::string name);
 
-            /**
-             * Pushes a new line of module header
-             */
-            std::string pushLine(std::string line);
-
-            /**
-             * Pushes a new character in the buffer
-             */
-            std::string push(unsigned char c);
-
-            bool finished();
-            
             std::string openscad(std::string format, Parameters parameters, bool noModels=false);
             std::string doOpenscad(std::string format, Parameters parameters, bool noModels=false);
+            
+            // The module color
+            bool hasColor = false;
+            float r, g, b;
 
         protected:
-            std::string filename, name, type, description;
-            Parameters parameters;
-            int state;
-
+            // Backend
             Backend *backend;
-        
-            int brackets, equals;
-            std::string tmpName, tmpValue;
+            std::string filename, name, type, description, prettyName;
+            // Module parameters, default values & descriptions
+            Parameters parameters; 
     };
 }

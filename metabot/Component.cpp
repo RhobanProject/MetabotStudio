@@ -106,6 +106,11 @@ namespace Metabot
         }
         myModel.openGLDraw();
 
+        // XXX: Last problem
+        // Il faut gérer la manière de cacher les compilations des pièces et
+        // des modèles d'une certaine manière
+        // Il n'est pas question d'ouvrir un fichier à ce point du programme!
+
         // Rendering models
         for (auto ref : models) {
             glPushMatrix();
