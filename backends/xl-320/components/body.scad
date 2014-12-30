@@ -1,7 +1,7 @@
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
-use <../parts/body.scad>;
+use <../parts/body_plate.scad>;
 
 //:Component Body
 //:Description "Star body"

@@ -6,7 +6,7 @@ use <../models/motor_arm.scad>;
 //:Parameter SizeA "Size of the first part"
 //:Parameter SizeB "Size of the second part"
 //:Parameter SizeC "Size of the third part"
-//:Parmaeter SizeBottom "Size of the bottom"
+//:Parameter SizeBottom "Size of the bottom"
 //:Parameter SizeTop "Size of the top"
 //:Parameter FixationAngle "Fixation angle"
 //:Parameter Thickness "Thickness of the part"
