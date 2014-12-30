@@ -35,8 +35,8 @@ namespace Metabot
             Parameters &getParameters();
             Parameter &getParameter(std::string name);
 
-            std::string openscad(std::string format, Parameters parameters, bool noModels=false);
-            std::string doOpenscad(std::string format, Parameters parameters, bool noModels=false);
+            std::string openscad(std::string format, Parameters parameters=Parameters(), bool noModels=false);
+            std::string doOpenscad(std::string format, Parameters parameters=Parameters(), bool noModels=false);
             
             // The module color
             bool hasColor = false;

@@ -92,17 +92,16 @@ namespace Metabot
 
     Model Backend::getModel(std::string name)
     {
-        Model m;
-        return m;
-        /*
         if (!models.count(name)) {
-            std::string filename = directory + "/models/" + name + ".scad";
-            Model model = loadModelSTL_string(openscad(filename, "stl"));
-            models[name] = model;
+            if (modules.count(name)) {
+                Model model = loadModelSTL_string(getModule(name).openscad("stl"));
+                models[name] = model;
+            } else {
+                return Model();
+            }
         }
 
         return models[name];
-        */
     }
             
     Component *Backend::instanciate(std::string name)
