@@ -15,7 +15,6 @@ module double_u(Height=15, Radius=8, Screws=true, ScrewsSpacing=14, ScrewsDiamet
         ScrewCount=8, Thickness=2.2, Angle=90)
 {
     //:Anchor motor female
-    metabot_anchor("motor", female=true);
 
     u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
     translate([0,(Height+Radius)*2,0]) {
