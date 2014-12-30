@@ -116,7 +116,7 @@ namespace Metabot
         scad << "// Rendering module " << getName() << " to format " << format << std::endl;
         scad << "// You can safely remove this file is Metabot is not running" << std::endl;
         scad << name << "(";
-        auto allParameters = parameters.getAll();
+        auto allParameters = parameters;
         auto last = allParameters.end();
         if (last != allParameters.begin()) {
             last--;

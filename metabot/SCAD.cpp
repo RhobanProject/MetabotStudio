@@ -202,7 +202,7 @@ namespace Metabot
                         moduleState = MODULE_CONTENTS;
                         oss << "// metabot: Begining module " << module.getName() << std::endl;
                         if (module.getType() != "component") {
-                            auto allParameters = module.getParameters().getAll();
+                            auto allParameters = module.getParameters();
                             auto last = allParameters.end();
                             auto iterator = allParameters.begin();
                             if (last != allParameters.begin()) {

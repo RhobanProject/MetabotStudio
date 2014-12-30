@@ -90,6 +90,17 @@ namespace Metabot
         return modules[name];
     }
 
+    std::vector<Module> Backend::getModules()
+    {
+        std::vector<Module> allModules;
+
+        for (auto entry : modules) {
+            allModules.push_back(entry.second);
+        }
+
+        return allModules;
+    }
+
     Model Backend::getModel(std::string name)
     {
         if (!models.count(name)) {

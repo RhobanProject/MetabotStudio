@@ -30,12 +30,15 @@ namespace Metabot
 
             std::string name;
             std::string directory;
-            std::map<std::string, Module> modules;
 
             Cache *cache;
 
+            std::vector<Module> getModules();
             Module &getModule(std::string name);
             Model getModel(std::string name);
             std::map<std::string, Model> models;
+
+        protected:
+            std::map<std::string, Module> modules;
     };
 }

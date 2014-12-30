@@ -14,23 +14,18 @@ namespace Metabot
 
     Parameter &Parameters::get(std::string name)
     {
-        if (!parameters.count(name)) {
-            parameters[name].name = name;
+        if (!count(name)) {
+            (*this)[name].name = name;
         }
 
-        return parameters[name];
-    }
-
-    std::map<std::string, Parameter> &Parameters::getAll()
-    {
-        return parameters;
+        return (*this)[name];
     }
             
     std::string Parameters::toArgs()
     {
         std::string args = "";
         
-        for (auto parameter : parameters) {
+        for (auto parameter : *this) {
             args += "-D" + parameter.second.name + "=" + parameter.second.value + " ";
         }
 

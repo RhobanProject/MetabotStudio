@@ -4,6 +4,7 @@
 #include <functional>
 #include <3d/Model.h>
 #include <3d/Point3.h>
+#include "Ref.h"
 #include "Vector.h"
 #include "BOM.h"
 
