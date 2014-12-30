@@ -30,12 +30,13 @@ namespace Metabot
     {
         for (auto module : modules) {
             if (module.second.getType() == "component") {
+                // Creating component
                 auto component = instanciate(module.second.getName());
                 component->compile();
                 delete component;
-                // break;
             }
         }
+        getModel("anchor");
     }
 
     int Backend::clearCache()

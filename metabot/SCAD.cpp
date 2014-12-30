@@ -230,9 +230,7 @@ namespace Metabot
                                 }
                             }
                             oss << "}";
-                            if (module.hasColor) {
-                                oss << ",'color': [" << module.r << "," << module.g << "," << module.b << "]";
-                            }
+                            oss << ",'color': [" << module.r << "," << module.g << "," << module.b << "]";
                             oss << "}\");" << std::endl;
 
                             // Adding forwarding to the _ module

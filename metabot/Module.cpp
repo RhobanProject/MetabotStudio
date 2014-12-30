@@ -11,6 +11,9 @@ namespace Metabot
     {
         prettyName = "";
         description = "";
+        r = 0.8;
+        g = 0.8;
+        b = 0.8;
     }
 
     Module::~Module()
@@ -176,7 +179,6 @@ namespace Metabot
 
         if (reader.parse(color, json)) {
             if (json.isArray() && json.size() == 3) {
-                hasColor = true;
                 r = json[0].asFloat();
                 g = json[1].asFloat();
                 b = json[2].asFloat();

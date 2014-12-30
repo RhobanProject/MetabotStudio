@@ -40,7 +40,6 @@ namespace Metabot
             std::string doOpenscad(std::string format, Parameters parameters=Parameters(), bool noModels=false);
             
             // The module color
-            bool hasColor = false;
             float r, g, b;
 
         protected:

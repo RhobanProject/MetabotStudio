@@ -155,7 +155,12 @@ namespace Metabot
 
         // Rendering models
         for (auto ref : models) {
-            Model m = backend->getModel(ref.name);
+            Model m = ref.getModel();
+            m.apply(ref.matrix);
+            model.merge(m);
+        }
+        for (auto ref : parts) {
+            Model m = ref.getModel();
             m.apply(ref.matrix);
             model.merge(m);
         }
@@ -205,10 +210,10 @@ namespace Metabot
         models = document.models;
         bom = document.bom;
 
-        for (auto ref : parts) {
+        for (auto &ref : parts) {
             ref.compile(backend);
         }
-        for (auto ref : models) {
+        for (auto &ref : models) {
             ref.compile(backend);
         }
 
