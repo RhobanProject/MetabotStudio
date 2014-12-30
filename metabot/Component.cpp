@@ -106,27 +106,12 @@ namespace Metabot
         }
         myModel.openGLDraw();
 
-        // XXX: Last problem
-        // Il faut gérer la manière de cacher les compilations des pièces et
-        // des modèles d'une certaine manière
-        // Il n'est pas question d'ouvrir un fichier à ce point du programme!
-
-        // Rendering models
+        // Rendering models & parts
         for (auto ref : models) {
-            glPushMatrix();
-            ref.matrix.openGLMult();
-            Model model = backend->getModel(ref.name);
-            if (highlight) {
-                model.r = 0.4;
-                model.g = 1.0;
-                model.b = 0.3;
-            } else {
-                model.r = ref.r;
-                model.g = ref.g;
-                model.b = ref.b;
-            }
-            model.openGLDraw();
-            glPopMatrix();
+            openGLDrawRef(ref);
+        }
+        for (auto ref : parts) {
+            openGLDrawRef(ref);
         }
 
         // Rendering sub-components
@@ -139,6 +124,24 @@ namespace Metabot
             glPopMatrix();
             anchorId++;
         }
+    }
+
+    void Component::openGLDrawRef(Ref &ref)
+    {
+        glPushMatrix();
+        ref.matrix.openGLMult();
+        auto model = ref.getModel();
+        if (highlight) {
+            model.r = 0.4;
+            model.g = 1.0;
+            model.b = 0.3;
+        } else {
+            model.r = ref.r;
+            model.g = ref.g;
+            model.b = ref.b;
+        }
+        model.openGLDraw();
+        glPopMatrix();
     }
 #endif
 
@@ -200,10 +203,10 @@ namespace Metabot
         bom = document.bom;
 
         for (auto ref : parts) {
-            backend->getModule(ref.name).openscad("stl", ref.parameters);
+            ref.compile(backend);
         }
         for (auto ref : models) {
-            backend->getModule(ref.name).openscad("stl", ref.parameters);
+            ref.compile(backend);
         }
 
         int index = 0;

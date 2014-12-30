@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
+#include <3d/stl.h>
 #include "Ref.h"
+#include "Backend.h"
 #include "util.h"
 
 namespace Metabot
@@ -33,7 +35,18 @@ namespace Metabot
             }
         }
     }
-            
+
+    void Ref::compile(Backend *backend)
+    {
+        std::string stl = backend->getModule(name).openscad("stl", parameters);
+        model = loadModelSTL_string(stl);
+    }
+
+    Model &Ref::getModel()
+    {
+        return model;
+    }
+    
     std::string Ref::hash()
     {
         return hash_sha1(name+"//"+parameters.toArgs());

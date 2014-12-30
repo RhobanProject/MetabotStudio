@@ -47,6 +47,7 @@ namespace Metabot
             
 #ifdef OPENGL
             void openGLDraw();
+            void openGLDrawRef(Ref &ref);
 #endif
             bool highlight;
             bool hover;

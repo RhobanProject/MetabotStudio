@@ -4,15 +4,20 @@
 #include <map>
 #include <vector>
 #include <json/json.h>
+#include <3d/Model.h>
 #include "TransformMatrix.h"
 #include "Parameters.h"
 
 namespace Metabot
 {
+    class Backend;
     class Ref
     {
         public:
             Ref(Json::Value json, TransformMatrix matrix);
+
+            void compile(Backend *backend);
+            Model &getModel();
 
             /**
              * This hash is used to group the unique parts
@@ -24,6 +29,10 @@ namespace Metabot
             Parameters parameters;
             float r, g, b;
             TransformMatrix matrix;
+
+        protected:
+            Model model;
+            Backend *backend;
     };
     
     class RefsGrouped;
