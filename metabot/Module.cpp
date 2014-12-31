@@ -8,6 +8,7 @@
 namespace Metabot
 {
     Module::Module()
+        : backend(NULL)
     {
         prettyName = "";
         description = "";
@@ -99,6 +100,10 @@ namespace Metabot
 
     std::string Module::openscad(std::string format, Parameters parameters, bool noModels)
     {
+        if (backend == NULL) {
+            return "";
+        }
+
         // XXX: Handle quality and print flag!
         std::string key = hash_sha1(filename + "." + format + " [" + (noModels ? "y" : "n") + "] w/ " + parameters.toArgs());
         if (backend->cache != NULL) {
