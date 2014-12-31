@@ -96,6 +96,8 @@ void Viewer::initializeGL()
     glEnable(GL_LIGHT0);
     // glEnable(GL_MODULATE);
     glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_ALPHA);
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
@@ -272,7 +274,7 @@ void Viewer::drawBackground()
     glColor3f(0.8,0.8,1.0);
     glVertex3f (1.0f, 1.0f, -1.0f);
     glVertex3f (-1.0f, 1.0f, -1.0f);
-    glEnd ();
+    glEnd();
 
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
@@ -283,16 +285,39 @@ void Viewer::drawBackground()
 
 void Viewer::drawGridLines()
 {
-    glLineWidth(1.0);
-    glBegin(GL_LINES);
-    glColor3f(0.6, 0.6, 0.6);
-    for (float x=plateX1; x<=plateX2; x+=10.0) {
-        glVertex3f(x, plateY1, plateZ);
-        glVertex3f(x, plateY2, plateZ);
-    }
-    for (float y=plateY1; y<=plateY2; y+=10.0) {
-        glVertex3f(plateX1, y, plateZ);
-        glVertex3f(plateX2, y, plateZ);
+    glBegin(GL_TRIANGLES);
+
+    float size = 15;
+
+    int xe=0;
+    for (float x=plateX1; x<=plateX2; x+=size) {
+        xe = (xe+1)%2;
+        int ye=0;
+        for (float y=plateY1; y<=plateY2; y+=size) {
+            ye = (ye+1)%2;
+
+            if ((xe%2) == (ye%2)) {
+                glColor4f(0.8, 0.8, 0.8, 0.5);
+            } else {
+                glColor4f(1.0, 1.0, 1.0, 0.5);
+            }
+
+            glVertex3f(x, y, plateZ);
+            glVertex3f(x+size, y, plateZ);
+            glVertex3f(x+size, y+size, plateZ);
+
+            glVertex3f(x, y, plateZ);
+            glVertex3f(x+size, y+size, plateZ);
+            glVertex3f(x, y+size, plateZ);
+
+            glVertex3f(x+size, y+size, plateZ);
+            glVertex3f(x+size, y, plateZ);
+            glVertex3f(x, y, plateZ);
+
+            glVertex3f(x, y+size, plateZ);
+            glVertex3f(x+size, y+size, plateZ);
+            glVertex3f(x, y, plateZ);
+        }
     }
     glEnd();
 }
