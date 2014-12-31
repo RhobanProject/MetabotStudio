@@ -12,7 +12,7 @@ use <../models/motor_arm.scad>;
 //:Parameter Thickness 
 //:Parameter Angle 
 module double_u(Height=15, Radius=8, Screws=true, ScrewsSpacing=14, ScrewsDiameter=2.6,
-        ScrewCount=8, Thickness=2.2, Angle=90)
+        ScrewsCount=8, Thickness=2.2, Angle=90)
 {
     //:Anchor motor female
 
