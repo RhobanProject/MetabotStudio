@@ -1,7 +1,7 @@
 include <../models/motor_values.scad>;
 include <../models/ollo.scad>;
 use <../models/motor_arm.scad>;
-use <../parts/square_body_arm.scad>;
+use <../parts/square_body_arm_plate.scad>;
 
 //:Component "Square Body arm"
 //:Description "Square body arm"
