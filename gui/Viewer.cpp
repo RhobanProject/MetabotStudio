@@ -85,9 +85,10 @@ void Viewer::initializeGL()
     GLfloat diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 
     glShadeModel(GL_SMOOTH);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.2f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.2f);
     glClearStencil(0);
     glClearDepth(1.0f);
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glEnable(GL_DEPTH_TEST);
@@ -264,11 +265,11 @@ void Viewer::drawBackground()
     glDisable(GL_DEPTH_TEST);
 
     glBegin (GL_QUADS);
-    glColor3f(0.0,0.0,0.0);
+    glColor3f(0.9,0.9,1.0);
     glVertex3f (-1.0f, -1.0f, -1.0f);
     glVertex3f (1.0f, -1.0f, -1.0f);
 
-    glColor3f(0.1,0.1,0.1);
+    glColor3f(0.8,0.8,1.0);
     glVertex3f (1.0f, 1.0f, -1.0f);
     glVertex3f (-1.0f, 1.0f, -1.0f);
     glEnd ();
@@ -284,7 +285,7 @@ void Viewer::drawGridLines()
 {
     glLineWidth(1.0);
     glBegin(GL_LINES);
-    glColor3f(0.3, 0.1, 0.3);
+    glColor3f(0.6, 0.6, 0.6);
     for (float x=plateX1; x<=plateX2; x+=10.0) {
         glVertex3f(x, plateY1, plateZ);
         glVertex3f(x, plateY2, plateZ);
