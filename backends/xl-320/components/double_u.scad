@@ -5,7 +5,7 @@ use <../models/motor_arm.scad>;
 //:Description "Two Us"
 //:Parameter Height "Height of the Us"
 //:Parameter Radius "Radius of the fixation"
-//:ParameterBool "Screws Put Screws?"
+//:Parameter Screws "Put Screws?"
 //:Parameter ScrewsSpacing "Screws spacing"
 //:Parameter ScrewsDiameter "Screws diameter"
 //:Parameter ScrewsCount "Number of screws"
