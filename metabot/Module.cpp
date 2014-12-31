@@ -99,6 +99,7 @@ namespace Metabot
 
     std::string Module::openscad(std::string format, Parameters parameters, bool noModels)
     {
+        // XXX: Handle quality and print flag!
         std::string key = hash_sha1(filename + "." + format + " [" + (noModels ? "y" : "n") + "] w/ " + parameters.toArgs());
         if (backend->cache != NULL) {
             return backend->cache->get(key, [this, format, parameters, noModels]() {
