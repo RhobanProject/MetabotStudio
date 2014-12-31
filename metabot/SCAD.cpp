@@ -105,6 +105,14 @@ namespace Metabot
                             module.getParameter(name).description = description;
                         }
                     }
+                    if (annotation == "bom" && parts.size()==4) {
+                        Json::Value json;
+                        json["type"] = "bom";
+                        json["name"] = parts[1];
+                        json["quantity"] = parts[2];
+                        json["url"] = parts[3];
+                        oss << jsonMarker(json);
+                    }
                 } else {
                     oss << line << std::endl;
 
