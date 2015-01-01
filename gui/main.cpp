@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
         QGLFormat glf = QGLFormat::defaultFormat();
         glf.setSampleBuffers(true);
-        glf.setSamples(8);
+        glf.setSamples(4);
         QGLFormat::setDefaultFormat(glf);
 
         MainWindow w;
