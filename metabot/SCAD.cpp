@@ -109,8 +109,9 @@ namespace Metabot
                         Json::Value json;
                         json["type"] = "bom";
                         json["name"] = parts[1];
-                        json["quantity"] = parts[2];
+                        json["price"] = atof(parts[2].c_str());
                         json["url"] = parts[3];
+                        json["quantity"] = 1;
                         oss << jsonMarker(json);
                     }
                 } else {
@@ -140,8 +141,9 @@ namespace Metabot
                         Json::Value json;
                         json["type"] = "bom";
                         json["name"] = parts[1];
-                        json["quantity"] = parts[2];
+                        json["price"] = atof(parts[2].c_str());
                         json["url"] = parts[3];
+                        json["quantity"] = 1;
                         oss << jsonMarker(json);
                     }
                 } else {

@@ -124,6 +124,7 @@ namespace Metabot
         if (noModels) {
             cmd << "-DNoModels=true ";
         }
+        cmd << "-D\\$fn=45 ";
         cmd << input << " -o " << output;
         // cmd << " >/dev/null 2>/dev/null";
         std::string command = cmd.str();
