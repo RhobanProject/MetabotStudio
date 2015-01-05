@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Debugging auto-open
 
-    filename = "/home/gregwar/Metabot/robots/spidey12.robot";
+    filename = "/home/gregwar/Metabot/robots/metabot.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
     ui->actionSave->setEnabled(true);

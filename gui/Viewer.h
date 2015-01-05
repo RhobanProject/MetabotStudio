@@ -62,6 +62,7 @@ signals:
     void component_double_clicked(Metabot::Component *instance);
 
 private:
+    bool shouldRedraw;
     bool autorotate;
     float radius;
 

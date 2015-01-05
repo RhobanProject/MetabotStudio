@@ -14,13 +14,14 @@ using namespace Metabot;
 Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     : QGLWidget(parent), robot(NULL)
 {
+    shouldRedraw = true;
     drawXYZ = true;
     drawGrid = true;
     alpha = 0;
     pressed = false;
     movePressed = false;
     t = 0.0;
-    framesPerSecond = 30;
+    framesPerSecond = 24;
     setMouseTracking(true);
 
     setFocusPolicy(Qt::ClickFocus);
@@ -218,6 +219,7 @@ void Viewer::keyPressEvent(QKeyEvent *keyEvent)
 
     if (beta > M_PI/2-0.01) beta = M_PI/2-0.01;
     if (beta < -M_PI/2+0.01) beta = -M_PI/2+0.01;
+    shouldRedraw = true;
 }
 
 Component *Viewer::getInstanceAt(int x, int y, int *id)
@@ -378,6 +380,7 @@ void Viewer::mouseReleaseEvent(QMouseEvent *evt)
             emit viewer_contextmenu_request(QPoint(evt->x(), evt->y()));
         }
     }
+    shouldRedraw = true;
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *evt)
@@ -410,6 +413,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *evt)
            }
        }
     }
+    shouldRedraw = true;
 }
 
 void Viewer::mouseDoubleClickEvent(QMouseEvent *evt)
@@ -432,6 +436,7 @@ void Viewer::wheelEvent(QWheelEvent *evt)
     radius -= evt->delta()*0.1;
 
     if (radius < 0.1) radius = 0.1;
+    shouldRedraw = true;
 }
 
 void Viewer::setPlateDimension(float x1, float y1, float x2, float y2, float z)
@@ -456,5 +461,8 @@ void Viewer::dontMove()
 
 void Viewer::timeOutSlot()
 {
-    updateGL();
+    if (shouldRedraw || autorotate) {
+        shouldRedraw = false;
+        updateGL();
+    }
 }
