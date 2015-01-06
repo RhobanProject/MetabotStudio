@@ -79,6 +79,11 @@ void Viewer::updatePlate()
     setPlateDimension(minP.x, minP.y, maxP.x, maxP.y, minP.z);
 }
 
+void Viewer::redraw()
+{
+    shouldRedraw = true;
+}
+
 void Viewer::initializeGL()
 {
     GLfloat specular[] = { 0.0, 0.0, 0.0, 1.0 };

@@ -32,6 +32,7 @@ public:
     void wheelEvent(QWheelEvent *);
     void updateRatio();
     void updatePlate();
+    void redraw();
 
     void setPlateDimension(float x1, float y1, float x2, float y2, float z);
 

@@ -78,6 +78,7 @@ void ZerosEditor::changed()
         zeros.push_back(angle);
     }
     robot->setZeros(zeros);
+    viewer->redraw();
 }
 
 void ZerosEditor::on_instance_clicked(Metabot::Component *instance)

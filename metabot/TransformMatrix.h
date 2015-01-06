@@ -9,6 +9,7 @@
 #include <GL/glu.h>
 #endif
 #endif
+#include "matrix.h"
 
 namespace Metabot
 {
@@ -22,7 +23,7 @@ namespace Metabot
 
             Vector apply(Vector vector);
 
-            float values[4*4];
+            double4x4 values;
 
 #ifdef OPENGL
             void openGLMult();
