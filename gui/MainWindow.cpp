@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->actionGrid->setChecked(true);
     ui->actionXYZ->setChecked(true);
+
+    on_action_tree_triggered();
 }
 
 MainWindow::~MainWindow()
@@ -485,5 +487,31 @@ void MainWindow::on_actionExport_STL_triggered()
             auto model = robot->toModel();
             saveModelToFileBinary(fn.toStdString().c_str(), &model);
         }
+    }
+}
+
+void MainWindow::on_treeButton_clicked()
+{
+    if (ui->tree->isVisible()) {
+        ui->tree->hide();
+    } else {
+        ui->tree->show();
+    }
+    ui->splitter->adjustSize();
+}
+
+void MainWindow::on_action_tree_triggered()
+{
+    int width = this->width();
+    if (ui->action_tree->isChecked()) {
+        QList<int> sizes;
+        sizes.push_back(width*0.2);
+        sizes.push_back(width*0.9);
+        ui->splitter->setSizes(sizes);
+    } else {
+        QList<int> sizes;
+        sizes.push_back(0);
+        sizes.push_back(1);
+        ui->splitter->setSizes(sizes);
     }
 }

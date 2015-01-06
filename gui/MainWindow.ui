@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>544</width>
-    <height>455</height>
+    <width>630</width>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,75 +18,75 @@
     <normaloff>:/imgs/imgs/spidey.png</normaloff>:/imgs/imgs/spidey.png</iconset>
   </property>
   <widget class="QWidget" name="main">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_7">
     <item>
      <widget class="QSplitter" name="splitter">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>1</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="ObjectsTree" name="tree">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="baseSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::SingleSelection</enum>
-       </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectItems</enum>
-       </property>
-       <property name="indentation">
-        <number>20</number>
-       </property>
-       <property name="rootIsDecorated">
-        <bool>false</bool>
-       </property>
-       <property name="headerHidden">
-        <bool>true</bool>
-       </property>
-       <property name="expandsOnDoubleClick">
-        <bool>false</bool>
-       </property>
-       <column>
-        <property name="text">
-         <string>Objects</string>
-        </property>
-       </column>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <layout class="QVBoxLayout" name="leftZone" stretch="0">
+        <item>
+         <widget class="ObjectsTree" name="tree">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="sizeIncrement">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectItems</enum>
+          </property>
+          <property name="indentation">
+           <number>20</number>
+          </property>
+          <property name="rootIsDecorated">
+           <bool>false</bool>
+          </property>
+          <property name="headerHidden">
+           <bool>true</bool>
+          </property>
+          <property name="expandsOnDoubleClick">
+           <bool>false</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Objects</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="viewer">
@@ -111,7 +111,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>544</width>
+     <width>630</width>
      <height>25</height>
     </rect>
    </property>
@@ -142,6 +142,7 @@
     <addaction name="actionGrid"/>
     <addaction name="actionXYZ"/>
     <addaction name="actionAutorotate"/>
+    <addaction name="action_tree"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -233,7 +234,7 @@
     <string>Autorotate</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+T</string>
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionNew">
@@ -250,6 +251,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+E</string>
+   </property>
+  </action>
+  <action name="action_tree">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tree</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

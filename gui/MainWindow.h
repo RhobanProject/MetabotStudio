@@ -80,6 +80,10 @@ private slots:
 
     void on_actionExport_STL_triggered();
 
+    void on_treeButton_clicked();
+
+    void on_action_tree_triggered();
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
