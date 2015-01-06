@@ -204,6 +204,8 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
 
         setupInstance();
     }
+
+    viewer->redraw();
 }
 
 void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
@@ -244,11 +246,14 @@ void ComponentWizard::setAnchor(Metabot::AnchorPoint *newAnchor)
             }
         }
     }
+
+    viewer->redraw();
 }
 
 void ComponentWizard::on_anchorPoint_clicked()
 {
     setAnchor(buttonToAnchor[dynamic_cast<QWidget*>(sender())]);
+    viewer->redraw();
 }
 
 void ComponentWizard::on_generate_clicked()
