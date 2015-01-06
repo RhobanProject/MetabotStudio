@@ -34,8 +34,8 @@ std::vector<std::string> split(const std::string &s, char delim, int limit) {
 std::vector<std::string> splitCSV(const std::string s, char delim, char enclosure)
 {
     std::vector<std::string> parts;
-    std::string buffer;
-    bool in_enclosure;
+    std::string buffer = "";
+    bool in_enclosure = false;
 
     for (unsigned int i=0; i<s.size(); i++) {
         char c = s[i];
