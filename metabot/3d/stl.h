@@ -1,5 +1,4 @@
-#ifndef STLFACTORY_H
-#define STLFACTORY_H
+#pragma once
 
 #include <string>
 #include "Model.h"
@@ -12,5 +11,3 @@ Model loadModelSTL_binary(const char* filename);
 Model loadModelSTL(const char* filename);
 Model loadModelFromFile(const char* filename);
 Model loadModelSTL_string(std::string str);
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef VOLUME_H
-#define VOLUME_H
+#pragma once
 
 #include "Face.h"
 #include <vector>
@@ -18,4 +17,3 @@ namespace Metabot
 			Point3 max();
     };
 }
-#endif

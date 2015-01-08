@@ -19,8 +19,11 @@ set(ALL_SOURCES
     util.cpp
 
     3d/stl.cpp
+    3d/Cube.cpp
     3d/Face.cpp
+    3d/Line.cpp
     3d/Model.cpp
+    3d/Octree.cpp
     3d/Point3.cpp
     3d/Volume.cpp
     
@@ -39,6 +42,7 @@ set(ALL_SOURCES
     SCAD.cpp
     TransformMatrix.cpp
     Vector.cpp
+    Voxels.cpp
     )
 
 include_directories("${CMAKE_SOURCE_DIR}")

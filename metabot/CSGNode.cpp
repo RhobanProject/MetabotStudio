@@ -32,7 +32,7 @@ namespace Metabot
     std::string CSGNode::fix(std::string data)
     {
         bool in_enclosure = true;
-        std::string buffer, out;
+        std::string buffer="", out="";
 
         for (unsigned int i=0; i<data.size(); i++) {
             char c = data[i];

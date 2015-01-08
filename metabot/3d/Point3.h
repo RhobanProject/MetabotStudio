@@ -1,5 +1,4 @@
-#ifndef POINT3_H
-#define POINT3_H
+#pragma once
 
 namespace Metabot
 {
@@ -18,4 +17,3 @@ namespace Metabot
             Point3(double x, double y, double z);
     };
 }
-#endif

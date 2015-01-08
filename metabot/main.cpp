@@ -1,12 +1,17 @@
 #include <string>
 #include <iostream>
 #include <3d/stl.h>
+#include <3d/Face.h>
+#include <3d/Line.h>
+#include <3d/Point3.h>
+#include <3d/Octree.h>
 #include <getopt.h>
 #include "util.h"
 #include "Backend.h"
 #include "AnchorPoint.h"
 #include "Component.h"
 #include "Robot.h"
+#include "Voxels.h"
 #include "util.h"
 
 using namespace std;
@@ -29,6 +34,8 @@ void usage()
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
     cerr << "   -p: shows the list of parts to print (stl and quantity)" << endl;
     cerr << "   -b: shows the BOM" << endl;
+    cerr << "Dev:" << endl;
+    cerr << "   -v: voxelize" << endl;
     exit(EXIT_FAILURE);
 }
 
@@ -57,7 +64,7 @@ int main(int argc, char *argv[])
     string mode = "";
     string output;
 
-    while ((index = getopt(argc, argv, "pbcws:")) != -1) {
+    while ((index = getopt(argc, argv, "pbcws:v")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -74,6 +81,9 @@ int main(int argc, char *argv[])
                 break;
             case 'p':
                 mode = "parts";
+                break;
+            case 'v':
+                mode = "voxelize";
                 break;
         }
     }
@@ -110,6 +120,21 @@ int main(int argc, char *argv[])
             needRobot();
             cout << "Parts" << endl;
             cout << robot->getParts().group().toString();
+        } else if (mode == "voxelize") {
+            Model m = loadModelFromFile(robotFile.c_str());
+            //m.gnuplot();
+            //Voxels::voxelize(m);
+            //Octree octree;
+            //octree.load(m);
+            //OctreeFloor floor(Cube(0, 1, 0, 1, 0, 1), 3);
+            //Face f(Point3(0.7,0.22,0.3), Point3(0.72,0.25,0.34), Point3(0.71,0.23,0.35));
+            //floor.add(f);
+        
+            //Line l(Point3(3,4,2), Point3(0.4, 0.7, 0.2));
+            // l.gnuplot();
+            //Cube c(3.9, 4.1, 5.5, 5.7, 2.46, 2.8);
+            // c.gnuplot();
+            //c.intersects(l);
         } else {
             usage();
         }

@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include "Volume.h"
 #include "Point3.h"
@@ -23,10 +22,10 @@ namespace Metabot
 			void rotateZ(float r);
 			void rotateY(float r);
 			void rotateX(float r);
+            void gnuplot();
 #ifdef OPENGL
             void openGLDraw(float brightness=1.0);
 #endif
             float r, g, b;
     };
 }
-#endif

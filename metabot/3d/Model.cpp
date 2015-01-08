@@ -176,4 +176,13 @@ namespace Metabot
         glEnd();
     }
 #endif
+
+    void Model::gnuplot()
+    {
+        for (auto &volume: volumes) {
+            for (auto &face : volume.faces) {
+                face.gnuplot();
+            }
+        }
+    }
 }

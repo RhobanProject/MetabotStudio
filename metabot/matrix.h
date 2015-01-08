@@ -25,6 +25,10 @@ typedef double double2x2[2][2];
 typedef double double3x3[3][3];
 typedef double double4x4[4][4];
 
+typedef double double2[2];
+typedef double double3[3];
+typedef double double4[4];
+
 /* ========================================================== */
 /* Zero out a 2D vector */
 
