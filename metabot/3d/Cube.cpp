@@ -1,3 +1,4 @@
+#include <vector>
 #include <iostream>
 #include "Cube.h"
 
@@ -38,7 +39,7 @@ namespace Metabot
         if ((force) || (upper < maximum)) maximum = upper;
     }
 
-    bool Cube::intersects(Line line)
+    bool Cube::intersects(Line line, double *alpha_1, double *alpha_2)
     {
         double minimum, maximum;
         consider(xMin, xMax, line.origin.x, line.direction.x, minimum, maximum, true);
@@ -52,8 +53,60 @@ namespace Metabot
         std::cout << A.x << " " << A.y << " " << A.z << std::endl;
         std::cout << B.x << " " << B.y << " " << B.z << std::endl;
         */
+        if (alpha_1 != NULL) {
+            *alpha_1 = minimum;
+        }
+        if (alpha_2 != NULL) {
+            *alpha_2 = maximum;
+        }
 
-        return (minimum < maximum);
+        return (minimum <= maximum);
+    }
+
+    bool Cube::intersectsSegment(Line line)
+    {
+        double a, b;
+        bool i = intersects(line, &a, &b);
+
+        return (i && a<=1 && b>=0);
+    }
+            
+    bool Cube::intersects(Face face, bool debug)
+    {
+        // If one of the vertexes is in the cube
+        if (contains(face.v[0]) || contains(face.v[1]) || contains(face.v[2])) {
+            return true;
+        }
+
+        // The cube intersects one of the vertex of the face
+        auto fa = Line::fromTo(face.v[0], face.v[1]);
+        auto fb = Line::fromTo(face.v[1], face.v[2]);
+        auto fc = Line::fromTo(face.v[2], face.v[0]);
+
+        if (intersectsSegment(fa) || intersectsSegment(fb) || intersectsSegment(fc)) {
+            return true;
+        }
+
+        // Else, the cube wheter intersects none of the facets, or it's "contained"
+        // in the facet
+        std::vector<Point3> points = {
+            Point3(xMin, yMin, zMin), Point3(xMax, yMin, zMin), Point3(xMax, yMax, zMin), Point3(xMin, yMax, zMin),
+            Point3(xMin, yMin, zMax), Point3(xMax, yMin, zMax), Point3(xMax, yMax, zMax), Point3(xMin, yMax, zMax)
+        };
+        std::vector<std::pair<Point3, Point3>> lines = {
+            {points[0], points[1]}, {points[1], points[2]}, {points[2], points[3]}, {points[3], points[0]},
+            {points[4], points[5]}, {points[5], points[6]}, {points[6], points[7]}, {points[7], points[4]},
+            {points[0], points[4]}, {points[1], points[5]}, {points[2], points[6]}, {points[3], points[7]}
+        };
+
+        for (auto &line : lines) {
+            auto l = Line::fromTo(line.first, line.second);
+            if (face.intersectsSegment(l)) {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     bool Cube::contains(Face face)

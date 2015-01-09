@@ -5,6 +5,7 @@
 #include <3d/Line.h>
 #include <3d/Point3.h>
 #include <3d/Octree.h>
+#include <3d/Volume.h>
 #include <getopt.h>
 #include "util.h"
 #include "Backend.h"
@@ -124,14 +125,38 @@ int main(int argc, char *argv[])
             Model m = loadModelFromFile(robotFile.c_str());
             //m.gnuplot();
             //Voxels::voxelize(m);
-            //Octree octree;
-            //octree.load(m);
+            
+            /*
+            Model m;
+            Volume v;
+            auto f1 = Face(Point3(3,3,3), Point3(13,-4,3), Point3(6,7,6));
+            auto f2 = Face(Point3(2.6,0.3,8.4), Point3(0.2,0.6,0.3), Point3(1.2,2.4,-0.5));
+            v.faces.push_back(f1);
+            v.faces.push_back(f2);
+            m.volumes.push_back(v);
+            */
+
+            /*
+            Cube c(-1, 0, -1, 1, 0, 3);
+            c.gnuplot();
+
+            if (c.intersects(f2)) {
+                std::cout << "INTERSECTS!" << std::endl;
+            }
+            */
+
+            //m.gnuplot();
+            Octree octree;
+            octree.load(m);
             //OctreeFloor floor(Cube(0, 1, 0, 1, 0, 1), 3);
             //Face f(Point3(0.7,0.22,0.3), Point3(0.72,0.25,0.34), Point3(0.71,0.23,0.35));
-            //floor.add(f);
-        
-            //Line l(Point3(3,4,2), Point3(0.4, 0.7, 0.2));
-            // l.gnuplot();
+            //floor.add(f);        
+            Line l(Point3(3,4,2), Point3(0.4, -0.7, 0.2));
+            //l.gnuplot();
+            auto faces = octree.facesFor(l);
+            for (auto face : faces) {
+                face->gnuplot();
+            }
             //Cube c(3.9, 4.1, 5.5, 5.7, 2.46, 2.8);
             // c.gnuplot();
             //c.intersects(l);

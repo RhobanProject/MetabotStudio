@@ -16,7 +16,9 @@ namespace Metabot
 
             bool contains(Point3 point);
             bool contains(Face face);
-            bool intersects(Line line);
+            bool intersects(Line line, double *alpha_1=NULL, double *alpha_2=NULL);
+            bool intersectsSegment(Line line);
+            bool intersects(Face face, bool debug=false);
             void gnuplot();
             
             double xMin, xMax, yMin, yMax, zMin, zMax;

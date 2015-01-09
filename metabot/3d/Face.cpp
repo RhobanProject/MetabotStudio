@@ -55,6 +55,18 @@ namespace Metabot
 
         return (a>0 && b>0 && (a+b)<1);
     }
+            
+    bool Face::intersectsSegment(const Line &l, float *alpha)
+    {
+        float a;
+        bool i = intersects(l, &a);
+
+        if (alpha != NULL) {
+            *alpha = a;
+        }
+
+        return (i && a>=0 && a<=1);
+    }
 
     void Face::gnuplot()
     {

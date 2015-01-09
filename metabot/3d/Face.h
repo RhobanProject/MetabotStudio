@@ -12,6 +12,7 @@ namespace Metabot
             virtual ~Face();
 
             bool intersects(const Line &l, float *alpha=NULL);
+            bool intersectsSegment(const Line &l, float *alpha=NULL);
             void gnuplot();
 
 			Point3 v[3];

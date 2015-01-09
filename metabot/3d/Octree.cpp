@@ -12,13 +12,29 @@ namespace Metabot
         auto min = model.min();
         auto max = model.max();
 
-        root = OctreeFloor(Cube(min.x-1, max.x+1, min.y-1, max.y+1, min.z-1, max.z+1), 5);
+        root = OctreeFloor(Cube(min.x-1, max.x+1, min.y-1, max.y+1, min.z-1, max.z+1), 4);
 
         for (auto &volume : model.volumes) {
             for (auto &face : volume.faces) {
-                root.add(face);
+                add(face);
             }
         }
+    }
+
+    void Octree::add(Face face)
+    {
+        Face *f = new Face;
+        *f = face;
+        faces.push_back(f);
+        root.add(f);
+    }
+            
+    std::set<Face*> Octree::facesFor(Line line)
+    {
+        std::set<Face*> faces;
+        root.facesFor(faces, line);
+
+        return faces;
     }
 
     OctreeFloor::OctreeFloor()
@@ -29,7 +45,7 @@ namespace Metabot
     OctreeFloor::OctreeFloor(Cube cube_, int depth_)
         : cube(cube_), depth(depth_), splitted(false)
     {
-        cube.gnuplot();
+        // cube.gnuplot();
     }
 
     void OctreeFloor::split()
@@ -55,26 +71,44 @@ namespace Metabot
         floors.push_back(OctreeFloor(Cube(xMid, xMax, yMid, yMax, zMid, zMax), depth-1));
     }
     
-    void OctreeFloor::add(Face face)
+    void OctreeFloor::add(Face *face)
     {
         if (depth > 0) {
             if (!splitted) {
                 split();
             }
 
-            std::vector<OctreeFloor*> containing;
+            int containing = 0;
+            // std::vector<OctreeFloor*> containing;
             for (auto &floor : floors) {
-                if (floor.cube.contains(face)) {
-                    containing.push_back(&floor);
+                if (floor.cube.intersects(*face)) {
+                    containing++;
+                    floor.add(face);
+                    // containing.push_back(&floor);
                 }
             }
 
-            if (containing.size() == 1) {
-                containing[0]->add(face);
+            // if (containing.size() == 1) {
+            //    containing[0]->add(face);
+            if (containing > 0) {
                 return;
             }
         }
 
         faces.push_back(face);
+    }
+            
+    void OctreeFloor::facesFor(std::set<Face*> &result, Line line)
+    {
+        if (cube.intersects(line)) {
+            // cube.gnuplot();
+            for (auto &face : faces) {
+                result.insert(face);
+            }
+
+            for (auto &floor : floors) {
+                floor.facesFor(result, line);
+            }
+        }
     }
 }
