@@ -11,6 +11,7 @@ namespace Metabot
             static Line fromTo(Point3 origin, Point3 destination);
             Point3 get(float alpha);
             void gnuplot(bool segment=false);
+            void dump();
 
             Point3 origin;
             Point3 direction;

@@ -24,8 +24,8 @@ namespace Metabot
         double3x3 mat;
 
         mat[0][0] = l.direction.x;
-        mat[1][0] = l.direction.x;
-        mat[2][0] = l.direction.x;
+        mat[1][0] = l.direction.y;
+        mat[2][0] = l.direction.z;
 
         mat[0][1] = -(v[1].x-v[0].x);
         mat[1][1] = -(v[1].y-v[0].y);
@@ -76,5 +76,14 @@ namespace Metabot
         std::cout << v[1].x << " " << v[1].y << " " << v[1].z << std::endl;
         std::cout << v[2].x << " " << v[2].y << " " << v[2].z << std::endl;
         std::cout << v[0].x << " " << v[0].y << " " << v[0].z << std::endl;
+    }
+
+    void Face::dump()
+    {
+        std::cout << "Face(";
+        std::cout << "Point3(" << v[0].x << "," << v[0].y << "," << v[0].z << "),";
+        std::cout << "Point3(" << v[1].x << "," << v[1].y << "," << v[1].z << "),";
+        std::cout << "Point3(" << v[2].x << "," << v[2].y << "," << v[2].z << ")";
+        std::cout << ")" << std::endl;
     }
 }

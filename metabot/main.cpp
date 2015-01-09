@@ -124,8 +124,12 @@ int main(int argc, char *argv[])
         } else if (mode == "voxelize") {
             Model m = loadModelFromFile(robotFile.c_str());
             //m.gnuplot();
-            //Voxels::voxelize(m);
+            Voxels::voxelize(m);
             
+            //Line l(Point3(15.5,26.5,0.5),Point3(0.817064,-0.229817,1.82707));
+            //Face f(Point3(17.2,7.73939,8.73626),Point3(17.2,7.48578,8.44599),Point3(17.2,45,-9.99201e-15));
+            //f.gnuplot();
+
             /*
             Model m;
             Volume v;
@@ -136,27 +140,37 @@ int main(int argc, char *argv[])
             m.volumes.push_back(v);
             */
 
+            //Line l(Point3(14.5,-31.5,0.5),Point3(0.817064,-0.229817,1.82707));
             /*
-            Cube c(-1, 0, -1, 1, 0, 3);
-            c.gnuplot();
+            Face f(Point3(17.2,-15,20),Point3(17.2,-45,11),Point3(17.2,-15,3.33067e-15));
+            if (c.intersects(f)) {
+                std::cout << "intersects!!!!!!!" << std::endl;
+            }
+            */
+            //c.gnuplot();
 
-            if (c.intersects(f2)) {
+            //m.gnuplot();
+            //Octree octree;
+            //octree.load(m);
+            //octree.facesFor(l);
+            //Cube c(10, 20, 22, 40, 3, 7);
+            //c.gnuplot();
+
+            /*
+            if (c.intersects(f)) {
                 std::cout << "INTERSECTS!" << std::endl;
             }
             */
 
-            //m.gnuplot();
-            Octree octree;
-            octree.load(m);
             //OctreeFloor floor(Cube(0, 1, 0, 1, 0, 1), 3);
             //Face f(Point3(0.7,0.22,0.3), Point3(0.72,0.25,0.34), Point3(0.71,0.23,0.35));
             //floor.add(f);        
-            Line l(Point3(3,4,2), Point3(0.4, -0.7, 0.2));
+            //Line l(Point3(3,4,2), Point3(0.4, -0.7, 0.2));
             //l.gnuplot();
-            auto faces = octree.facesFor(l);
-            for (auto face : faces) {
-                face->gnuplot();
-            }
+            //auto faces = octree.facesFor(l);
+            //for (auto face : faces) {
+                //face->gnuplot();
+            //}
             //Cube c(3.9, 4.1, 5.5, 5.7, 2.46, 2.8);
             // c.gnuplot();
             //c.intersects(l);

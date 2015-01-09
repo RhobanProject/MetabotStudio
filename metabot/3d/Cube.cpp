@@ -1,3 +1,4 @@
+#include <math.h>
 #include <vector>
 #include <iostream>
 #include "Cube.h"
@@ -24,27 +25,52 @@ namespace Metabot
     }
 
     static void consider(double vmin, double vmax, double start, double variation, 
-            double &minimum, double &maximum, bool force=false)
+            double &minimum, double &maximum, bool &hasValue)
     {
         double lower, upper;
-        if (variation > 0) {
-            lower = (vmin-start)/variation;
-            upper = (vmax-start)/variation;
+
+        if (fabs(variation) < 0.0000001) {
+            if (!(start>=vmin && start<=vmax)) {
+                hasValue = true;
+                minimum = 1;
+                maximum = -1;
+            }
+            return;
         } else {
-            lower = (vmax-start)/variation;
-            upper = (vmin-start)/variation;
+            if (variation > 0) {
+                lower = (vmin-start)/variation;
+                upper = (vmax-start)/variation;
+            } else {
+                lower = (vmax-start)/variation;
+                upper = (vmin-start)/variation;
+            }
         }
 
-        if ((force) || (lower > minimum)) minimum = lower;
-        if ((force) || (upper < maximum)) maximum = upper;
+        if (!hasValue) {
+            hasValue = true;
+            minimum = lower;
+            maximum = upper;
+        } else {
+            if (lower > minimum) {
+                minimum = lower;
+            }
+            if (upper < maximum) {
+                maximum = upper;
+            }
+        }
     }
 
     bool Cube::intersects(Line line, double *alpha_1, double *alpha_2)
     {
-        double minimum, maximum;
-        consider(xMin, xMax, line.origin.x, line.direction.x, minimum, maximum, true);
-        consider(yMin, yMax, line.origin.y, line.direction.y, minimum, maximum);
-        consider(zMin, zMax, line.origin.z, line.direction.z, minimum, maximum);
+        //line.dump();
+        bool hasValue = false;
+        double minimum=0, maximum=0;
+        consider(xMin, xMax, line.origin.x, line.direction.x, minimum, maximum, hasValue);
+        //std::cout << xMin << ">" << xMax << " " << hasValue << " " << minimum << " " << maximum << std::endl;
+        consider(yMin, yMax, line.origin.y, line.direction.y, minimum, maximum, hasValue);
+        //std::cout << yMin << ">" << yMax << " " << hasValue << " " << minimum << " " << maximum << std::endl;
+        consider(zMin, zMax, line.origin.z, line.direction.z, minimum, maximum, hasValue);
+        //std::cout << zMin << ">" << zMax << " " << hasValue << " " << minimum << " " << maximum << std::endl;
 
         /**
         // Plots the intersection
@@ -60,7 +86,7 @@ namespace Metabot
             *alpha_2 = maximum;
         }
 
-        return (minimum <= maximum);
+        return (hasValue && minimum <= maximum);
     }
 
     bool Cube::intersectsSegment(Line line)

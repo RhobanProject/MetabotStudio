@@ -21,9 +21,8 @@ namespace Metabot
 
     void Line::gnuplot(bool segment)
     {
-        std::cout << origin.x << " " << origin.y << " " << origin.z << std::endl;
-        float min = -50;
-        float max = 50;
+        float min = -7;
+        float max = 7;
         if (segment) {
             min = 0;
             max = 1.01;
@@ -32,5 +31,13 @@ namespace Metabot
             auto p = get(alpha);
             std::cout << p.x << " " << p.y << " " << p.z << std::endl;
         }
+    }
+
+    void Line::dump()
+    {
+        std::cout << "Line(";
+        std::cout << "Point3(" << origin.x << "," << origin.y << "," << origin.z << "),";
+        std::cout << "Point3(" << direction.x << "," << direction.y << "," << direction.z << ")";
+        std::cout << ")" << std::endl;
     }
 }
