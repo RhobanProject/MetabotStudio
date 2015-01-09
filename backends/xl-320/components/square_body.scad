@@ -27,6 +27,7 @@ module square_body(Width=40, Length=70, LegsSpacing=40, Legs=4, Thickness=2.2)
                 rotate([0,0,side*90])
                 translate([0,OlloSpacing*4,0]) {
                     motorArm();
+                    //:Anchor motor male
                 }
         }
     }
