@@ -35,6 +35,7 @@ void usage()
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
     cerr << "   -p: shows the list of parts to print (stl and quantity)" << endl;
     cerr << "   -b: shows the BOM" << endl;
+    cerr << "   -u: saves to URDF" << endl;
     cerr << "Dev:" << endl;
     cerr << "   -v: voxelize" << endl;
     exit(EXIT_FAILURE);
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
     string mode = "";
     string output = "";
 
-    while ((index = getopt(argc, argv, "pbcws:vo:")) != -1) {
+    while ((index = getopt(argc, argv, "pbcws:vo:u")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -86,6 +87,9 @@ int main(int argc, char *argv[])
                 break;
             case 'v':
                 mode = "voxelize";
+                break;
+            case 'u':
+                mode = "urdf";
                 break;
         }
     }
@@ -123,6 +127,9 @@ int main(int argc, char *argv[])
             auto groups = robot->writeSTLs(output);
             cout << "Parts" << endl;
             std::cout << groups.toString() << std::endl;
+        } else if (mode == "urdf") {
+            needRobot();
+            robot->writeURDF(output);
         } else if (mode == "voxelize") {
             Model m = loadModelFromFile(robotFile.c_str());
             //m.gnuplot();

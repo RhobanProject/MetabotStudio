@@ -24,6 +24,7 @@ namespace Metabot
             void build(std::string directory);
 
             RefsGrouped writeSTLs(std::string directory);
+            void writeURDF(std::string directory);
 
             Robot *clone();
             void setRoot(Component *root);

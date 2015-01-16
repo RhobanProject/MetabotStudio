@@ -48,6 +48,29 @@ namespace Metabot
 
         return groups;
     }
+
+    void Robot::writeURDF(std::string directory)
+    {
+        foreachComponent([directory](Component *instance) {
+            for (auto ref : instance->refs()) {
+                auto model = ref.getModel();
+                model.scale(1/1000.0);
+                std::string fn;
+                fn = directory+ref.hash()+".stl";
+                saveModelToFileBinary(fn.c_str(), &model);
+            }
+        });
+
+        std::stringstream ss;
+        ss << "<robot name=\"metabot\">" << std::endl;
+        ss << "  <link name=\"base\">" << std::endl;
+        ss << "  </link>" << std::endl;
+        if (root != NULL) {
+            root->writeURDF(ss);
+        }
+        ss << "</robot>" << std::endl;
+        std::cout << ss.str() << std::endl;
+    }
             
     Robot *Robot::clone()
     {

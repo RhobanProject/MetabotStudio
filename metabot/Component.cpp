@@ -69,6 +69,47 @@ namespace Metabot
             }
         }
     }
+            
+    void Component::writeURDF(std::stringstream &ss)
+    {
+        ss << std::endl << "  <!-- Component " << module->getName();
+        ss << "#" << id << " -->" << std::endl << std::endl;
+
+        std::stringstream tmp;
+        tmp << module->getName() << "_" << id;
+        std::string name = tmp.str();
+        ss << "  <link name=\"" << name << "\">" << std::endl;
+        ss << "  </link>" << std::endl;
+        ss << "  <joint name=\"" << name << "_base\" type=\"fixed\">" << std::endl;
+        ss << "    <parent link=\"base\"/>" << std::endl;
+        ss << "    <child link=\"" << name << "\"/>" << std::endl;
+        ss << "  </joint>" << std::endl;
+
+        int refid = 0;
+        for (auto ref : refs()) {
+            tmp.str("");
+            tmp << module->getName() << "_" << id << "_" << (refid++);
+            auto refName = tmp.str();
+            auto jointName = refName+"_joint";
+
+            ss << "  <link name=\"" << refName << "\">" << std::endl;
+            ss << "    <visual>" << std::endl;
+            ss << "      <geometry>" << std::endl;
+            // XXX: Absolute path?
+            ss << "        <mesh filename=\"package://tmp/" << ref.hash() << ".stl\"/>" << std::endl;
+            ss << "      </geometry>" << std::endl;
+            ss << "      <material name=\"" << refName << "_material\">" << std::endl;
+            ss << "        <color rgba=\"" << ref.r << " " << ref.g << " " << ref.b << " 1.0\"/>" << std::endl;
+            ss << "      </material>" << std::endl;
+            ss << "    </visual>" << std::endl;
+            ss << "  </link>" << std::endl;
+            ss << "  <joint name=\"" << jointName << "\" type=\"fixed\">" << std::endl;
+            ss << "    <parent link=\"" << name << "\"/>" << std::endl;
+            ss << "    <child link=\"" << refName << "\"/>" << std::endl;
+            ss << "    " << ref.matrix.toURDF() << std::endl;
+            ss << "  </joint>" << std::endl;
+        }
+    }
 
     std::string Component::fullName()
     {
@@ -420,5 +461,14 @@ namespace Metabot
         for (auto anchor : anchors) {
             anchor->hover = true;
         }
+    }
+
+    Refs Component::refs()
+    {
+        Refs refs;
+        refs.merge(models);
+        refs.merge(parts);
+
+        return refs;
     }
 }

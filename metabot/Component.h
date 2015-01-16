@@ -3,6 +3,7 @@
 #ifndef NOCPP11
 #include <functional>
 #endif
+#include <iostream>
 #include <map>
 #include <vector>
 #include <string>
@@ -26,6 +27,8 @@ namespace Metabot
             Component *clone();
 
             void root();
+
+            void writeURDF(std::stringstream &ss);
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);
@@ -81,6 +84,8 @@ namespace Metabot
 
             std::map<std::string, std::string> values;
             Component *component;
+
+            Refs refs();
  
             std::vector<AnchorPoint *> anchors;
             Refs models;

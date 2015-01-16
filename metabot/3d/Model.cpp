@@ -128,6 +128,19 @@ namespace Metabot
             }
         }
     }
+
+    void Model::scale(float ratio)
+    {
+        for (auto& volume : volumes) {
+            for (auto& face : volume.faces) {
+                for (int i=0; i<3; i++) {
+                    face.v[i].x *= ratio;
+                    face.v[i].y *= ratio;
+                    face.v[i].z *= ratio;
+                }
+            }
+        }
+    }
             
     void Model::apply(TransformMatrix matrix)
     {

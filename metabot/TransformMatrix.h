@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+#include <array>
 #include <string>
 #include "Vector.h"
 #ifdef OPENGL
@@ -20,6 +22,8 @@ namespace Metabot
             TransformMatrix multiply(TransformMatrix other);
             TransformMatrix invert();
             std::string toString();
+
+            std::string toURDF();
 
             Vector apply(Vector vector);
 

@@ -22,7 +22,9 @@ namespace Metabot
 			void rotateZ(float r);
 			void rotateY(float r);
 			void rotateX(float r);
+            void scale(float ratio);
             void gnuplot();
+
 #ifdef OPENGL
             void openGLDraw(float brightness=1.0);
 #endif

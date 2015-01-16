@@ -159,11 +159,11 @@ std::string removestart(std::string str, std::string start)
 std::string hash_sha1(std::string str)
 {
     unsigned char hash[20];
-    char hexstring[41];
+    char hexstring[40];
     sha1::calc(str.c_str(), str.length(), hash); // 10 is the length of the string
     sha1::toHexString(hash, hexstring);
 
-    return std::string(hexstring, 41);
+    return std::string(hexstring, 40);
 }
 
 std::string replaceStr(std::string& str, const std::string& from, const std::string& to) {

@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 #include <sstream>
 #include <json/json.h>
 #include "TransformMatrix.h"
@@ -9,6 +10,42 @@
 #include <GL/glu.h>
 #endif
 #endif
+
+bool closeEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon()) {
+    return (epsilon > fabs(a - b));
+}
+
+std::array<float,3> eulerAngles(const double4x4& R) {
+    //check for gimbal lock
+    if (closeEnough(R[2][0], -1.0f)) {
+        float x = 0; //gimbal lock, value of x doesn't matter
+        float y = M_PI / 2;
+        float z = x + atan2(R[0][1], R[0][2]);
+        return { x, y, z };
+    } else if (closeEnough(R[2][0], 1.0f)) {
+        float x = 0;
+        float y = -M_PI / 2;
+        float z = -x + atan2(-R[0][1], -R[0][2]);
+        return { x, y, z };
+    } else { //two solutions exist
+        float x1 = -asin(R[2][0]);
+        float x2 = M_PI - x1;
+
+        float y1 = atan2(R[2][1] / cos(x1), R[2][2] / cos(x1));
+        float y2 = atan2(R[2][1] / cos(x2), R[2][2] / cos(x2));
+
+        float z1 = atan2(R[1][0] / cos(x1), R[0][0] / cos(x1));
+        float z2 = atan2(R[1][0] / cos(x2), R[0][0] / cos(x2));
+
+        //choose one solution to return
+        //for example the "shortest" rotation
+        if ((fabs(x1) + fabs(y1) + fabs(z1)) <= (fabs(x2) + fabs(y2) + fabs(z2))) {
+            return { x1, y1, z1 };
+        } else {
+            return { x2, y2, z2 };
+        }
+    }
+}
 
 namespace Metabot
 {
@@ -150,5 +187,18 @@ namespace Metabot
         m.values[0][1] = sin(alpha);
         m.values[1][1] = cos(alpha);
         return m;
+    }
+
+    std::string TransformMatrix::toURDF()
+    {
+        auto rpy = eulerAngles(values);
+
+        std::stringstream ss;
+        ss << "<origin";
+        ss << " xyz=\"" << values[0][3]/1000 << " " << values[1][3]/1000 << " " << values[2][3]/1000 << "\"";
+        ss << " rpy=\"" << rpy[0] << " " << rpy[1] << " " << rpy[2] << "\"";
+        ss << "/>";
+
+        return ss.str();
     }
 }
