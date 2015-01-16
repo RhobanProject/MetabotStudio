@@ -12,7 +12,7 @@ namespace Metabot
         auto min = model.min();
         auto max = model.max();
 
-        root = OctreeFloor(Cube(min.x-1, max.x+1, min.y-1, max.y+1, min.z-1, max.z+1), 3);
+        root = OctreeFloor(Cube(min.x-1, max.x+1, min.y-1, max.y+1, min.z-1, max.z+1), 4);
 
         //add(Face(Point3(17.2,7.73939,8.73626),Point3(17.2,7.48578,8.44599),Point3(17.2,45,-9.99201e-15)));
         //return;

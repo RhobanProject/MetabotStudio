@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <cstdio>
+#include <random>
 #include <fcntl.h>
 #include <dirent.h>
 #include "util.h"
@@ -239,4 +240,30 @@ void remove_file(std::string filename)
 std::string current_dir()
 {
     return std::string(get_current_dir_name());
+}
+
+class Random
+{
+    public:
+        Random() {
+            m.seed(time(NULL));
+        };
+        unsigned int random() {
+            return m();
+        };
+    protected:
+        std::mt19937 m;
+};
+
+static Random random_generator;
+
+int random_int()
+{
+    return random_generator.random();
+}
+
+double random_number(double min, double max, double precision)
+{
+    unsigned int delta = (max-min)/precision;
+    return ((random_int()%delta)*precision)+min;
 }

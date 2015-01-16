@@ -63,9 +63,9 @@ int main(int argc, char *argv[])
 {
     int index;
     string mode = "";
-    string output;
+    string output = "";
 
-    while ((index = getopt(argc, argv, "pbcws:v")) != -1) {
+    while ((index = getopt(argc, argv, "pbcws:vo:")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
                 break;
             case 's':
                 mode = "stlExport";
+            case 'o':
                 output = string(optarg);
                 break;
             case 'b':
@@ -119,8 +120,9 @@ int main(int argc, char *argv[])
             cout << robot->getBOM().toString();
         } else if (mode == "parts") {
             needRobot();
+            auto groups = robot->writeSTLs(output);
             cout << "Parts" << endl;
-            cout << robot->getParts().group().toString();
+            std::cout << groups.toString() << std::endl;
         } else if (mode == "voxelize") {
             Model m = loadModelFromFile(robotFile.c_str());
             //m.gnuplot();

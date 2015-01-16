@@ -16,7 +16,14 @@ namespace Metabot
         public:
             Ref(Json::Value json, TransformMatrix matrix);
 
+            /**
+             * This compiles the part, calling the according method on the
+             * backend. 
+             * The print flags can be used to add print=true in the arguments
+             * of the module.
+             */
             void compile(Backend *backend);
+            Model doCompile(Backend *backend, bool print=false);
             Model &getModel();
 
             /**
@@ -44,12 +51,10 @@ namespace Metabot
             RefsGrouped group();
     };
 
-    class RefsGrouped
+    class RefsGrouped : public std::map<std::string, std::vector<Ref>>
     {
         public:
             void add(std::string name, Ref part);
             std::string toString();
-
-            std::map<std::string, Refs> groups;
     };
 }

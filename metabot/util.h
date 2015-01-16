@@ -37,3 +37,7 @@ std::string file_get_contents(std::string path);
 int filemtime(std::string path);
 void remove_file(std::string filename);
 std::string current_dir();
+
+// Random
+int random_int();
+double random_number(double min, double max, double precision=0.0001);

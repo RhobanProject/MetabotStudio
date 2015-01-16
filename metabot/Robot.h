@@ -23,6 +23,8 @@ namespace Metabot
 
             void build(std::string directory);
 
+            RefsGrouped writeSTLs(std::string directory);
+
             Robot *clone();
             void setRoot(Component *root);
             Vector getPoint(Component *instance, Vector pt);

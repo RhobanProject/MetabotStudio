@@ -8,7 +8,7 @@
 namespace Metabot
 {
     Ref::Ref(Json::Value json, TransformMatrix matrix_)
-        : quantity(1), matrix(matrix_)
+        : matrix(matrix_)
     {
         if (json.isObject()) {
             if (json.isMember("name")) {
@@ -38,8 +38,21 @@ namespace Metabot
 
     void Ref::compile(Backend *backend)
     {
-        std::string stl = backend->getModule(name).openscad("stl", parameters);
-        model = loadModelSTL_string(stl);
+        model = doCompile(backend);
+    }
+
+    Model Ref::doCompile(Backend *backend, bool print)
+    {
+        auto module = backend->getModule(name);
+        auto params = parameters;
+
+        if (print && module.hasParameter("print")) {
+            std::cout << "[Debug] Passing print to true for " << name << std::endl;
+            params.set("print", "true");
+        }
+
+        std::string stl = module.openscad("stl", params);
+        return loadModelSTL_string(stl);
     }
 
     Model &Ref::getModel()
@@ -94,7 +107,7 @@ namespace Metabot
             
     void RefsGrouped::add(std::string name, Ref ref)
     {
-        groups[name].add(ref);
+        (*this)[name].push_back(ref);
     }
 
     std::string RefsGrouped::toString()
@@ -103,7 +116,7 @@ namespace Metabot
 
         int total = 0;
         int unique = 0;
-        for (auto entry : groups) {
+        for (auto entry : (*this)) {
             auto name = entry.first;
             auto refs = entry.second;
             auto count = refs.size();
