@@ -49,7 +49,7 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
     if (print) {
         translate([0,0,10])
             rotate([0,90,0])
-            u(height,radius,thickness,screwsSpacing,screwsDiameter,
+            u(height,radius,thickness,screwsSpacing,screwsDiameter,screwsCount,
                     screws,olloArm,armAngle,thicknessSize,false);
     } else {
         difference() {
@@ -68,4 +68,4 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
     }
 }
 
-u(olloArm=true, screws=false, armAngle=10);
+//u(olloArm=true, screws=false, armAngle=0, print=true);
