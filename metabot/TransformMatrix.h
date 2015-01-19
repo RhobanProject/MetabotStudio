@@ -13,6 +13,8 @@
 #endif
 #include "matrix.h"
 
+std::array<float,3> eulerAngles(const double4x4& R);
+
 namespace Metabot
 {
     class TransformMatrix

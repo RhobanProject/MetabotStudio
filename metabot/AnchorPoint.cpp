@@ -202,4 +202,29 @@ namespace Metabot
         }
     }
 #endif
+            
+    void AnchorPoint::writeURDF(std::stringstream &ss, std::string parent)
+    {
+        std::stringstream tmp;
+        tmp << "anchor_" << component->id << "_" << id;
+        auto name = tmp.str();
+
+        // Creating anchor link
+        ss << "  <link name=\"" << name<< "\">" << std::endl;
+        ss << "  <visual><origin xyz=\"0 0 0\" rpy=\"0 0 0\"/><geometry><box size=\"0.0001 0.0001 0.0001\"/></geometry></visual>" << std::endl;
+        ss << "  </link>" << std::endl;
+        auto matrix = above ? transformationForward() : transformationBackward();
+        ss << "  <joint name=\"" << name << "_joint\" type=\"fixed\">" << std::endl;
+        ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
+        ss << "    <child link=\"" << name << "\"/>" << std::endl;
+        ss << "    " << matrix.toURDF() << std::endl;
+        ss << "  </joint>" << std::endl;
+
+        if (above && anchor) {
+            anchor->writeURDF(ss, name);
+        }
+        if (!above) {
+            component->writeURDF(ss, name);
+        }
+    }
 }

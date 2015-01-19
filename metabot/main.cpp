@@ -13,6 +13,7 @@
 #include "Component.h"
 #include "Robot.h"
 #include "Voxels.h"
+#include "TransformMatrix.h"
 #include "util.h"
 
 using namespace std;
@@ -97,6 +98,21 @@ int main(int argc, char *argv[])
     if (optind != argc) {
         robotFile = string(argv[optind]);
     }
+
+    /*
+    auto a = TransformMatrix::identity();
+    a = a.multiply(TransformMatrix::rotationZ((30)*M_PI/180));
+    a = a.multiply(TransformMatrix::rotationY((20)*M_PI/180));
+    a = a.multiply(TransformMatrix::rotationX((18)*M_PI/180));
+    auto rpy = eulerAngles(a.values);
+    std::cout << "A" << std::endl;
+    std::cout << a.toString() << std::endl;
+
+    std::cout << "X: " << (rpy[0]*180/M_PI) << std::endl;
+    std::cout << "Y: " << (rpy[1]*180/M_PI) << std::endl;
+    std::cout << "Z: " << (rpy[2]*180/M_PI) << std::endl;
+    return 0;
+    */
 
     try {
         // Loading the backend

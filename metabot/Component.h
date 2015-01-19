@@ -28,7 +28,7 @@ namespace Metabot
 
             void root();
 
-            void writeURDF(std::stringstream &ss);
+            void writeURDF(std::stringstream &ss, std::string parent);
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);

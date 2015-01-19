@@ -63,10 +63,11 @@ namespace Metabot
 
         std::stringstream ss;
         ss << "<robot name=\"metabot\">" << std::endl;
-        ss << "  <link name=\"base\">" << std::endl;
+        ss << "  <link name=\"base_link\">" << std::endl;
+        ss << "  <visual><origin xyz=\"0 0 0\" rpy=\"0 0 0\"/><geometry><box size=\"0.0001 0.0001 0.0001\"/></geometry></visual>" << std::endl;
         ss << "  </link>" << std::endl;
         if (root != NULL) {
-            root->writeURDF(ss);
+            root->writeURDF(ss, "base_link");
         }
         ss << "</robot>" << std::endl;
         std::cout << ss.str() << std::endl;

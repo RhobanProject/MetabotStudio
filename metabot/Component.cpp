@@ -70,21 +70,24 @@ namespace Metabot
         }
     }
             
-    void Component::writeURDF(std::stringstream &ss)
+    void Component::writeURDF(std::stringstream &ss, std::string parent)
     {
         ss << std::endl << "  <!-- Component " << module->getName();
         ss << "#" << id << " -->" << std::endl << std::endl;
 
+        // Adding the component and linking it to the parent
         std::stringstream tmp;
         tmp << module->getName() << "_" << id;
         std::string name = tmp.str();
         ss << "  <link name=\"" << name << "\">" << std::endl;
+        ss << "  <visual><origin xyz=\"0 0 0\" rpy=\"0 0 0\"/><geometry><box size=\"0.0001 0.0001 0.0001\"/></geometry></visual>" << std::endl;
         ss << "  </link>" << std::endl;
-        ss << "  <joint name=\"" << name << "_base\" type=\"fixed\">" << std::endl;
-        ss << "    <parent link=\"base\"/>" << std::endl;
+        ss << "  <joint name=\"" << name << "_parent\" type=\"fixed\">" << std::endl;
+        ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
         ss << "    <child link=\"" << name << "\"/>" << std::endl;
         ss << "  </joint>" << std::endl;
 
+        // Adding parts and models, linked to component
         int refid = 0;
         for (auto ref : refs()) {
             tmp.str("");
@@ -95,7 +98,7 @@ namespace Metabot
             ss << "  <link name=\"" << refName << "\">" << std::endl;
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
-            // XXX: Absolute path?
+            // XXX: Absolute path, not good
             ss << "        <mesh filename=\"package://tmp/" << ref.hash() << ".stl\"/>" << std::endl;
             ss << "      </geometry>" << std::endl;
             ss << "      <material name=\"" << refName << "_material\">" << std::endl;
@@ -108,6 +111,13 @@ namespace Metabot
             ss << "    <child link=\"" << refName << "\"/>" << std::endl;
             ss << "    " << ref.matrix.toURDF() << std::endl;
             ss << "  </joint>" << std::endl;
+        }
+
+        // Adding anchors
+        for (auto anchor : anchors) {
+            if (anchor->above) {
+                anchor->writeURDF(ss, name);
+            }
         }
     }
 

@@ -15,27 +15,36 @@ bool closeEnough(const float& a, const float& b, const float& epsilon = std::num
     return (epsilon > fabs(a - b));
 }
 
+#define EULER_X 2
+#define EULER_Y 1
+#define EULER_Z 0
+
 std::array<float,3> eulerAngles(const double4x4& R) {
     //check for gimbal lock
-    if (closeEnough(R[2][0], -1.0f)) {
-        float x = 0; //gimbal lock, value of x doesn't matter
-        float y = M_PI / 2;
-        float z = x + atan2(R[0][1], R[0][2]);
-        return { x, y, z };
-    } else if (closeEnough(R[2][0], 1.0f)) {
-        float x = 0;
-        float y = -M_PI / 2;
-        float z = -x + atan2(-R[0][1], -R[0][2]);
+    if (closeEnough(R[2][0], -1.0f) || closeEnough(R[2][0], 1.0f)) {
+        std::cout << "CASE 1" << std::endl;
+        float x, y;
+        float z = 0;
+        float d = atan2(R[0][1], R[0][2]);
+
+        if (closeEnough(R[2][0], -1.0f)) {
+            y = M_PI/2;
+            x = d;
+        } else {
+            y = -M_PI/2;
+            x = -d;
+        }
+
         return { x, y, z };
     } else { //two solutions exist
-        float x1 = -asin(R[2][0]);
-        float x2 = M_PI - x1;
+        float y1 = -asin(R[2][0]);
+        float y2 = M_PI - y1;
 
-        float y1 = atan2(R[2][1] / cos(x1), R[2][2] / cos(x1));
-        float y2 = atan2(R[2][1] / cos(x2), R[2][2] / cos(x2));
+        float x1 = atan2(R[2][1] / cos(y1), R[2][2] / cos(y1));
+        float x2 = atan2(R[2][1] / cos(y2), R[2][2] / cos(y2));
 
-        float z1 = atan2(R[1][0] / cos(x1), R[0][0] / cos(x1));
-        float z2 = atan2(R[1][0] / cos(x2), R[0][0] / cos(x2));
+        float z1 = atan2(R[1][0] / cos(y1), R[0][0] / cos(y1));
+        float z2 = atan2(R[1][0] / cos(y2), R[0][0] / cos(y2));
 
         //choose one solution to return
         //for example the "shortest" rotation
@@ -153,7 +162,11 @@ namespace Metabot
 
         for (int x=0; x<4; x++) {
             for (int y=0; y<4; y++) {
-                str << values[x][y] << " ";
+                if (closeEnough(values[x][y], 0.0f)) {
+                    str << "0 ";
+                } else {
+                    str << values[x][y] << " ";
+                }
             }
             str << std::endl;
         }
@@ -165,8 +178,8 @@ namespace Metabot
     {
         TransformMatrix m = TransformMatrix::identity();
         m.values[1][1] = cos(alpha);
-        m.values[2][1] = -sin(alpha);
-        m.values[1][2] = sin(alpha);
+        m.values[1][2] = -sin(alpha);
+        m.values[2][1] = sin(alpha);
         m.values[2][2] = cos(alpha);
         return m;
     }
@@ -174,8 +187,8 @@ namespace Metabot
     {
         TransformMatrix m = TransformMatrix::identity();
         m.values[0][0] = cos(alpha);
-        m.values[2][0] = -sin(alpha);
         m.values[0][2] = sin(alpha);
+        m.values[2][0] = -sin(alpha);
         m.values[2][2] = cos(alpha);
         return m;
     }
@@ -183,8 +196,8 @@ namespace Metabot
     {
         TransformMatrix m = TransformMatrix::identity();
         m.values[0][0] = cos(alpha);
-        m.values[1][0] = -sin(alpha);
-        m.values[0][1] = sin(alpha);
+        m.values[0][1] = -sin(alpha);
+        m.values[1][0] = sin(alpha);
         m.values[1][1] = cos(alpha);
         return m;
     }
