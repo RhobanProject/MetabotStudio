@@ -22,7 +22,6 @@ bool closeEnough(const float& a, const float& b, const float& epsilon = std::num
 std::array<float,3> eulerAngles(const double4x4& R) {
     //check for gimbal lock
     if (closeEnough(R[2][0], -1.0f) || closeEnough(R[2][0], 1.0f)) {
-        std::cout << "CASE 1" << std::endl;
         float x, y;
         float z = 0;
         float d = atan2(R[0][1], R[0][2]);
