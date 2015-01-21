@@ -24,14 +24,15 @@ std::array<float,3> eulerAngles(const double4x4& R) {
     if (closeEnough(R[2][0], -1.0f) || closeEnough(R[2][0], 1.0f)) {
         float x, y;
         float z = 0;
-        float d = atan2(R[0][1], R[0][2]);
 
         if (closeEnough(R[2][0], -1.0f)) {
+            float d = atan2(R[0][1], R[0][2]);
             y = M_PI/2;
             x = d;
         } else {
+            float d = atan2(-R[0][1], -R[0][2]);
             y = -M_PI/2;
-            x = -d;
+            x = d;
         }
 
         return { x, y, z };
