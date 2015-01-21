@@ -115,7 +115,7 @@ namespace Metabot
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
             // XXX: Absolute path, not good
-            ss << "        <mesh filename=\"" << ref.hash() << ".stl\"/>" << std::endl;
+            ss << "        <mesh filename=\"package://urdf/" << ref.hash() << ".stl\"/>" << std::endl;
             ss << "      </geometry>" << std::endl;
             ss << "      <material name=\"" << refName << "_material\">" << std::endl;
             ss << "        <color rgba=\"" << ref.r << " " << ref.g << " " << ref.b << " 1.0\"/>" << std::endl;

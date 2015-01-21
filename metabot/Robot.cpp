@@ -51,6 +51,10 @@ namespace Metabot
 
     void Robot::writeURDF(std::string directory)
     {
+        directory += "urdf/";
+        if (!is_directory(directory)) {
+            makedir(directory);
+        }
         foreachComponent([directory](Component *instance) {
             for (auto ref : instance->refs()) {
                 auto model = ref.getModel();
@@ -70,7 +74,8 @@ namespace Metabot
             root->writeURDF(ss, "base_link");
         }
         ss << "</robot>" << std::endl;
-        std::cout << ss.str() << std::endl;
+        std::string filename = directory+"robot.urdf";
+        file_put_contents(filename, ss.str());
     }
             
     Robot *Robot::clone()
