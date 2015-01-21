@@ -29,3 +29,5 @@ module side_to_side(Size=65, HolesToBorder=5, Thickness=2.2)
         }
     }
 }
+
+side_to_side();

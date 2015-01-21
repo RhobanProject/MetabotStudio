@@ -15,3 +15,6 @@ module arm_leg(SizeA=60, SizeB=20, SizeC=20, SizeBottom=10, SizeTop=15, Thicknes
         leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "arm", 0, Thickness);
     }
 }
+
+
+arm_leg();
