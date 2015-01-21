@@ -35,8 +35,6 @@ namespace Metabot
             void openGLDraw(int id=1);
 #endif
 
-            void writeURDF(std::stringstream &ss, std::string parent);
-
             std::string type;
             std::string model;
             TransformMatrix matrix;

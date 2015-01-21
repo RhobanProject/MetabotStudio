@@ -70,7 +70,7 @@ namespace Metabot
         }
     }
             
-    void Component::writeURDF(std::stringstream &ss, std::string parent)
+    void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix parentPreTransform, AnchorPoint *above)
     {
         ss << std::endl << "  <!-- Component " << module->getName();
         ss << "#" << id << " -->" << std::endl << std::endl;
@@ -82,13 +82,29 @@ namespace Metabot
         ss << "  <link name=\"" << name << "\">" << std::endl;
         ss << "  <visual><origin xyz=\"0 0 0\" rpy=\"0 0 0\"/><geometry><box size=\"0.0001 0.0001 0.0001\"/></geometry></visual>" << std::endl;
         ss << "  </link>" << std::endl;
-        ss << "  <joint name=\"" << name << "_parent\" type=\"fixed\">" << std::endl;
+
+        // Linking it to the parent
+        std::string type;
+        if (above != NULL) {
+            type = "revolute";
+        } else {
+            type = "fixed";
+        }
+        ss << "  <joint name=\"" << name << "_parent\" type=\"" << type << "\">" << std::endl;
         ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
         ss << "    <child link=\"" << name << "\"/>" << std::endl;
+        ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
+        if (above != NULL) {
+            ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
+        }
         ss << "  </joint>" << std::endl;
 
         // Adding parts and models, linked to component
         int refid = 0;
+        auto preTransform = TransformMatrix::identity();
+        if (above != NULL) {
+            preTransform = above->transformationBackward();
+        }
         for (auto ref : refs()) {
             tmp.str("");
             tmp << module->getName() << "_" << id << "_" << (refid++);
@@ -99,24 +115,25 @@ namespace Metabot
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
             // XXX: Absolute path, not good
-            ss << "        <mesh filename=\"package://tmp/" << ref.hash() << ".stl\"/>" << std::endl;
+            ss << "        <mesh filename=\"" << ref.hash() << ".stl\"/>" << std::endl;
             ss << "      </geometry>" << std::endl;
             ss << "      <material name=\"" << refName << "_material\">" << std::endl;
             ss << "        <color rgba=\"" << ref.r << " " << ref.g << " " << ref.b << " 1.0\"/>" << std::endl;
             ss << "      </material>" << std::endl;
             ss << "    </visual>" << std::endl;
             ss << "  </link>" << std::endl;
+
             ss << "  <joint name=\"" << jointName << "\" type=\"fixed\">" << std::endl;
             ss << "    <parent link=\"" << name << "\"/>" << std::endl;
             ss << "    <child link=\"" << refName << "\"/>" << std::endl;
-            ss << "    " << ref.matrix.toURDF() << std::endl;
+            ss << "    " << preTransform.multiply(ref.matrix).toURDF() << std::endl;
             ss << "  </joint>" << std::endl;
         }
 
-        // Adding anchors
+        // Drawing sub-components
         for (auto anchor : anchors) {
-            if (anchor->above) {
-                anchor->writeURDF(ss, name);
+            if (anchor->above && anchor->anchor!=NULL) {
+                anchor->anchor->component->writeURDF(ss, name, preTransform, anchor->anchor);
             }
         }
     }

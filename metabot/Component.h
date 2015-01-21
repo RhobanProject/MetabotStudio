@@ -28,7 +28,8 @@ namespace Metabot
 
             void root();
 
-            void writeURDF(std::stringstream &ss, std::string parent);
+            void writeURDF(std::stringstream &ss, std::string parent, 
+                    TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);
