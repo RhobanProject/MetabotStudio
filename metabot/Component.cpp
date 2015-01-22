@@ -107,7 +107,7 @@ namespace Metabot
         }
         for (auto ref : refs()) {
             tmp.str("");
-            tmp << module->getName() << "_" << id << "_" << (refid++);
+            tmp << module->getName() << "_" << ref.name << "_" << id << "_" << (refid++);
             auto refName = tmp.str();
             auto jointName = refName+"_joint";
 
