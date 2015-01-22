@@ -80,9 +80,33 @@ namespace Metabot
         tmp << module->getName() << "_" << id;
         std::string name = tmp.str();
         ss << "  <link name=\"" << name << "\">" << std::endl;
-        ss << "  <visual><origin xyz=\"0 0 0\" rpy=\"0 0 0\"/><geometry><box size=\"0.0001 0.0001 0.0001\"/></geometry></visual>" << std::endl;
-        ss << "  </link>" << std::endl;
 
+        // Adding parts and models, linked to component
+        int refid = 0;
+        auto preTransform = TransformMatrix::identity();
+        if (above != NULL) {
+            preTransform = above->transformationBackward();
+        }
+        for (auto ref : refs()) {
+            tmp.str("");
+            tmp << module->getName() << "_" << ref.name << "_" << id << "_" << (refid++);
+            auto refName = tmp.str();
+            auto jointName = refName+"_joint";
+
+            ss << "    <visual>" << std::endl;
+            ss << "      <geometry>" << std::endl;
+            // XXX: Absolute path, not good
+            ss << "        <mesh filename=\"package://urdf/" << ref.hash() << ".stl\"/>" << std::endl;
+            ss << "      </geometry>" << std::endl;
+            ss << "      <material name=\"" << refName << "_material\">" << std::endl;
+            ss << "        <color rgba=\"" << ref.r << " " << ref.g << " " << ref.b << " 1.0\"/>" << std::endl;
+            ss << "      </material>" << std::endl;
+            ss << "    " << preTransform.multiply(ref.matrix).toURDF() << std::endl;
+            ss << "    </visual>" << std::endl;
+        }
+            
+        ss << "  </link>" << std::endl;
+        
         // Linking it to the parent
         std::string type;
         if (above != NULL) {
@@ -98,37 +122,6 @@ namespace Metabot
             ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
         }
         ss << "  </joint>" << std::endl;
-
-        // Adding parts and models, linked to component
-        int refid = 0;
-        auto preTransform = TransformMatrix::identity();
-        if (above != NULL) {
-            preTransform = above->transformationBackward();
-        }
-        for (auto ref : refs()) {
-            tmp.str("");
-            tmp << module->getName() << "_" << ref.name << "_" << id << "_" << (refid++);
-            auto refName = tmp.str();
-            auto jointName = refName+"_joint";
-
-            ss << "  <link name=\"" << refName << "\">" << std::endl;
-            ss << "    <visual>" << std::endl;
-            ss << "      <geometry>" << std::endl;
-            // XXX: Absolute path, not good
-            ss << "        <mesh filename=\"package://urdf/" << ref.hash() << ".stl\"/>" << std::endl;
-            ss << "      </geometry>" << std::endl;
-            ss << "      <material name=\"" << refName << "_material\">" << std::endl;
-            ss << "        <color rgba=\"" << ref.r << " " << ref.g << " " << ref.b << " 1.0\"/>" << std::endl;
-            ss << "      </material>" << std::endl;
-            ss << "    </visual>" << std::endl;
-            ss << "  </link>" << std::endl;
-
-            ss << "  <joint name=\"" << jointName << "\" type=\"fixed\">" << std::endl;
-            ss << "    <parent link=\"" << name << "\"/>" << std::endl;
-            ss << "    <child link=\"" << refName << "\"/>" << std::endl;
-            ss << "    " << preTransform.multiply(ref.matrix).toURDF() << std::endl;
-            ss << "  </joint>" << std::endl;
-        }
 
         // Drawing sub-components
         for (auto anchor : anchors) {

@@ -51,6 +51,9 @@ namespace Metabot
 
     void Robot::writeURDF(std::string directory)
     {
+        if (directory!="") {
+            directory += "/";
+        }
         directory += "urdf/";
         if (!is_directory(directory)) {
             makedir(directory);
