@@ -66,6 +66,57 @@ std::vector<std::string> splitCSV(const std::string s, char delim, char enclosur
     return parts;
 }
 
+/**
+ * Get vars from a string like:
+ *
+ * a=12, b=2.33, c="hello, my friend!", d=[1,2,3]
+ */
+std::map<std::string, std::string> getVars(const std::string s, 
+        char delim, char enclosure, char equals)
+{
+    int state = 0;
+    std::string var="", buf="";
+    bool in_enclosure = false;
+    int brackets = 0;
+    std::map<std::string, std::string> vars;
+
+    for (unsigned int i=0; i<s.length(); i++) {
+        auto c = s[i];
+        buf += c;
+
+        if (in_enclosure) {
+            if (c == enclosure) {
+                in_enclosure = false;
+            }
+        } else {
+            if (c == enclosure) {
+                in_enclosure = true;
+            } else {
+                if (c == '[') brackets++;
+                if (c == ']') brackets--;
+                if (!brackets) {
+                    if (state == 0 && c==equals) {
+                        var = trim(buf.substr(0, buf.length()-1));
+                        buf = "";
+                        state = 1;
+                    }
+                    if (state == 1 && c==delim) {
+                        vars[var] = trim(buf.substr(0, buf.length()-1));
+                        buf = "";
+                        state = 0;
+                    }
+                }
+            }
+        }
+    }
+    if (var != "") {
+        vars[var] = trim(buf);
+    }
+
+
+    return vars;
+}
+
 std::string implode(std::vector<std::string> strs, std::string separator)
 {
     std::stringstream str;

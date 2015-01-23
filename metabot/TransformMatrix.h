@@ -41,6 +41,11 @@ namespace Metabot
             static TransformMatrix rotationX(float alpha);
             static TransformMatrix rotationY(float alpha);
             static TransformMatrix rotationZ(float alpha);
+            static TransformMatrix translation(float x, float y, float z);
             static TransformMatrix fromJSON(std::string json);
+
+            float x();
+            float y();
+            float z();
     };
 }

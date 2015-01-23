@@ -6,6 +6,7 @@
 #include <json/json.h>
 #include <3d/Model.h>
 #include "TransformMatrix.h"
+#include "Dynamics.h"
 #include "Parameters.h"
 
 namespace Metabot
@@ -27,6 +28,13 @@ namespace Metabot
             Model &getModel();
 
             /**
+             * Run the analysis of the part and get its dynamics
+             */
+            void analyze();
+            Dynamics &getDynamics();
+            void setDynamics(Dynamics other);
+
+            /**
              * This hash is used to group the unique parts
              */
             std::string hash();
@@ -39,6 +47,7 @@ namespace Metabot
 
         protected:
             Model model;
+            Dynamics dynamics;
             Backend *backend;
     };
     

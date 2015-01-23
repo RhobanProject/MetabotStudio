@@ -72,6 +72,8 @@ namespace Metabot
             
     void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix parentPreTransform, AnchorPoint *above)
     {
+        Dynamics dynamics;
+
         ss << std::endl << "  <!-- Component " << module->getName();
         ss << "#" << id << " -->" << std::endl << std::endl;
 
@@ -88,40 +90,57 @@ namespace Metabot
             preTransform = above->transformationBackward();
         }
         for (auto ref : refs()) {
+            dynamics = dynamics.combine(ref->getDynamics(), ref->matrix);
             tmp.str("");
-            tmp << module->getName() << "_" << ref.name << "_" << id << "_" << (refid++);
+            tmp << module->getName() << "_" << ref->name << "_" << id << "_" << (refid++);
             auto refName = tmp.str();
             auto jointName = refName+"_joint";
 
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
-            // XXX: Absolute path, not good
-            ss << "        <mesh filename=\"package://urdf/" << ref.hash() << ".stl\"/>" << std::endl;
+            // XXX: This forces the file to be in an urdf/ folder
+            ss << "        <mesh filename=\"package://urdf/" << ref->hash() << ".stl\"/>" << std::endl;
             ss << "      </geometry>" << std::endl;
             ss << "      <material name=\"" << refName << "_material\">" << std::endl;
-            ss << "        <color rgba=\"" << ref.r << " " << ref.g << " " << ref.b << " 1.0\"/>" << std::endl;
+            ss << "        <color rgba=\"" << ref->r << " " << ref->g << " " << ref->b << " 1.0\"/>" << std::endl;
             ss << "      </material>" << std::endl;
-            ss << "    " << preTransform.multiply(ref.matrix).toURDF() << std::endl;
+            ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
             ss << "    </visual>" << std::endl;
+        }
+
+        // Adding dynamics
+        ss << "  <inertial>" << std::endl;
+        auto dcom = TransformMatrix::translation(dynamics.com.x(), dynamics.com.y(), dynamics.com.z());
+        auto com = preTransform.multiply(dcom);;
+        std::cout << dcom.toString() << std::endl;
+        std::cout << com.toString() << std::endl;
+        ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
+            << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
+        // XXX: Todo, handle density
+        ss << "    <mass value=\"" << (dynamics.volume*1.2/1000000.0) << "\"/>" << std::endl;
+        // XXX: Todo, handle tensor
+        ss << "    <inertia ixx=\"0.01\"  ixy=\"0\"  ixz=\"0\" iyy=\"0.01\" iyz=\"0\" izz=\"0.01\" />" << std::endl;
+        ss << "  </inertial>" << std::endl;
+
+        // Adding collisions
+        for (auto shape : shapes) {
+            ss << "  <collision>" << std::endl;
+            ss << shape.toURDF(preTransform) << std::endl;
+            ss << "  </collision>" << std::endl;
         }
             
         ss << "  </link>" << std::endl;
+
         
         // Linking it to the parent
-        std::string type;
-        if (above != NULL) {
-            type = "revolute";
-        } else {
-            type = "fixed";
-        }
-        ss << "  <joint name=\"" << name << "_parent\" type=\"" << type << "\">" << std::endl;
-        ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
-        ss << "    <child link=\"" << name << "\"/>" << std::endl;
-        ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
-        if (above != NULL) {
+        if (above!=NULL) {
+            ss << "  <joint name=\"" << name << "_parent\" type=\"revolute\">" << std::endl;
+            ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
+            ss << "    <child link=\"" << name << "\"/>" << std::endl;
+            ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
             ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
+            ss << "  </joint>" << std::endl;
         }
-        ss << "  </joint>" << std::endl;
 
         // Drawing sub-components
         for (auto anchor : anchors) {
@@ -270,6 +289,11 @@ namespace Metabot
         parts = document.parts;
         models = document.models;
         bom = document.bom;
+        
+        // Collision CSG
+        std::string collisionsCsg = module->openscad("csg", parameters(), false, true);
+        CSG collisionsDocument = CSG::parse(collisionsCsg);
+        shapes = collisionsDocument.shapes;
 
         for (auto &ref : parts) {
             ref.compile(backend);
@@ -483,11 +507,15 @@ namespace Metabot
         }
     }
 
-    Refs Component::refs()
+    std::vector<Ref*> Component::refs()
     {
-        Refs refs;
-        refs.merge(models);
-        refs.merge(parts);
+        std::vector<Ref*> refs;
+        for (auto &ref : models) {
+            refs.push_back(&ref);
+        }
+        for (auto &ref : parts) {
+            refs.push_back(&ref);
+        }
 
         return refs;
     }

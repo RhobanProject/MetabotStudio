@@ -11,6 +11,7 @@
 #include <json/json.h>
 #include "BOM.h"
 #include "Ref.h"
+#include "Shape.h"
 #include "Parameters.h"
 
 namespace Metabot
@@ -28,7 +29,7 @@ namespace Metabot
 
             void root();
 
-            void writeURDF(std::stringstream &ss, std::string parent, 
+            void writeURDF(std::stringstream &ss, std::string parent="", 
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 
             Model toModel();
@@ -86,12 +87,13 @@ namespace Metabot
             std::map<std::string, std::string> values;
             Component *component;
 
-            Refs refs();
+            std::vector<Ref*> refs();
  
             std::vector<AnchorPoint *> anchors;
             Refs models;
             Refs parts;
             BOM bom;
+            std::vector<Shape> shapes;
 
             Model myModel;
 

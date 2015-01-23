@@ -6,6 +6,7 @@
 #include "AnchorPoint.h"
 #include "Ref.h"
 #include "BOM.h"
+#include "Shape.h"
 
 namespace Metabot
 {
@@ -20,6 +21,7 @@ namespace Metabot
             void walk(TransformMatrix matrix, CSGNode *node);
 
             std::vector<AnchorPoint*> anchors;
+            std::vector<Shape> shapes;
             Refs models;
             Refs parts;
             BOM bom;

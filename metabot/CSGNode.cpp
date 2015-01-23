@@ -1,6 +1,7 @@
 #include <iostream>
 #include <json/json.h>
 #include "CSGNode.h"
+#include "Shape.h"
 #include "util.h"
 
 namespace Metabot
@@ -83,5 +84,44 @@ namespace Metabot
     bool CSGNode::is(std::string type)
     {
         return json["type"]==type;
+    }
+
+    bool CSGNode::isShape()
+    {
+        return (name == "cube" || name == "cylinder" || name == "sphere");
+    }
+
+    Shape CSGNode::toShape(TransformMatrix m)
+    {
+        Shape shape;
+        auto vars = getVars(value);
+        shape.matrix = m;
+
+        if (name == "cube") {
+            shape.type = SHAPE_BOX;
+            auto size = splitCSV(vars["size"].substr(1, vars["size"].length()-1));
+            if (size.size() == 3) {
+                shape.a = atof(size[0].c_str());
+                shape.b = atof(size[1].c_str());
+                shape.c = atof(size[2].c_str());
+            }
+            if (vars["center"]=="false") {
+                shape.matrix = m.multiply(TransformMatrix::translation(shape.a/2, shape.b/2, shape.c/2));
+            }
+        }
+        if (name == "sphere") {
+            shape.type = SHAPE_SPHERE;
+            shape.r = atof(vars["r"].c_str());
+        }
+        if (name == "cylinder") {
+            shape.type = SHAPE_CYLINDER;
+            shape.r = atof(vars["r1"].c_str());
+            shape.h = atof(vars["h"].c_str());
+            if (vars["center"]=="false") {
+                shape.matrix = m.multiply(TransformMatrix::translation(0, 0, shape.h/2));
+            }
+        }
+
+        return shape;
     }
 }

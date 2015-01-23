@@ -3,6 +3,7 @@
 #include <3d/stl.h>
 #include "Ref.h"
 #include "Backend.h"
+#include "Voxels.h"
 #include "util.h"
 
 namespace Metabot
@@ -55,9 +56,28 @@ namespace Metabot
         return loadModelSTL_string(stl);
     }
 
+    void Ref::analyze()
+    {
+        std::cout << "Analyzing part " << name << "... " << std::flush;
+        dynamics = Voxels::voxelize(getModel());
+        std::cout << "volume: " << dynamics.volume;
+        std::cout << ", com: " << dynamics.com.x() << "," << dynamics.com.y() << ", " << dynamics.com.z();
+        std::cout << std::endl;
+    }
+
     Model &Ref::getModel()
     {
         return model;
+    }
+
+    Dynamics &Ref::getDynamics()
+    {
+        return dynamics;
+    }
+
+    void Ref::setDynamics(Dynamics other)
+    {
+        dynamics = other;
     }
     
     std::string Ref::hash()

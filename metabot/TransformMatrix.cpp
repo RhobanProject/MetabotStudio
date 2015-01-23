@@ -81,6 +81,7 @@ namespace Metabot
         TransformMatrix inverse;
         float det;
         INVERT_4X4(inverse.values, det, values);
+        inverse.values[3][3] = 1;
 
         return inverse;
     }
@@ -144,6 +145,7 @@ namespace Metabot
     {
         TransformMatrix result;
         MATRIX_PRODUCT_4X4(result.values, values, other.values);
+        result.values[3][3] = 1;
 
         return result;
     }
@@ -213,5 +215,30 @@ namespace Metabot
         ss << "/>";
 
         return ss.str();
+    }
+            
+    TransformMatrix TransformMatrix::translation(float x, float y, float z)
+    {
+        TransformMatrix m = TransformMatrix::identity();
+        m.values[0][3] = x;
+        m.values[1][3] = y;
+        m.values[2][3] = z;
+
+        return m;
+    }
+            
+    float TransformMatrix::x()
+    {
+        return values[0][3];
+    }
+
+    float TransformMatrix::y()
+    {
+        return values[1][3];
+    }
+
+    float TransformMatrix::z()
+    {
+        return values[2][3];
     }
 }

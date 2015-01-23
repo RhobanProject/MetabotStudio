@@ -51,6 +51,8 @@ namespace Metabot
 
     void Robot::writeURDF(std::string directory)
     {
+        std::map<std::string, Dynamics> analysis;
+
         if (directory!="") {
             directory += "/";
         }
@@ -58,23 +60,27 @@ namespace Metabot
         if (!is_directory(directory)) {
             makedir(directory);
         }
-        foreachComponent([directory](Component *instance) {
+        foreachComponent([directory, &analysis](Component *instance) {
             for (auto ref : instance->refs()) {
-                auto model = ref.getModel();
+                auto model = ref->getModel();
                 model.scale(1/1000.0);
                 std::string fn;
-                fn = directory+ref.hash()+".stl";
+                fn = directory+ref->hash()+".stl";
                 saveModelToFileBinary(fn.c_str(), &model);
+
+                if (analysis.count(ref->hash())) {
+                    ref->setDynamics(analysis[ref->hash()]);
+                } else {
+                    ref->analyze();
+                    analysis[ref->hash()] = ref->getDynamics();
+                }
             }
         });
 
         std::stringstream ss;
         ss << "<robot name=\"metabot\">" << std::endl;
-        ss << "  <link name=\"base_link\">" << std::endl;
-        ss << "  <visual><origin xyz=\"0 0 0\" rpy=\"0 0 0\"/><geometry><box size=\"0.0001 0.0001 0.0001\"/></geometry></visual>" << std::endl;
-        ss << "  </link>" << std::endl;
         if (root != NULL) {
-            root->writeURDF(ss, "base_link");
+            root->writeURDF(ss);
         }
         ss << "</robot>" << std::endl;
         std::string filename = directory+"robot.urdf";

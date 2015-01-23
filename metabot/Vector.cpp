@@ -36,4 +36,19 @@ namespace Metabot
 
         return sqrt(s);
     }
+
+    float Vector::x()
+    {
+        return values[0];
+    }
+
+    float Vector::y()
+    {
+        return values[1];
+    }
+
+    float Vector::z()
+    {
+        return values[2];
+    }
 }

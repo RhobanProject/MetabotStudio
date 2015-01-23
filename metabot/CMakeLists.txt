@@ -34,12 +34,14 @@ set(ALL_SOURCES
     Component.cpp
     CSG.cpp
     CSGNode.cpp
+    Dynamics.cpp
     Module.cpp
     Parameter.cpp
     Parameters.cpp
     Ref.cpp
     Robot.cpp
     SCAD.cpp
+    Shape.cpp
     TransformMatrix.cpp
     Vector.cpp
     Voxels.cpp

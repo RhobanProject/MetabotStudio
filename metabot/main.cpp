@@ -150,6 +150,13 @@ int main(int argc, char *argv[])
             Model m = loadModelFromFile(robotFile.c_str());
             //m.gnuplot();
             Voxels::voxelize(m);
+
+        /*
+        std::cout << "Box volume: " << volume << std::endl;
+        std::cout << "Inside: " << inside << ", Outside: " << outside << std::endl;
+        std::cout << "Total: " << (100*ratio) << "%" << std::endl;
+        std::cout << "Monte carlo volume: " << (ratio*volume) << std::endl;
+        */
             
             //Line l(Point3(15.5,26.5,0.5),Point3(0.817064,-0.229817,1.82707));
             //Face f(Point3(17.2,7.73939,8.73626),Point3(17.2,7.48578,8.44599),Point3(17.2,45,-9.99201e-15));

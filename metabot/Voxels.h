@@ -3,16 +3,14 @@
 #include <vector>
 #include <3d/Model.h>
 
+#include "Dynamics.h"
+
 namespace Metabot
 {
     class Voxels
     {
         public:
-            Voxels(int width, int height, int depth);
-
-            void static voxelize(Model m);
-
-        protected:
-            std::vector<bool> points;
+            Voxels();
+            Dynamics static voxelize(Model m);
     };
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -14,6 +15,7 @@
 // String manipuliation
 std::vector<std::string> split(const std::string &s, char delim=' ', int limit=-1);
 std::vector<std::string> splitCSV(const std::string s, char delim=' ', char enclosure='"');
+std::map<std::string, std::string> getVars(const std::string s, char delim=',', char enclosure='"', char equals='=');
 std::string implode(std::vector<std::string> strs, std::string separator);
 std::string ltrim(std::string s);
 std::string rtrim(std::string s);

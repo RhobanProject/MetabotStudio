@@ -95,6 +95,10 @@ namespace Metabot
             matrix = matrix.multiply(node->matrix);
         }
 
+        if (node->isShape()) {
+            shapes.push_back(node->toShape(matrix));
+        }
+
         if (node->is("anchor")) {
             AnchorPoint *anchor = new AnchorPoint(node->json, matrix);
             anchors.push_back(anchor);

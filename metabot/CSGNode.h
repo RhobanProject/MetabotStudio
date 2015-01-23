@@ -4,6 +4,7 @@
 #include <string>
 #include <json/json.h>
 #include "TransformMatrix.h"
+#include "Shape.h"
 
 namespace Metabot
 {
@@ -16,6 +17,10 @@ namespace Metabot
             // For multmatrix nodes
             bool isMatrix();
             TransformMatrix matrix;
+
+            // Shapes nodes
+            bool isShape();
+            Shape toShape(TransformMatrix m);
 
             // For marker nodes
             std::string data;

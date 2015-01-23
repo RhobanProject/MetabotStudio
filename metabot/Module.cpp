@@ -98,24 +98,26 @@ namespace Metabot
         return parameters.get(name);
     }
 
-    std::string Module::openscad(std::string format, Parameters parameters, bool noModels)
+    std::string Module::openscad(std::string format, Parameters parameters, bool noModels, bool collisions)
     {
         if (backend == NULL) {
             return "";
         }
 
-        // XXX: Handle quality and print flag!
-        std::string key = hash_sha1(filename + "." + format + " [" + (noModels ? "y" : "n") + "] w/ " + parameters.toArgs());
+        std::string key = hash_sha1(filename + "." + format 
+                + " [" + (noModels ? "m" : "") + (collisions ? "C" : "") + "] w/ " 
+                + parameters.toArgs());
+
         if (backend->cache != NULL) {
-            return backend->cache->get(key, [this, format, parameters, noModels]() {
-                return this->doOpenscad(format, parameters, noModels);
+            return backend->cache->get(key, [this, format, parameters, noModels, collisions]() {
+                return this->doOpenscad(format, parameters, noModels, collisions);
             }, filename);
         } else {
-            return doOpenscad(format, parameters, noModels);
+            return doOpenscad(format, parameters, noModels, collisions);
         }
     }
     
-    std::string Module::doOpenscad(std::string format, Parameters parameters, bool noModels)
+    std::string Module::doOpenscad(std::string format, Parameters parameters, bool noModels, bool collisions)
     {
         std::stringstream cmd;
         cmd << "openscad ";
@@ -123,6 +125,9 @@ namespace Metabot
         std::string output = tempname() + "." + format;
         if (noModels) {
             cmd << "-DNoModels=true ";
+        }
+        if (collisions) {
+            cmd << "-DCollisions=true ";
         }
         cmd << "-D\\$fn=20 ";
         cmd << input << " -o " << output;
