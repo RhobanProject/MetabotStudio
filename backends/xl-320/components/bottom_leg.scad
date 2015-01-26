@@ -17,10 +17,10 @@ module bottom_leg(SizeA=60, SizeB=20, SizeC=20, SizeBottom=10,
     motorArm();
 
     translate([0,-(24),0]) {
-        rotate([180,0,0]) {
-            rotate([180,90,FixationAngle]) {
-                leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "side", FixationAngle, Thickness);
-            }
-        }
+    rotate([0,-90,FixationAngle]) {
+	leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "side", FixationAngle, Thickness);
+    }
     }
 }
+
+bottom_leg();

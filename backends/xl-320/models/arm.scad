@@ -1,13 +1,16 @@
+Collisions=false;
 include <ollo.scad>;
 
 module arm_pulley(pulley=false)
 {
-     c = pulley?[0.6,0.6,0.6]:[0.2,0.2,0.2];
-    color(c) {
-        difference() {
-            cylinder(d=20, h=OlloWidth);
-            servoArm(OlloWidth);
-        }
+	c = pulley?[0.6,0.6,0.6]:[0.2,0.2,0.2];
+    if (!Collisions) {
+	    color(c) {
+		difference() {
+		    cylinder(d=20, h=OlloWidth);
+		    servoArm(OlloWidth);
+		}
+	    }
     }
 }
 

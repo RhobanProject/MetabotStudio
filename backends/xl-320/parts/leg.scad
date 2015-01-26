@@ -1,3 +1,4 @@
+Collisions=false;
 use <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
@@ -35,11 +36,19 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
                 }
             }
         }
-        translate([-thickness/2,0,sizeA]) {
-            rotate([90,0,90])
-                linear_extrude(thickness)
-                polygon([[-10,0],[-1,sizeTop],[1,sizeTop],[10,0]]);
-        }
+	if (Collisions) {
+		translate([0,0,sizeA+sizeTop-10]) {
+			rotate([45,0,0])
+			rotate([0,-90,0])
+			cube([14,14,thickness],center=true);
+		}
+	} else {
+		translate([-thickness/2,0,sizeA]) {
+		    rotate([90,0,90])
+			linear_extrude(thickness)
+			polygon([[-10,0],[-1,sizeTop],[1,sizeTop],[10,0]]);
+		}
+	}
     }
 
     module biais() {
@@ -66,20 +75,24 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
             translate([-(spacing/2+thickness/2),0,0])
                 legSide();
 
-            translate([0,0,-sizeB])
-                cube([spacing+thickness*2, 20, thickness], center=true);
-            translate([spacing/2+thickness/2,0,-sizeB/2])
-                cube([thickness,20,sizeB], center=true);
-            translate([-(spacing/2+thickness/2),0,-sizeB/2])
-                cube([thickness,20,sizeB], center=true);
+		if (!Collisions) {
+		    translate([0,0,-sizeB])
+			cube([spacing+thickness*2, 20, thickness], center=true);
+		    translate([spacing/2+thickness/2,0,-sizeB/2])
+			cube([thickness,20,sizeB], center=true);
+		    translate([-(spacing/2+thickness/2),0,-sizeB/2])
+			cube([thickness,20,sizeB], center=true);
 
-            translate([0,0,-(sizeB+sizeC)])
-                cube([sizeBottom+thickness*2, 20, thickness], center=true);
+		    translate([0,0,-(sizeB+sizeC)])
+			cube([sizeBottom+thickness*2, 20, thickness], center=true);
 
-            biais();
-            mirror([1,0,0]) {
-                biais();
-            }
+		    biais();
+		    mirror([1,0,0])
+			biais();
+		} else {
+		    translate([0,0,-(sizeB+sizeC+thickness)+20])
+			sphere(20);  
+		}
         }
     }
 }

@@ -25,3 +25,5 @@ module double_u(Height=15, Radius=8, Screws=true, ScrewsSpacing=14, ScrewsDiamet
         }
     }
 }
+
+double_u();

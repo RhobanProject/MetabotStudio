@@ -1,3 +1,4 @@
+Collisions=false;
 use <../models/ollo.scad>;
 use <../util/screws.scad>;
 
@@ -18,6 +19,7 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
                 translate([-10,height+radius-thickness,radius])
                     cube([20,thickness,thicknessSize-(radius-thickness)]);
                 translate([-10,height,radius]) {
+		    if (!Collisions) {
                     rotate([0,90,0]) {
                         difference() {
                             cylinder(20,radius,radius);
@@ -29,6 +31,7 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
                                 cube([10,20.01,22]);
                         }
                     }
+	            }
                 }
             }
             servoArm(depth=6);
@@ -69,3 +72,4 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
 }
 
 //u(olloArm=true, screws=false, armAngle=0, print=true);
+u();

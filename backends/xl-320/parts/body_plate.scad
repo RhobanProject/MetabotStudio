@@ -33,4 +33,4 @@ module body_plate(size=20, legs=4, thickness=2.2) {
     }			
 }
 
-body(size=30);
+body_plate(size=30);
