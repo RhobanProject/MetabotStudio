@@ -12,7 +12,6 @@ namespace Metabot
     {
         auto other_com = matrix.apply(other.com);
         Dynamics dynamics;
-        std::cout << "Combining with " << other.volume << std::endl;
         double a = volume;
         double b = other.volume;
         double total = a+b;

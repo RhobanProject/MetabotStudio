@@ -112,14 +112,12 @@ namespace Metabot
         ss << "  <inertial>" << std::endl;
         auto dcom = TransformMatrix::translation(dynamics.com.x(), dynamics.com.y(), dynamics.com.z());
         auto com = preTransform.multiply(dcom);;
-        std::cout << dcom.toString() << std::endl;
-        std::cout << com.toString() << std::endl;
         ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
             << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
         // XXX: Todo, handle density
         ss << "    <mass value=\"" << (dynamics.volume*1.2/1000000.0) << "\"/>" << std::endl;
         // XXX: Todo, handle tensor
-        ss << "    <inertia ixx=\"0.01\"  ixy=\"0\"  ixz=\"0\" iyy=\"0.01\" iyz=\"0\" izz=\"0.01\" />" << std::endl;
+        ss << "    <inertia ixx=\"0.001\"  ixy=\"0\"  ixz=\"0\" iyy=\"0.001\" iyz=\"0\" izz=\"0.001\" />" << std::endl;
         ss << "  </inertial>" << std::endl;
 
         // Adding collisions
@@ -139,6 +137,7 @@ namespace Metabot
             ss << "    <child link=\"" << name << "\"/>" << std::endl;
             ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
             ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
+            ss << "    <limit lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
             ss << "  </joint>" << std::endl;
         }
 
