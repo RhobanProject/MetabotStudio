@@ -184,6 +184,7 @@ void MainWindow::on_tree_itemSelectionChanged()
             highlightAnchor(anchor);
         }
     }
+    viewer->redraw();
 }
 
 void MainWindow::highlightAnchor(Metabot::AnchorPoint *anchor)
