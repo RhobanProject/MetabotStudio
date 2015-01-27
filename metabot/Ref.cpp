@@ -16,12 +16,6 @@ namespace Metabot
                 // Reading name
                 name = json["name"].asString();
             }
-            if (json.isMember("color") && json["color"].isArray()
-                    && json["color"].size() == 3) {
-                r = json["color"][0].asFloat();
-                g = json["color"][1].asFloat();
-                b = json["color"][2].asFloat();
-            }
             if (json.isMember("parameters") && json["parameters"].isObject()) {
                 // Reading parameters
                 for (auto key : json["parameters"].getMemberNames()) {
@@ -47,6 +41,12 @@ namespace Metabot
         auto module = backend->getModule(name);
         auto params = parameters;
 
+        r = module.r;
+        g = module.g;
+        b = module.b;
+        mass = module.mass;
+        density = module.density;
+
         if (print && module.hasParameter("print")) {
             std::cout << "[Debug] Passing print to true for " << name << std::endl;
             params.set("print", "true");
@@ -58,10 +58,9 @@ namespace Metabot
 
     void Ref::analyze()
     {
-        std::cout << "Analyzing part " << name << "... " << std::flush;
-        dynamics = Voxels::voxelize(getModel());
-        std::cout << "volume: " << dynamics.volume;
-        std::cout << ", com: " << dynamics.com.x() << "," << dynamics.com.y() << ", " << dynamics.com.z();
+        std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
+        dynamics = Voxels::voxelize(getModel(), density, mass);
+        std::cout << dynamics.toString();
         std::cout << std::endl;
     }
 

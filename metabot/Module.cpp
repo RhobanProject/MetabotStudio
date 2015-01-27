@@ -15,6 +15,8 @@ namespace Metabot
         r = 0.8;
         g = 0.8;
         b = 0.8;
+        mass = 0.0;
+        density = 1.25;
     }
 
     Module::~Module()

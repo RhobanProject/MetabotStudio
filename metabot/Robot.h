@@ -26,6 +26,9 @@ namespace Metabot
             RefsGrouped writeSTLs(std::string directory);
             void writeURDF(std::string directory);
 
+            void computeDynamics();
+            void printDynamics();
+
             Robot *clone();
             void setRoot(Component *root);
             Vector getPoint(Component *instance, Vector pt);
@@ -51,6 +54,9 @@ namespace Metabot
             void unHighlight();
             void unHover();
             Component *root;
+
+            bool drawCollisions;
+            void setDrawCollisions(bool draw=false);
 
             Backend *backend;
 

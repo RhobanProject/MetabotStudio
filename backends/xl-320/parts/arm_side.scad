@@ -14,7 +14,7 @@ module arm_side(distance=40, radius=10, firstPart=12, thickness=2.2, print=false
         translate([0,0,radius])
             rotate([0,-90,0])
             translate([0,0,-(OlloWidth+MotorDepth/2)])
-            arm_side(distance, radius, thickness, false);
+            arm_side(distance, radius, firstPart, thickness, false);
     } else {
         translate([0,0,OlloWidth+MotorDepth/2]) {
             difference() {

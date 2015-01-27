@@ -1,27 +1,36 @@
 #include <iostream>
+#include <sstream>
 #include "Dynamics.h"
 
 namespace Metabot
 {
     Dynamics::Dynamics()
-        : com(0, 0, 0), volume(0)
+        : com(0, 0, 0), volume(0), mass(0)
     {
     }
             
-    Dynamics Dynamics::combine(const Dynamics &other, TransformMatrix matrix)
+    void Dynamics::combine(const Dynamics &other, TransformMatrix matrix)
     {
         auto other_com = matrix.apply(other.com);
-        Dynamics dynamics;
-        double a = volume;
-        double b = other.volume;
+        double a = mass;
+        double b = other.mass;
         double total = a+b;
         if (total > 0.00001) {
-            dynamics.com.values[0] = (com.values[0]*a + other_com.values[0]*b)/total;
-            dynamics.com.values[1] = (com.values[1]*a + other_com.values[1]*b)/total;
-            dynamics.com.values[2] = (com.values[2]*a + other_com.values[2]*b)/total;
+            com.values[0] = (com.x()*a + other_com.x()*b)/total;
+            com.values[1] = (com.y()*a + other_com.y()*b)/total;
+            com.values[2] = (com.z()*a + other_com.z()*b)/total;
         }
-        dynamics.volume = total;
+        volume = volume+other.volume;
+        mass = total;
+    }
 
-        return dynamics;
+    std::string Dynamics::toString()
+    {
+        std::stringstream ss;
+        ss << "Volume: " << volume << "mm^3" << std::endl;
+        ss << "Mass: " << mass << "g" << std::endl;
+        ss << "COM: " << com.x() << ", " << com.y() << ", " << com.z() << std::endl;
+
+        return ss.str();
     }
 }

@@ -105,6 +105,12 @@ namespace Metabot
                             module.getParameter(name).description = description;
                         }
                     }
+                    if (annotation == "mass" && parts.size()>1) {
+                        module.mass = atof(parts[1].c_str());
+                    }
+                    if (annotation == "density" && parts.size()>1) {
+                        module.density = atof(parts[1].c_str());
+                    }
                     if (annotation == "bom" && parts.size()==4) {
                         Json::Value json;
                         json["type"] = "bom";
@@ -241,6 +247,12 @@ namespace Metabot
                             }
                             oss << "}";
                             oss << ",'color': [" << module.r << "," << module.g << "," << module.b << "]";
+                            if (module.mass > 0.0001) {
+                                oss << ",'mass':" << module.mass;
+                            }
+                            if (module.density > 0.0001) {
+                                oss << ",'density':" << module.density;
+                            }
                             oss << "}\");" << std::endl;
 
                             // Adding forwarding to the _ module

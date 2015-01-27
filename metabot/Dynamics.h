@@ -12,9 +12,13 @@ namespace Metabot
 
             // Volume (mm3)
             double volume;
+            // Mass (g)
+            double mass;
             // Center of mass position (mm)
             Vector com;
 
-            Dynamics combine(const Dynamics &other, TransformMatrix matrix);
+            std::string toString();
+
+            void combine(const Dynamics &other, TransformMatrix matrix);
     };
 }

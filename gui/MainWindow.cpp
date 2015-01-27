@@ -515,3 +515,9 @@ void MainWindow::on_action_tree_triggered()
         ui->splitter->setSizes(sizes);
     }
 }
+
+void MainWindow::on_actionCollisions_triggered()
+{
+    robot->setDrawCollisions(ui->actionCollisions->isChecked());
+    viewer->redraw();
+}

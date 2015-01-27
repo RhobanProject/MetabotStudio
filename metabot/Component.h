@@ -13,6 +13,7 @@
 #include "Ref.h"
 #include "Shape.h"
 #include "Parameters.h"
+#include "Dynamics.h"
 
 namespace Metabot
 {
@@ -29,6 +30,8 @@ namespace Metabot
 
             void root();
 
+            Dynamics getDynamics();
+            void walkDynamics(Dynamics &global, TransformMatrix matrix=TransformMatrix::identity());
             void writeURDF(std::stringstream &ss, std::string parent="", 
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 
@@ -51,7 +54,7 @@ namespace Metabot
 #endif
             
 #ifdef OPENGL
-            void openGLDraw();
+            void openGLDraw(bool collisions=false);
             void openGLDrawRef(Ref &ref);
 #endif
             bool highlight;
@@ -71,7 +74,7 @@ namespace Metabot
             AnchorPoint *aboveAnchor();
 
             std::string getValue(std::string name);
-            std::string stl();
+            std::string stl(bool collisions=false);
             Parameters parameters();
 
             // Backend and module
@@ -96,6 +99,7 @@ namespace Metabot
             std::vector<Shape> shapes;
 
             Model myModel;
+            Model myCollisions;
 
             int id;
     };

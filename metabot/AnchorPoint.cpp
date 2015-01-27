@@ -178,17 +178,17 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void AnchorPoint::openGLDraw(int id)
+    void AnchorPoint::openGLDraw(int id, bool collisions)
     {
         glStencilFunc(GL_ALWAYS, 200+id, -1);
 
         if (anchor != NULL) {
             if (above) {
                 transformationForward().openGLMult();
-                anchor->openGLDraw();
+                anchor->openGLDraw(1, collisions);
             } else {
                 transformationBackward().openGLMult();
-                component->openGLDraw();
+                component->openGLDraw(collisions);
             }
         } else {
             if (above && (highlight || hover)) {

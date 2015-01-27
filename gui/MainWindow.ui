@@ -143,6 +143,7 @@
     <addaction name="actionXYZ"/>
     <addaction name="actionAutorotate"/>
     <addaction name="action_tree"/>
+    <addaction name="actionCollisions"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -262,6 +263,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionCollisions">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Collisions</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
  </widget>

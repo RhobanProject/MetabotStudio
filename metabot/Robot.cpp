@@ -14,7 +14,7 @@
 namespace Metabot
 {
     Robot::Robot(Backend *backend_)
-        : root(NULL), backend(backend_)
+        : root(NULL), backend(backend_), drawCollisions(false)
     {
     }
 
@@ -49,10 +49,39 @@ namespace Metabot
         return groups;
     }
 
-    void Robot::writeURDF(std::string directory)
+    void Robot::computeDynamics()
     {
         std::map<std::string, Dynamics> analysis;
+        
+        foreachComponent([&analysis](Component *instance) {
+            for (auto ref : instance->refs()) {
+                if (analysis.count(ref->hash())) {
+                    ref->setDynamics(analysis[ref->hash()]);
+                } else {
+                    ref->analyze();
+                    analysis[ref->hash()] = ref->getDynamics();
+                }
+            }
+        });
+    }
+            
+    void Robot::printDynamics()
+    {
+        std::cout << "* Analyzing parts" << std::endl << std::endl;
+        computeDynamics();
 
+        std::cout << "* Combining components" << std::endl << std::endl;
+        Dynamics global;
+        root->walkDynamics(global);
+
+        std::cout << std::endl;
+        std::cout << "* Global:" << std::endl;
+        std::cout << global.toString();
+        std::cout << std::endl;
+    }
+
+    void Robot::writeURDF(std::string directory)
+    {
         if (directory!="") {
             directory += "/";
         }
@@ -60,20 +89,16 @@ namespace Metabot
         if (!is_directory(directory)) {
             makedir(directory);
         }
-        foreachComponent([directory, &analysis](Component *instance) {
+
+        computeDynamics();
+        
+        foreachComponent([directory](Component *instance) {
             for (auto ref : instance->refs()) {
                 auto model = ref->getModel();
                 model.scale(1/1000.0);
                 std::string fn;
                 fn = directory+ref->hash()+".stl";
                 saveModelToFileBinary(fn.c_str(), &model);
-
-                if (analysis.count(ref->hash())) {
-                    ref->setDynamics(analysis[ref->hash()]);
-                } else {
-                    ref->analyze();
-                    analysis[ref->hash()] = ref->getDynamics();
-                }
             }
         });
 
@@ -182,7 +207,7 @@ namespace Metabot
     void Robot::openGLDraw()
     {
         if (root != NULL) {
-            root->openGLDraw();
+            root->openGLDraw(drawCollisions);
         }
     }
 #endif
@@ -339,5 +364,10 @@ namespace Metabot
         });
 
         return bom;
+    }
+            
+    void Robot::setDrawCollisions(bool draw)
+    {
+        drawCollisions = draw;
     }
 }

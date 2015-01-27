@@ -12,7 +12,7 @@
 
 namespace Metabot
 {
-    Dynamics Voxels::voxelize(Model m)
+    Dynamics Voxels::voxelize(Model m, double density, double mass)
     {
         float resolution = 1.0;
 #ifdef METHOD_RANDOM
@@ -30,8 +30,7 @@ namespace Metabot
         int depth = (max.z+1-zero.z)/resolution;
         Dynamics dynamics;
 
-        double volume = resolution*resolution*resolution*width*height*depth;
-        int inside = 0, outside = 0;
+        int cubes = 0;
 
         Octree octree;
         octree.load(m);
@@ -108,21 +107,27 @@ namespace Metabot
             if (left%2 || right%2) {
                 // Inside the part
                 //std::cout << X << " " << Y << " " << Z << std::endl;
-                inside++;
+                cubes++;
                 com.x += X;
                 com.y += Y;
                 com.z += Z;
-            } else {
-                // Outside the part
-                outside++;
             }
         }
 
-        double ratio = inside/(double)(outside+inside);
-        dynamics.volume = (ratio*volume);
-        com.x /= inside;
-        com.y /= inside;
-        com.z /= inside;
+        double volume_per_cube = resolution*resolution*resolution;
+        double mass_per_cube;
+
+        if (mass > 0.0001) {
+            mass_per_cube = mass/cubes;
+        } else {
+            mass_per_cube = volume_per_cube*(density/1000.);
+        }
+
+        dynamics.volume = cubes*volume_per_cube;
+        dynamics.mass = cubes*mass_per_cube;
+        com.x /= cubes;
+        com.y /= cubes;
+        com.z /= cubes;
         dynamics.com.values[0] = com.x;
         dynamics.com.values[1] = com.y;
         dynamics.com.values[2] = com.z;

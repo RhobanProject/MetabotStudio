@@ -43,6 +43,7 @@ namespace Metabot
             std::string name;
             Parameters parameters;
             float r, g, b;
+            float density, mass;
             TransformMatrix matrix;
 
         protected:

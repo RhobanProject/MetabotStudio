@@ -11,6 +11,6 @@ namespace Metabot
     {
         public:
             Voxels();
-            Dynamics static voxelize(Model m);
+            Dynamics static voxelize(Model m, double density=1.25, double mass=0);
     };
 }

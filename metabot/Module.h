@@ -41,6 +41,8 @@ namespace Metabot
             
             // The module color
             float r, g, b;
+            // Module mass & density
+            float mass, density;
 
         protected:
             // Backend
