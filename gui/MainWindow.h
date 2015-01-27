@@ -86,6 +86,10 @@ private slots:
 
     void on_actionCollisions_triggered();
 
+    void on_actionExport_STLs_triggered();
+
+    void on_actionExport_URDF_triggered();
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;

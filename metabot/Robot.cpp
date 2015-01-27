@@ -42,9 +42,9 @@ namespace Metabot
             auto &ref = entry.second.front();
             ss << ref.name << ".stl " << entry.second.size() << std::endl;
             auto model = ref.doCompile(backend, true);
-            saveModelToFileBinary(std::string(directory+ref.name+".stl").c_str(), &model);
+            saveModelToFileBinary(std::string(directory+"/"+ref.name+".stl").c_str(), &model);
         }
-        file_put_contents(directory+"plater.conf", ss.str());
+        file_put_contents(directory+"/plater.conf", ss.str());
 
         return groups;
     }

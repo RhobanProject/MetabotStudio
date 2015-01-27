@@ -522,3 +522,15 @@ void MainWindow::on_actionCollisions_triggered()
     robot->setDrawCollisions(ui->actionCollisions->isChecked());
     viewer->redraw();
 }
+
+void MainWindow::on_actionExport_STLs_triggered()
+{
+    auto directory = QFileDialog::getExistingDirectory(this, "STLs print Export");
+    robot->writeSTLs(directory.toStdString());
+}
+
+void MainWindow::on_actionExport_URDF_triggered()
+{
+    auto directory = QFileDialog::getExistingDirectory(this, "URDF Export");
+    robot->writeURDF(directory.toStdString());
+}
