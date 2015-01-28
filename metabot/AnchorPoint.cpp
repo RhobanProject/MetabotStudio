@@ -193,7 +193,7 @@ namespace Metabot
         } else {
             if (above && (highlight || hover)) {
                 matrix.openGLMult();
-                Model m = component->backend->getModel("anchor");
+                auto m = component->backend->getModel("anchor");
                 m.r = 0.4;
                 m.g = 0.3;
                 m.b = 1.0;

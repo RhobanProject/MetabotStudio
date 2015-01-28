@@ -12,10 +12,10 @@ namespace Metabot
 
             float distance(const Vector &other);
             float values[4];
-            float x();
-            float y();
-            float z();
+            float x() const;
+            float y() const;
+            float z() const;
 
-            std::string toString();
+            std::string toString() const;
     };
 }

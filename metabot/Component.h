@@ -32,7 +32,7 @@ namespace Metabot
 
             void computeDynamics();
             Dynamics getDynamics();
-            void walkDynamics(Dynamics &global, TransformMatrix matrix=TransformMatrix::identity());
+            void walkDynamics(Dynamics &global, TransformMatrix matrix=TransformMatrix::identity(), bool verbose=false);
             void writeURDF(std::stringstream &ss, std::string parent="", 
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 

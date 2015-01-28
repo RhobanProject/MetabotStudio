@@ -16,7 +16,7 @@ namespace Metabot
         values[3] = 1;
     }
 
-    std::string Vector::toString()
+    std::string Vector::toString() const
     {
         std::stringstream str;
 
@@ -37,17 +37,17 @@ namespace Metabot
         return sqrt(s);
     }
 
-    float Vector::x()
+    float Vector::x() const
     {
         return values[0];
     }
 
-    float Vector::y()
+    float Vector::y() const
     {
         return values[1];
     }
 
-    float Vector::z()
+    float Vector::z() const
     {
         return values[2];
     }

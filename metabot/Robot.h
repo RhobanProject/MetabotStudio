@@ -6,6 +6,7 @@
 #include <3d/Point3.h>
 #include "Ref.h"
 #include "Vector.h"
+#include "Dynamics.h"
 #include "BOM.h"
 
 namespace Metabot
@@ -27,6 +28,7 @@ namespace Metabot
             void writeURDF(std::string directory);
 
             void computeDynamics();
+            Dynamics getDynamics();
             void printDynamics();
 
             Robot *clone();
@@ -57,6 +59,8 @@ namespace Metabot
 
             bool drawCollisions;
             void setDrawCollisions(bool draw=false);
+            bool drawCOM;
+            void setDrawCOM(bool draw=false);
 
             Backend *backend;
 

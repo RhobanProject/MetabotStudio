@@ -37,6 +37,7 @@ namespace Metabot
             }
         }
         getModel("anchor");
+        getModel("com");
     }
 
     int Backend::clearCache()
@@ -102,14 +103,14 @@ namespace Metabot
         return allModules;
     }
 
-    Model Backend::getModel(std::string name)
+    Model &Backend::getModel(std::string name)
     {
         if (!models.count(name)) {
             if (modules.count(name)) {
                 Model model = loadModelSTL_string(getModule(name).openscad("stl"));
                 models[name] = model;
             } else {
-                return Model();
+                models[name] = Model();
             }
         }
 

@@ -54,6 +54,9 @@ namespace Metabot
             }
         }
 
+        component->shapes = shapes;
+        component->collisions = collisions;
+        component->dynamics = dynamics;
         component->main = main;
         component->models = models;
         component->parts = parts;
@@ -85,18 +88,21 @@ namespace Metabot
         }
     }
             
-    void Component::walkDynamics(Dynamics &global, TransformMatrix matrix)
+    void Component::walkDynamics(Dynamics &global, TransformMatrix matrix, bool verbose)
     {
         Dynamics my_dynamics = getDynamics();
-        std::cout << "* Combining component " << module->getName() << std::endl;
-        std::cout << my_dynamics.toString() << std::endl;
+        if (verbose) {
+            std::cout << "* Combining component " << module->getName() << std::endl;
+            std::cout << matrix.toString() << std::endl << std::endl;
+            std::cout << my_dynamics.toString() << std::endl;
+        }
         global.combine(my_dynamics, matrix);
 
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor) {
                 auto m = matrix.multiply(anchor->transformationForward());
                 m = m.multiply(anchor->anchor->transformationBackward());
-                anchor->anchor->component->walkDynamics(global, m);
+                anchor->anchor->component->walkDynamics(global, m, verbose);
             }
         }
     }
@@ -141,8 +147,7 @@ namespace Metabot
 
         // Adding dynamics
         ss << "  <inertial>" << std::endl;
-        auto dcom = TransformMatrix::translation(dynamics.com.x(), dynamics.com.y(), dynamics.com.z());
-        auto com = preTransform.multiply(dcom);;
+        auto com = preTransform.apply(dynamics.com);;
         ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
             << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
         // XXX: Todo, handle density

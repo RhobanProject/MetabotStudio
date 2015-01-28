@@ -66,6 +66,14 @@ namespace Metabot
             instance->computeDynamics();
         });
     }
+        
+    Dynamics Robot::getDynamics()
+    {
+        Dynamics global;
+        root->walkDynamics(global, TransformMatrix::identity(), true);
+
+        return global;
+    }
             
     void Robot::printDynamics()
     {
@@ -74,7 +82,7 @@ namespace Metabot
 
         std::cout << "* Combining components" << std::endl << std::endl;
         Dynamics global;
-        root->walkDynamics(global);
+        root->walkDynamics(global, TransformMatrix::identity(), true);
 
         std::cout << std::endl;
         std::cout << "* Global:" << std::endl;
@@ -210,6 +218,20 @@ namespace Metabot
     {
         if (root != NULL) {
             root->openGLDraw(drawCollisions);
+
+            if (drawCOM) {
+                Dynamics global;
+                root->walkDynamics(global);
+
+                glPushMatrix();
+                glTranslated(global.com.x(), global.com.y(), global.com.z());
+                auto m = backend->getModel("com");
+                m.r = 1;
+                m.g = 0.1;
+                m.b = 0.1;
+                m.openGLDraw();
+                glPopMatrix();
+            }
         }
     }
 #endif
@@ -371,5 +393,10 @@ namespace Metabot
     void Robot::setDrawCollisions(bool draw)
     {
         drawCollisions = draw;
+    }
+
+    void Robot::setDrawCOM(bool draw)
+    {
+        drawCOM = draw;
     }
 }

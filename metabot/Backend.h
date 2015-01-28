@@ -35,7 +35,7 @@ namespace Metabot
 
             std::vector<Module> getModules();
             Module &getModule(std::string name);
-            Model getModel(std::string name);
+            Model &getModel(std::string name);
             std::map<std::string, Model> models;
 
         protected:

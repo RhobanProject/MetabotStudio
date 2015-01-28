@@ -29,7 +29,7 @@ namespace Metabot
         } else {
             if (other.computed) {
                 computed = true;
-                com = other.com;
+                com = matrix.apply(other.com);
                 mass = other.mass;
                 volume = other.volume;
             }
