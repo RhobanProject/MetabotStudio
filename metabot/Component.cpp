@@ -93,7 +93,6 @@ namespace Metabot
         Dynamics my_dynamics = getDynamics();
         if (verbose) {
             std::cout << "* Combining component " << module->getName() << std::endl;
-            std::cout << matrix.toString() << std::endl << std::endl;
             std::cout << my_dynamics.toString() << std::endl;
         }
         global.combine(my_dynamics, matrix);
