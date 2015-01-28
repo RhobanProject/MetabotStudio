@@ -26,3 +26,4 @@ module body(Size=20, Legs=4, Thickness=2.2)
     }
 }
 
+body();

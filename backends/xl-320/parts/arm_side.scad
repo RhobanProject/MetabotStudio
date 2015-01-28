@@ -53,3 +53,4 @@ module arm_side(distance=40, radius=10, firstPart=12, thickness=2.2, print=false
    rotate([0,90,0])
    motorArm();
  */
+arm_side();

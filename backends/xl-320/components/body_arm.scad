@@ -26,3 +26,6 @@ module body_arms(Size=25, Legs=4, Thickness=2.2)
                 }
         }
     }
+}
+
+body_arms();
