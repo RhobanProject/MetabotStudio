@@ -62,6 +62,8 @@ namespace Metabot
                     analysis[ref->hash()] = ref->getDynamics();
                 }
             }
+
+            instance->computeDynamics();
         });
     }
             

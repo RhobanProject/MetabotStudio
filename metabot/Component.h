@@ -30,6 +30,7 @@ namespace Metabot
 
             void root();
 
+            void computeDynamics();
             Dynamics getDynamics();
             void walkDynamics(Dynamics &global, TransformMatrix matrix=TransformMatrix::identity());
             void writeURDF(std::stringstream &ss, std::string parent="", 
@@ -54,8 +55,8 @@ namespace Metabot
 #endif
             
 #ifdef OPENGL
-            void openGLDraw(bool collisions=false);
-            void openGLDrawRef(Ref &ref);
+            void openGLDraw(bool drawCollisions=false);
+            void openGLDrawRef(Ref *ref);
 #endif
             bool highlight;
             bool hover;
@@ -74,7 +75,7 @@ namespace Metabot
             AnchorPoint *aboveAnchor();
 
             std::string getValue(std::string name);
-            std::string stl(bool collisions=false);
+            std::string stl(bool drawCollisions=false);
             Parameters parameters();
 
             // Backend and module
@@ -93,13 +94,14 @@ namespace Metabot
             std::vector<Ref*> refs();
  
             std::vector<AnchorPoint *> anchors;
+            Ref main;
             Refs models;
             Refs parts;
             BOM bom;
             std::vector<Shape> shapes;
 
-            Model myModel;
-            Model myCollisions;
+            Model collisions;
+            Dynamics dynamics;
 
             int id;
     };

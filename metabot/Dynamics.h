@@ -16,6 +16,8 @@ namespace Metabot
             double mass;
             // Center of mass position (mm)
             Vector com;
+            // Is this dynamics computed?
+            bool computed;
 
             std::string toString();
 

@@ -15,7 +15,7 @@ namespace Metabot
     class Ref
     {
         public:
-            Ref(Json::Value json, TransformMatrix matrix);
+            Ref(Json::Value json, TransformMatrix matrix, bool noModels=false);
 
             /**
              * This compiles the part, calling the according method on the
@@ -39,6 +39,7 @@ namespace Metabot
              */
             std::string hash();
 
+            bool noModels;
             int quantity;
             std::string name;
             Parameters parameters;

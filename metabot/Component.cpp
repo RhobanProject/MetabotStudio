@@ -18,7 +18,8 @@
 namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
-        : backend(backend_), module(module_), highlight(false), hover(false)
+        : backend(backend_), module(module_), highlight(false), 
+        hover(false), main(Json::Value(), TransformMatrix::identity(), true)
     {
         for (auto param : module->getParameters()) {
             values[param.second.name] = param.second.getValue();
@@ -37,7 +38,6 @@ namespace Metabot
     Component *Component::clone()
     {
         Component *component = new Component(backend, module);
-        component->myModel = myModel;
         component->values = values;
 
         int index = 0;
@@ -54,6 +54,7 @@ namespace Metabot
             }
         }
 
+        component->main = main;
         component->models = models;
         component->parts = parts;
         component->bom = bom;
@@ -72,13 +73,16 @@ namespace Metabot
             
     Dynamics Component::getDynamics()
     {
-        Dynamics dynamics;
+        return dynamics;
+    }
+            
+    void Component::computeDynamics()
+    {
+        dynamics = Dynamics();
 
         for (auto ref : refs()) {
             dynamics.combine(ref->getDynamics(), ref->matrix);
         }
-
-        return dynamics;
     }
             
     void Component::walkDynamics(Dynamics &global, TransformMatrix matrix)
@@ -200,30 +204,24 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void Component::openGLDraw(bool collisions)
+    void Component::openGLDraw(bool drawCollisions)
     {
         glStencilFunc(GL_ALWAYS, id, -1);
 
-        auto &draw = collisions ? myCollisions : myModel;
-        if (highlight) {
-            draw.r = 0.4;
-            draw.g = 1.0;
-            draw.b = 0.3;
-        } else {
-            if (collisions) {
-                draw.r = draw.g = draw.b = 0.6;
+        if (drawCollisions) {
+            if (highlight) {
+                collisions.r = 0.4;
+                collisions.g = 1.0;
+                collisions.b = 0.3;
             } else {
-                draw.r = draw.g = draw.b = 0.95;
+                collisions.r = collisions.g = collisions.b = 0.6;
             }
+            collisions.openGLDraw();
         }
-        draw.openGLDraw();
 
         // Rendering models & parts
-        if (!collisions) {
-            for (auto ref : models) {
-                openGLDrawRef(ref);
-            }
-            for (auto ref : parts) {
+        if (!drawCollisions) {
+            for (auto ref : refs()) {
                 openGLDrawRef(ref);
             }
         }
@@ -233,26 +231,26 @@ namespace Metabot
         for (auto anchor : anchors) {
             glPushMatrix();
             if (anchor->above) {
-                anchor->openGLDraw(anchorId, collisions);
+                anchor->openGLDraw(anchorId, drawCollisions);
             }
             glPopMatrix();
             anchorId++;
         }
     }
 
-    void Component::openGLDrawRef(Ref &ref)
+    void Component::openGLDrawRef(Ref *ref)
     {
         glPushMatrix();
-        ref.matrix.openGLMult();
-        auto model = ref.getModel();
+        ref->matrix.openGLMult();
+        auto model = ref->getModel();
         if (highlight) {
             model.r = 0.4;
             model.g = 1.0;
             model.b = 0.3;
         } else {
-            model.r = ref.r;
-            model.g = ref.g;
-            model.b = ref.b;
+            model.r = ref->r;
+            model.g = ref->g;
+            model.b = ref->b;
         }
         model.openGLDraw();
         glPopMatrix();
@@ -262,17 +260,11 @@ namespace Metabot
     Model Component::toModel()
     {
         Model model;
-        model = myModel;
 
         // Rendering models
-        for (auto ref : models) {
-            Model m = ref.getModel();
-            m.apply(ref.matrix);
-            model.merge(m);
-        }
-        for (auto ref : parts) {
-            Model m = ref.getModel();
-            m.apply(ref.matrix);
+        for (auto ref : refs()) {
+            Model m = ref->getModel();
+            m.apply(ref->matrix);
             model.merge(m);
         }
 
@@ -312,8 +304,12 @@ namespace Metabot
     {
         // Creating CSG 
         std::string csg = module->openscad("csg", parameters());
-        // Creating STL and storing it to the model
-        myModel = loadModelSTL_string(stl());
+        // Main reference
+        main.name = module->getName();
+        main.parameters.clear();
+        for (auto entry : values) {
+            main.parameters.set(entry.first, entry.second);
+        }
         // Parsing the CSG document
         CSG document = CSG::parse(csg);
         anchors = document.anchors;
@@ -321,12 +317,13 @@ namespace Metabot
         models = document.models;
         bom = document.bom;
         
-        // Collision CSG
+        // Collision CSG & STL
         std::string collisionsCsg = module->openscad("csg", parameters(), false, true);
-        myCollisions = loadModelSTL_string(stl(true));
+        collisions = loadModelSTL_string(stl(true));
         CSG collisionsDocument = CSG::parse(collisionsCsg);
         shapes = collisionsDocument.shapes;
 
+        main.compile(backend);
         for (auto &ref : parts) {
             ref.compile(backend);
         }
@@ -450,9 +447,9 @@ namespace Metabot
         return params;
     }
 
-    std::string Component::stl(bool collisions)
+    std::string Component::stl(bool drawCollisions)
     {
-        return module->openscad("stl", parameters(), !collisions, collisions);
+        return module->openscad("stl", parameters(), !drawCollisions, drawCollisions);
     }
 
     Json::Value Component::parametersJson()
@@ -542,6 +539,8 @@ namespace Metabot
     std::vector<Ref*> Component::refs()
     {
         std::vector<Ref*> refs;
+
+        refs.push_back(&main);
         for (auto &ref : models) {
             refs.push_back(&ref);
         }

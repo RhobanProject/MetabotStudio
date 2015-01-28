@@ -34,9 +34,9 @@ void usage()
     cerr << "" << endl;
     cerr << "Robot operations (needs a .robot)" << endl;
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
-    cerr << "   -p: shows the list of parts to print (stl and quantity)" << endl;
+    cerr << "   -p [output directory]: shows the list of parts to print (stl and quantity)" << endl;
+    cerr << "   -u [output directory]: saves to URDF" << endl;
     cerr << "   -b: shows the BOM" << endl;
-    cerr << "   -u: saves to URDF" << endl;
     cerr << "   -d: compute the dynamics" << endl;
     exit(EXIT_FAILURE);
 }

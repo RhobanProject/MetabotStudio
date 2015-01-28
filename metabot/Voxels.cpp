@@ -123,14 +123,17 @@ namespace Metabot
             mass_per_cube = volume_per_cube*(density/1000.);
         }
 
-        dynamics.volume = cubes*volume_per_cube;
-        dynamics.mass = cubes*mass_per_cube;
-        com.x /= cubes;
-        com.y /= cubes;
-        com.z /= cubes;
-        dynamics.com.values[0] = com.x;
-        dynamics.com.values[1] = com.y;
-        dynamics.com.values[2] = com.z;
+        if (cubes) {
+            dynamics.volume = cubes*volume_per_cube;
+            dynamics.mass = cubes*mass_per_cube;
+            com.x /= cubes;
+            com.y /= cubes;
+            com.z /= cubes;
+            dynamics.com.values[0] = com.x;
+            dynamics.com.values[1] = com.y;
+            dynamics.com.values[2] = com.z;
+            dynamics.computed = true;
+        }
 
         return dynamics;
     }

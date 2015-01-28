@@ -8,8 +8,8 @@
 
 namespace Metabot
 {
-    Ref::Ref(Json::Value json, TransformMatrix matrix_)
-        : matrix(matrix_)
+    Ref::Ref(Json::Value json, TransformMatrix matrix_, bool noModels_)
+        : matrix(matrix_), noModels(noModels_)
     {
         if (json.isObject()) {
             if (json.isMember("name")) {
@@ -52,7 +52,7 @@ namespace Metabot
             params.set("print", "true");
         }
 
-        std::string stl = module.openscad("stl", params);
+        std::string stl = module.openscad("stl", params, noModels);
         return loadModelSTL_string(stl);
     }
 
