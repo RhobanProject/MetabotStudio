@@ -8,6 +8,7 @@
 #include "Vector.h"
 #include "Dynamics.h"
 #include "BOM.h"
+#include "Values.h"
 
 namespace Metabot
 {
@@ -55,7 +56,11 @@ namespace Metabot
 #endif
             void unHighlight();
             void unHover();
+
+            std::string getValue(std::string name);
+
             Component *root;
+            Values parameters;
 
             bool drawCollisions;
             void setDrawCollisions(bool draw=false);

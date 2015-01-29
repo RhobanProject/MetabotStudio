@@ -10,6 +10,7 @@
 
 namespace Metabot
 {
+    class Robot;
     class Cache;
     class Backend
     {
@@ -25,7 +26,7 @@ namespace Metabot
             int cacheFiles();
             void parse(std::string path);
 
-            Component *fromJson(Json::Value json);
+            Component *fromJson(Json::Value json, Robot *robot=NULL);
             Component *instanciate(std::string name);
 
             std::string name;

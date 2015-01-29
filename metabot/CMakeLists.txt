@@ -43,6 +43,7 @@ set(ALL_SOURCES
     SCAD.cpp
     Shape.cpp
     TransformMatrix.cpp
+    Values.cpp
     Vector.cpp
     Voxels.cpp
     )

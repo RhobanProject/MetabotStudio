@@ -169,6 +169,10 @@ namespace Metabot
                 throw ss.str();
             }
 
+            if (json.isMember("parameters")) {
+                parameters = Values::fromJson(json["parameters"]);
+            }
+
             if (!json.isMember("tree")) {
                 std::stringstream ss;
                 ss << "Malformed file " << filename << ": no tree";
@@ -185,6 +189,7 @@ namespace Metabot
     {
         Json::Value json(Json::objectValue);
         json["backend"] = backend->name;
+        json["parameters"] = parameters.toJson();
         json["tree"] = Json::Value(Json::objectValue);
         if (root != NULL) {
             json["tree"] = root->toJson();
@@ -209,7 +214,7 @@ namespace Metabot
     void Robot::compile()
     {
         if (root != NULL) {
-            root->compileAll();
+            root->compileAll(this);
         }
     }
             
@@ -254,6 +259,11 @@ namespace Metabot
                 anchor->hover = false;
             }
         });
+    }
+            
+    std::string Robot::getValue(std::string name)
+    {
+        return parameters.get(name);
     }
             
     AnchorPoint *Robot::getHoveredAnchor(int id)

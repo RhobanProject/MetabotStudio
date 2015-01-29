@@ -13,12 +13,13 @@
 #include "Backend.h"
 #include "Cache.h"
 #include "CSG.h"
+#include "Robot.h"
 #include "util.h"
 
 namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
-        : backend(backend_), module(module_), highlight(false), 
+        : backend(backend_), robot(NULL), module(module_), highlight(false), 
         hover(false), main(Json::Value(), TransformMatrix::identity(), true)
     {
         for (auto param : module->getParameters()) {
@@ -293,21 +294,21 @@ namespace Metabot
         values[name] = value;
     }
 
-    void Component::compileAll()
+    void Component::compileAll(Robot *robot)
     {
-        compile();
+        compile(robot);
 
         for (auto anchor : anchors) {
             if (anchor->component != NULL) {
-                anchor->component->compileAll();
+                anchor->component->compileAll(robot);
             }
         }
     }
 
-    void Component::compile()
+    void Component::compile(Robot *robot)
     {
         // Creating CSG 
-        std::string csg = module->openscad("csg", parameters());
+        std::string csg = module->openscad("csg", parameters(robot));
         // Main reference
         main.name = module->getName();
         main.parameters.clear();
@@ -322,8 +323,8 @@ namespace Metabot
         bom = document.bom;
         
         // Collision CSG & STL
-        std::string collisionsCsg = module->openscad("csg", parameters(), false, true);
-        collisions = loadModelSTL_string(stl(true));
+        std::string collisionsCsg = module->openscad("csg", parameters(robot), false, true);
+        collisions = loadModelSTL_string(stl(robot, true));
         CSG collisionsDocument = CSG::parse(collisionsCsg);
         shapes = collisionsDocument.shapes;
 
@@ -440,31 +441,26 @@ namespace Metabot
         return "";
     }
 
-    Parameters Component::parameters()
+    Parameters Component::parameters(Robot *robot)
     {
         Parameters params = module->getParameters();
 
-        for (auto value : values) {
-            params.update(value.first, value.second);
+        for (auto entry : values) {
+            auto key = entry.first;
+            auto value = entry.second;
+            if (value.size()>0 && value[0]=='$' && robot!=NULL) {
+                params.update(key, robot->getValue(value.substr(1)));
+            } else {
+                params.update(key, value);
+            }
         }
 
         return params;
     }
 
-    std::string Component::stl(bool drawCollisions)
+    std::string Component::stl(Robot *robot, bool drawCollisions)
     {
-        return module->openscad("stl", parameters(), !drawCollisions, drawCollisions);
-    }
-
-    Json::Value Component::parametersJson()
-    {
-        Json::Value json(Json::objectValue);
-
-        for (auto value : values) {
-            json[value.first] = value.second;
-        }
-
-        return json;
+        return module->openscad("stl", parameters(robot), !drawCollisions, drawCollisions);
     }
 
     AnchorPoint *Component::getAnchor(int id)
@@ -480,9 +476,7 @@ namespace Metabot
 
     void Component::parametersFromJson(Json::Value json)
     {
-        for (auto name : json.getMemberNames()) {
-            values[name] = json[name].asString();
-        }
+        values = Values::fromJson(json);
     }
 
     Json::Value Component::toJson()
@@ -490,7 +484,7 @@ namespace Metabot
         Json::Value json(Json::objectValue);
 
         json["component"] = module->getName();
-        json["parameters"] = parametersJson();
+        json["parameters"] = values.toJson();
         json["anchors"] = Json::Value(Json::objectValue);
 
         for (auto anchor : anchors) {

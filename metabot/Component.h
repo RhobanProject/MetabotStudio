@@ -9,6 +9,7 @@
 #include <string>
 #include <3d/Model.h>
 #include <json/json.h>
+#include "Values.h"
 #include "BOM.h"
 #include "Ref.h"
 #include "Shape.h"
@@ -17,6 +18,7 @@
 
 namespace Metabot
 {
+    class Robot;
     class Backend;
     class AnchorPoint;
     class Module;
@@ -42,12 +44,11 @@ namespace Metabot
 
             std::string fullName();
 
-            Json::Value parametersJson();
             void parametersFromJson(Json::Value json);
             Json::Value toJson();
 
-            void compileAll();
-            void compile();
+            void compileAll(Robot *robot=NULL);
+            void compile(Robot *robot=NULL);
 
 #ifndef NOCPP11
             void foreachComponent(std::function<void(Component *instance)> method);
@@ -75,11 +76,12 @@ namespace Metabot
             AnchorPoint *aboveAnchor();
 
             std::string getValue(std::string name);
-            std::string stl(bool drawCollisions=false);
-            Parameters parameters();
+            std::string stl(Robot *robot=NULL, bool drawCollisions=false);
+            Parameters parameters(Robot *robot);
 
             // Backend and module
             Backend *backend;
+            Robot *robot;
             Module *module;
 
             // Accessing parameter values
@@ -88,7 +90,7 @@ namespace Metabot
             
             AnchorPoint *getAnchor(int id);
 
-            std::map<std::string, std::string> values;
+            Values values;
             Component *component;
 
             std::vector<Ref*> refs();

@@ -129,7 +129,7 @@ namespace Metabot
         return NULL;
     }
 
-    Component *Backend::fromJson(Json::Value json)
+    Component *Backend::fromJson(Json::Value json, Robot *robot)
     {
         if (!json.isObject() || !json.isMember("component") 
             || !json.isMember("parameters") || !json.isMember("anchors")
@@ -150,7 +150,7 @@ namespace Metabot
 
         Component *instance = instanciate(component);
         instance->parametersFromJson(json["parameters"]);
-        instance->compile();
+        instance->compile(robot);
 
         Json::Value &anchors = json["anchors"];
         for (auto anchor : instance->anchors) {
@@ -159,7 +159,7 @@ namespace Metabot
             std::string id = ss.str();
             if (anchors.isMember(id)) {
                 int remote = anchors[id]["remote"].asInt();
-                Component *instance = Backend::fromJson(anchors[id]["component"]);
+                Component *instance = Backend::fromJson(anchors[id]["component"], robot);
                 if (anchors[id].isMember("zero")) {
                     anchor->zero = anchors[id]["zero"].asFloat();
                 }
