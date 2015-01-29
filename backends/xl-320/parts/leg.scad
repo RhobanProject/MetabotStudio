@@ -1,13 +1,14 @@
 Collisions=false;
+include <../models/motor_values.scad>;
 use <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 //:Part
 module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
-        sizeTop=15, mode="arm", fixationAngle=0, thickness=2.2, print=false)
+        sizeTop=15, mode="arm", fixationAngle=0, thickness=2.2, holesPosition=15, print=false)
 {
     xOffset = (mode == "side") ? -10 : 0;
-    spacing = (mode == "side") ? 24 : 30;
+    spacing = (mode == "side" || mode == "bottom") ? MotorWidth : MotorWidth+6;
 
     module legSide()
     {
@@ -23,7 +24,7 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
                         }
                     }
             }
-            translate([-thickness, 0, sizeA-15]) {
+            translate([-thickness, 0, sizeA-holesPosition]) {
                 rotate([90,0,90]) {
                     if (mode == "arm") {
                         servoArm(2*thickness);
@@ -32,6 +33,11 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
                 if (mode == "side") {
                     translate([0,10,0])
                         rotate([90,90-fixationAngle,90])
+                        threeOllo(2*thickness);
+                }
+		if (mode == "bottom") {
+                    translate([0,0,0])
+                        rotate([90,fixationAngle,90])
                         threeOllo(2*thickness);
                 }
             }
@@ -67,7 +73,7 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
             leg(sizeA, sizeB, sizeC, sizeBottom,
                     sizeTop, mode, fixationAngle, thickness, false);
     } else {
-        translate([0,xOffset,-sizeA+15]) {
+        translate([0,xOffset,-sizeA+holesPosition]) {
             cube([spacing+thickness*2, 20, thickness], center=true);
 
             translate([spacing/2+thickness/2,0,0])
