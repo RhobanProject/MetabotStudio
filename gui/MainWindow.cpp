@@ -559,13 +559,17 @@ void MainWindow::on_actionCollisions_triggered()
 void MainWindow::on_actionExport_STLs_triggered()
 {
     auto directory = QFileDialog::getExistingDirectory(this, "STLs print Export");
-    robot->writeSTLs(directory.toStdString());
+    if (directory != "") {
+        robot->writeSTLs(directory.toStdString());
+    }
 }
 
 void MainWindow::on_actionExport_URDF_triggered()
 {
     auto directory = QFileDialog::getExistingDirectory(this, "URDF Export");
-    robot->writeURDF(directory.toStdString());
+    if (directory != "") {
+        robot->writeURDF(directory.toStdString());
+    }
 }
 
 void MainWindow::on_actionCompute_dynamics_triggered()
