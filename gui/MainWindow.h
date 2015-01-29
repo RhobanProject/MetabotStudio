@@ -12,6 +12,7 @@
 #include <metabot/Backend.h>
 #include <metabot/Robot.h>
 #include "ComponentWizard.h"
+#include "DynamicsWindow.h"
 
 namespace Ui {
     class MainWindow;
@@ -32,11 +33,13 @@ public:
     void drawTreeRecursive(QTreeWidgetItem *parentItem, Metabot::Component *instance);
 
     void showContextMenu(QPoint pos, QTreeWidgetItem *item);
+    void showDynamicsWindow(Metabot::Dynamics dynamics);
     void runWizard(Metabot::AnchorPoint *anchor);
     void highlightAnchor(Metabot::AnchorPoint *anchor);
     void deselectAll();
 
     Metabot::AnchorPoint *selectedAnchor();
+    Metabot::Component *selectedComponent();
 
 public slots:
     void on_wizard_ok();
@@ -62,6 +65,7 @@ private slots:
     void on_contextmenu_remove();
     void on_contextmenu_root();
     void on_contextmenu_center();
+    void on_contextmenu_dynamics();
 
     void on_clicked();
     void on_close();
@@ -83,23 +87,23 @@ private slots:
     void on_treeButton_clicked();
 
     void on_action_tree_triggered();
-
     void on_actionCollisions_triggered();
-
     void on_actionExport_STLs_triggered();
-
     void on_actionExport_URDF_triggered();
+    void on_actionCompute_dynamics_triggered();
+    void on_actionCenter_of_mass_triggered();
 
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
-    QAction addComponent, editComponent, removeComponent, rootComponent, centerComponent;
+    QAction addComponent, editComponent, removeComponent, rootComponent, centerComponent, dynamicsComponent;
     QMenu menu;
     Metabot::Robot *robot;
     Metabot::Robot *robotSave;
     Viewer *viewer;
     Ui::MainWindow *ui;
     Metabot::Backend *backend;
+    DynamicsWindow *dynamics;
     ComponentWizard *wizard;
     std::map<QTreeWidgetItem*, Metabot::AnchorPoint*> items;
     QString filename;

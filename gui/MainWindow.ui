@@ -135,6 +135,7 @@
      <string>Robot</string>
     </property>
     <addaction name="actionZeros"/>
+    <addaction name="actionCompute_dynamics"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -146,6 +147,7 @@
     <addaction name="actionAutorotate"/>
     <addaction name="action_tree"/>
     <addaction name="actionCollisions"/>
+    <addaction name="actionCenter_of_mass"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -275,7 +277,7 @@
     <string>Collisions</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+C</string>
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionExport_URDF">
@@ -292,6 +294,25 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionCompute_dynamics">
+   <property name="text">
+    <string>Compute dynamics</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionCenter_of_mass">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Center of mass</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
  </widget>

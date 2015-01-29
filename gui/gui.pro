@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     Viewer.cpp \
     ParameterWidget.cpp \
     ObjectsTree.cpp \
-    ZerosEditor.cpp
+    ZerosEditor.cpp \
+    DynamicsWindow.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
@@ -27,12 +28,14 @@ HEADERS  += MainWindow.h \
     Viewer.h \
     ParameterWidget.h \
     ObjectsTree.h \
-    ZerosEditor.h
+    ZerosEditor.h \
+    DynamicsWindow.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \
     ComponentItem.ui \
-    ZerosEditor.ui
+    ZerosEditor.ui \
+    DynamicsWindow.ui
 
 CONFIG += c++11
 

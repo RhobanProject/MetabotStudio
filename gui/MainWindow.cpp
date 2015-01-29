@@ -20,10 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
     removeComponent("Remove", this),
     rootComponent("Root", this),
     centerComponent("Center", this),
-    robot(NULL), robotSave(NULL), wizard(NULL),
+    dynamicsComponent("Dynamics", this),
+    robot(NULL), robotSave(NULL), wizard(NULL), dynamics(NULL),
     filename(""),
     zeros(NULL)
 {
+
     ui->setupUi(this);
     setWindowTitle("Metabot");
 
@@ -69,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&removeComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_remove()));
     QObject::connect(&rootComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_root()));
     QObject::connect(&centerComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_center()));
+    QObject::connect(&dynamicsComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_dynamics()));
     QObject::connect(ui->tree, SIGNAL(itemSelectionChanged()), this, SLOT(on_tree_itemSelectionChanged()));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
     drawTree();
@@ -253,9 +256,21 @@ void MainWindow::showContextMenu(QPoint pos, QTreeWidgetItem *item)
         menu.addAction(&removeComponent);
         menu.addAction(&rootComponent);
         menu.addAction(&centerComponent);
+        menu.addAction(&dynamicsComponent);
     }
     contextmenu_item = item;
     menu.exec(pos);
+}
+
+void MainWindow::showDynamicsWindow(Dynamics dyn)
+{
+    if (dynamics != NULL) {
+        dynamics->close();
+        delete dynamics;
+    }
+    dynamics = new DynamicsWindow(this);
+    dynamics->setDynamics(dyn);
+    dynamics->show();
 }
 
 void MainWindow::on_close()
@@ -368,6 +383,14 @@ void MainWindow::on_contextmenu_center()
     viewer->tY = -v.values[1];
 }
 
+void MainWindow::on_contextmenu_dynamics()
+{
+    auto component = selectedComponent();;
+    if (component != NULL) {
+        showDynamicsWindow(component->getDynamics());
+    }
+}
+
 void MainWindow::on_clicked()
 {
 }
@@ -379,6 +402,16 @@ Metabot::AnchorPoint *MainWindow::selectedAnchor()
     }
 
     return NULL;
+}
+
+Component *MainWindow::selectedComponent()
+{
+    auto anchor = selectedAnchor();
+    if (anchor == NULL) {
+        return robot->root;
+    } else {
+        return anchor->anchor->component;
+    }
 }
 
 void MainWindow::on_contextmenu_edit()
@@ -533,4 +566,16 @@ void MainWindow::on_actionExport_URDF_triggered()
 {
     auto directory = QFileDialog::getExistingDirectory(this, "URDF Export");
     robot->writeURDF(directory.toStdString());
+}
+
+void MainWindow::on_actionCompute_dynamics_triggered()
+{
+    robot->computeDynamics();
+    showDynamicsWindow(robot->getDynamics());
+}
+
+void MainWindow::on_actionCenter_of_mass_triggered()
+{
+    robot->setDrawCOM(ui->actionCenter_of_mass->isChecked());
+    viewer->redraw();
 }
