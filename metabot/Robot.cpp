@@ -14,7 +14,7 @@
 namespace Metabot
 {
     Robot::Robot(Backend *backend_)
-        : root(NULL), backend(backend_), drawCollisions(false)
+        : root(NULL), backend(backend_), drawCollisions(false), drawCOM(false)
     {
     }
 
