@@ -44,7 +44,7 @@ namespace Metabot
             ss << "Mass: " << mass << "g" << std::endl;
             ss << "COM: " << com.x() << ", " << com.y() << ", " << com.z() << std::endl;
         } else {
-            ss << "No dynamics (no geometry?)" << std::endl;
+            ss << "No dynamics (no geometry or not computed)" << std::endl;
         }
 
         return ss.str();
