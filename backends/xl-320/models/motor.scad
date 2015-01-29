@@ -18,19 +18,19 @@ module motor(thickness=2.2) {
 			    cube([MotorWidth+0.2, 5.7, MotorDepth-6]);
 
 			translate([0,-MotorHeight/2+3])
-			    threeOllo(MotorDepth);
+			    threeOllo(MotorDepth, false);
 
 			// Motor shaft
 			translate([0, MotorArmOffset])
-			    olloHole(MotorDepth+5);
+			    olloHole(MotorDepth+5, false);
 
 			// Side holes
 			for (side=[-MotorWidth/2,MotorWidth/2-thickness]) {
 			    translate([side,9,MotorDepth/2]) {
 				rotate([0,90,0]) {
-				    threeOllo();
+				    threeOllo(thickness, false);
 				    translate([0,-3*OlloSpacing,0])
-					threeOllo();
+					threeOllo(thickness, false);
 				}
 			    }
 			}

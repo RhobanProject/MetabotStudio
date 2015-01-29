@@ -1,16 +1,20 @@
-use <../models/ollo.scad>;
+include <../models/ollo.scad>;
 use <../util/rounded.scad>;
 
 //:Part
-module body_plate(size=20, legs=4, thickness=2.2) {
+module body_plate(size=20, legs=4, thickness=2.2, double=false) {
     module bodyPart() {
         translate([-10,0,0])
-            rounded(20, size, thickness, 5);
+            rounded(20, size+(double?18:0), thickness, 5);
     }
 
     module bodyHoles() {
         translate([0, size-5, 0]) {
             threeOllo(thickness*2);
+	    if (double) {
+		translate([0,3*OlloSpacing,0])    
+		threeOllo(thickness*2);
+	    }
         }
     }
 

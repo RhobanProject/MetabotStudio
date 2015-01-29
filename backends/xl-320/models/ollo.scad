@@ -10,28 +10,30 @@ OlloWidth = 3;
 OlloSpacing = 6;
 
 // Do an Ollo hole on the part
-module olloHole(depth=2.2)
+module olloHole(depth=2.2, rivet=true)
 {
     if (!Collisions) {
-        //:BOM "Ollo rivet" 0.05 http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1605
+        if (rivet) {
+            //:BOM "Ollo rivet" 0.05 http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1605
+        }
         translate([0,0,-0.1])
             cylinder(depth+0.2, OlloHoles/2, OlloHoles/2);
     }	    
 }
 
 // Do 3 ollo holes
-module threeOllo(depth=2.2)
+module threeOllo(depth=2.2, rivets=true)
 {
     for (xy=[[-OlloSpacing,0],[0,0],[OlloSpacing,0]]) {
         translate([xy[0], xy[1], 0])
-            olloHole(depth);
+            olloHole(depth, rivets);
     }
 }
 
 // Do a servo arm holes
-module servoArm(depth=2.2)
+module servoArm(depth=2.2, rivets=true)
 {
-    threeOllo(depth);
+    threeOllo(depth, rivets);
     rotate([0,0,90])
         threeOllo(depth);
 }

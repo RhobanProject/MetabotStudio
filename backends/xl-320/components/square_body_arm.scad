@@ -6,12 +6,12 @@ use <../parts/square_body_arm_plate.scad>;
 //:Component "Square Body arm"
 //:Description "Square body arm"
 //:Parameter Width "Width of the body"
-//:Parameter Length "Length of the body"
 //:Parameter LegsSpacing "Spacing between legs"
 //:Parameter Legs "Number of legs (multiple of 2)"
 //:Parameter Thickness
-module square_body_arm(Width=40, Length=70, LegsSpacing=40, Legs=4, Thickness=2.2)
+module square_body_arm(Width=40, LegsSpacing=65, Legs=4, Thickness=2.2)
 {
+    Length = LegsSpacing*(Legs/2-1)+24;
     translate([0,0,MotorDepth/2+OlloWidth])
         square_body_arm_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
 
@@ -28,3 +28,5 @@ module square_body_arm(Width=40, Length=70, LegsSpacing=40, Legs=4, Thickness=2.
         }
     }
 }
+
+square_body_arm();

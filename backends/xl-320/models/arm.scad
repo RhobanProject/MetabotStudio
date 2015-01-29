@@ -8,7 +8,7 @@ module arm_pulley(pulley=false)
 	    color(c) {
 		difference() {
 		    cylinder(d=20, h=OlloWidth);
-		    servoArm(OlloWidth);
+		    servoArm(OlloWidth, false);
 		}
 	    }
     }
