@@ -136,9 +136,12 @@ void saveModelToFileBinary(const char *filename, Model *model)
     for (auto volume : model->volumes) {
         for (auto face : volume.faces) {
             auto normal = face.getNormal();
-            ofile.write((char*)&normal.x, sizeof(float));
-            ofile.write((char*)&normal.y, sizeof(float));
-            ofile.write((char*)&normal.z, sizeof(float));
+            float nx = normal.x;
+            float ny = normal.y;
+            float nz = normal.z;
+            ofile.write((char*)&nx, sizeof(float));
+            ofile.write((char*)&ny, sizeof(float));
+            ofile.write((char*)&nz, sizeof(float));
             for (int i=0; i<3; i++) {
                 float x = face.v[i].x;
                 float y = face.v[i].y;
