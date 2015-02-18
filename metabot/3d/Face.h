@@ -15,6 +15,7 @@ namespace Metabot
             bool intersectsSegment(const Line &l, float *alpha=NULL);
             void gnuplot();
             void dump();
+            Point3 getNormal();
 
 			Point3 v[3];
 			Face();

@@ -51,7 +51,9 @@ void saveModelToFileAscii(const char *filename, Model *model)
     ofile << "solid robot" << endl;
     for (auto volume : model->volumes) {
         for (auto face : volume.faces) {
-            ofile << "  facet normal 1 0 0" << endl;
+            auto normal = face.getNormal();
+
+            ofile << "  facet normal " << normal.x << " " << normal.y << " " << normal.z << endl;
             ofile << "    outer loop" << endl;
             for (int i=0; i<3; i++) {
                 ofile << "      vertex " << 
@@ -133,11 +135,10 @@ void saveModelToFileBinary(const char *filename, Model *model)
     ofile.write((char*)&faceCount, sizeof(uint32_t));
     for (auto volume : model->volumes) {
         for (auto face : volume.faces) {
-            float a = 1.0;
-            float b = 0.0;
-            ofile.write((char*)&a, sizeof(float));
-            ofile.write((char*)&b, sizeof(float));
-            ofile.write((char*)&b, sizeof(float));
+            auto normal = face.getNormal();
+            ofile.write((char*)&normal.x, sizeof(float));
+            ofile.write((char*)&normal.y, sizeof(float));
+            ofile.write((char*)&normal.z, sizeof(float));
             for (int i=0; i<3; i++) {
                 float x = face.v[i].x;
                 float y = face.v[i].y;

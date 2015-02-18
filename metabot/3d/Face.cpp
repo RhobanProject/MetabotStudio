@@ -86,4 +86,20 @@ namespace Metabot
         std::cout << "Point3(" << v[2].x << "," << v[2].y << "," << v[2].z << ")";
         std::cout << ")" << std::endl;
     }
+    
+    Point3 Face::getNormal()
+    {
+        Point3 U, V, W;
+        U.x = v[1].x-v[0].x;
+        U.y = v[1].y-v[0].y;
+        U.z = v[1].z-v[0].z;
+        V.x = v[2].x-v[0].x;
+        V.y = v[2].y-v[0].y;
+        V.z = v[2].z-v[0].z;
+        W.x = U.y*V.z - U.z*V.y;
+        W.y = U.z*V.x - U.x*V.z;
+        W.z = U.x*V.y - U.y*V.x;
+
+        return W;
+    }
 }
