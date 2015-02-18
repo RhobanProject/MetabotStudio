@@ -25,6 +25,7 @@ namespace Metabot
             TransformMatrix invert();
             std::string toString();
 
+            std::string toJS();
             std::string toURDF();
 
             Vector apply(Vector vector);

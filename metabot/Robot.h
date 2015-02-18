@@ -26,6 +26,7 @@ namespace Metabot
             void build(std::string directory);
 
             RefsGrouped writeSTLs(std::string directory);
+            void writeJS(std::string directory);
             void writeURDF(std::string directory);
 
             void computeDynamics();

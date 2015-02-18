@@ -203,6 +203,17 @@ namespace Metabot
         m.values[1][1] = cos(alpha);
         return m;
     }
+    
+    std::string TransformMatrix::toJS()
+    {
+        auto rpy = eulerAngles(values);
+
+        std::stringstream ss;
+        ss << "[" << values[0][3]/1000 << "," << values[1][3]/1000 << "," << values[2][3]/1000 << "], ";
+        ss << "[" << rpy[0] << "," << rpy[1] << "," << rpy[2] << "]";
+        
+        return ss.str();
+    }
 
     std::string TransformMatrix::toURDF()
     {

@@ -36,6 +36,7 @@ void usage()
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
     cerr << "   -p [output directory]: shows the list of parts to print (stl and quantity)" << endl;
     cerr << "   -u [output directory]: saves to URDF" << endl;
+    cerr << "   -j [output directory]: save to JS (three loading operation)" << endl;
     cerr << "   -b: shows the BOM" << endl;
     cerr << "   -d: compute the dynamics" << endl;
     exit(EXIT_FAILURE);
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
     string mode = "";
     string output = "";
 
-    while ((index = getopt(argc, argv, "pbcws:vo:ud")) != -1) {
+    while ((index = getopt(argc, argv, "pbcws:vo:udj")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -93,6 +94,9 @@ int main(int argc, char *argv[])
                 break;
             case 'd':
                 mode = "dynamics";
+                break;
+            case 'j':
+                mode = "js";
                 break;
         }
     }
@@ -148,6 +152,9 @@ int main(int argc, char *argv[])
         } else if (mode == "dynamics") {
             needRobot();
             robot->printDynamics();
+        } else if (mode == "js") {
+            needRobot();
+            robot->writeJS(output);
         } else if (mode == "urdf") {
             needRobot();
             robot->writeURDF(output);

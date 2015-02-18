@@ -107,6 +107,46 @@ namespace Metabot
         }
     }
             
+    void Component::writeJS(std::stringstream &ss, std::string parent,
+            TransformMatrix parentPreTransform, AnchorPoint *above)
+    {
+        std::stringstream linkNameSS;
+        linkNameSS << "link_" << module->getName() << "_" << id;
+        auto linkName = linkNameSS.str();
+        if (above == NULL) {
+            linkName = "link_root";
+        }
+
+        auto preTransform = TransformMatrix::identity();
+        if (above != NULL) {
+            preTransform = above->transformationBackward();
+        }
+        ss << "var " << linkName << " = new Joint();" << std::endl;
+        for (auto ref : refs()) {
+            unsigned int color =
+                 (((int)(ref->r*255))<<16)
+                |(((int)(ref->g*255))<<8)
+                |(((int)(ref->b*255))<<0)
+                ;
+            ss << linkName << ".addSTL(\"" << ref->hash() << ".stl\"," << color << ",";
+            ss << preTransform.multiply(ref->matrix).toJS() << ");" << std::endl;
+        }
+        
+        if (above!=NULL) {
+            auto jointName = linkName + "_joint";
+            ss << "var " << jointName << " = new Joint();" << std::endl;
+            ss << parent << ".addChild(" << jointName << ", " << parentPreTransform.multiply(above->anchor->transformationForward()).toJS() << ");" << std::endl;
+            ss << jointName << ".addChild(" << linkName << ", [0,0,0], [0,0,0]);" << std::endl;
+            ss << "joints.push(" << linkName << ");" << std::endl;
+        } 
+        
+        for (auto anchor : anchors) {
+            if (anchor->above && anchor->anchor!=NULL) {
+                anchor->anchor->component->writeJS(ss, linkName, preTransform, anchor->anchor);
+            }
+        }
+    }
+            
     void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix parentPreTransform, AnchorPoint *above)
     {
         Dynamics dynamics;
