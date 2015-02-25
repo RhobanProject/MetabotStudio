@@ -16,6 +16,11 @@ namespace Metabot
     {
         get(name).updateValue(value);
     }
+            
+    bool Parameters::has(std::string name)
+    {
+        return count(name);
+    }
 
     Parameter &Parameters::get(std::string name)
     {

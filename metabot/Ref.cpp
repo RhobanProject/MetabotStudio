@@ -8,8 +8,8 @@
 
 namespace Metabot
 {
-    Ref::Ref(Json::Value json, TransformMatrix matrix_, bool noModels_)
-        : matrix(matrix_), noModels(noModels_)
+    Ref::Ref(Json::Value json, TransformMatrix matrix_, int default_defines_)
+        : matrix(matrix_), default_defines(default_defines_)
     {
         if (json.isObject()) {
             if (json.isMember("name")) {
@@ -31,13 +31,14 @@ namespace Metabot
         }
     }
 
-    void Ref::compile(Backend *backend)
+    void Ref::compile(Backend *backend, int defines)
     {
-        model = doCompile(backend);
+        model = doCompile(backend, defines);
     }
 
-    Model Ref::doCompile(Backend *backend, bool print)
+    Model Ref::doCompile(Backend *backend, int defines, bool print)
     {
+        defines |= default_defines;
         auto module = backend->getModule(name);
         auto params = parameters;
 
@@ -52,7 +53,7 @@ namespace Metabot
             params.set("print", "true");
         }
 
-        std::string stl = module.openscad("stl", params, noModels);
+        std::string stl = module.openscad("stl", params, defines);
         return loadModelSTL_string(stl);
     }
 

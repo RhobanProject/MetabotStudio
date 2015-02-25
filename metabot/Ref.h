@@ -15,7 +15,7 @@ namespace Metabot
     class Ref
     {
         public:
-            Ref(Json::Value json, TransformMatrix matrix, bool noModels=false);
+            Ref(Json::Value json, TransformMatrix matrix, int default_defines=0);
 
             /**
              * This compiles the part, calling the according method on the
@@ -23,8 +23,8 @@ namespace Metabot
              * The print flags can be used to add print=true in the arguments
              * of the module.
              */
-            void compile(Backend *backend);
-            Model doCompile(Backend *backend, bool print=false);
+            void compile(Backend *backend, int defines=0);
+            Model doCompile(Backend *backend, int defines=0, bool print=false);
             Model &getModel();
 
             /**
@@ -39,7 +39,7 @@ namespace Metabot
              */
             std::string hash();
 
-            bool noModels;
+            int default_defines;
             int quantity;
             std::string name;
             Parameters parameters;

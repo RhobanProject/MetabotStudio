@@ -5,6 +5,10 @@
 #include "Backend.h"
 #include "Parameters.h"
 
+#define DEFINE_NO_MODELS        (1<<1)
+#define DEFINE_COLLISIONS       (1<<2)
+#define DEFINE_JS               (1<<3)
+
 namespace Metabot
 {
     class Module
@@ -36,8 +40,8 @@ namespace Metabot
             Parameter &getParameter(std::string name);
             bool hasParameter(std::string name);
 
-            std::string openscad(std::string format, Parameters parameters=Parameters(), bool noModels=false, bool collisions=false);
-            std::string doOpenscad(std::string format, Parameters parameters=Parameters(), bool noModels=false, bool collisions=false);
+            std::string openscad(std::string format, Parameters parameters=Parameters(), int defines=0);
+            std::string doOpenscad(std::string format, Parameters parameters=Parameters(), int defines=0);
             
             // The module color
             float r, g, b;

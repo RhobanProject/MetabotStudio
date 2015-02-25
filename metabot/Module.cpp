@@ -100,38 +100,43 @@ namespace Metabot
         return parameters.get(name);
     }
 
-    std::string Module::openscad(std::string format, Parameters parameters, bool noModels, bool collisions)
+    std::string Module::openscad(std::string format, Parameters parameters, int defines)
     {
         if (backend == NULL) {
             return "";
         }
 
-        std::string key = hash_sha1(filename + "." + format 
-                + " [" + (noModels ? "m" : "") + (collisions ? "C" : "") + "] w/ " 
-                + parameters.toArgs());
+        std::stringstream ss;
+        ss << filename << "." << format << " [" << defines << "] " << parameters.toArgs();
+        std::string key = hash_sha1(ss.str());
 
         if (backend->cache != NULL) {
-            return backend->cache->get(key, [this, format, parameters, noModels, collisions]() {
-                return this->doOpenscad(format, parameters, noModels, collisions);
+            return backend->cache->get(key, [this, format, parameters, defines]() {
+                return this->doOpenscad(format, parameters, defines);
             }, filename);
         } else {
-            return doOpenscad(format, parameters, noModels, collisions);
+            return doOpenscad(format, parameters, defines);
         }
     }
     
-    std::string Module::doOpenscad(std::string format, Parameters parameters, bool noModels, bool collisions)
+    std::string Module::doOpenscad(std::string format, Parameters parameters, int defines)
     {
         std::stringstream cmd;
         cmd << "openscad ";
         std::string input = tempname() + ".scad";
         std::string output = tempname() + "." + format;
-        if (noModels) {
+        if (defines & DEFINE_NO_MODELS) {
             cmd << "-DNoModels=true ";
         }
-        if (collisions) {
+        if (defines & DEFINE_COLLISIONS) {
             cmd << "-DCollisions=true ";
         }
-        cmd << "-D\\$fn=20 ";
+        if (defines & DEFINE_JS) {
+            cmd << "-DJS=true ";
+        }
+        if (!parameters.has("$fn")) {
+            cmd << "-D\\$fn=20 ";
+        }
         cmd << input << " -o " << output;
         // cmd << " >/dev/null 2>/dev/null";
         std::string command = cmd.str();

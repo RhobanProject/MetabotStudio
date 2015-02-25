@@ -41,7 +41,7 @@ namespace Metabot
         for (auto &entry : groups) {
             auto &ref = entry.second.front();
             ss << ref.name << ".stl " << entry.second.size() << std::endl;
-            auto model = ref.doCompile(backend, true);
+            auto model = ref.doCompile(backend, 0, true);
             saveModelToFileBinary(std::string(directory+"/"+ref.name+".stl").c_str(), &model);
         }
         file_put_contents(directory+"/plater.conf", ss.str());
@@ -99,8 +99,10 @@ namespace Metabot
             makedir(directory);
         }
  
-        foreachComponent([directory](Component *instance) {
+        foreachComponent([directory, this](Component *instance) {
             for (auto ref : instance->refs()) {
+                ref->parameters.set("$fn", "7");
+                ref->compile(this->backend, DEFINE_JS);
                 auto model = ref->getModel();
                 model.scale(1/1000.0);
                 std::string fn;

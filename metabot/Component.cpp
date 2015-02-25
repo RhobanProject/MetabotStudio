@@ -20,7 +20,7 @@ namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
         : backend(backend_), robot(NULL), module(module_), highlight(false), 
-        hover(false), main(Json::Value(), TransformMatrix::identity(), true)
+        hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS)
     {
         for (auto param : module->getParameters()) {
             values[param.second.name] = param.second.getValue();
@@ -363,7 +363,7 @@ namespace Metabot
         bom = document.bom;
         
         // Collision CSG & STL
-        std::string collisionsCsg = module->openscad("csg", parameters(robot), false, true);
+        std::string collisionsCsg = module->openscad("csg", parameters(robot), DEFINE_COLLISIONS);
         collisions = loadModelSTL_string(stl(robot, true));
         CSG collisionsDocument = CSG::parse(collisionsCsg);
         shapes = collisionsDocument.shapes;
@@ -500,7 +500,8 @@ namespace Metabot
 
     std::string Component::stl(Robot *robot, bool drawCollisions)
     {
-        return module->openscad("stl", parameters(robot), !drawCollisions, drawCollisions);
+        int defines = drawCollisions ? DEFINE_COLLISIONS : DEFINE_NO_MODELS;
+        return module->openscad("stl", parameters(robot), defines);
     }
 
     AnchorPoint *Component::getAnchor(int id)
