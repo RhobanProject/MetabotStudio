@@ -22,6 +22,7 @@ namespace Metabot
 
             std::vector<AnchorPoint*> anchors;
             std::vector<Shape> shapes;
+            std::vector<TransformMatrix> contacts;
             Refs models;
             Refs parts;
             BOM bom;

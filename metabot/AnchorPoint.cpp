@@ -159,6 +159,27 @@ namespace Metabot
         cached = true;
     }
 
+    Symbolic AnchorPoint::symbolicTransformation(std::string name)
+    {
+        Symbolic cos_a("cos_"+name);
+        Symbolic sin_a("sin_"+name);
+        auto save_alpha = alpha;
+        alpha = 0;
+        computeMatrixes();
+        Symbolic transformation = transformationForward().toSymbolic();
+        Symbolic rotation("r", 4, 4);
+        rotation = rotation.identity();
+        rotation(0,0) = cos_a;
+        rotation(0,1) = -sin_a;
+        rotation(1,0) = sin_a;
+        rotation(1,1) = cos_a;
+
+        alpha = save_alpha;
+        computeMatrixes();
+
+        return transformation*rotation;
+    }
+
     TransformMatrix AnchorPoint::transformationForward()
     {
         if (!cached) {

@@ -32,6 +32,7 @@ namespace Metabot
             void computeDynamics();
             Dynamics getDynamics();
             void printDynamics();
+            void computeKinematic();
 
             Robot *clone();
             void setRoot(Component *root);

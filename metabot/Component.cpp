@@ -8,6 +8,7 @@
 #include <GL/glu.h>
 #endif
 #endif
+#include <symbolicc++.h>
 #include "Component.h"
 #include "AnchorPoint.h"
 #include "Backend.h"
@@ -62,6 +63,7 @@ namespace Metabot
         component->models = models;
         component->parts = parts;
         component->bom = bom;
+        component->contacts = contacts;
 
         return component;
     }
@@ -72,6 +74,31 @@ namespace Metabot
             if (anchor->above == false) {
                 anchor->revert();
             }
+        }
+    }
+
+    void Component::computeKinematic(Symbolic parent, AnchorPoint *above)
+    {
+        if (above != NULL) {
+            std::stringstream ss;
+            ss << "alpha_" << id;
+            parent *= above->symbolicTransformation(ss.str());
+            parent *= above->anchor->transformationBackward().toSymbolic();
+        }
+
+        for (auto anchor : anchors) {
+            if (anchor->above == true) {
+                anchor->anchor->component->computeKinematic(parent, anchor);
+            }
+        }
+
+        for (auto contact : contacts) {
+            Symbolic matrix = parent*contact.toSymbolic();
+            std::cout << "float contact_" << id << "_kinematic(float *x, float *y, float *z) {" << std::endl;
+            std::cout << "*x = " << matrix(0,3) << ";" << std::endl;
+            std::cout << "*y = " << matrix(1,3) << ";" << std::endl;
+            std::cout << "*z = " << matrix(2,3) << ";" << std::endl;
+            std::cout << "}" << std::endl <<  std::endl;
         }
     }
             
@@ -361,6 +388,7 @@ namespace Metabot
         parts = document.parts;
         models = document.models;
         bom = document.bom;
+        contacts = document.contacts;
         
         // Collision CSG & STL
         std::string collisionsCsg = module->openscad("csg", parameters(robot), DEFINE_COLLISIONS);

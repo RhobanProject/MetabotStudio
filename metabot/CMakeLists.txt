@@ -49,12 +49,16 @@ set(ALL_SOURCES
     )
 
 include_directories("${CMAKE_SOURCE_DIR}")
+include_directories("${CMAKE_SOURCE_DIR}/sym/")
 include_directories("${CMAKE_SOURCE_DIR}/json/include")
 add_subdirectory("${CMAKE_SOURCE_DIR}/json")
 
+add_library(symbolic sym/symbolicc++.cpp)
+set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSPLUS")
+
 add_library(libmetabot ${ALL_SOURCES})
 
-target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json)
+target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json symbolic)
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()

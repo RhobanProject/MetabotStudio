@@ -11,7 +11,8 @@
 #include <GL/glu.h>
 #endif
 #endif
-#include "matrix.h"
+class Symbolic;
+#include "vvector.h"
 
 std::array<float,3> eulerAngles(const double4x4& R);
 
@@ -31,6 +32,8 @@ namespace Metabot
             Vector apply(Vector vector);
 
             double4x4 values;
+
+            Symbolic toSymbolic();
 
 #ifdef OPENGL
             void openGLMult();

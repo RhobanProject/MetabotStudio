@@ -152,6 +152,11 @@ namespace Metabot
                         json["quantity"] = 1;
                         oss << jsonMarker(json);
                     }
+                    if (annotation == "contact") {
+                        Json::Value json;
+                        json["type"] = "contact";
+                        oss << jsonMarker(json);
+                    }
                 } else {
                     oss << line << std::endl;
                     processModuleLine(line);

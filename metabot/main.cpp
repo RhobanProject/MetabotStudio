@@ -39,6 +39,7 @@ void usage()
     cerr << "   -j [output directory]: save to JS (three loading operation)" << endl;
     cerr << "   -b: shows the BOM" << endl;
     cerr << "   -d: compute the dynamics" << endl;
+    cerr << "   -k: outputs the direct kinematics" << endl;
     exit(EXIT_FAILURE);
 }
 
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
     string mode = "";
     string output = "";
 
-    while ((index = getopt(argc, argv, "pbcws:vo:udj")) != -1) {
+    while ((index = getopt(argc, argv, "pbcws:vo:udjk")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -97,6 +98,9 @@ int main(int argc, char *argv[])
                 break;
             case 'j':
                 mode = "js";
+                break;
+            case 'k':
+                mode = "kinematic";
                 break;
         }
     }
@@ -218,6 +222,9 @@ int main(int argc, char *argv[])
             //Cube c(3.9, 4.1, 5.5, 5.7, 2.46, 2.8);
             // c.gnuplot();
             //c.intersects(l);
+        } else if (mode == "kinematic") {
+            needRobot();
+            robot->computeKinematic();
         } else {
             usage();
         }

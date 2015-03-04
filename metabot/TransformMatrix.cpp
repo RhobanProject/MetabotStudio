@@ -10,6 +10,7 @@
 #include <GL/glu.h>
 #endif
 #endif
+#include <symbolicc++.h>
 
 bool closeEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon()) {
     return (epsilon > fabs(a - b));
@@ -251,5 +252,15 @@ namespace Metabot
     float TransformMatrix::z()
     {
         return values[2][3];
+    }
+
+    Symbolic TransformMatrix::toSymbolic()
+    {
+        Symbolic m("m", 4, 4);
+        for (int i=0; i<4; i++)
+        for (int j=0; j<4; j++)
+            m(i, j) = values[i][j];
+
+        return m;
     }
 }

@@ -5,6 +5,7 @@
 #include <json/json.h>
 #include "TransformMatrix.h"
 #include "Component.h"
+#include <symbolicc++.h>
 
 namespace Metabot
 {
@@ -24,6 +25,7 @@ namespace Metabot
             void attach(AnchorPoint *anchor, bool above=true);
             void detach(bool remove=true);
             
+            Symbolic symbolicTransformation(std::string name);
             TransformMatrix transformationForward();
             TransformMatrix transformationBackward();
 

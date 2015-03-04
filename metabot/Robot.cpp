@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <json/json.h>
+#include <symbolicc++.h>
 #include <3d/stl.h>
 #include "Backend.h"
 #include "Robot.h"
@@ -47,6 +48,14 @@ namespace Metabot
         file_put_contents(directory+"/plater.conf", ss.str());
 
         return groups;
+    }
+
+    void Robot::computeKinematic()
+    {
+        Symbolic identity = TransformMatrix::identity().toSymbolic();
+        if (root != NULL) {
+            root->computeKinematic(identity);
+        }
     }
 
     void Robot::computeDynamics()

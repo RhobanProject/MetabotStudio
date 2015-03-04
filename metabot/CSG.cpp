@@ -116,6 +116,10 @@ namespace Metabot
             bom.append(BOMEntry(node->json));
         }
 
+        if (node->is("contact")) {
+            contacts.push_back(matrix);
+        }
+
         for (auto child : node->children) {
             walk(matrix, child);
         }
