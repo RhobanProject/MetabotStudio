@@ -12,7 +12,7 @@ if (WIN32)
 	add_definitions(-DWIN32)
 endif()
 
-set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wno-reorder -pedantic -U__STRICT_ANSI__")
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic")
 
 set(ALL_SOURCES
     sha1.cpp

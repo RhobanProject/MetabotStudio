@@ -34,7 +34,7 @@ void usage()
     cerr << "" << endl;
     cerr << "Robot operations (needs a .robot)" << endl;
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
-    cerr << "   -p [output directory]: shows the list of parts to print (stl and quantity)" << endl;
+    cerr << "   -p [output directory]: exports the parts to print (stl and quantity)" << endl;
     cerr << "   -u [output directory]: saves to URDF" << endl;
     cerr << "   -j [output directory]: save to JS (three loading operation)" << endl;
     cerr << "   -b: shows the BOM" << endl;
