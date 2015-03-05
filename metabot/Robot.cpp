@@ -121,7 +121,7 @@ namespace Metabot
         });
 
         std::stringstream ss;
-        ss << "function make_robot() {" << std::endl;
+        ss << "function metabot_make_robot() {" << std::endl;
         ss << "var joints=[];" << std::endl;
         if (root != NULL) {
             root->writeJS(ss);
