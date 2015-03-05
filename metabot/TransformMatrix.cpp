@@ -258,8 +258,9 @@ namespace Metabot
     {
         Symbolic m("m", 4, 4);
         for (int i=0; i<4; i++)
-        for (int j=0; j<4; j++)
-            m(i, j) = values[i][j];
+        for (int j=0; j<4; j++) {
+            m(i, j) = ((fabs(values[i][j]) > 1e-7) ? values[i][j] : 0);
+        }
 
         return m;
     }

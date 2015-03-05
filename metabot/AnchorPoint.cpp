@@ -163,6 +163,7 @@ namespace Metabot
     {
         Symbolic cos_a("cos_"+name);
         Symbolic sin_a("sin_"+name);
+        // Symbolic a(name);
         auto save_alpha = alpha;
         alpha = 0;
         computeMatrixes();

@@ -84,17 +84,18 @@ namespace Metabot
             ss << "alpha_" << id;
             parent *= above->symbolicTransformation(ss.str());
             parent *= above->anchor->transformationBackward().toSymbolic();
+            std::cout << "float " << ss.str() << " = 0;" << std::endl;
         }
 
         for (auto anchor : anchors) {
-            if (anchor->above == true) {
+            if (anchor->above == true && anchor->anchor!=NULL) {
                 anchor->anchor->component->computeKinematic(parent, anchor);
             }
         }
 
         for (auto contact : contacts) {
             Symbolic matrix = parent*contact.toSymbolic();
-            std::cout << "float contact_" << id << "_kinematic(float *x, float *y, float *z) {" << std::endl;
+            std::cout << "void contact_" << id << "_kinematic(float *x, float *y, float *z) {" << std::endl;
             std::cout << "*x = " << matrix(0,3) << ";" << std::endl;
             std::cout << "*y = " << matrix(1,3) << ";" << std::endl;
             std::cout << "*z = " << matrix(2,3) << ";" << std::endl;
