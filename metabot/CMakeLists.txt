@@ -15,8 +15,9 @@ endif()
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic")
 
 set(ALL_SOURCES
-    sha1.cpp
-    util.cpp
+    util/Cache.cpp
+    util/sha1.cpp
+    util/util.cpp
 
     3d/stl.cpp
     3d/Cube.cpp
@@ -27,21 +28,21 @@ set(ALL_SOURCES
     3d/Point3.cpp
     3d/Volume.cpp
     
+    scad/BOM.cpp
+    scad/CSG.cpp
+    scad/CSGNode.cpp
+    scad/Module.cpp
+    scad/SCAD.cpp
+    scad/Shape.cpp
+    
     AnchorPoint.cpp
     Backend.cpp
-    BOM.cpp
-    Cache.cpp
     Component.cpp
-    CSG.cpp
-    CSGNode.cpp
     Dynamics.cpp
-    Module.cpp
     Parameter.cpp
     Parameters.cpp
     Ref.cpp
     Robot.cpp
-    SCAD.cpp
-    Shape.cpp
     TransformMatrix.cpp
     Values.cpp
     Vector.cpp
@@ -49,6 +50,8 @@ set(ALL_SOURCES
     )
 
 include_directories("${CMAKE_SOURCE_DIR}")
+include_directories("${CMAKE_SOURCE_DIR}/util/")
+include_directories("${CMAKE_SOURCE_DIR}/scad/")
 include_directories("${CMAKE_SOURCE_DIR}/sym/")
 include_directories("${CMAKE_SOURCE_DIR}/json/include")
 add_subdirectory("${CMAKE_SOURCE_DIR}/json")
