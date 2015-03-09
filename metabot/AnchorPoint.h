@@ -26,9 +26,11 @@ namespace Metabot
             void detach(bool remove=true);
             
             Symbolic symbolicTransformation(std::string name);
+            TransformMatrix orientationMatrix();
             TransformMatrix transformationForward();
             TransformMatrix transformationBackward();
 
+            int sign();
             Model toModel();
             bool highlight;
             bool hover;

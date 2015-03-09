@@ -84,6 +84,7 @@ namespace Metabot
             ss << "alpha_" << id;
             parent *= above->symbolicTransformation(ss.str());
             parent *= above->anchor->transformationBackward().toSymbolic();
+            std::cout << "// Sign: " << above->sign() << std::endl;
             std::cout << "float " << ss.str() << " = 0;" << std::endl;
         }
 
@@ -165,6 +166,7 @@ namespace Metabot
             ss << "var " << jointName << " = new Joint();" << std::endl;
             ss << parent << ".addChild(" << jointName << ", " << parentPreTransform.multiply(above->anchor->transformationForward()).toJS() << ");" << std::endl;
             ss << jointName << ".addChild(" << linkName << ", [0,0,0], [0,0,0]);" << std::endl;
+            ss << linkName << ".setSign(" << above->sign() << ");" << std::endl;
             ss << "joints.push(" << linkName << ");" << std::endl;
         } 
         
