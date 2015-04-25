@@ -181,6 +181,11 @@ namespace Metabot
         Symbolic transformation = transformationForward().toSymbolic();
         Symbolic rotation("r", 4, 4);
         rotation = rotation.identity();
+        //rotation(0,0) = cos_a;
+        //rotation(0,1) = -sin_a;
+        //rotation(1,0) = sin_a;
+        //rotation(1,1) = cos_a;
+        
         rotation(0,0) = cos(a);
         rotation(0,1) = -sin(a);
         rotation(1,0) = sin(a);

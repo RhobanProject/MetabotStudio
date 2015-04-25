@@ -82,10 +82,15 @@ namespace Metabot
         if (above != NULL) {
             std::stringstream ss;
             ss << "alpha_" << id;
-            parent *= above->symbolicTransformation(ss.str());
-            parent *= above->anchor->transformationBackward().toSymbolic();
-            std::cout << "// Sign: " << above->sign() << std::endl;
-            std::cout << "float " << ss.str() << " = 0;" << std::endl;
+            auto myTransformation = above->symbolicTransformation(ss.str());
+            myTransformation *= above->anchor->transformationBackward().toSymbolic();
+
+            std::cout << "# " << above->component->id << "_to_" << id << std::endl;
+            std::cout << myTransformation << std::endl;
+
+            parent *= myTransformation;
+            // std::cout << "// Sign: " << above->sign() << std::endl;
+            // std::cout << "float " << ss.str() << " = 0;" << std::endl;
         }
 
         for (auto anchor : anchors) {
@@ -95,11 +100,14 @@ namespace Metabot
         }
 
         for (auto contact : contacts) {
-            Symbolic matrix = parent*contact.toSymbolic();
+            std::cout << "# Contact" << std::endl;
+            auto sym = contact.toSymbolic();
+            std::cout << sym << std::endl;
+            Symbolic matrix = parent*sym;
             std::cout << "void contact_" << id << "_kinematic(float *x, float *y, float *z) {" << std::endl;
-            std::cout << "*x = " << matrix(0,3) << ";" << std::endl;
-            std::cout << "*y = " << matrix(1,3) << ";" << std::endl;
-            std::cout << "*z = " << matrix(2,3) << ";" << std::endl;
+            std::cout << "*x = " << matrix(0,3).simplify() << ";" << std::endl;
+            std::cout << "*y = " << matrix(1,3).simplify() << ";" << std::endl;
+            std::cout << "*z = " << matrix(2,3).simplify() << ";" << std::endl;
             std::cout << "}" << std::endl <<  std::endl;
         }
     }
