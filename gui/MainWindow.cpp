@@ -21,7 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     rootComponent("Root", this),
     centerComponent("Center", this),
     dynamicsComponent("Dynamics", this),
-    robot(NULL), robotSave(NULL), wizard(NULL), dynamics(NULL),
+    robot(NULL), robotSave(NULL),
+    wizard(NULL), dynamics(NULL), parametersEditor(NULL),
     filename(""),
     zeros(NULL)
 {
@@ -582,4 +583,14 @@ void MainWindow::on_actionCenter_of_mass_triggered()
 {
     robot->setDrawCOM(ui->actionCenter_of_mass->isChecked());
     viewer->redraw();
+}
+
+void MainWindow::on_actionParameters_triggered()
+{
+    if (parametersEditor != NULL) {
+        parametersEditor->close();
+        delete parametersEditor;
+    }
+    parametersEditor = new ParametersEditor(robot, this);
+    parametersEditor->show();
 }

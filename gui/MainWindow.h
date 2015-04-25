@@ -13,6 +13,7 @@
 #include <metabot/Robot.h>
 #include "ComponentWizard.h"
 #include "DynamicsWindow.h"
+#include "ParametersEditor.h"
 
 namespace Ui {
     class MainWindow;
@@ -93,6 +94,8 @@ private slots:
     void on_actionCompute_dynamics_triggered();
     void on_actionCenter_of_mass_triggered();
 
+    void on_actionParameters_triggered();
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
@@ -104,6 +107,7 @@ private:
     Ui::MainWindow *ui;
     Metabot::Backend *backend;
     DynamicsWindow *dynamics;
+    ParametersEditor *parametersEditor;
     ComponentWizard *wizard;
     std::map<QTreeWidgetItem*, Metabot::AnchorPoint*> items;
     QString filename;

@@ -136,6 +136,7 @@
     </property>
     <addaction name="actionZeros"/>
     <addaction name="actionCompute_dynamics"/>
+    <addaction name="actionParameters"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -313,6 +314,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="actionParameters">
+   <property name="text">
+    <string>Parameters</string>
    </property>
   </action>
  </widget>

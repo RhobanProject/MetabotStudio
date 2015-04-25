@@ -3,7 +3,7 @@
 #include "ZerosEditor.h"
 #include "ui_ZerosEditor.h"
 #include "MainWindow.h"
-#include <metabot/util.h>
+#include <metabot/util/util.h>
 
 ZerosEditor::ZerosEditor(MainWindow *main_, Metabot::Robot *robot_, Viewer *viewer_, QWidget *parent)
     : main(main_),

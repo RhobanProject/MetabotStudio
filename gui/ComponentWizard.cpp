@@ -6,7 +6,7 @@
 #include <metabot/Parameter.h>
 #include <metabot/AnchorPoint.h>
 #include <metabot/Backend.h>
-#include <metabot/util.h>
+#include <metabot/util/util.h>
 #include <QRadioButton>
 
 #define ROLE_COMPONENT  1002
@@ -56,6 +56,10 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
 
 ComponentWizard::~ComponentWizard()
 {
+    for (auto parameter : parameters) {
+        delete parameter;
+    }
+
     delete ui;
 }
 
@@ -195,7 +199,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
 
         // Create the instance
         instance = robot->backend->instanciate(data.toStdString());
-        instance->compile();
+        instance->compile(robot);
 
         if (oldInstance != NULL) {
             instance->moveAnchors(oldInstance);
@@ -267,7 +271,7 @@ void ComponentWizard::on_generate_clicked()
         instance->values[parameter->name] = parameter->getValue();
     }
 
-    instance->compile();
+    instance->compile(robot);
     instance->moveAnchors(previous);
 
     previous->detachAll();

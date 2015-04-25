@@ -5,12 +5,9 @@
 #-------------------------------------------------
 
 QT       += core gui opengl
-CONFIG += c++-11
 
 TARGET = Metabot
 TEMPLATE = app
-
-DEFINES += OPENGL NOCPP11
 
 SOURCES += main.cpp \
     MainWindow.cpp \
@@ -20,7 +17,8 @@ SOURCES += main.cpp \
     ParameterWidget.cpp \
     ObjectsTree.cpp \
     ZerosEditor.cpp \
-    DynamicsWindow.cpp
+    DynamicsWindow.cpp \
+    ParametersEditor.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
@@ -29,22 +27,25 @@ HEADERS  += MainWindow.h \
     ParameterWidget.h \
     ObjectsTree.h \
     ZerosEditor.h \
-    DynamicsWindow.h
+    DynamicsWindow.h \
+    ParametersEditor.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \
     ComponentItem.ui \
     ZerosEditor.ui \
-    DynamicsWindow.ui
+    DynamicsWindow.ui \
+    ParametersEditor.ui
 
+DEFINES += OPENGL
 CONFIG += c++11
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljson
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljson
 else:symbian: LIBS += -llibmetabot -ljson
-else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib -llibmetabot -ljson
+else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib -llibmetabot -ljson -lsymbolic
 
-INCLUDEPATH += $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/json/include/
+INCLUDEPATH += $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/json/include/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
 DEPENDPATH += $$PWD/../
 
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a

@@ -17,8 +17,14 @@ ParametersEditor::~ParametersEditor()
     delete ui;
 }
 
+void ParametersEditor::addParameter(std::string name, std::string value)
+{
+    auto parameter = new ParameterWidget()
+}
+
 void ParametersEditor::on_ok_clicked()
 {
+    this->on_generate_clicked();
     this->close();
 }
 
