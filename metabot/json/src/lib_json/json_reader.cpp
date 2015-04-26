@@ -113,6 +113,7 @@ Reader::parse( const std::string &document,
                Value &root,
                bool collectComments )
 {
+   setlocale(LC_NUMERIC, "C");
    document_ = document;
    const char *begin = document_.c_str();
    const char *end = begin + document_.length();
