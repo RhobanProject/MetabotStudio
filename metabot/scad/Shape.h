@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TransformMatrix.h"
-#include "Vector.h"
+#include "Vect.h"
 
 #define SHAPE_BOX       0
 #define SHAPE_SPHERE    1

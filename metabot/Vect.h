@@ -4,13 +4,13 @@
 
 namespace Metabot
 {
-    class Vector
+    class Vect
     {
         public:
-            Vector(float x, float y, float z);
-            Vector();
+            Vect(float x, float y, float z);
+            Vect();
 
-            float distance(const Vector &other);
+            float distance(const Vect &other);
             float values[4];
             float x() const;
             float y() const;

@@ -377,7 +377,7 @@ namespace Metabot
         });
     }
             
-    Vector Robot::getPoint(Component *instance, Vector v)
+    Vect Robot::getPoint(Component *instance, Vect v)
     {
         TransformMatrix m = TransformMatrix::identity();
 
@@ -389,17 +389,17 @@ namespace Metabot
         }
 
         m = m.invert();
-        Vector p = m.apply(v);
+        Vect p = m.apply(v);
         return p;
     }
             
-    Component *Robot::nearest(Vector pt)
+    Component *Robot::nearest(Vect pt)
     {
         Component *bestInstance = NULL;
         float bestDistance = -1;
 
         foreachComponent([this, pt, &bestInstance, &bestDistance](Component *instance) {
-            Vector v(0, 0, 0);
+            Vect v(0, 0, 0);
             auto partPoint = this->getPoint(instance, v);
             float distance = partPoint.distance(pt);
             if (bestDistance < 0 || distance<bestDistance) {

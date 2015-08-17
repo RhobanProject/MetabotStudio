@@ -147,7 +147,7 @@ namespace Metabot
         for (auto& volume : volumes) {
             for (auto& face : volume.faces) {
                 for (int i=0; i<3; i++) {
-                    Vector pt(face.v[i].x, face.v[i].y, face.v[i].z);
+                    Vect pt(face.v[i].x, face.v[i].y, face.v[i].z);
                     // std::cout << pt.toString() << std::endl;
                     pt = matrix.apply(pt);
                     // std::cout << "=>" << std::endl;

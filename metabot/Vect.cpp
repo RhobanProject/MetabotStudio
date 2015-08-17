@@ -1,14 +1,14 @@
 #include <sstream>
 #include <cmath>
-#include "Vector.h"
+#include "Vect.h"
 
 namespace Metabot
 {
-    Vector::Vector()
+    Vect::Vect()
     {
     }
 
-    Vector::Vector(float x, float y, float z)
+    Vect::Vect(float x, float y, float z)
     {
         values[0] = x;
         values[1] = y;
@@ -16,7 +16,7 @@ namespace Metabot
         values[3] = 1;
     }
 
-    std::string Vector::toString() const
+    std::string Vect::toString() const
     {
         std::stringstream str;
 
@@ -27,7 +27,7 @@ namespace Metabot
         return str.str();
     }
             
-    float Vector::distance(const Vector &other)
+    float Vect::distance(const Vect &other)
     {
         float s = 0;
         for (int i=0; i<3; i++) {
@@ -37,17 +37,17 @@ namespace Metabot
         return sqrt(s);
     }
 
-    float Vector::x() const
+    float Vect::x() const
     {
         return values[0];
     }
 
-    float Vector::y() const
+    float Vect::y() const
     {
         return values[1];
     }
 
-    float Vector::z() const
+    float Vect::z() const
     {
         return values[2];
     }

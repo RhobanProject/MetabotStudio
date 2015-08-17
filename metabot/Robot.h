@@ -5,7 +5,7 @@
 #include <3d/Model.h>
 #include <3d/Point3.h>
 #include "Ref.h"
-#include "Vector.h"
+#include "Vect.h"
 #include "Dynamics.h"
 #include "BOM.h"
 #include "Values.h"
@@ -36,8 +36,8 @@ namespace Metabot
 
             Robot *clone();
             void setRoot(Component *root);
-            Vector getPoint(Component *instance, Vector pt);
-            Component *nearest(Vector pt);
+            Vect getPoint(Component *instance, Vect pt);
+            Component *nearest(Vect pt);
 
             Component *getComponentById(int id);
             AnchorPoint *getHoveredAnchor(int id);

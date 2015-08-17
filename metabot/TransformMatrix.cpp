@@ -151,9 +151,9 @@ namespace Metabot
         return result;
     }
             
-    Vector TransformMatrix::apply(Vector vector)
+    Vect TransformMatrix::apply(Vect vector)
     {
-        Vector output;
+        Vect output;
         MAT_DOT_VEC_4X4(output.values, values, vector.values);
 
         return output;

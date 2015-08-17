@@ -3,7 +3,7 @@
 #include <limits>
 #include <array>
 #include <string>
-#include "Vector.h"
+#include "Vect.h"
 #ifdef OPENGL
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
@@ -29,7 +29,7 @@ namespace Metabot
             std::string toJS();
             std::string toURDF();
 
-            Vector apply(Vector vector);
+            Vect apply(Vect vector);
 
             double4x4 values;
 

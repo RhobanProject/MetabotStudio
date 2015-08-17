@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector.h"
+#include "Vect.h"
 #include "TransformMatrix.h"
 
 namespace Metabot
@@ -15,7 +15,7 @@ namespace Metabot
             // Mass (g)
             double mass;
             // Center of mass position (mm)
-            Vector com;
+            Vect com;
             // Is this dynamics computed?
             bool computed;
 
