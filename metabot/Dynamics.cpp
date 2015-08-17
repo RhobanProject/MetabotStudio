@@ -18,7 +18,7 @@ namespace Metabot
                 double a = mass;
                 double b = other.mass;
                 double total = a+b;
-                if (total > 0.00001) {
+                if (total > 0.0) {
                     com.values[0] = (com.x()*a + other_com.x()*b)/total;
                     com.values[1] = (com.y()*a + other_com.y()*b)/total;
                     com.values[2] = (com.z()*a + other_com.z()*b)/total;
@@ -26,6 +26,7 @@ namespace Metabot
                 volume = volume+other.volume;
                 mass = total;
                 computed = true;
+
             }
         } else {
             if (other.computed) {
@@ -35,6 +36,11 @@ namespace Metabot
                 volume = other.volume;
             }
         }
+        for (auto cube : other.cubes) {
+            cube.pos = matrix.apply(cube.pos);
+            cubes.push_back(cube);
+        }
+        updateInertia();
     }
 
     std::string Dynamics::toString()
@@ -51,5 +57,24 @@ namespace Metabot
         }
 
         return ss.str();
+    }
+            
+    void Dynamics::updateInertia()
+    {
+        ixx = iyy = izz = ixy = iyz = ixz = 0;
+
+        for (auto &cube : cubes) {
+            float X = cube.pos.x()/1000.0;
+            float Y = cube.pos.y()/1000.0;
+            float Z = cube.pos.z()/1000.0;
+            float m = cube.mass/1000.0;
+
+            ixx += (Y*Y + Z*Z)*m;
+            iyy += (X*X + Z*Z)*m;
+            izz += (X*X + Y*Y)*m;
+            ixy -= X*Y*m;
+            iyz -= Y*Z*m;
+            ixz -= X*Z*m;
+        }
     }
 }
