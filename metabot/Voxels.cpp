@@ -107,10 +107,22 @@ namespace Metabot
             if (left%2 || right%2) {
                 // Inside the part
                 //std::cout << X << " " << Y << " " << Z << std::endl;
+
+                // Increasing volume
                 cubes++;
+
+                // Updating center of mass
                 com.x += X;
                 com.y += Y;
                 com.z += Z;
+
+                // Updating inertia
+                dynamics.ixx += (Y*Y + Z*Z);
+                dynamics.iyy += (X*X + Z*Z);
+                dynamics.izz += (X*X + Y*Y);
+                dynamics.ixy -= X*Y;
+                dynamics.iyz -= Y*Z;
+                dynamics.ixz -= X*Z;
             }
         }
 
@@ -118,12 +130,21 @@ namespace Metabot
         double mass_per_cube;
 
         if (mass > 0.0001) {
+            // Mass is already set
             mass_per_cube = mass/cubes;
         } else {
+            // Using density
             mass_per_cube = volume_per_cube*(density/1000.);
         }
 
         if (cubes) {
+            dynamics.ixx *= mass_per_cube;
+            dynamics.iyy *= mass_per_cube;
+            dynamics.izz *= mass_per_cube;
+            dynamics.ixy *= mass_per_cube;
+            dynamics.iyz *= mass_per_cube;
+            dynamics.ixz *= mass_per_cube;
+
             dynamics.volume = cubes*volume_per_cube;
             dynamics.mass = cubes*mass_per_cube;
             com.x /= cubes;

@@ -18,6 +18,8 @@ namespace Metabot
             Vect com;
             // Is this dynamics computed?
             bool computed;
+            // Inertia
+            float ixx, ixy, ixz, iyy, iyz, izz;
 
             std::string toString();
 

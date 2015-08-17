@@ -5,7 +5,8 @@
 namespace Metabot
 {
     Dynamics::Dynamics()
-        : com(0, 0, 0), volume(0), mass(0), computed(false)
+        : com(0, 0, 0), volume(0), mass(0), computed(false),
+          ixx(0), ixy(0), ixz(0), iyy(0), iyz(0), izz(0)
     {
     }
             
@@ -43,6 +44,8 @@ namespace Metabot
             ss << "Volume: " << volume << "mm^3" << std::endl;
             ss << "Mass: " << mass << "g" << std::endl;
             ss << "COM: " << com.x() << ", " << com.y() << ", " << com.z() << std::endl;
+            ss << "Inertia: ixx=" << ixx << ", iyy=" << iyy << ", izz=" << izz << 
+                ", ixy=" << ixy << ", iyz=" << iyz << ", ixz=" << ixz << std::endl;
         } else {
             ss << "No dynamics (no geometry or not computed)" << std::endl;
         }

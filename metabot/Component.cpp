@@ -229,7 +229,7 @@ namespace Metabot
         ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
             << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
         // XXX: Todo, handle density
-        ss << "    <mass value=\"" << (dynamics.volume*1.0/1000000.0) << "\"/>" << std::endl;
+        ss << "    <mass value=\"" << (dynamics.mass) << "\"/>" << std::endl;
         // XXX: Todo, handle tensor
         ss << "    <inertia ixx=\"0.001\"  ixy=\"0\"  ixz=\"0\" iyy=\"0.001\" iyz=\"0\" izz=\"0.001\" />" << std::endl;
         ss << "  </inertial>" << std::endl;
