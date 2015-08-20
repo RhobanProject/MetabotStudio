@@ -12,7 +12,7 @@ if (WIN32)
 	add_definitions(-DWIN32)
 endif()
 
-set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic")
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors")
 
 set(ALL_SOURCES
     util/Cache.cpp
