@@ -18,15 +18,15 @@ namespace Metabot
         }
     }
 
-    CSG CSG::parse(std::string data)
+    CSG *CSG::parse(std::string data)
     {
-        CSG document;
+        CSG *document = new CSG;
         int state = 0;
         unsigned int n = data.length();
         std::vector<CSGNode *> stack;
         std::string name;
         std::string value;
-        stack.push_back(document.root);
+        stack.push_back(document->root);
 
         for (unsigned int i=0; i<n; i++) {
             char c = data[i];
@@ -84,7 +84,7 @@ namespace Metabot
         }
 
         auto matrix = TransformMatrix::identity();
-        document.walk(matrix, document.root);
+        document->walk(matrix, document->root);
 
         return document;
     }

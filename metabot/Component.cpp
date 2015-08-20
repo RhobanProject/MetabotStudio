@@ -228,10 +228,14 @@ namespace Metabot
         auto com = preTransform.apply(dynamics.com);;
         ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
             << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
-        // XXX: Todo, handle density
-        ss << "    <mass value=\"" << (dynamics.mass) << "\"/>" << std::endl;
-        // XXX: Todo, handle tensor
-        ss << "    <inertia ixx=\"0.001\"  ixy=\"0\"  ixz=\"0\" iyy=\"0.001\" iyz=\"0\" izz=\"0.001\" />" << std::endl;
+        ss << "    <mass value=\"" << (dynamics.mass/1000.0) << "\"/>" << std::endl;
+        ss << "    <inertia ixx=\"" << dynamics.ixx << 
+            "\"  ixy=\"" << dynamics.ixy << 
+            "\"  ixz=\"" << dynamics.ixz << 
+            "\" iyy=\"" << dynamics.iyy << 
+            "\" iyz=\"" << dynamics.iyz << 
+            "\" izz=\"" << dynamics.izz << 
+            "\" />" << std::endl;
         ss << "  </inertial>" << std::endl;
 
         // Adding collisions
@@ -394,18 +398,20 @@ namespace Metabot
             main.parameters.set(entry.first, entry.second);
         }
         // Parsing the CSG document
-        CSG document = CSG::parse(csg);
-        anchors = document.anchors;
-        parts = document.parts;
-        models = document.models;
-        bom = document.bom;
-        contacts = document.contacts;
+        CSG *document = CSG::parse(csg);
+        anchors = document->anchors;
+        parts = document->parts;
+        models = document->models;
+        bom = document->bom;
+        contacts = document->contacts;
+        delete document;
         
         // Collision CSG & STL
         std::string collisionsCsg = module->openscad("csg", parameters(robot), DEFINE_COLLISIONS);
         collisions = loadModelSTL_string(stl(robot, true));
-        CSG collisionsDocument = CSG::parse(collisionsCsg);
-        shapes = collisionsDocument.shapes;
+        CSG *collisionsDocument = CSG::parse(collisionsCsg);
+        shapes = collisionsDocument->shapes;
+        delete collisionsDocument;
 
         main.compile(backend);
         for (auto &ref : parts) {
