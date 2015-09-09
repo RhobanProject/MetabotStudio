@@ -158,6 +158,7 @@ namespace Metabot
         ss << "<?xml version=\"1.0\" ?>" << std::endl;
         ss << "<sdf version=\"1.5\">" << std::endl;
         ss << "<model name=\"metabot\">" << std::endl;
+        ss << "<self_collide>true</self_collide>" << std::endl;
         if (root != NULL) {
             root->writeURDF(ss);
         }
