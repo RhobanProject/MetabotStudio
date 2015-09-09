@@ -185,7 +185,7 @@ namespace Metabot
         }
     }
             
-    void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix parentPreTransform, AnchorPoint *above)
+    void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix transform, AnchorPoint *above)
     {
         Dynamics dynamics;
 
@@ -197,12 +197,15 @@ namespace Metabot
         tmp << module->getName() << "_" << id;
         std::string name = tmp.str();
         ss << "  <link name=\"" << name << "\">" << std::endl;
-
+            
         // Adding parts and models, linked to component
         int refid = 0;
-        auto preTransform = TransformMatrix::identity();
         if (above != NULL) {
-            preTransform = above->transformationBackward();
+            //preTransform = above->transformationBackward();
+            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).invert().toURDF() << std::endl;
+            // ss << above->anchor->transformationBackward().toURDF() << std::endl;
+            //ss << "<pose>0.2 0 0 0 0 0</pose>" << std::endl;
+            ss << transform.toURDF() << std::endl;
         }
         for (auto ref : refs()) {
             dynamics.combine(ref->getDynamics(), ref->matrix);
@@ -211,37 +214,50 @@ namespace Metabot
             auto refName = tmp.str();
             auto jointName = refName+"_joint";
 
-            ss << "    <visual>" << std::endl;
+            ss << "    <visual name=\"" << refName << "_visual\">" << std::endl;
             ss << "      <geometry>" << std::endl;
             // XXX: This forces the file to be in an urdf/ folder
-            ss << "        <mesh filename=\"package://urdf/" << ref->hash() << ".stl\"/>" << std::endl;
+            ss << "        <mesh><uri>model://metabot/" << ref->hash() << ".stl</uri></mesh>" << std::endl;
             ss << "      </geometry>" << std::endl;
-            ss << "      <material name=\"" << refName << "_material\">" << std::endl;
-            ss << "        <color rgba=\"" << ref->r << " " << ref->g << " " << ref->b << " 1.0\"/>" << std::endl;
+            ss << "      <material>" << std::endl;
+            // ss << "            <name>" << refName << "_material</name>" << std::endl;
+            ss << "            <ambient>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</ambient>" << std::endl;
+            ss << "            <specular>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</specular>" << std::endl;
+            ss << "            <diffuse>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</diffuse>" << std::endl;
+            ss << "            <emissive>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</emissive>" << std::endl;
             ss << "      </material>" << std::endl;
-            ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
+            // ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
+            ss << "    " << ref->matrix.toURDF() << std::endl;
             ss << "    </visual>" << std::endl;
         }
 
         // Adding dynamics
         ss << "  <inertial>" << std::endl;
-        auto com = preTransform.apply(dynamics.com);;
-        ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
-            << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
-        ss << "    <mass value=\"" << (dynamics.mass/1000.0) << "\"/>" << std::endl;
-        ss << "    <inertia ixx=\"" << dynamics.ixx << 
-            "\"  ixy=\"" << dynamics.ixy << 
-            "\"  ixz=\"" << dynamics.ixz << 
-            "\" iyy=\"" << dynamics.iyy << 
-            "\" iyz=\"" << dynamics.iyz << 
-            "\" izz=\"" << dynamics.izz << 
-            "\" />" << std::endl;
+
+        auto com = dynamics.com; // preTransform.apply(dynamics.com);;
+        ss << "    <pose>";
+        ss << (com.x()/1000) << " " << (com.y()/1000) << " " << (com.z()/1000) << " 0 0 0";
+        ss << "</pose>" << std::endl;
+        ss << "    <mass>" << (dynamics.mass/1000.0) << "</mass>" << std::endl;
+        ss << "    <inertia>" << std::endl;
+        ss << "        <ixx>" << dynamics.ixx << "</ixx>" << std::endl;
+        ss << "        <ixy>" << dynamics.ixy << "</ixy>" << std::endl;
+        ss << "        <ixz>" << dynamics.ixz << "</ixz>" << std::endl;
+        ss << "        <iyy>" << dynamics.iyy << "</iyy>" << std::endl;
+        ss << "        <iyz>" << dynamics.iyz << "</iyz>" << std::endl;
+        ss << "        <izz>" << dynamics.izz << "</izz>" << std::endl;
+        ss << "    </inertia>" << std::endl;
         ss << "  </inertial>" << std::endl;
 
         // Adding collisions
+        int colid = 0;
         for (auto shape : shapes) {
-            ss << "  <collision>" << std::endl;
-            ss << shape.toURDF(preTransform) << std::endl;
+            std::stringstream tmp;
+            tmp << module->getName() << "_" << id << "_" << (colid++);
+            auto colName = tmp.str();
+            ss << "  <collision name=\"" << colName << "_col\">" << std::endl;
+            // ss << shape.toURDF(preTransform) << std::endl;
+            ss << shape.toURDF(TransformMatrix::identity()) << std::endl;
             ss << "  </collision>" << std::endl;
         }
             
@@ -249,20 +265,24 @@ namespace Metabot
 
         
         // Linking it to the parent
-        if (above!=NULL) {
-            ss << "  <joint name=\"" << name << "_parent\" type=\"revolute\">" << std::endl;
-            ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
-            ss << "    <child link=\"" << name << "\"/>" << std::endl;
-            ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
-            ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
-            ss << "    <limit lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
+        if (above != NULL) {
+            ss << "  <joint name=\"" << name << "_joint\" type=\"revolute\">" << std::endl;
+            ss << "    <parent>" << parent << "</parent>" << std::endl;
+            ss << "    <child>" << name << "</child>" << std::endl;
+            ss << "    <axis><xyz>0 0 1</xyz></axis>" << std::endl;
+            ss << above->transformationForward().toURDF() << std::endl;
+            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
+            ss << "    <limit><lower>" << -M_PI << "</lower><upper>" << M_PI << "</upper></limit>" << std::endl;
             ss << "  </joint>" << std::endl;
         }
 
         // Drawing sub-components
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor!=NULL) {
-                anchor->anchor->component->writeURDF(ss, name, preTransform, anchor->anchor);
+                TransformMatrix t = transform.multiply(anchor->transformationForward());
+                // t = anchor->anchor->transformationBackward().multiply(t);
+                 t = t.multiply(anchor->anchor->transformationBackward());
+                anchor->anchor->component->writeURDF(ss, name, t, anchor->anchor);
             }
         }
     }

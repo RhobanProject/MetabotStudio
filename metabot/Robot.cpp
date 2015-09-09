@@ -137,7 +137,7 @@ namespace Metabot
         if (directory!="") {
             directory += "/";
         }
-        directory += "urdf/";
+        directory += "metabot/";
         if (!is_directory(directory)) {
             makedir(directory);
         }
@@ -155,12 +155,15 @@ namespace Metabot
         });
 
         std::stringstream ss;
-        ss << "<robot name=\"metabot\">" << std::endl;
+        ss << "<?xml version=\"1.0\" ?>" << std::endl;
+        ss << "<sdf version=\"1.5\">" << std::endl;
+        ss << "<model name=\"metabot\">" << std::endl;
         if (root != NULL) {
             root->writeURDF(ss);
         }
-        ss << "</robot>" << std::endl;
-        std::string filename = directory+"robot.urdf";
+        ss << "</model>" << std::endl;
+        ss << "</sdf>" << std::endl;
+        std::string filename = directory+"robot.sdf";
         file_put_contents(filename, ss.str());
     }
             
