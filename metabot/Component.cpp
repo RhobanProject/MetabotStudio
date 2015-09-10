@@ -269,10 +269,12 @@ namespace Metabot
             ss << "  <joint name=\"" << name << "_joint\" type=\"revolute\">" << std::endl;
             ss << "    <parent>" << parent << "</parent>" << std::endl;
             ss << "    <child>" << name << "</child>" << std::endl;
-            ss << "    <axis><xyz>0 0 1</xyz></axis>" << std::endl;
             ss << above->transformationForward().toURDF() << std::endl;
+            ss << "    <axis>" << std::endl;
+            ss << "         <xyz>0 0 1</xyz>" << std::endl;
             // ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
-            ss << "    <limit><lower>" << -M_PI << "</lower><upper>" << M_PI << "</upper></limit>" << std::endl;
+            ss << "            <limit><lower>" << -M_PI << "</lower><upper>" << M_PI << "</upper></limit>" << std::endl;
+            ss << "    </axis>" << std::endl;
             ss << "  </joint>" << std::endl;
         }
 
