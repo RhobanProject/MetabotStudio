@@ -1,4 +1,5 @@
 Collisions=false;
+SphereTip=false;
 include <../models/motor_values.scad>;
 use <../models/ollo.scad>;
 use <../util/rounded.scad>;
@@ -81,7 +82,7 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
             translate([-(spacing/2+thickness/2),0,0])
                 legSide();
 
-		if (!Collisions) {
+		if (!SphereTip || !Collisions) {
 		    translate([0,0,-sizeB])
 			cube([spacing+thickness*2, 20, thickness], center=true);
 		    translate([spacing/2+thickness/2,0,-sizeB/2])
