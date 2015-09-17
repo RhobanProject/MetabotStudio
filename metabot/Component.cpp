@@ -221,10 +221,10 @@ namespace Metabot
             ss << "      </geometry>" << std::endl;
             ss << "      <material>" << std::endl;
             // ss << "            <name>" << refName << "_material</name>" << std::endl;
-            ss << "            <ambient>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</ambient>" << std::endl;
-            ss << "            <specular>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</specular>" << std::endl;
-            ss << "            <diffuse>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</diffuse>" << std::endl;
-            ss << "            <emissive>" << ref->r << " " << ref->g << " " << ref->b << " 1.0</emissive>" << std::endl;
+            ss << "            <ambient>" << ref->r/2 << " " << ref->g/2 << " " << ref->b/2 << " 1.0</ambient>" << std::endl;
+            ss << "            <specular>" << ref->r/2 << " " << ref->g/2 << " " << ref->b/2 << " 1.0</specular>" << std::endl;
+            ss << "            <diffuse>" << ref->r/2 << " " << ref->g/2 << " " << ref->b/2 << " 1.0</diffuse>" << std::endl;
+            ss << "            <emissive>" << ref->r/2 << " " << ref->g/2 << " " << ref->b/2 << " 1.0</emissive>" << std::endl;
             ss << "      </material>" << std::endl;
             // ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
             ss << "    " << ref->matrix.toURDF() << std::endl;
@@ -273,7 +273,11 @@ namespace Metabot
             ss << "    <axis>" << std::endl;
             ss << "         <xyz>0 0 1</xyz>" << std::endl;
             // ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
-            ss << "            <limit><lower>" << -M_PI << "</lower><upper>" << M_PI << "</upper></limit>" << std::endl;
+            ss << "          <limit>" << std::endl;
+            ss << "              <lower>" << -M_PI << "</lower>" << std::endl;
+            ss << "              <upper>" << M_PI << "</upper>" << std::endl;
+            ss << "              <effort>0.5</effort>" << std::endl;
+            ss << "          </limit>" << std::endl;
             ss << "    </axis>" << std::endl;
             ss << "  </joint>" << std::endl;
         }
