@@ -35,7 +35,7 @@ void usage()
     cerr << "Robot operations (needs a .robot)" << endl;
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
     cerr << "   -p [output directory]: exports the parts to print (stl and quantity)" << endl;
-    cerr << "   -u [output directory]: saves to URDF" << endl;
+    cerr << "   -S [output directory]: saves to SDF" << endl;
     cerr << "   -j [output directory]: save to JS (three loading operation)" << endl;
     cerr << "   -b: shows the BOM" << endl;
     cerr << "   -d: compute the dynamics" << endl;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     string mode = "";
     string output = "";
 
-    while ((index = getopt(argc, argv, "pbcws:vo:udjk")) != -1) {
+    while ((index = getopt(argc, argv, "p:bcws:vS:dj:k")) != -1) {
         switch (index) {
             case 'c':
                 mode = "cacheClear";
@@ -78,25 +78,26 @@ int main(int argc, char *argv[])
                 break;
             case 's':
                 mode = "stlExport";
-            case 'o':
-                output = string(optarg);
                 break;
             case 'b':
                 mode = "bom";
                 break;
             case 'p':
+                output = string(optarg);
                 mode = "parts";
                 break;
             case 'v':
                 mode = "voxelize";
                 break;
-            case 'u':
-                mode = "urdf";
+            case 'S':
+                output = string(optarg);
+                mode = "sdf";
                 break;
             case 'd':
                 mode = "dynamics";
                 break;
             case 'j':
+                output = string(optarg);
                 mode = "js";
                 break;
             case 'k':
@@ -159,9 +160,9 @@ int main(int argc, char *argv[])
         } else if (mode == "js") {
             needRobot();
             robot->writeJS(output);
-        } else if (mode == "urdf") {
+        } else if (mode == "sdf") {
             needRobot();
-            robot->writeURDF(output);
+            robot->writeSDF(output);
         } else if (mode == "voxelize") {
             Model m = loadModelFromFile(robotFile.c_str());
             //m.gnuplot();

@@ -216,7 +216,7 @@ namespace Metabot
         return ss.str();
     }
 
-    std::string TransformMatrix::toURDF()
+    std::string TransformMatrix::toSDF()
     {
         auto rpy = eulerAngles(values);
         

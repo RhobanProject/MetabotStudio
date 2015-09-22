@@ -185,7 +185,7 @@ namespace Metabot
         }
     }
             
-    void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix transform, AnchorPoint *above)
+    void Component::writeSDF(std::stringstream &ss, std::string parent, TransformMatrix transform, AnchorPoint *above)
     {
         Dynamics dynamics;
 
@@ -202,10 +202,10 @@ namespace Metabot
         int refid = 0;
         if (above != NULL) {
             //preTransform = above->transformationBackward();
-            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).invert().toURDF() << std::endl;
-            // ss << above->anchor->transformationBackward().toURDF() << std::endl;
+            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).invert().toSDF() << std::endl;
+            // ss << above->anchor->transformationBackward().toSDF() << std::endl;
             //ss << "<pose>0.2 0 0 0 0 0</pose>" << std::endl;
-            ss << transform.toURDF() << std::endl;
+            ss << transform.toSDF() << std::endl;
         }
         for (auto ref : refs()) {
             dynamics.combine(ref->getDynamics(), ref->matrix);
@@ -226,8 +226,8 @@ namespace Metabot
             ss << "            <diffuse>" << ref->r/2 << " " << ref->g/2 << " " << ref->b/2 << " 1.0</diffuse>" << std::endl;
             ss << "            <emissive>" << ref->r/2 << " " << ref->g/2 << " " << ref->b/2 << " 1.0</emissive>" << std::endl;
             ss << "      </material>" << std::endl;
-            // ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
-            ss << "    " << ref->matrix.toURDF() << std::endl;
+            // ss << "    " << preTransform.multiply(ref->matrix).toSDF() << std::endl;
+            ss << "    " << ref->matrix.toSDF() << std::endl;
             ss << "    </visual>" << std::endl;
         }
 
@@ -256,8 +256,8 @@ namespace Metabot
             tmp << module->getName() << "_" << id << "_" << (colid++);
             auto colName = tmp.str();
             ss << "  <collision name=\"" << colName << "_col\">" << std::endl;
-            // ss << shape.toURDF(preTransform) << std::endl;
-            ss << shape.toURDF(TransformMatrix::identity()) << std::endl;
+            // ss << shape.toSDF(preTransform) << std::endl;
+            ss << shape.toSDF(TransformMatrix::identity()) << std::endl;
             ss << "  </collision>" << std::endl;
         }
             
@@ -269,10 +269,10 @@ namespace Metabot
             ss << "  <joint name=\"" << name << "_joint\" type=\"revolute\">" << std::endl;
             ss << "    <parent>" << parent << "</parent>" << std::endl;
             ss << "    <child>" << name << "</child>" << std::endl;
-            ss << above->transformationForward().toURDF() << std::endl;
+            ss << above->transformationForward().toSDF() << std::endl;
             ss << "    <axis>" << std::endl;
             ss << "         <xyz>0 0 1</xyz>" << std::endl;
-            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
+            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).toSDF() << std::endl;
             ss << "          <limit>" << std::endl;
             ss << "              <lower>" << -M_PI << "</lower>" << std::endl;
             ss << "              <upper>" << M_PI << "</upper>" << std::endl;
@@ -288,7 +288,7 @@ namespace Metabot
                 TransformMatrix t = transform.multiply(anchor->transformationForward());
                 // t = anchor->anchor->transformationBackward().multiply(t);
                  t = t.multiply(anchor->anchor->transformationBackward());
-                anchor->anchor->component->writeURDF(ss, name, t, anchor->anchor);
+                anchor->anchor->component->writeSDF(ss, name, t, anchor->anchor);
             }
         }
     }
