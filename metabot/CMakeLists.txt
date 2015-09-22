@@ -49,12 +49,12 @@ set(ALL_SOURCES
     Voxels.cpp
     )
 
-include_directories("${CMAKE_SOURCE_DIR}")
-include_directories("${CMAKE_SOURCE_DIR}/util/")
-include_directories("${CMAKE_SOURCE_DIR}/scad/")
-include_directories("${CMAKE_SOURCE_DIR}/sym/")
-include_directories("${CMAKE_SOURCE_DIR}/json/include")
-add_subdirectory("${CMAKE_SOURCE_DIR}/json")
+include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/util/")
+include_directories("${PROJECT_SOURCE_DIR}/scad/")
+include_directories("${PROJECT_SOURCE_DIR}/sym/")
+include_directories("${PROJECT_SOURCE_DIR}/json/include")
+add_subdirectory("${PROJECT_SOURCE_DIR}/json")
 
 add_library(symbolic sym/symbolicc++.cpp)
 set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSPLUS")
