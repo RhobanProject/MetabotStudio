@@ -132,12 +132,11 @@ namespace Metabot
         file_put_contents(filename, ss.str());
     }
 
-    void Robot::writeURDF(std::string directory)
+    void Robot::writeSDF(std::string directory)
     {
-        if (directory!="") {
+        if (directory != "") {
             directory += "/";
         }
-        directory += "metabot/";
         if (!is_directory(directory)) {
             makedir(directory);
         }
@@ -160,7 +159,7 @@ namespace Metabot
         ss << "<model name=\"metabot\">" << std::endl;
         ss << "<self_collide>true</self_collide>" << std::endl;
         if (root != NULL) {
-            root->writeURDF(ss);
+            root->writeSDF(ss);
         }
         ss << "</model>" << std::endl;
         ss << "</sdf>" << std::endl;

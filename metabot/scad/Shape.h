@@ -16,7 +16,7 @@ namespace Metabot
     {
         public:
             TransformMatrix matrix;
-            std::string toURDF(TransformMatrix transform);
+            std::string toSDF(TransformMatrix transform);
 
             int type;
             double a, b, c;

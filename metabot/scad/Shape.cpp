@@ -5,10 +5,10 @@
 
 namespace Metabot
 {
-    std::string Shape::toURDF(TransformMatrix transform)
+    std::string Shape::toSDF(TransformMatrix transform)
     {
         std::stringstream ss;
-        ss << "    " << (transform.multiply(matrix)).toURDF() << std::endl;
+        ss << "    " << (transform.multiply(matrix)).toSDF() << std::endl;
         ss << "    <geometry>" << std::endl;
         if (type == SHAPE_BOX) {
             ss << "      <box><size>" << ((a-RETRACTION)/1000) << " " << ((b-RETRACTION)/1000) << " " << ((c-RETRACTION)/1000) << "</size></box>" << std::endl;

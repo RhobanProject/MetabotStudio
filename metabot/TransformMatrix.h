@@ -27,7 +27,7 @@ namespace Metabot
             std::string toString();
 
             std::string toJS();
-            std::string toURDF();
+            std::string toSDF();
 
             Vect apply(Vect vector);
 
