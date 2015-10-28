@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Loading metabot backend
     backend = new Metabot::Backend("xl-320");
+    // backend = new Metabot::Backend("abstract");
     backend->load();
 
     // Creating viewer
@@ -43,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer->setRobot(robot);
 
     // Debugging auto-open
-
+    // filename = "/home/gregwar/Metabot/robots/remi.robot";
     filename = "/home/gregwar/Metabot/robots/metabot.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
@@ -213,6 +214,11 @@ void MainWindow::deselectAll()
     ui->tree->clearSelection();
 }
 
+Viewer *MainWindow::getViewer()
+{
+    return viewer;
+}
+
 void MainWindow::on_tree_itemDeselected()
 {
     robot->unHighlight();
@@ -378,7 +384,7 @@ void MainWindow::on_contextmenu_center()
     } else {
         instance = anchor->anchor->component;
     }
-    Metabot::Vector v(0, 0, 0);
+    Metabot::Vect v(0, 0, 0);
     v = robot->getPoint(instance, v);
     viewer->tX = -v.values[0];
     viewer->tY = -v.values[1];
@@ -569,7 +575,7 @@ void MainWindow::on_actionExport_URDF_triggered()
 {
     auto directory = QFileDialog::getExistingDirectory(this, "URDF Export");
     if (directory != "") {
-        robot->writeURDF(directory.toStdString());
+        robot->writeSDF(directory.toStdString());
     }
 }
 
@@ -591,6 +597,6 @@ void MainWindow::on_actionParameters_triggered()
         parametersEditor->close();
         delete parametersEditor;
     }
-    parametersEditor = new ParametersEditor(robot, this);
+    parametersEditor = new ParametersEditor(this, robot, this);
     parametersEditor->show();
 }

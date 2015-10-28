@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <metabot/Component.h>
 #include <metabot/Parameter.h>
-#include <metabot/Module.h>
+#include <metabot/scad/Module.h>
 
 ParameterWidget::ParameterWidget(Metabot::Component *instance_,
                                  std::string name_, QWidget *parent) :

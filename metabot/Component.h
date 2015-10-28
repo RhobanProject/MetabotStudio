@@ -52,8 +52,8 @@ namespace Metabot
             void parametersFromJson(Json::Value json);
             Json::Value toJson();
 
-            void compileAll(Robot *robot=NULL);
-            void compile(Robot *robot=NULL);
+            void update(Robot *robot=NULL);
+            void compile(Robot *robot=NULL, bool update=false);
 
 #ifndef NOCPP11
             void foreachComponent(std::function<void(Component *instance)> method);

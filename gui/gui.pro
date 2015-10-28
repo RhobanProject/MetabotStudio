@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     ObjectsTree.cpp \
     ZerosEditor.cpp \
     DynamicsWindow.cpp \
-    ParametersEditor.cpp
+    ParametersEditor.cpp \
+    ValueWidget.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
@@ -28,7 +29,8 @@ HEADERS  += MainWindow.h \
     ObjectsTree.h \
     ZerosEditor.h \
     DynamicsWindow.h \
-    ParametersEditor.h
+    ParametersEditor.h \
+    ValueWidget.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \

@@ -38,6 +38,7 @@ public:
     void runWizard(Metabot::AnchorPoint *anchor);
     void highlightAnchor(Metabot::AnchorPoint *anchor);
     void deselectAll();
+    Viewer *getViewer();
 
     Metabot::AnchorPoint *selectedAnchor();
     Metabot::Component *selectedComponent();

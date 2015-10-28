@@ -402,19 +402,35 @@ namespace Metabot
         values[name] = value;
     }
 
-    void Component::compileAll(Robot *robot)
+    void Component::update(Robot *robot)
     {
-        compile(robot);
+        compile(robot, true);
 
         for (auto anchor : anchors) {
-            if (anchor->component != NULL) {
-                anchor->component->compileAll(robot);
+            if (anchor->above && anchor->anchor && anchor->anchor->component != NULL) {
+                anchor->anchor->component->update(robot);
             }
         }
     }
 
-    void Component::compile(Robot *robot)
+    void Component::compile(Robot *robot, bool update)
     {
+        Component *old;
+        if (update) {
+            old = clone();
+        }
+        AnchorPoint *parentAnchor = NULL;
+        int index = 0;
+        int parentId;
+        for (auto anchor : anchors) {
+            if (!anchor->above && anchor->anchor) {
+                parentAnchor = anchor->anchor;
+                parentAnchor->detach();
+                parentId = index;
+            }
+            index++;
+        }
+
         // Creating CSG 
         std::string csg = module->openscad("csg", parameters(robot));
         // Main reference
@@ -444,11 +460,19 @@ namespace Metabot
             ref.compile(backend);
         }
 
-        int index = 0;
+        index = 0;
         for (auto anchor : anchors) {
             anchor->component = this;
             anchor->id = index;
             index++;
+        }
+
+        if (update) {
+            moveAnchors(old);
+            if (parentAnchor) {
+                parentAnchor->attach(anchors[parentId]);
+            }
+            delete old;
         }
     }
 

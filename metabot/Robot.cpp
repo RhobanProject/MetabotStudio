@@ -173,6 +173,7 @@ namespace Metabot
         if (root) {
             robot->root = root->clone();
         }
+        robot->parameters = parameters;
 
         return robot;
     }
@@ -262,7 +263,7 @@ namespace Metabot
     void Robot::compile()
     {
         if (root != NULL) {
-            root->compileAll(this);
+            root->update(this);
         }
     }
             
