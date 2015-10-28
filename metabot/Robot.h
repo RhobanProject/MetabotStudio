@@ -7,7 +7,7 @@
 #include "Ref.h"
 #include "Vect.h"
 #include "Dynamics.h"
-#include "BOM.h"
+#include "scad/BOM.h"
 #include "Values.h"
 
 namespace Metabot
