@@ -189,7 +189,7 @@ namespace Metabot
         root = NULL;
     }
             
-    void Robot::loadFromFile(std::string filename)
+    void Robot::loadFromFile(std::string filename, Values defines)
     {
         if (file_exists(filename)) {
             std::string data = file_get_contents(filename);
@@ -216,6 +216,9 @@ namespace Metabot
 
             if (json.isMember("parameters")) {
                 parameters = Values::fromJson(json["parameters"]);
+                for (auto entry : defines) {
+                    parameters.set(entry.first, entry.second);
+                }
             }
 
             if (!json.isMember("tree")) {
@@ -224,7 +227,7 @@ namespace Metabot
                 throw ss.str();
             }
 
-            root = backend->fromJson(json["tree"]);
+            root = backend->fromJson(json["tree"], this);
         }
 
         number();

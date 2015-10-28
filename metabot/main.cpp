@@ -43,12 +43,14 @@ void usage()
     exit(EXIT_FAILURE);
 }
 
+Values defines;
+
 void needRobot()
 {
     if (robotFile != "") {
         try {
             robot = new Robot(backend);
-            robot->loadFromFile(robotFile);
+            robot->loadFromFile(robotFile, defines);
         } catch (string err) {
             cerr << "Error: unable to open " << robotFile << " (" << err << ")" << endl;
             exit(EXIT_FAILURE);
@@ -68,8 +70,15 @@ int main(int argc, char *argv[])
     string mode = "";
     string output = "";
 
-    while ((index = getopt(argc, argv, "p:bcws:vS:dj:k")) != -1) {
+    while ((index = getopt(argc, argv, "p:bcws:vS:dj:kD:")) != -1) {
         switch (index) {
+            case 'D': {
+                    auto parts = split(string(optarg), '=', 2);
+                    if (parts.size() == 2) {
+                        defines.set(parts[0], parts[1]);
+                    }
+                }
+                break;
             case 'c':
                 mode = "cacheClear";
                 break;
@@ -77,6 +86,7 @@ int main(int argc, char *argv[])
                 mode = "cacheWarmup";
                 break;
             case 's':
+                output = string(optarg);
                 mode = "stlExport";
                 break;
             case 'b':
@@ -128,6 +138,7 @@ int main(int argc, char *argv[])
     try {
         // Loading the backend
         backend = new Backend("xl-320");
+        // backend = new Backend("abstract");
         backend->load();
 
         // Cache handling

@@ -43,7 +43,7 @@ namespace Metabot
             AnchorPoint *getHoveredAnchor(int id);
 
             void clear();
-            void loadFromFile(std::string filename);
+            void loadFromFile(std::string filename, Values values = Values());
             void saveToFile(std::string filename);
             void number();
 

@@ -419,10 +419,7 @@ namespace Metabot
         std::string csg = module->openscad("csg", parameters(robot));
         // Main reference
         main.name = module->getName();
-        main.parameters.clear();
-        for (auto entry : values) {
-            main.parameters.set(entry.first, entry.second);
-        }
+        main.parameters = parameters(robot);
         // Parsing the CSG document
         CSG *document = CSG::parse(csg);
         anchors = document->anchors;

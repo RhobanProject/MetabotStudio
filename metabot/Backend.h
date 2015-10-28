@@ -6,7 +6,7 @@
 #include <3d/Model.h>
 #include <json/json.h>
 #include "Component.h"
-#include "Module.h"
+#include "scad/Module.h"
 
 namespace Metabot
 {

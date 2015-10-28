@@ -10,9 +10,9 @@
 #include <3d/Model.h>
 #include <json/json.h>
 #include "Values.h"
-#include "BOM.h"
+#include "scad/BOM.h"
 #include "Ref.h"
-#include "Shape.h"
+#include "scad/Shape.h"
 #include "Parameters.h"
 #include "Dynamics.h"
 class Symbolic;
