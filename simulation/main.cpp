@@ -152,24 +152,34 @@ int main(int _argc, char **_argv)
         backend.load();
         Metabot::Robot robot(&backend);
         robot.loadFromFile("/home/gregwar/Metabot/robots/metabot.robot");
+        
+        std::cout << "Connecting to the simulator..." << std::endl;
+        gazebo::client::setup(_argc, _argv);
+        
+        gazebo::transport::NodePtr node(new gazebo::transport::Node());
+        gazebo::transport::PublisherPtr pub;
+        node->Init("default");
+
+        std::cout << "Removing model..." << std::endl;
+        gazebo::msgs::Request *msg_delete = gazebo::msgs::CreateRequest("entity_delete", "metabot");
+        pub = node->Advertise<gazebo::msgs::Request>("~/request");
+        std::cout << "Wait..." << std::endl;
+        pub->WaitForConnection();
+        std::cout << "Publish..." << std::endl;
+        pub->Publish(*msg_delete, true);
+        delete msg_delete;
 
         std::cout << "Exporting it to SDF..." << std::endl;
         robot.writeSDF("/tmp/metabot");
-
-        std::cout << "Connecting to the simulator..." << std::endl;
-        gazebo::client::setup(_argc, _argv);
-
 
         std::cout << "Loading the model..." << std::endl;
         boost::shared_ptr<sdf::SDF> sdf(new sdf::SDF());
         sdf::init(sdf);
         sdf::readFile("/tmp/metabot/robot.sdf", sdf);
         gazebo::math::Pose pose;
-        gazebo::transport::NodePtr node(new gazebo::transport::Node());
-        node->Init("default");
+        pub = node->Advertise<gazebo::msgs::Factory>("~/factory");
         sdf::ElementPtr modelElem = sdf->Root()->GetElement("model");
         modelElem->GetAttribute("name")->SetFromString("metabot");
-        gazebo::transport::PublisherPtr pub = node->Advertise<gazebo::msgs::Factory>("~/factory");
         pub->WaitForConnection();
         gazebo::msgs::Factory msg;
         msg.set_sdf(sdf->ToString());
