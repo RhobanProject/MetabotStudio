@@ -265,6 +265,7 @@ namespace Metabot
         if (root != NULL) {
             root->update(this);
         }
+        number();
     }
             
 #ifdef OPENGL
