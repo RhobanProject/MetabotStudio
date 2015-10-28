@@ -24,7 +24,6 @@
 #include "function.h"
 #include "motion.h"
 #include "kinematic.h"
-#include "mapping.h"
 
 // Angles for the legs motor
 float l1[4], l2[4], l3[4];
@@ -53,7 +52,7 @@ float motion_get_motor(int idx)
 #define AMPLITUDE 30
 
 // Speed factor
-TERMINAL_PARAMETER_FLOAT(freq, "Time factor gain", 1);
+TERMINAL_PARAMETER_FLOAT(freq, "Time factor gain", 1.0);
 
 // Legs bacakward mode
 TERMINAL_PARAMETER_BOOL(backLegs, "Legs backwards", false);
@@ -63,7 +62,7 @@ TERMINAL_PARAMETER_FLOAT(alt, "Height of the steps", 10.0);
 
 // Static position
 TERMINAL_PARAMETER_FLOAT(r, "Robot size", 125.0);
-TERMINAL_PARAMETER_FLOAT(h, "Robot height", -38.0);
+TERMINAL_PARAMETER_FLOAT(h, "Robot height", -48.0);
 
 // Direction vector
 TERMINAL_PARAMETER_FLOAT(dx, "Dx", 50.0);
@@ -164,9 +163,6 @@ float extra_r = 0;
 
 void motion_init()
 {
-    // Setting the mapping to 0
-    remap(0);
-
     for (int i=0; i<4; i++) {
         ex[i] = 0;
         ey[i] = 0;

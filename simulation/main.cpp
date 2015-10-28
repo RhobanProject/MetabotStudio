@@ -2,10 +2,8 @@
 #include <deque>
 #include <map>
 #include <unistd.h>
-#include <gazebo/transport/transport.hh>
-#include <gazebo/msgs/msgs.hh>
-#include <gazebo/gazebo_client.hh>
 #include "motion.h"
+#include "GazeboRobot.h"
 #include <Robot.h>
 #include <Backend.h>
 
@@ -58,76 +56,6 @@ gazebo::client::shutdown();
    }
    */
 
-class GazeboRobot
-{
-    public:
-        GazeboRobot(std::string name_, std::string world_="default")
-            : name(name_), world(world_), worldNode(new gazebo::transport::Node()), factor(1)
-            {
-                // Initializing world node
-                worldNode->Init(world);
-
-                // Creating the publisher
-                jointPublisher = worldNode->Advertise<gazebo::msgs::JointCmd>(
-                        std::string("~/") + name + "/joint_cmd");
-                jointPublisher->WaitForConnection();
-
-                // Subscribe to world stats
-                statsSub = worldNode->Subscribe("~/world_stats", &GazeboRobot::getStats, this);
-            }
-
-        void getStats(ConstWorldStatisticsPtr &_msg)
-        {
-            auto simTime = gazebo::msgs::Convert(_msg->sim_time());
-            auto realTime = gazebo::msgs::Convert(_msg->real_time());
-
-            simTimes.push_back(simTime.Double());
-            if (simTimes.size() > 30) simTimes.pop_front();
-            realTimes.push_back(realTime.Double());
-            if (realTimes.size() > 30) realTimes.pop_front();
-
-            double simTotal=0, realTotal=0;
-            for (int k=0; k<simTimes.size(); k++) {
-                simTotal += simTimes[k]-simTimes.front();
-                realTotal += realTimes[k]-realTimes.front();
-            }
-
-            if (realTotal > 0) {
-                factor = simTotal/(float)realTotal;
-                // std::cout << factor << std::endl;
-            }
-        }
-
-        void setJoint(std::string joint, float target)
-        {
-            auto &msg = getJointMessage(joint);
-            msg.mutable_position()->set_target(target);
-            jointPublisher->Publish(msg, true);
-            std::cout << target << " ";
-        }
-
-        float factor;
-
-    protected:
-        gazebo::transport::NodePtr worldNode;
-        gazebo::transport::PublisherPtr jointPublisher;
-        gazebo::transport::SubscriberPtr statsSub;
-        std::string name, world;
-        std::deque<double> simTimes;
-        std::deque<double> realTimes;
-        std::map<std::string, gazebo::msgs::JointCmd> jointMessages;
-
-        gazebo::msgs::JointCmd &getJointMessage(std::string joint)
-        {
-            if (!jointMessages.count(joint)) {
-                jointMessages[joint] = gazebo::msgs::JointCmd();
-                jointMessages[joint].set_name(name + std::string("::") + joint);
-            }
-
-            return jointMessages[joint];
-        }
-};
-
 #define JOINTS 12
 std::string joints[JOINTS] = {
     "double_u_2_joint",
@@ -152,6 +80,9 @@ int main(int _argc, char **_argv)
         backend.load();
         Metabot::Robot robot(&backend);
         robot.loadFromFile("/home/gregwar/Metabot/robots/metabot.robot");
+        robot.parameters.set("L2", "250");
+        robot.parameters.set("L3", "250");
+        robot.compile();
         
         std::cout << "Connecting to the simulator..." << std::endl;
         gazebo::client::setup(_argc, _argv);
@@ -170,12 +101,12 @@ int main(int _argc, char **_argv)
         delete msg_delete;
 
         std::cout << "Exporting it to SDF..." << std::endl;
-        robot.writeSDF("/tmp/metabot");
+        robot.writeSDF("/home/gregwar/.gazebo/models/metabot/");
 
         std::cout << "Loading the model..." << std::endl;
         boost::shared_ptr<sdf::SDF> sdf(new sdf::SDF());
         sdf::init(sdf);
-        sdf::readFile("/tmp/metabot/robot.sdf", sdf);
+        sdf::readFile("/home/gregwar/.gazebo/models/metabot/robot.sdf", sdf);
         gazebo::math::Pose pose;
         pub = node->Advertise<gazebo::msgs::Factory>("~/factory");
         sdf::ElementPtr modelElem = sdf->Root()->GetElement("model");
@@ -183,6 +114,7 @@ int main(int _argc, char **_argv)
         pub->WaitForConnection();
         gazebo::msgs::Factory msg;
         msg.set_sdf(sdf->ToString());
+        pose += gazebo::math::Pose(0, 0, 0.05, 0, 0, 0);
         gazebo::msgs::Set(msg.mutable_pose(), pose.Ign());
         pub->Publish(msg, true);
 
@@ -196,8 +128,8 @@ int main(int _argc, char **_argv)
             motion_tick(t);
             for (int k=0; k<4; k++) {
                 metabot.setJoint(joints[k*3], DEG2RAD(l1[k]));
-                metabot.setJoint(joints[k*3+1], -DEG2RAD(l2[k]));
-                metabot.setJoint(joints[k*3+2], DEG2RAD(l3[k]));
+                metabot.setJoint(joints[k*3+1], DEG2RAD(l2[k]));
+                metabot.setJoint(joints[k*3+2], -DEG2RAD(l3[k]));
             }
             std::cout << std::endl;
             usleep(20000);
