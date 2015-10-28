@@ -11,24 +11,26 @@ use <../parts/square_body_plate.scad>;
 //:Parameter Thickness
 module square_body(Width=40, LegsSpacing=80, Legs=4, Thickness=2.2)
 {
-    Length = LegsSpacing*(Legs/2-1)+24;
-    translate([0,0,MotorDepth/2]) {
-        square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
-    }
+    rotate([0,0,90]) {
+        Length = LegsSpacing*(Legs/2-1)+24;
+        translate([0,0,MotorDepth/2]) {
+            square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
+        }
 
-    translate([0,0,-Thickness-MotorDepth/2]) {
-        square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
-    }
+        translate([0,0,-Thickness-MotorDepth/2]) {
+            square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness);
+        }
 
-    LegsDistance = LegsSpacing*(Legs/2-1);
-    for (leg=[1:(Legs/2)]) {
-        for (side=[-1,1]) {
-            translate([-side*(Width/2),LegsDistance/2-(leg-1)*LegsSpacing,0])
-                rotate([0,180,side*90])
-                translate([0,OlloSpacing*4,0]) {
-                    motorArm();
-                    //:Anchor motor male
-                }
+        LegsDistance = LegsSpacing*(Legs/2-1);
+        for (leg=[1:(Legs/2)]) {
+            for (side=[-1,1]) {
+                translate([-side*(Width/2),LegsDistance/2-(leg-1)*LegsSpacing,0])
+                    rotate([0,180,side*90])
+                    translate([0,OlloSpacing*4,0]) {
+                        motorArm();
+                        //:Anchor motor male
+                    }
+            }
         }
     }
 }

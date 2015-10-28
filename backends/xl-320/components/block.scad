@@ -43,3 +43,4 @@ module block(Thickness=2.2, Internal=false)
             tie_bar();
     }
 }
+block();
