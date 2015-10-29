@@ -58,18 +58,18 @@ gazebo::client::shutdown();
 
 #define JOINTS 12
 std::string joints[JOINTS] = {
-    "double_u_2_joint",
-    "side_to_side_3_joint",
-    "arm_leg_4_joint",
-    "double_u_5_joint",
-    "side_to_side_6_joint",
-    "arm_leg_7_joint",
     "double_u_8_joint",
     "side_to_side_9_joint",
     "arm_leg_10_joint",
     "double_u_11_joint",
     "side_to_side_12_joint",
     "arm_leg_13_joint",
+    "double_u_2_joint",
+    "side_to_side_3_joint",
+    "arm_leg_4_joint",
+    "double_u_5_joint",
+    "side_to_side_6_joint",
+    "arm_leg_7_joint"
 };
 
 int main(int _argc, char **_argv)
@@ -118,7 +118,7 @@ int main(int _argc, char **_argv)
 
         GazeboRobot metabot("metabot");
         Controller controller;
-        controller.dx = 30;
+        controller.dx = 80;
 
         float t = 0.0;
         while (true) {
