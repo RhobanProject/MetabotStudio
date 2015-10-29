@@ -272,8 +272,8 @@ namespace Metabot
             ss << above->transformationForward().toSDF() << std::endl;
             ss << "    <axis>" << std::endl;
             ss << "         <xyz>0 0 1</xyz>" << std::endl;
-            // ss << parentPreTransform.multiply(above->anchor->transformationForward()).toSDF() << std::endl;
             ss << "          <limit>" << std::endl;
+            // XXX: This limits should be configurable
             ss << "              <lower>" << -M_PI << "</lower>" << std::endl;
             ss << "              <upper>" << M_PI << "</upper>" << std::endl;
             ss << "              <effort>0.5</effort>" << std::endl;
