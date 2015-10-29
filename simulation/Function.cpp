@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "function.h"
+#include "Function.h"
 
 #define POINT_X(n) points[2*(n)]
 #define POINT_Y(n) points[2*(n)+1]

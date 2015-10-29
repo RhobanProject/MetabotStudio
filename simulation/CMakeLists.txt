@@ -17,10 +17,10 @@ list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 
 set (SOURCES
     GazeboRobot.cpp
+    Controller.cpp
+    Function.cpp
 
-    motion.cpp
     kinematic.cpp
-    function.cpp
     main.cpp
     )
 

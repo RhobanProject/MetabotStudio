@@ -1,6 +1,11 @@
 #ifndef _IK_H
 #define _IK_H
 
+#define L0      37
+#define L1      40
+#define L2      62
+#define L3      85
+
 // Math util
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define MIN(a,b) (((a)<(b))?(a):(b))

@@ -2,10 +2,10 @@
 #include <deque>
 #include <map>
 #include <unistd.h>
-#include "motion.h"
-#include "GazeboRobot.h"
 #include <Robot.h>
 #include <Backend.h>
+#include "Controller.h"
+#include "GazeboRobot.h"
 
 #include <iostream>
 
@@ -80,8 +80,6 @@ int main(int _argc, char **_argv)
         backend.load();
         Metabot::Robot robot(&backend);
         robot.loadFromFile("/home/gregwar/Metabot/robots/metabot.robot");
-        robot.parameters.set("L2", "250");
-        robot.parameters.set("L3", "250");
         robot.compile();
         
         std::cout << "Connecting to the simulator..." << std::endl;
@@ -119,17 +117,18 @@ int main(int _argc, char **_argv)
         pub->Publish(msg, true);
 
         GazeboRobot metabot("metabot");
-        motion_init();
+        Controller controller;
+        controller.dx = 30;
 
         float t = 0.0;
         while (true) {
-            t += 0.02*motion_get_f()*metabot.factor;
+            t += 0.02*controller.freq*metabot.factor;
             while (t > 1.0) t -= 1.0;
-            motion_tick(t);
+            auto angles = controller.compute(t);
             for (int k=0; k<4; k++) {
-                metabot.setJoint(joints[k*3], DEG2RAD(l1[k]));
-                metabot.setJoint(joints[k*3+1], DEG2RAD(l2[k]));
-                metabot.setJoint(joints[k*3+2], -DEG2RAD(l3[k]));
+                metabot.setJoint(joints[k*3], -DEG2RAD(angles.l1[k]));
+                metabot.setJoint(joints[k*3+1], -DEG2RAD(angles.l2[k]));
+                metabot.setJoint(joints[k*3+2], DEG2RAD(angles.l3[k]));
             }
             std::cout << std::endl;
             usleep(20000);
