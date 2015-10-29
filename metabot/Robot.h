@@ -9,6 +9,7 @@
 #include "Dynamics.h"
 #include "scad/BOM.h"
 #include "Values.h"
+#include "Kinematic.h"
 
 namespace Metabot
 {
@@ -32,7 +33,7 @@ namespace Metabot
             void computeDynamics();
             Dynamics getDynamics();
             void printDynamics();
-            void computeKinematic();
+            Kinematic computeKinematic();
 
             Robot *clone();
             void setRoot(Component *root);

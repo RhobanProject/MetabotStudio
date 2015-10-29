@@ -152,9 +152,9 @@ namespace Metabot
                         json["quantity"] = 1;
                         oss << jsonMarker(json);
                     }
-                    if (annotation == "contact") {
+                    if (annotation == "tip") {
                         Json::Value json;
-                        json["type"] = "contact";
+                        json["type"] = "tip";
                         oss << jsonMarker(json);
                     }
                 } else {

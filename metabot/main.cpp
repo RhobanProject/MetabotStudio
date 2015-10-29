@@ -235,7 +235,8 @@ int main(int argc, char *argv[])
             //c.intersects(l);
         } else if (mode == "kinematic") {
             needRobot();
-            robot->computeKinematic();
+            auto kinematic = robot->computeKinematic();
+            kinematic.display();
         } else {
             usage();
         }

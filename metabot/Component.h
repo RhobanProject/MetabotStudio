@@ -15,6 +15,7 @@
 #include "scad/Shape.h"
 #include "Parameters.h"
 #include "Dynamics.h"
+#include "Kinematic.h"
 class Symbolic;
 
 namespace Metabot
@@ -33,7 +34,8 @@ namespace Metabot
 
             void root();
 
-            void computeKinematic(Symbolic parent, AnchorPoint *above = NULL);
+            void computeKinematic(Kinematic &kinematic, Symbolic parent,
+                    std::vector<Symbolic> dependances= std::vector<Symbolic>(), AnchorPoint *above = NULL);
 
             void computeDynamics();
             Dynamics getDynamics();
@@ -106,7 +108,7 @@ namespace Metabot
             Refs parts;
             BOM bom;
             std::vector<Shape> shapes;
-            std::vector<TransformMatrix> contacts;
+            std::vector<TransformMatrix> tips;
 
             Model collisions;
             Dynamics dynamics;

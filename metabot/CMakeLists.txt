@@ -39,6 +39,7 @@ set(ALL_SOURCES
     Backend.cpp
     Component.cpp
     Dynamics.cpp
+    Kinematic.cpp
     Parameter.cpp
     Parameters.cpp
     Ref.cpp

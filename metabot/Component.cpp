@@ -63,7 +63,7 @@ namespace Metabot
         component->models = models;
         component->parts = parts;
         component->bom = bom;
-        component->contacts = contacts;
+        component->tips = tips;
 
         return component;
     }
@@ -77,16 +77,21 @@ namespace Metabot
         }
     }
 
-    void Component::computeKinematic(Symbolic parent, AnchorPoint *above)
+    void Component::computeKinematic(Kinematic &kinematic, Symbolic parent,
+            std::vector<Symbolic> dependances, AnchorPoint *above)
     {
         if (above != NULL) {
-            std::stringstream ss;
-            ss << "alpha_" << id;
-            auto myTransformation = above->symbolicTransformation(ss.str());
+            auto alpha = kinematic.addJoint();
+            dependances.push_back(Symbolic(alpha));
+            auto myTransformation = above->symbolicTransformation(alpha);
             myTransformation *= above->anchor->transformationBackward().toSymbolic();
 
-            std::cout << "# " << above->component->id << "_to_" << id << std::endl;
-            std::cout << myTransformation << std::endl;
+            std::stringstream ss;
+            ss << "/*" << std::endl;
+            ss << above->component->id << "_to_" << id << std::endl;
+            ss << myTransformation << std::endl;
+            ss << "*/" << std::endl;
+            kinematic.code += ss.str();
 
             parent *= myTransformation;
             // std::cout << "// Sign: " << above->sign() << std::endl;
@@ -95,20 +100,22 @@ namespace Metabot
 
         for (auto anchor : anchors) {
             if (anchor->above == true && anchor->anchor!=NULL) {
-                anchor->anchor->component->computeKinematic(parent, anchor);
+                anchor->anchor->component->computeKinematic(kinematic, parent, dependances, anchor);
             }
         }
 
-        for (auto contact : contacts) {
-            std::cout << "# Contact" << std::endl;
-            auto sym = contact.toSymbolic();
-            std::cout << sym << std::endl;
+        for (auto tip : tips) {
+            std::stringstream ss;
+            ss << "/*" << std::endl;
+            ss << "Tip" << std::endl;
+            auto sym = tip.toSymbolic();
+            ss << sym;
+            ss << "*/" << std::endl << std::endl;
+            kinematic.code += ss.str();
             Symbolic matrix = parent*sym;
-            std::cout << "void contact_" << id << "_kinematic(float *x, float *y, float *z) {" << std::endl;
-            std::cout << "*x = " << matrix(0,3).simplify() << ";" << std::endl;
-            std::cout << "*y = " << matrix(1,3).simplify() << ";" << std::endl;
-            std::cout << "*z = " << matrix(2,3).simplify() << ";" << std::endl;
-            std::cout << "}" << std::endl <<  std::endl;
+
+            kinematic.addTip(matrix(0,3).simplify(), matrix(1,3).simplify(), matrix(2,3).simplify(),
+                    dependances);
         }
     }
             
@@ -442,7 +449,7 @@ namespace Metabot
         parts = document->parts;
         models = document->models;
         bom = document->bom;
-        contacts = document->contacts;
+        tips = document->tips;
         delete document;
         
         // Collision CSG & STL

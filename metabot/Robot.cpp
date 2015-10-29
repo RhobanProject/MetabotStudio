@@ -50,12 +50,15 @@ namespace Metabot
         return groups;
     }
 
-    void Robot::computeKinematic()
+    Kinematic Robot::computeKinematic()
     {
+        Kinematic kinematic;
         Symbolic identity = TransformMatrix::identity().toSymbolic();
         if (root != NULL) {
-            root->computeKinematic(identity);
+            root->computeKinematic(kinematic, identity);
         }
+
+        return kinematic;
     }
 
     void Robot::computeDynamics()
