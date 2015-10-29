@@ -35,7 +35,7 @@ namespace Metabot
             void root();
 
             void computeKinematic(Kinematic &kinematic, Symbolic parent,
-                    std::vector<Symbolic> dependances= std::vector<Symbolic>(), AnchorPoint *above = NULL);
+                    Kinematic::Chain chain = Kinematic::Chain(), AnchorPoint *above = NULL);
 
             void computeDynamics();
             Dynamics getDynamics();

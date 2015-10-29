@@ -78,11 +78,13 @@ namespace Metabot
     }
 
     void Component::computeKinematic(Kinematic &kinematic, Symbolic parent,
-            std::vector<Symbolic> dependances, AnchorPoint *above)
+            Kinematic::Chain chain, AnchorPoint *above)
     {
         if (above != NULL) {
             auto alpha = kinematic.addJoint();
-            dependances.push_back(Symbolic(alpha));
+            chain.addMatrix(above->transformationForward());
+            chain.addRotation(kinematic.alpha-1);
+            chain.addMatrix(above->anchor->transformationBackward());
             auto myTransformation = above->symbolicTransformation(alpha);
             myTransformation *= above->anchor->transformationBackward().toSymbolic();
 
@@ -100,7 +102,7 @@ namespace Metabot
 
         for (auto anchor : anchors) {
             if (anchor->above == true && anchor->anchor!=NULL) {
-                anchor->anchor->component->computeKinematic(kinematic, parent, dependances, anchor);
+                anchor->anchor->component->computeKinematic(kinematic, parent, chain, anchor);
             }
         }
 
@@ -108,14 +110,14 @@ namespace Metabot
             std::stringstream ss;
             ss << "/*" << std::endl;
             ss << "Tip" << std::endl;
+            chain.addMatrix(tip);
             auto sym = tip.toSymbolic();
             ss << sym;
             ss << "*/" << std::endl << std::endl;
             kinematic.code += ss.str();
             Symbolic matrix = parent*sym;
 
-            kinematic.addTip(matrix(0,3).simplify(), matrix(1,3).simplify(), matrix(2,3).simplify(),
-                    dependances);
+            kinematic.addTip(matrix(0,3).simplify(), matrix(1,3).simplify(), matrix(2,3).simplify(), chain);
         }
     }
             

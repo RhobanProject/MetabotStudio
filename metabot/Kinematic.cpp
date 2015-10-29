@@ -3,6 +3,22 @@
 
 namespace Metabot
 {
+    void Kinematic::Chain::addMatrix(TransformMatrix matrix)
+    {
+        Kinematic::ChainItem item;
+        item.type = CHAIN_MATRIX;
+        item.matrix = matrix;
+        items.push_back(item);
+    }
+
+    void Kinematic::Chain::addRotation(int alpha)
+    {
+        Kinematic::ChainItem item;
+        item.type = CHAIN_ROTATION;
+        item.alpha = alpha;
+        items.push_back(item);
+    }
+
     Kinematic::Kinematic()
         : alpha(0), tip(0)
     {
@@ -27,7 +43,7 @@ namespace Metabot
         return ss.str();
     }
 
-    void Kinematic::addTip(Symbolic x, Symbolic y, Symbolic z, std::vector<Symbolic> dependances)
+    void Kinematic::addTip(Symbolic x, Symbolic y, Symbolic z, Chain chain)
     {
         std::stringstream ss;
         ss << "RobotKinematic::Point3D tip_" << (tip++) << "_position() {" << std::endl;
@@ -40,10 +56,10 @@ namespace Metabot
         code += ss.str();
 
         Kinematic::Tip tip;
-        tip.dependances = dependances;
         tip.x = x;
         tip.y = y;
         tip.z = z;
+        tip.chain = chain;
         tips.push_back(tip);
     }
 }
