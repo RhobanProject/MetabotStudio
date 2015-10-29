@@ -10,6 +10,18 @@
 
 namespace Metabot
 {
+    static std::map<std::string, Backend *> backends;
+
+    Backend *Backend::get(std::string name)
+    {
+        if (!backends.count(name)) {
+            backends[name] = new Backend(name);
+            backends[name]->load();
+        }
+
+        return backends[name];
+    }
+
     Backend::Backend(std::string name_)
         : name(name_)
     {

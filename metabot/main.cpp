@@ -8,18 +8,17 @@
 #include <3d/Volume.h>
 #include <getopt.h>
 #include "util.h"
-#include "Backend.h"
 #include "AnchorPoint.h"
 #include "Component.h"
 #include "Robot.h"
 #include "Voxels.h"
 #include "TransformMatrix.h"
+#include "Backend.h"
 #include "util.h"
 
 using namespace std;
 using namespace Metabot;
 
-Backend *backend = NULL;
 Robot *robot = NULL;
 string robotFile = "";
 
@@ -28,9 +27,9 @@ void usage()
     cerr << "Metabot v1.0 - Rhoban System" << endl;
     cerr << "Usage: metabot [option] [file.robot]" << endl;
     cerr << "" << endl;
-    cerr << "Cache operations" << endl;
-    cerr << "   -c: Clears the cache" << endl;
-    cerr << "   -w: Warmup/generates the cache" << endl;
+    cerr << "Backend operations" << endl;
+    cerr << "   -c [backend]: Clears the cache" << endl;
+    cerr << "   -w [backend]: Warmup/generates the cache" << endl;
     cerr << "" << endl;
     cerr << "Robot operations (needs a .robot)" << endl;
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
@@ -49,7 +48,7 @@ void needRobot()
 {
     if (robotFile != "") {
         try {
-            robot = new Robot(backend);
+            robot = new Robot();
             robot->loadFromFile(robotFile, defines);
         } catch (string err) {
             cerr << "Error: unable to open " << robotFile << " (" << err << ")" << endl;
@@ -69,8 +68,9 @@ int main(int argc, char *argv[])
     int index;
     string mode = "";
     string output = "";
+    string backendName = "";
 
-    while ((index = getopt(argc, argv, "p:bcws:vS:dj:kD:")) != -1) {
+    while ((index = getopt(argc, argv, "p:bc:w:s:vS:dj:kD:")) != -1) {
         switch (index) {
             case 'D': {
                     auto parts = split(string(optarg), '=', 2);
@@ -80,9 +80,11 @@ int main(int argc, char *argv[])
                 }
                 break;
             case 'c':
+                backendName = string(optarg);
                 mode = "cacheClear";
                 break;
             case 'w':
+                backendName = string(optarg);
                 mode = "cacheWarmup";
                 break;
             case 's':
@@ -136,17 +138,14 @@ int main(int argc, char *argv[])
     */
 
     try {
-        // Loading the backend
-        backend = new Backend("xl-320");
-        // backend = new Backend("abstract");
-        backend->load();
-
         // Cache handling
         if (mode == "cacheClear") {
+            auto backend = Backend::get(backendName);
             cout << "Clearing the cache" << endl;
             int n = backend->clearCache();
             cout << "Done, removed " << n << " files." << endl;
         } else if (mode == "cacheWarmup") {
+            auto backend = Backend::get(backendName);
             cout << "Generating the cache..." << endl;
             backend->buildCache();
             cout << "Cache generated (" << backend->cacheFiles() << " files)." << endl;
@@ -248,10 +247,6 @@ int main(int argc, char *argv[])
 
     if (robot != NULL) {
         delete robot;
-    }
-
-    if (backend != NULL) {
-        delete backend;
     }
 
     return EXIT_SUCCESS;

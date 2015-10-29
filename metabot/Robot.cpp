@@ -205,15 +205,11 @@ namespace Metabot
 
             if (!json.isObject() || !json.isMember("backend") || !json["backend"].isString()) {
                 std::stringstream ss;
-                ss << "Malformed file " << filename << " (unable to read backend)";
+                ss << "Malformed file " << filename << " (backend not specified)";
                 throw ss.str();
             }
 
-            if (json["backend"].asString() != backend->name) {
-                std::stringstream ss;
-                ss << "Bad backend: " << json["backend"].asString();
-                throw ss.str();
-            }
+            backend = Backend::get(json["backend"].asString());
 
             if (json.isMember("parameters")) {
                 parameters = Values::fromJson(json["parameters"]);

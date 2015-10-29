@@ -18,7 +18,7 @@ namespace Metabot
     class Robot
     {
         public:
-            Robot(Backend *backend);
+            Robot(Backend *backend=NULL);
             virtual ~Robot();
             void compile();
             Model toModel();

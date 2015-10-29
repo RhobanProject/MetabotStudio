@@ -15,6 +15,8 @@ namespace Metabot
     class Backend
     {
         public:
+            static Backend *get(std::string name);
+
             Backend(std::string);
             virtual ~Backend();
 
