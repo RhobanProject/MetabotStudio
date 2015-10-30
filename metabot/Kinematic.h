@@ -3,7 +3,9 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <map>
 #include <symbolicc++.h>
+#include "3d/Point3.h"
 #include "TransformMatrix.h"
 
 #define CHAIN_MATRIX    0
@@ -25,7 +27,9 @@ namespace Metabot
                 public:
                     void addMatrix(TransformMatrix matrix);
                     void addRotation(int alpha);
+                    Point3 position();
                     std::vector<ChainItem> items;
+                    std::map<int, int> angles;
             };
 
             Kinematic();

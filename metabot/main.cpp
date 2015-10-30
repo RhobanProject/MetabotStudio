@@ -239,13 +239,16 @@ int main(int argc, char *argv[])
             kinematic.display();
 
             /*
-            auto tip = kinematic.tips[0];
-            for (auto item : tip.chain.items) {
-                if (item.type == CHAIN_ROTATION) {
-                    std::cout << "Rotation with alpha " << item.alpha << std::endl;
-                } else {
-                    std::cout << "Matrix:" << std::endl;
-                    std::cout << item.matrix.toString() << std::endl;
+            for (auto tip : kinematic.tips) {
+                auto point = tip.chain.position();
+                std::cout << point.x << ", " << point.y << ", " << point.z << std::endl;
+                for (auto item : tip.chain.items) {
+                    if (item.type == CHAIN_ROTATION) {
+                        std::cout << "Rotation with alpha " << item.alpha << std::endl;
+                    } else {
+                        std::cout << "Matrix:" << std::endl;
+                        std::cout << item.matrix.toString() << std::endl;
+                    }
                 }
             }
             */

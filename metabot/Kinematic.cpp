@@ -17,6 +17,22 @@ namespace Metabot
         item.type = CHAIN_ROTATION;
         item.alpha = alpha;
         items.push_back(item);
+        angles[alpha] = 0.0;
+    }
+                    
+    Point3 Kinematic::Chain::position()
+    {
+        auto matrix = TransformMatrix::identity();
+
+        for (auto item : items) {
+            if (item.type == CHAIN_MATRIX) {
+                matrix = matrix.multiply(item.matrix);
+            } else if (item.type == CHAIN_ROTATION) {
+                matrix = matrix.multiply(TransformMatrix::rotationZ(angles[item.alpha]));
+            }
+        }
+
+        return Point3(matrix.x(), matrix.y(), matrix.z());
     }
 
     Kinematic::Kinematic()
