@@ -241,7 +241,8 @@ int main(int argc, char *argv[])
             /*
             for (auto tip : kinematic.tips) {
                 auto point = tip.chain.position();
-                std::cout << point.x << ", " << point.y << ", " << point.z << std::endl;
+                x += point.x + point.y + point.z;
+                // std::cout << point.x << ", " << point.y << ", " << point.z << std::endl;
                 for (auto item : tip.chain.items) {
                     if (item.type == CHAIN_ROTATION) {
                         std::cout << "Rotation with alpha " << item.alpha << std::endl;
