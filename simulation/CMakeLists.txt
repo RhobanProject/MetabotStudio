@@ -21,6 +21,7 @@ set (SOURCES
     Controller.cpp
     Function.cpp
 
+    util.cpp
     kinematic.cpp
     main.cpp
     )

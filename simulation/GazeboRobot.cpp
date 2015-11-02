@@ -1,4 +1,5 @@
 #include "GazeboRobot.h"
+#include "util.h"
 
     GazeboRobot::GazeboRobot(std::string name_, std::string world_)
 : name(name_), world(world_), worldNode(new gazebo::transport::Node()), factor(1),
@@ -129,12 +130,12 @@ void GazeboRobot::unload()
 void GazeboRobot::load(Metabot::Robot &robot)
 {
     unload();
-    robot.writeSDF("/home/gregwar/.gazebo/models/metabot/");
+    robot.writeSDF(homeDir(".gazebo/models/metabot/"));
 
     gazebo::transport::PublisherPtr pub;
     boost::shared_ptr<sdf::SDF> sdf(new sdf::SDF());
     sdf::init(sdf);
-    sdf::readFile("/home/gregwar/.gazebo/models/metabot/robot.sdf", sdf);
+    sdf::readFile(homeDir(".gazebo/models/metabot/robot.sdf"), sdf);
     gazebo::math::Pose pose;
     pub = worldNode->Advertise<gazebo::msgs::Factory>("~/factory");
     sdf::ElementPtr modelElem = sdf->Root()->GetElement("model");

@@ -6,6 +6,7 @@
 #include <Backend.h>
 #include "Controller.h"
 #include "GazeboRobot.h"
+#include "util.h"
 
 #include <iostream>
 
@@ -85,7 +86,7 @@ int main(int _argc, char **_argv)
         // Loading the robot
         GazeboRobot metabot("metabot");
         Metabot::Robot robot;
-        robot.loadFromFile("/home/gregwar/Metabot/robots/metabot2.robot");
+        robot.loadFromFile(homeDir("Metabot/robots/metabot2.robot"));
         robot.compile();
         metabot.load(robot);
 
