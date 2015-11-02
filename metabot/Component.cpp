@@ -83,7 +83,7 @@ namespace Metabot
         if (above != NULL) {
             auto alpha = kinematic.addJoint();
             chain.addMatrix(above->transformationForward());
-            chain.addRotation(kinematic.alpha-1);
+            chain.addRotation(kinematic.alpha-1, id);
             chain.addMatrix(above->anchor->transformationBackward());
             auto myTransformation = above->symbolicTransformation(alpha);
             myTransformation *= above->anchor->transformationBackward().toSymbolic();

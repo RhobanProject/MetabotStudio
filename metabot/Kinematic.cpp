@@ -11,11 +11,12 @@ namespace Metabot
         items.push_back(item);
     }
 
-    void Kinematic::Chain::addRotation(int alpha)
+    void Kinematic::Chain::addRotation(int alpha, int jointId)
     {
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
         item.alpha = alpha;
+        item.jointId = id;
         items.push_back(item);
         angles[alpha] = 0.0;
     }
