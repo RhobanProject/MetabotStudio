@@ -178,7 +178,7 @@ namespace Metabot
             ss << preTransform.multiply(ref->matrix).toJS() << ");" << std::endl;
         }
         
-        if (above!=NULL) {
+        if (above != NULL) {
             auto jointName = linkName + "_joint";
             ss << "var " << jointName << " = new Joint();" << std::endl;
             ss << parent << ".addChild(" << jointName << ", " << parentPreTransform.multiply(above->anchor->transformationForward()).toJS() << ");" << std::endl;
@@ -221,7 +221,6 @@ namespace Metabot
             tmp.str("");
             tmp << module->getName() << "_" << ref->name << "_" << id << "_" << (refid++);
             auto refName = tmp.str();
-            auto jointName = refName+"_joint";
 
             ss << "    <visual name=\"" << refName << "_visual\">" << std::endl;
             ss << "      <geometry>" << std::endl;
@@ -275,7 +274,7 @@ namespace Metabot
         
         // Linking it to the parent
         if (above != NULL) {
-            ss << "  <joint name=\"" << name << "_joint\" type=\"revolute\">" << std::endl;
+            ss << "  <joint name=\"joint_" << id << "\" type=\"revolute\">" << std::endl;
             ss << "    <parent>" << parent << "</parent>" << std::endl;
             ss << "    <child>" << name << "</child>" << std::endl;
             ss << above->transformationForward().toSDF() << std::endl;

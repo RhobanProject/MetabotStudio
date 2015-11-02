@@ -58,18 +58,18 @@ gazebo::client::shutdown();
 
 #define JOINTS 12
 std::string joints[JOINTS] = {
-    "double_u_2_joint",
-    "side_to_side_3_joint",
-    "arm_leg_4_joint",
-    "double_u_5_joint",
-    "side_to_side_6_joint",
-    "arm_leg_7_joint",
-    "double_u_8_joint",
-    "side_to_side_9_joint",
-    "arm_leg_10_joint",
-    "double_u_11_joint",
-    "side_to_side_12_joint",
-    "arm_leg_13_joint"
+    "joint_2",
+    "joint_3",
+    "joint_4",
+    "joint_5",
+    "joint_6",
+    "joint_7",
+    "joint_8",
+    "joint_9",
+    "joint_10",
+    "joint_11",
+    "joint_12",
+    "joint_13",
 };
 
 int main(int _argc, char **_argv)
@@ -95,7 +95,7 @@ int main(int _argc, char **_argv)
         controller.freq = 2.0;
 
         float t = 0.0;
-        while (t < 20) {
+        while (t < 60) {
             metabot.tick(0.02);
             t += 0.02*controller.freq*metabot.factor;
             auto angles = controller.compute(t);
