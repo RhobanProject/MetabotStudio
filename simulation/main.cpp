@@ -58,81 +58,56 @@ gazebo::client::shutdown();
 
 #define JOINTS 12
 std::string joints[JOINTS] = {
-    "double_u_8_joint",
-    "side_to_side_9_joint",
-    "arm_leg_10_joint",
-    "double_u_11_joint",
-    "side_to_side_12_joint",
-    "arm_leg_13_joint",
     "double_u_2_joint",
     "side_to_side_3_joint",
     "arm_leg_4_joint",
     "double_u_5_joint",
     "side_to_side_6_joint",
-    "arm_leg_7_joint"
+    "arm_leg_7_joint",
+    "double_u_8_joint",
+    "side_to_side_9_joint",
+    "arm_leg_10_joint",
+    "double_u_11_joint",
+    "side_to_side_12_joint",
+    "arm_leg_13_joint"
 };
 
 int main(int _argc, char **_argv)
 {
     try {
-        std::cout << "Loading the robot..." << std::endl;
-        Metabot::Backend backend("xl-320");
-        backend.load();
-        Metabot::Robot robot(&backend);
-        robot.loadFromFile("/home/gregwar/Metabot/robots/metabot.robot");
-        robot.compile();
-        
-        std::cout << "Connecting to the simulator..." << std::endl;
+    
         gazebo::client::setup(_argc, _argv);
         
         gazebo::transport::NodePtr node(new gazebo::transport::Node());
         gazebo::transport::PublisherPtr pub;
         node->Init("default");
 
-        std::cout << "Removing model..." << std::endl;
-        gazebo::msgs::Request *msg_delete = gazebo::msgs::CreateRequest("entity_delete", "metabot");
-        pub = node->Advertise<gazebo::msgs::Request>("~/request");
-        std::cout << "Wait..." << std::endl;
-        pub->WaitForConnection();
-        std::cout << "Publish..." << std::endl;
-        pub->Publish(*msg_delete, true);
-        delete msg_delete;
-
-        std::cout << "Exporting it to SDF..." << std::endl;
-        robot.writeSDF("/home/gregwar/.gazebo/models/metabot/");
-
-        std::cout << "Loading the model..." << std::endl;
-        boost::shared_ptr<sdf::SDF> sdf(new sdf::SDF());
-        sdf::init(sdf);
-        sdf::readFile("/home/gregwar/.gazebo/models/metabot/robot.sdf", sdf);
-        gazebo::math::Pose pose;
-        pub = node->Advertise<gazebo::msgs::Factory>("~/factory");
-        sdf::ElementPtr modelElem = sdf->Root()->GetElement("model");
-        modelElem->GetAttribute("name")->SetFromString("metabot");
-        pub->WaitForConnection();
-        gazebo::msgs::Factory msg;
-        msg.set_sdf(sdf->ToString());
-        pose += gazebo::math::Pose(0, 0, 0.05, 0, 0, 0);
-        gazebo::msgs::Set(msg.mutable_pose(), pose.Ign());
-        pub->Publish(msg, true);
-
+        // Loading the robot
         GazeboRobot metabot("metabot");
+        Metabot::Robot robot;
+        robot.loadFromFile("/home/gregwar/Metabot/robots/metabot2.robot");
+        robot.compile();
+        metabot.load(robot);
+
+        // Initializing the controller
         Controller controller;
-        controller.dx = 80;
+        controller.dx = 70;
+        controller.freq = 2.0;
 
         float t = 0.0;
-        while (true) {
+        while (t < 20) {
+            metabot.tick(0.02);
             t += 0.02*controller.freq*metabot.factor;
-            while (t > 1.0) t -= 1.0;
             auto angles = controller.compute(t);
             for (int k=0; k<4; k++) {
                 metabot.setJoint(joints[k*3], -DEG2RAD(angles.l1[k]));
-                metabot.setJoint(joints[k*3+1], -DEG2RAD(angles.l2[k]));
-                metabot.setJoint(joints[k*3+2], DEG2RAD(angles.l3[k]));
+                metabot.setJoint(joints[k*3+1], DEG2RAD(angles.l2[k]));
+                metabot.setJoint(joints[k*3+2], -DEG2RAD(angles.l3[k]));
             }
-            std::cout << std::endl;
+            // std::cout << std::endl;
             usleep(20000);
         }
+        metabot.stopMonitoring();
 
         gazebo::client::shutdown();
     } catch (std::string err) {

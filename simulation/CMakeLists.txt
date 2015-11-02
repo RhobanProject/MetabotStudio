@@ -9,6 +9,7 @@ set (METABOT_DIR
     "${BASE}/metabot/" CACHE STRING "Metabot directory")
 
 include_directories("${METABOT_DIR}")
+include_directories("${METABOT_DIR}/sym")
 add_subdirectory(${METABOT_DIR} metabot)
 
 include_directories(${GAZEBO_INCLUDE_DIRS})
