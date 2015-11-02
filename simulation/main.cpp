@@ -1,3 +1,4 @@
+#include <getopt.h>
 #include <sstream>
 #include <deque>
 #include <map>
@@ -73,11 +74,36 @@ std::string joints[JOINTS] = {
     "joint_13",
 };
 
-int main(int _argc, char **_argv)
+static void usage()
 {
-    try {
-    
-        gazebo::client::setup(_argc, _argv);
+    std::cout << "Metabot simulation (w/ Gazebo)" << std::endl;
+    std::cout << "Usage:" << std::endl;
+    std::cout << "  -r [file.robot]: The robot file to simulate" << std::endl;
+    exit(1);
+}
+
+int main(int argc, char *argv[])
+{
+    int index;
+    std::string robotFile = "";
+
+    while ((index = getopt(argc, argv, "r:")) != -1) {
+        switch (index) {
+            case 'r':
+                robotFile = std::string(optarg);
+                break;
+            case 'h':
+                usage();
+                break;
+        }
+    }
+
+    if (robotFile == "") {
+        usage();
+    }
+
+    try { 
+        gazebo::client::setup(argc, argv);
         
         gazebo::transport::NodePtr node(new gazebo::transport::Node());
         gazebo::transport::PublisherPtr pub;
@@ -86,7 +112,7 @@ int main(int _argc, char **_argv)
         // Loading the robot
         GazeboRobot metabot("metabot");
         Metabot::Robot robot;
-        robot.loadFromFile(homeDir("Metabot/robots/metabot2.robot"));
+        robot.loadFromFile(robotFile);
         robot.compile();
         metabot.load(robot);
 
