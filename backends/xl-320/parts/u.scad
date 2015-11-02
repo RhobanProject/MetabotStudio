@@ -3,32 +3,32 @@ use <../models/ollo.scad>;
 use <../util/screws.scad>;
 
 //:Part
-module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.6, screwsCount=8, screws=true, olloArm=false, armAngle=0, thicknessSize=15, print=false) {
+module u(height=22, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.6, screwsCount=4, screws=true, olloArm=false, armAngle=0, thicknessSize=15, print=false) {
     module Ubranch() {
         union() {  
             cylinder(thickness, 10, 10);
             translate([-10,0,0])
-                cube([20, height, thickness]);
+                cube([20, height-radius, thickness]);
         }
     }
 
     module USide() {
         difference() {
-            union() {
+           union() {
                 Ubranch();
-                translate([-10,height+radius-thickness,radius])
+                translate([-10,height-thickness,radius])
                     cube([20,thickness,thicknessSize-(radius-thickness)]);
-                translate([-10,height,radius]) {
+                translate([-10,height-radius,radius]) {
 		    if (!Collisions) {
                     rotate([0,90,0]) {
                         difference() {
                             cylinder(20,radius,radius);
                             translate([0,0,-1])
                                 cylinder(22,radius-thickness,radius-thickness);
-                            translate([-10+radius-thickness,-10,-1])
-                                cube([10,10,22]);
-                            translate([-10,-20+radius-thickness,-1])
-                                cube([10,20.01,22]);
+                            translate([-10+radius-thickness,-20,-1])
+                                cube([10,20,22]);
+                            translate([-15,-20+radius-thickness,-1])
+                                cube([15,20.01,22]);
                         }
                     }
 	            }
@@ -72,4 +72,4 @@ module u(height=15, radius=8, thickness=2.2, screwsSpacing=14, screwsDiameter=2.
 }
 
 //u(olloArm=true, screws=false, armAngle=0, print=true);
-u();
+u(radius=4);

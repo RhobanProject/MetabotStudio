@@ -3,7 +3,7 @@ use <../models/motor_arm.scad>;
 
 //:Component "Double U"
 //:Description "Two Us"
-//:Parameter Height "Height of the Us"
+//:Parameter Height "Distances between axes"
 //:Parameter Radius "Radius of the fixation"
 //:Parameter Screws "Put Screws?"
 //:Parameter ScrewsSpacing "Screws spacing"
@@ -11,15 +11,15 @@ use <../models/motor_arm.scad>;
 //:Parameter ScrewsCount "Number of screws"
 //:Parameter Thickness 
 //:Parameter Angle 
-module double_u(Height=15, Radius=8, Screws=true, ScrewsSpacing=14, ScrewsDiameter=2.6,
-        ScrewsCount=8, Thickness=2.2, Angle=90)
+module double_u(Height=45, Radius=8, Screws=true, ScrewsSpacing=14, ScrewsDiameter=2.6,
+        ScrewsCount=4, Thickness=2.2, Angle=90)
 {
     //:Anchor motor female
 
-    u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
-    translate([0,(Height+Radius)*2,0]) {
+    u(Height/2.0, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
+    translate([0,Height,0]) {
         rotate([0,Angle,180]) {
-            u(Height, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
+            u(Height/2.0, Radius, Thickness, ScrewsSpacing, ScrewsDiameter, ScrewsCount, Screws);
             //:Anchor motor female
             children();
         }
