@@ -95,9 +95,9 @@ namespace Metabot
         return parameters;
     }
             
-    Parameter &Module::getParameter(std::string name)
+    Parameter &Module::getParameter(std::string pname)
     {
-        return parameters.get(name);
+        return parameters.get(pname);
     }
 
     std::string Module::openscad(std::string format, Parameters parameters, int defines)
@@ -107,7 +107,7 @@ namespace Metabot
         }
 
         std::stringstream ss;
-        ss << filename << "." << format << " [" << defines << "] " << parameters.toArgs();
+        ss << filename << "." << format << "#" << name << " [" << defines << "] " << parameters.toArgs();
         std::string key = hash_sha1(ss.str());
 
         if (backend->cache != NULL) {
