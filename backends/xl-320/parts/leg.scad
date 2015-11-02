@@ -101,7 +101,7 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
 			sphere(20);  
 		}
 		translate([0,0,-(sizeB+sizeC+thickness)]) {
-			//:Contact
+                        //:Tip
 			//sphere(7);
 		}
         }
