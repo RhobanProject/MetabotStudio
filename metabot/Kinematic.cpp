@@ -16,7 +16,7 @@ namespace Metabot
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
         item.alpha = alpha;
-        item.jointId = id;
+        item.jointId = jointId;
         items.push_back(item);
         angles[alpha] = 0.0;
     }

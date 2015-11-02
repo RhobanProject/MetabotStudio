@@ -423,13 +423,13 @@ namespace Metabot
 
     void Component::compile(Robot *robot, bool update)
     {
-        Component *old;
+        Component *old = NULL;
         if (update) {
             old = clone();
         }
         AnchorPoint *parentAnchor = NULL;
         int index = 0;
-        int parentId;
+        int parentId = -1;
         for (auto anchor : anchors) {
             if (!anchor->above && anchor->anchor) {
                 parentAnchor = anchor->anchor;
