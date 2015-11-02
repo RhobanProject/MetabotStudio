@@ -496,7 +496,11 @@ namespace Metabot
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
                     myAnchor->copyData(otherAnchor);
-                    myAnchor->attach(otherAnchor->anchor);
+                    if (otherAnchor->above) {
+                        myAnchor->attach(otherAnchor->anchor);
+                    } else {
+                        otherAnchor->anchor->attach(myAnchor);
+                    }
                     otherAnchor->detach(false);
                 }
             }
