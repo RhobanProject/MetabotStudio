@@ -274,6 +274,12 @@ void ComponentWizard::on_generate_clicked()
     instance->compile(robot);
     instance->moveAnchors(previous);
 
+    for (auto anchor : instance->anchors) {
+        if (anchor->above == false) {
+            previousAnchor = anchor;
+        }
+    }
+
     previous->detachAll();
     delete previous;
 
