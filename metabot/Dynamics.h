@@ -36,5 +36,8 @@ namespace Metabot
             std::string toString();
 
             void combine(const Dynamics &other, TransformMatrix matrix);
+
+            std::string serialize();
+            static Dynamics unserialize(std::string data);
     };
 }

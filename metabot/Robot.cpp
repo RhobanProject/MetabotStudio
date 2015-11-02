@@ -65,12 +65,12 @@ namespace Metabot
     {
         std::map<std::string, Dynamics> analysis;
         
-        foreachComponent([&analysis](Component *instance) {
+        foreachComponent([this, &analysis](Component *instance) {
             for (auto ref : instance->refs()) {
                 if (analysis.count(ref->hash())) {
                     ref->setDynamics(analysis[ref->hash()]);
                 } else {
-                    ref->analyze();
+                    ref->analyze(backend);
                     analysis[ref->hash()] = ref->getDynamics();
                 }
             }

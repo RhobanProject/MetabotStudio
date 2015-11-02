@@ -30,7 +30,7 @@ namespace Metabot
             /**
              * Run the analysis of the part and get its dynamics
              */
-            void analyze();
+            void analyze(Backend *backend);
             Dynamics &getDynamics();
             void setDynamics(Dynamics other);
 

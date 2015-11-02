@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <3d/stl.h>
+#include "util/sha1.h"
+#include "Cache.h"
 #include "Ref.h"
 #include "Backend.h"
 #include "Voxels.h"
@@ -57,12 +59,23 @@ namespace Metabot
         return loadModelSTL_string(stl);
     }
 
-    void Ref::analyze()
+    void Ref::analyze(Backend *backend)
     {
-        std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
-        dynamics = Voxels::voxelize(getModel(), density, mass);
-        std::cout << dynamics.toString();
-        std::cout << std::endl;
+        auto module = backend->getModule(name);
+        std::stringstream ss;
+        ss << module.getFilename() << "#" << module.getName() << " dynamics";
+        std::string key = hash_sha1(ss.str()) + ".dynamics";
+
+        std::string data = backend->cache->get(key, [this]() {
+            std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
+            auto dynamics = Voxels::voxelize(this->getModel(), this->density, this->mass);
+            std::cout << dynamics.toString();
+            std::cout << std::endl;
+
+            return dynamics.serialize();
+        }, module.getFilename());
+
+        dynamics = Dynamics::unserialize(data);
     }
 
     Model &Ref::getModel()

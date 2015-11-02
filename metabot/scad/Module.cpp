@@ -16,7 +16,7 @@ namespace Metabot
         g = 0.8;
         b = 0.8;
         mass = 0.0;
-        density = 1.0;
+        density = 1.25;
     }
 
     Module::~Module()
@@ -107,8 +107,8 @@ namespace Metabot
         }
 
         std::stringstream ss;
-        ss << filename << "." << format << "#" << name << " [" << defines << "] " << parameters.toArgs();
-        std::string key = hash_sha1(ss.str());
+        ss << filename << "#" << name << " [" << defines << "] " << parameters.toArgs();
+        std::string key = hash_sha1(ss.str()) + "." + format;
 
         if (backend->cache != NULL) {
             return backend->cache->get(key, [this, format, parameters, defines]() {
