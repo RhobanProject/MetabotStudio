@@ -10,6 +10,9 @@ Controller::Controller()
     freq = 1.0;
     h = -55;
     r = 125;
+    dx = 0;
+    dy = 0;
+    turn = 0;
     setupFunctions();
 }
 
