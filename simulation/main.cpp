@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         if (isVerbose()) std::cout << "* Reading file..." << std::endl;
         robot.loadFromFile(robotFile);
 
-        for (int N=0; N<10; N++) {
+        for (double dx=10; dx<80; dx+=10) {
             if (isVerbose()) std::cout << "* Compiling..." << std::endl;
             robot.compile();
             if (isVerbose()) std::cout << "* Loading it to Gazebo..." << std::endl;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             // Initializing the controller
             if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
             Controller controller;
-            controller.dx = 50;
+            controller.dx = dx;
             controller.freq = 1.2;
 
             float t = 0.0;
@@ -93,11 +93,13 @@ int main(int argc, char *argv[])
                     metabot.setJoint(joints[k*3+1], angles.l2[k]);
                     metabot.setJoint(joints[k*3+2], -angles.l3[k]);
                 }
-                std::cout << std::endl;
+                // std::cout << std::endl;
                 usleep(20000);
             }
-            metabot.stopMonitoring();
+            double d = metabot.stopMonitoring();
             metabot.unload();
+            
+            std::cout << dx << " " << d << std::endl;
         }
 
         gazebo::client::shutdown();

@@ -19,7 +19,7 @@ class GazeboRobot
         void unload();
         void waitForAvailable();
         void monitor();
-        void stopMonitoring();
+        double stopMonitoring();
 
         void requestResponse(ConstResponsePtr &_msg);
         void requestPose();

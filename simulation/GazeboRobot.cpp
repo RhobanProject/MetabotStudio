@@ -38,7 +38,7 @@ void GazeboRobot::requestResponse(ConstResponsePtr &response)
     {   
         auto pose = modelMsg.mutable_pose()->mutable_position();
         points.push_back(std::pair<float, Metabot::Point3>(t, Metabot::Point3(pose->x(), pose->y(), pose->z())));
-        std::cout << pose->x() << ", " << pose->y() << ", " << pose->z() << std::endl;
+        // std::cout << pose->x() << ", " << pose->y() << ", " << pose->z() << std::endl;
         available = true;
     } else {
         available = false;
@@ -79,7 +79,7 @@ void GazeboRobot::setJoint(std::string joint, float target)
     auto &msg = getJointMessage(joint);
     msg.mutable_position()->set_target(target);
     jointPublisher->Publish(msg, true);
-    std::cout << target << " ";
+    // std::cout << target << " ";
 }
 
 gazebo::msgs::JointCmd &GazeboRobot::getJointMessage(std::string joint)
@@ -139,7 +139,7 @@ void GazeboRobot::monitor()
     });
 }
 
-void GazeboRobot::stopMonitoring()
+double GazeboRobot::stopMonitoring()
 {
     if (isVerbose()) std::cout << "* Stopping monitor" << std::endl;
     if (monitorThread) {
@@ -148,13 +148,15 @@ void GazeboRobot::stopMonitoring()
         monitorThread = NULL;
     }
 
+    double d = 0.0;
     for (auto entry : points) {
         auto t = entry.first;
         auto point = entry.second;
-        std::cout << t << " " << point.x << " " << point.y << " " << point.z << std::endl;
-        float d = sqrt(point.x*point.x+point.y*point.y+point.z*point.z);
-        std::cout << "D=" << d << std::endl;
+        // std::cout << t << " " << point.x << " " << point.y << " " << point.z << std::endl;
+        d = sqrt(point.x*point.x+point.y*point.y+point.z*point.z);
     }
+
+    return d;
 }
 
 void GazeboRobot::unload()
