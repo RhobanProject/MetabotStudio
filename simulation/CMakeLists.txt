@@ -24,6 +24,7 @@ set (SOURCES
     util.cpp
     kinematic.cpp
     main.cpp
+    verbose.cpp
     )
 
 add_executable(sim ${SOURCES})

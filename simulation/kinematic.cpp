@@ -42,9 +42,9 @@ bool computeIK(float x, float y, float z,
     float gamma = M_PI - alKashi(l2, l3, d);
 
     if (!isnan(alpha) && !isnan(beta) && !isnan(gamma)) {
-        *a = RAD2DEG(alpha);
-        *b = RAD2DEG(beta);
-        *c = RAD2DEG(gamma);
+        *a = alpha;
+        *b = beta;
+        *c = gamma;
         return true;
     } else {
         return false;

@@ -21,17 +21,21 @@ class GazeboRobot
         void monitor();
         void stopMonitoring();
 
+        void requestResponse(ConstResponsePtr &_msg);
+        void requestPose();
+
         float factor, t;
 
         void tick(float elapsed);
 
     protected:
+        bool available;
         std::vector<std::pair<float, Metabot::Point3>> points;
         bool isMonitoring;
         std::thread *monitorThread;
         gazebo::transport::NodePtr worldNode;
-        gazebo::transport::PublisherPtr jointPublisher;
-        gazebo::transport::SubscriberPtr statsSub;
+        gazebo::transport::PublisherPtr jointPublisher, requestPub;
+        gazebo::transport::SubscriberPtr statsSub, responseSub;
         std::string name, world;
         std::deque<double> simTimes;
         std::deque<double> realTimes;

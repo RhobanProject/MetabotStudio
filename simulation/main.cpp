@@ -8,58 +8,11 @@
 #include "Controller.h"
 #include "GazeboRobot.h"
 #include "util.h"
+#include "verbose.h"
 
 #include <iostream>
 
-#ifndef DEG2RAD
-#define DEG2RAD(x) (((x)/180.0)*M_PI)
-#endif
-#ifndef RAD2DEG
-#define RAD2DEG(x) (((x)/M_PI)*180.0)
-#endif
-
-void cb(ConstWorldStatisticsPtr &_msg)
-{
-    // Dump the message contents to stdout.
-    std::cout << _msg->DebugString();
-}
-/*
-// Create our node for communication
-gazebo::transport::NodePtr node(new gazebo::transport::Node());
-node->Init();
-
-// Listen to Gazebo world_stats topic
-gazebo::transport::SubscriberPtr sub = node->Subscribe("~/world_stats", cb);
-
-// Busy wait loop...replace with your own code as needed.
-while (true)
-gazebo::common::Time::MSleep(10);
-
-// Make sure to shut everything down.
-gazebo::client::shutdown();
-*/
-
-/*
-   std::string worldName = "default";
-   std::string modelName = "metabot";
-
-   while (1) {
-   auto response = gazebo::transport::request(
-   worldName, "entity_info", modelName);
-   gazebo::msgs::Model modelMsg;
-
-   if (response->has_serialized_data() &&
-   !response->serialized_data().empty() &&
-   modelMsg.ParseFromString(response->serialized_data()))
-   {    
-   auto pose = gazebo::msgs::ConvertIgn(modelMsg.pose());
-   std::cout << gazebo::msgs::Convert(modelMsg.pose()).pos.x << std::endl;
-   } 
-   }
-   */
-
-#define JOINTS 12
-std::string joints[JOINTS] = {
+std::string joints[12] = {
     "joint_2",
     "joint_3",
     "joint_4",
@@ -87,13 +40,16 @@ int main(int argc, char *argv[])
     int index;
     std::string robotFile = "";
 
-    while ((index = getopt(argc, argv, "r:")) != -1) {
+    while ((index = getopt(argc, argv, "r:v")) != -1) {
         switch (index) {
             case 'r':
                 robotFile = std::string(optarg);
                 break;
             case 'h':
                 usage();
+                break;
+            case 'v':
+                setVerbosity(1);
                 break;
         }
     }
@@ -103,38 +59,46 @@ int main(int argc, char *argv[])
     }
 
     try { 
+        if (isVerbose()) std::cout << "Connecting to Gazebo..." << std::endl;
         gazebo::client::setup(argc, argv);
-        
-        gazebo::transport::NodePtr node(new gazebo::transport::Node());
-        gazebo::transport::PublisherPtr pub;
-        node->Init("default");
 
         // Loading the robot
+        if (isVerbose()) std::cout << "Loading the robot..." << std::endl;
         GazeboRobot metabot("metabot");
+
         Metabot::Robot robot;
+        if (isVerbose()) std::cout << "* Reading file..." << std::endl;
         robot.loadFromFile(robotFile);
-        robot.compile();
-        metabot.load(robot);
 
-        // Initializing the controller
-        Controller controller;
-        controller.dx = 70;
-        controller.freq = 2.0;
+        for (int N=0; N<10; N++) {
+            if (isVerbose()) std::cout << "* Compiling..." << std::endl;
+            robot.compile();
+            if (isVerbose()) std::cout << "* Loading it to Gazebo..." << std::endl;
+            metabot.load(robot);
 
-        float t = 0.0;
-        while (t < 60) {
-            metabot.tick(0.02);
-            t += 0.02*controller.freq*metabot.factor;
-            auto angles = controller.compute(t);
-            for (int k=0; k<4; k++) {
-                metabot.setJoint(joints[k*3], -DEG2RAD(angles.l1[k]));
-                metabot.setJoint(joints[k*3+1], DEG2RAD(angles.l2[k]));
-                metabot.setJoint(joints[k*3+2], -DEG2RAD(angles.l3[k]));
+            // Initializing the controller
+            if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
+            Controller controller;
+            controller.dx = 50;
+            controller.freq = 1.2;
+
+            float t = 0.0;
+            if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
+            while (t < 10) {
+                metabot.tick(0.02);
+                t += 0.02*controller.freq*metabot.factor;
+                auto angles = controller.compute(t);
+                for (int k=0; k<4; k++) {
+                    metabot.setJoint(joints[k*3], -angles.l1[k]);
+                    metabot.setJoint(joints[k*3+1], angles.l2[k]);
+                    metabot.setJoint(joints[k*3+2], -angles.l3[k]);
+                }
+                std::cout << std::endl;
+                usleep(20000);
             }
-            // std::cout << std::endl;
-            usleep(20000);
+            metabot.stopMonitoring();
+            metabot.unload();
         }
-        metabot.stopMonitoring();
 
         gazebo::client::shutdown();
     } catch (std::string err) {
