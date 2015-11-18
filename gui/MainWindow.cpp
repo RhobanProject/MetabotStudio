@@ -48,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
     filename = "/home/gregwar/Metabot/robots/metabot.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
+    robot->computeDynamics();
+    robot->toBullet();
     ui->actionSave->setEnabled(true);
 
     // Viewer

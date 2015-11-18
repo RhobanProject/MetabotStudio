@@ -187,6 +187,12 @@ void Viewer::paintGL()
 
     glDisable(GL_LIGHTING);
 
+    glPushMatrix();
+    glScalef(1000, 1000, 1000);
+    robot->world.stepSimulation(0.001);
+    robot->world.debugDraw();
+    glPopMatrix();
+
     if (drawGrid) {
         drawGridLines();
     }

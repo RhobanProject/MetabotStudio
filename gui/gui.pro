@@ -47,16 +47,16 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$P
 else:symbian: LIBS += -llibmetabot -ljson
 else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib -llibmetabot -ljson -lsymbolic
 
-INCLUDEPATH += $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/json/include/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
+INCLUDEPATH += /usr/include/bullet/ $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/json/include/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
 DEPENDPATH += $$PWD/../
 
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a
 else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../metabot/build/liblibmetabot.a $$PWD/../metabot/build/json/lib/libjson.a
 
-win32: LIBS += -lglu32
+win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath
 mac: LIBS += -framework OpenGL
-else:unix: LIBS += -lGLU
+else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath
 
 RESOURCES += \
     icons.qrc
