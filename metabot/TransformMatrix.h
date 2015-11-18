@@ -11,6 +11,8 @@
 #include <GL/glu.h>
 #endif
 #endif
+#include <LinearMath/btTransform.h>
+
 class Symbolic;
 #include "vvector.h"
 
@@ -34,6 +36,8 @@ namespace Metabot
             double4x4 values;
 
             Symbolic toSymbolic();
+
+            btTransform toBullet();
 
 #ifdef OPENGL
             void openGLMult();

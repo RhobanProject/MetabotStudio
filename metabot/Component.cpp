@@ -300,6 +300,52 @@ namespace Metabot
             }
         }
     }
+            
+    btRigidBody *Component::toBullet(World *world, AnchorPoint *above, TransformMatrix matrix)
+    {
+        // Creating shapes
+        auto *compound = world->createCompound();
+        for (auto shape : shapes) {
+            btCollisionShape *colShape = NULL;
+            switch (shape.type) {
+                case SHAPE_BOX:
+                     colShape = world->createBox(shape.a/1000.0, shape.b/1000.0, shape.c/1000.0);
+                    break;
+                case SHAPE_SPHERE:
+                    colShape = world->createSphere(shape.r/1000.0);
+                    break;
+                case SHAPE_CYLINDER:
+                    colShape = world->createCylinder(shape.r/1000.0, shape.h/1000.0);
+                    break;
+            }
+
+            if (colShape) {
+                auto matrix = shape.matrix;
+                if (shape.type == SHAPE_CYLINDER) {
+                    matrix = matrix.multiply(TransformMatrix::rotationX(M_PI/2));
+                }
+                compound->addChildShape(matrix.toBullet(), colShape);
+            }
+        }
+
+        // Creating rigid body
+        auto body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
+                btVector3(dynamics.ixx, dynamics.iyy, dynamics.izz));
+
+        // Child
+        for (auto anchor : anchors) {
+            if (anchor->above && anchor->anchor) {
+                auto m = matrix.multiply(anchor->transformationForward());
+                m = m.multiply(anchor->anchor->transformationBackward());
+                auto child = anchor->anchor->component->toBullet(world, anchor->anchor, m);
+
+                world->createHinge(body, child, anchor->transformationForward().toBullet(),
+                        anchor->anchor->transformationForward().toBullet());
+            }
+        }
+
+        return body;
+    }
 
     std::string Component::fullName()
     {

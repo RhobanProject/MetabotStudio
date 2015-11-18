@@ -10,6 +10,7 @@
 #include "scad/BOM.h"
 #include "Values.h"
 #include "Kinematic.h"
+#include "bullet/World.h"
 
 namespace Metabot
 {
@@ -62,6 +63,8 @@ namespace Metabot
 
             std::string getValue(std::string name);
 
+            void toBullet();
+
             Component *root;
             Values parameters;
 
@@ -74,5 +77,7 @@ namespace Metabot
 
             Refs getParts();
             BOM getBOM();
+
+            World world;
     };
 }

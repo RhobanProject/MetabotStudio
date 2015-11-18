@@ -272,4 +272,14 @@ namespace Metabot
 
         return m;
     }
+            
+    btTransform TransformMatrix::toBullet()
+    {
+        return btTransform(
+                btMatrix3x3(values[0][0], values[0][1], values[0][2],
+                            values[1][0], values[1][1], values[1][2],
+                            values[2][0], values[2][1], values[2][2]),
+                btVector3(x()/1000.0, y()/1000.0, z()/1000.0)
+                );
+    }
 }

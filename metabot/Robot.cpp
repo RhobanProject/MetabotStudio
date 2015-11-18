@@ -458,4 +458,12 @@ namespace Metabot
     {
         drawCOM = draw;
     }
+            
+    void Robot::toBullet()
+    {
+        world.clear();
+        if (root) {
+            root->toBullet(&world);
+        }
+    }
 }

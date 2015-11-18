@@ -16,6 +16,7 @@
 #include "Parameters.h"
 #include "Dynamics.h"
 #include "Kinematic.h"
+#include "bullet/World.h"
 class Symbolic;
 
 namespace Metabot
@@ -44,6 +45,8 @@ namespace Metabot
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
             void writeSDF(std::stringstream &ss, std::string parent="", 
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
+
+            btRigidBody *toBullet(World *world, AnchorPoint *above=NULL, TransformMatrix matrix=TransformMatrix::identity());
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);

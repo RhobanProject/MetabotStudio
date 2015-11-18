@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(metabot)
 find_package (Threads)
+find_package (Bullet)
 
 option (OPENGL "Enable OpenGL" OFF)
 
@@ -18,6 +19,9 @@ set(ALL_SOURCES
     util/Cache.cpp
     util/sha1.cpp
     util/util.cpp
+
+    bullet/World.cpp
+    bullet/GLDebugDrawer.cpp
 
     3d/stl.cpp
     3d/Cube.cpp
@@ -55,6 +59,7 @@ include_directories("${PROJECT_SOURCE_DIR}/util/")
 include_directories("${PROJECT_SOURCE_DIR}/scad/")
 include_directories("${PROJECT_SOURCE_DIR}/sym/")
 include_directories("${PROJECT_SOURCE_DIR}/json/include")
+include_directories(${BULLET_INCLUDE_DIRS})
 add_subdirectory("${PROJECT_SOURCE_DIR}/json")
 
 add_library(symbolic sym/symbolicc++.cpp)
@@ -62,7 +67,7 @@ set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSP
 
 add_library(libmetabot ${ALL_SOURCES})
 
-target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json symbolic)
+target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json symbolic ${BULLET_LIBRARIES})
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()
