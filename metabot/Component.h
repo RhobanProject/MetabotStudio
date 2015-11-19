@@ -72,8 +72,8 @@ namespace Metabot
 #endif
             
 #ifdef OPENGL
-            void openGLDraw(bool drawCollisions=false);
-            void openGLDrawRef(Ref *ref);
+            void openGLDraw(bool drawCollisions=false, float alpha=1.0);
+            void openGLDrawRef(Ref *ref, float alpha=1.0);
 #endif
             bool highlight;
             bool hover;

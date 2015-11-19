@@ -392,7 +392,7 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void Component::openGLDraw(bool drawCollisions)
+    void Component::openGLDraw(bool drawCollisions, float alpha)
     {
         glPushMatrix();
         if (body != NULL) {
@@ -411,13 +411,13 @@ namespace Metabot
             } else {
                 collisions.r = collisions.g = collisions.b = 0.6;
             }
-            collisions.openGLDraw();
+            collisions.openGLDraw(1.0, alpha);
         }
 
         // Rendering models & parts
         if (!drawCollisions) {
             for (auto ref : refs()) {
-                openGLDrawRef(ref);
+                openGLDrawRef(ref, alpha);
             }
         }
         glPopMatrix();
@@ -427,14 +427,14 @@ namespace Metabot
         for (auto anchor : anchors) {
             glPushMatrix();
             if (anchor->above) {
-                anchor->openGLDraw(anchorId, drawCollisions, body == NULL);
+                anchor->openGLDraw(anchorId, drawCollisions, body == NULL, alpha);
             }
             glPopMatrix();
             anchorId++;
         }
     }
 
-    void Component::openGLDrawRef(Ref *ref)
+    void Component::openGLDrawRef(Ref *ref, float alpha)
     {
         glPushMatrix();
         ref->matrix.openGLMult();
@@ -448,7 +448,7 @@ namespace Metabot
             model.g = ref->g;
             model.b = ref->b;
         }
-        model.openGLDraw();
+        model.openGLDraw(1.0, alpha);
         glPopMatrix();
     }
 #endif

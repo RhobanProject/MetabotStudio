@@ -303,10 +303,10 @@ namespace Metabot
     }
             
 #ifdef OPENGL
-    void Robot::openGLDraw()
+    void Robot::openGLDraw(float alpha)
     {
         if (root != NULL) {
-            root->openGLDraw(drawCollisions);
+            root->openGLDraw(drawCollisions, alpha);
 
             if (drawCOM) {
                 Dynamics global;
@@ -318,7 +318,7 @@ namespace Metabot
                 m.r = 1;
                 m.g = 0.1;
                 m.b = 0.1;
-                m.openGLDraw();
+                m.openGLDraw(alpha);
                 glPopMatrix();
             }
         }

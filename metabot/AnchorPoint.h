@@ -36,7 +36,7 @@ namespace Metabot
             bool hover;
 
 #ifdef OPENGL
-            void openGLDraw(int id=1, bool collisions=false, bool transform=true);
+            void openGLDraw(int id=1, bool collisions=false, bool transform=true, float alpha=1.0);
 #endif
 
             std::string type;

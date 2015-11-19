@@ -26,7 +26,7 @@ namespace Metabot
             void gnuplot();
 
 #ifdef OPENGL
-            void openGLDraw(float brightness=1.0);
+            void openGLDraw(float brightness=1.0, float alpha=1.0);
 #endif
             float r, g, b;
     };

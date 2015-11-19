@@ -189,6 +189,13 @@ void Viewer::paintGL()
         if (client.robot) {
             client.lock();
             client.robot->openGLDraw();
+
+            // Mirror
+            glScalef(1.0, 1.0, -1.0);
+            glColor4f(1.0, 1.0, 1.0, 0.2);
+            if (sin(beta) > 0) {
+                client.robot->openGLDraw(0.25);
+            }
             client.unlock();
         }
     }
