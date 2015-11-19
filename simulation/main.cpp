@@ -12,21 +12,6 @@
 
 #include <iostream>
 
-std::string joints[12] = {
-    "joint_2",
-    "joint_3",
-    "joint_4",
-    "joint_5",
-    "joint_6",
-    "joint_7",
-    "joint_8",
-    "joint_9",
-    "joint_10",
-    "joint_11",
-    "joint_12",
-    "joint_13",
-};
-
 static void usage()
 {
     std::cout << "Metabot simulation (w/ Gazebo)" << std::endl;
@@ -77,20 +62,36 @@ int main(int argc, char *argv[])
         if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
         server.loadRobot(&robot);
 
+        if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
+        Controller controller;
+        controller.dx = 60;
+        controller.freq = 2.0;
+
+        float rT = getTime();
+        float t = 0.0;
+        int k = 0;
+        if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
         while (true) {
-            usleep(1000);
+            auto angles = controller.compute(t);
+            for (int leg=0; leg<4; leg++) {
+                robot.getComponentById(leg*3+2)->setTarget(angles.l1[leg]);
+                robot.getComponentById(leg*3+3)->setTarget(-angles.l2[leg]);
+                robot.getComponentById(leg*3+4)->setTarget(angles.l3[leg]);
+            }
             robot.world.stepSimulation(0.001);
-            if (isVerbose()) std::cout << "* Tick..." << std::endl;
-            server.updateRobot(&robot);
+            usleep(1000);
+            t += 0.001;
+            if ((k++) > 20) {
+                server.updateRobot(&robot);
+                k = 0;
+                float factor = t/(getTime()-rT);
+                std::cout << t << " " << (getTime()-rT) << " (factor=" << factor << ")" << std::endl;
+            }
         }
 
         /*
         for (double dx=75; dx<80; dx+=1) {
             // Initializing the controller
-            if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-            Controller controller;
-            controller.dx = dx;
-            controller.freq = 1.2;
 
             float t = 0.0;
             if (isVerbose()) std::cout << "Starting simulation..." << std::endl;

@@ -7,7 +7,8 @@
     m_dispatcher(0),
     m_solver(0),
     m_collisionConfiguration(0),
-    m_dynamicsWorld(0)
+    m_dynamicsWorld(0),
+    zOffset(0)
 {
     // Collision configuration contains default setup for memory, collision setup
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -133,6 +134,10 @@ btRigidBody* World::createRigidBody(float mass, const btTransform& startTransfor
         shape->calculateLocalInertia(mass, inertia);
     }
 
+    /*
+    auto origin = startTransform.getOrigin();
+    origin.setZ(origin.getZ()-zOffset);
+    */
     //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
 #define USE_MOTIONSTATE 1
@@ -142,8 +147,8 @@ btRigidBody* World::createRigidBody(float mass, const btTransform& startTransfor
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
 
     btRigidBody* body = new btRigidBody(cInfo);
+    body->translate(btVector3(0.0, 0.0, -zOffset));
     //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
-
 #else
     btRigidBody* body = new btRigidBody(mass, 0, shape, inertia);
     body->setWorldTransform(startTransform);
@@ -215,4 +220,12 @@ void World::clear()
 void World::debugDraw()
 {
     m_dynamicsWorld->debugDrawWorld();
+}
+
+void World::freeze()
+{
+    for (auto body : bodies) {
+        body->clearForces();
+        body->setLinearVelocity(btVector3(0, 0, 0));
+    }
 }

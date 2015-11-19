@@ -46,10 +46,13 @@ namespace Metabot
             void writeSDF(std::stringstream &ss, std::string parent="", 
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 
+            // Bullet
             btRigidBody *body;
+            btHingeConstraint *hinge;
             btRigidBody *toBullet(World *world, AnchorPoint *above=NULL, TransformMatrix matrix=TransformMatrix::identity());
             TransformMatrix getState();
             void setState(TransformMatrix matrix);
+            void setTarget(float alpha);
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);

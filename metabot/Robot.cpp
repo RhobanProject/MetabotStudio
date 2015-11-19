@@ -498,7 +498,15 @@ namespace Metabot
     {
         world.clear();
         if (root) {
+            // Getting the bounding box
+            auto model = toModel();
+            auto pmin = model.min();
+            auto lowerZ = pmin.z;
+            world.zOffset = lowerZ/1000.0;
+
+            // Exporting to bullet
             root->toBullet(&world);
         }
+        world.freeze();
     }
 }

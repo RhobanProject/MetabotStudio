@@ -15,6 +15,7 @@ class World
 
         // Clear (empty the world)
         void clear();
+        void freeze();
 
         // Creating shapes
         btCompoundShape *createCompound();
@@ -29,7 +30,7 @@ class World
         btRigidBody* createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0));
 
         void debugDraw();
-
+        float zOffset;
         GLDebugDrawer drawer;
 
     protected:

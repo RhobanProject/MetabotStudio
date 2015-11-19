@@ -10,10 +10,10 @@ namespace Metabot
     {
         public:
             virtual ~Volume();
-			vector<Face> faces;
-			Volume();
-			void addFace(Face f);
-			Point3 min();
-			Point3 max();
+            vector<Face> faces;
+            Volume();
+            void addFace(Face f);
+            Point3 min();
+            Point3 max();
     };
 }

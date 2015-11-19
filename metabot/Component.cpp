@@ -22,7 +22,7 @@ namespace Metabot
     Component::Component(Backend *backend_, Module *module_)
         : backend(backend_), robot(NULL), module(module_), highlight(false), 
         hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
-        body(NULL)
+        body(NULL), hinge(NULL)
     {
         for (auto param : module->getParameters()) {
             values[param.second.name] = param.second.getValue();
@@ -359,7 +359,7 @@ namespace Metabot
                 m = m.multiply(anchor->anchor->transformationBackward());
                 auto child = anchor->anchor->component->toBullet(world, anchor->anchor, m);
 
-                world->createHinge(body, child, anchor->transformationForward().toBullet(),
+                anchor->anchor->component->hinge = world->createHinge(body, child, anchor->transformationForward().toBullet(),
                         anchor->anchor->transformationForward().toBullet());
             }
         }
@@ -766,5 +766,14 @@ namespace Metabot
         }
 
         return refs;
+    }
+            
+    void Component::setTarget(float alpha)
+    {
+        if (hinge != NULL) {
+            float current = hinge->getHingeAngle();
+            float error = (alpha - current);
+            hinge->enableAngularMotor(true, 10*error, 1.0);
+        }
     }
 }
