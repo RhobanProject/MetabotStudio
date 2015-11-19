@@ -69,6 +69,7 @@ namespace Metabot
             std::string getValue(std::string name);
 
             void toBullet();
+            TransformMatrix getState();
 
             Component *root;
             Values parameters;

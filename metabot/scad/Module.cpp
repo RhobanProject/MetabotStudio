@@ -138,7 +138,7 @@ namespace Metabot
             cmd << "-D\\$fn=20 ";
         }
         cmd << input << " -o " << output;
-        // cmd << " >/dev/null 2>/dev/null";
+        cmd << " >/dev/null 2>/dev/null";
         std::string command = cmd.str();
 
         std::stringstream scad;
@@ -165,7 +165,7 @@ namespace Metabot
         file_put_contents(input, scad.str());
         
         // Uncomment that to see the compile command called
-        std::cout << "compile(): " << command << std::endl;
+        // std::cout << "compile(): " << command << std::endl;
 
         FILE *process = popen(command.c_str(), "r");
         int result = pclose(process);

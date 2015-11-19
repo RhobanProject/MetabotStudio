@@ -26,12 +26,6 @@
     m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
     m_dynamicsWorld->setDebugDrawer(&drawer);
 
-    // Adding a ground
-    auto plane = new btBoxShape(btVector3(10, 10, 10));
-    auto trans = btTransform::getIdentity();
-    trans.getOrigin().setZ(-10);
-    auto ground = createRigidBody(0.0, trans, plane);
-
     /*
     // Adding a box
     btRigidBody *last = NULL;
@@ -60,6 +54,8 @@
     auto shape = createCylinder(0.01, 0.01);
     createRigidBody(0.0, btTransform::getIdentity(), shape);
     */
+
+    clear();
 }
 
 World::~World()
@@ -123,7 +119,7 @@ void World::stepSimulation(float deltaTime)
     }
 }
 
-btRigidBody* World::createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape,  btVector3 inertia)
+btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape,  btVector3 inertia)
 {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
@@ -134,10 +130,9 @@ btRigidBody* World::createRigidBody(float mass, const btTransform& startTransfor
         shape->calculateLocalInertia(mass, inertia);
     }
 
-    /*
     auto origin = startTransform.getOrigin();
     origin.setZ(origin.getZ()-zOffset);
-    */
+    startTransform.setOrigin(origin);
     //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
 #define USE_MOTIONSTATE 1
@@ -147,7 +142,6 @@ btRigidBody* World::createRigidBody(float mass, const btTransform& startTransfor
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
 
     btRigidBody* body = new btRigidBody(cInfo);
-    body->translate(btVector3(0.0, 0.0, -zOffset));
     //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
 #else
     btRigidBody* body = new btRigidBody(mass, 0, shape, inertia);
@@ -156,6 +150,8 @@ btRigidBody* World::createRigidBody(float mass, const btTransform& startTransfor
 
     body->setUserIndex(-1);
     m_dynamicsWorld->addRigidBody(body);
+    bodies.push_back(body);
+
     return body;
 }
         
@@ -196,17 +192,20 @@ btHingeConstraint *World::createHinge(btRigidBody *A, btRigidBody *B, btTransfor
     auto hinge = new btHingeConstraint(*A, *B, AFrame, BFrame);
     m_dynamicsWorld->addConstraint(hinge);
 
+    hinges.push_back(hinge);
     return hinge;
 }
         
 void World::clear()
 {
+    zOffset = 0;
+    for (auto hinge : hinges) {
+        m_dynamicsWorld->removeConstraint(hinge);
+        delete hinge;
+    }
     for (auto body : bodies) {
         m_dynamicsWorld->removeRigidBody(body);
         delete body;
-    }
-    for (auto hinge : hinges) {
-        delete hinge;
     }
     for (auto shape : shapes) {
         delete shape;
@@ -215,6 +214,13 @@ void World::clear()
     bodies.clear();
     hinges.clear();
     shapes.clear();
+    
+    // Adding a ground
+    auto plane = new btBoxShape(btVector3(10, 10, 10));
+    plane->setMargin(0.0);
+    auto trans = btTransform::getIdentity();
+    trans.getOrigin().setZ(-10);
+    auto ground = createRigidBody(0.0, trans, plane);
 }
 
 void World::debugDraw()

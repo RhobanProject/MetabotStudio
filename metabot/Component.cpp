@@ -344,6 +344,7 @@ namespace Metabot
                 if (shape.type == SHAPE_CYLINDER) {
                     matrix = matrix.multiply(TransformMatrix::rotationX(M_PI/2));
                 }
+                colShape->setMargin(0.0);
                 compound->addChildShape(matrix.toBullet(), colShape);
             }
         }
@@ -773,7 +774,7 @@ namespace Metabot
         if (hinge != NULL) {
             float current = hinge->getHingeAngle();
             float error = (alpha - current);
-            hinge->enableAngularMotor(true, 10*error, 1.0);
+            hinge->enableAngularMotor(true, 10*error, 0.0005);
         }
     }
 }

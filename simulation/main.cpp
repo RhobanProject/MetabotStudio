@@ -56,37 +56,49 @@ int main(int argc, char *argv[])
         robot.compile();
         if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
         robot.computeDynamics();
-        if (isVerbose()) std::cout << "* Exporting to bullet..." << std::endl;
-        robot.toBullet();
 
-        if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
-        server.loadRobot(&robot);
+            
+        for (float l1=45; l1<100; l1+=5) {
+            if (isVerbose()) std::cout << "* Exporting to bullet..." << std::endl;
+            robot.parameters.set("L1", l1);
+            robot.compile();
+            robot.toBullet();
+            if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
+            server.loadRobot(&robot);
 
-        if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-        Controller controller;
-        controller.dx = 60;
-        controller.freq = 2.0;
+            if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
+            Controller controller;
+            controller.dx = 60;
+            controller.freq = 2.0;
 
-        float rT = getTime();
-        float t = 0.0;
-        int k = 0;
-        if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
-        while (true) {
-            auto angles = controller.compute(t);
-            for (int leg=0; leg<4; leg++) {
-                robot.getComponentById(leg*3+2)->setTarget(angles.l1[leg]);
-                robot.getComponentById(leg*3+3)->setTarget(-angles.l2[leg]);
-                robot.getComponentById(leg*3+4)->setTarget(angles.l3[leg]);
+            float rT = getTime();
+            float t = 0.0;
+            float lastUpdate = 0.0;
+            int k = 0;
+            if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
+            while (t<10.0) {
+                auto angles = controller.compute(t);
+                for (int k=0; k<4; k++) {
+                    int leg = (k+2)%4;
+                    robot.getComponentById(k*3+2)->setTarget(angles.l1[leg]);
+                    robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg]);
+                    robot.getComponentById(k*3+4)->setTarget(angles.l3[leg]);
+                }
+                robot.world.stepSimulation(0.001);
+                t += 0.001;
+                // usleep(10000);
+                float elapsed = (getTime()-rT);
+                if (elapsed - lastUpdate > 0.02) {
+                    lastUpdate += 0.02;
+                    server.updateRobot(&robot);
+                    k = 0;
+                    float factor = t/(elapsed);
+                    // std::cout << t << " " << (elapsed) << " (factor=" << factor << ")" << std::endl;
+                }
             }
-            robot.world.stepSimulation(0.001);
-            usleep(1000);
-            t += 0.001;
-            if ((k++) > 20) {
-                server.updateRobot(&robot);
-                k = 0;
-                float factor = t/(getTime()-rT);
-                std::cout << t << " " << (getTime()-rT) << " (factor=" << factor << ")" << std::endl;
-            }
+            auto state = robot.getState();
+            auto score = sqrt(state.x()*state.x() + state.y()*state.y() + state.z()*state.z());
+            std::cout << l1 << " " << score << std::endl;
         }
 
         /*

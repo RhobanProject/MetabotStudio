@@ -502,11 +502,20 @@ namespace Metabot
             auto model = toModel();
             auto pmin = model.min();
             auto lowerZ = pmin.z;
-            world.zOffset = lowerZ/1000.0;
+            world.zOffset = (lowerZ/1000.0);
 
             // Exporting to bullet
             root->toBullet(&world);
         }
         world.freeze();
+    }
+            
+    TransformMatrix Robot::getState()
+    {
+        if (root) {
+            return root->getState();
+        } else {
+            return TransformMatrix::identity();
+        }
     }
 }

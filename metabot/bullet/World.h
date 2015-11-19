@@ -27,7 +27,7 @@ class World
         btHingeConstraint *createHinge(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame);
 	
         // Creating a rigid body
-        btRigidBody* createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0));
+        btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0));
 
         void debugDraw();
         float zOffset;

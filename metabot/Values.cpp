@@ -17,6 +17,13 @@ namespace Metabot
     {
         (*this)[name] = value;
     }
+            
+    void Values::set(std::string name, double value)
+    {
+        std::stringstream ss;
+        ss << value;
+        set(name, ss.str());
+    }
 
     Json::Value Values::toJson()
     {
