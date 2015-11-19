@@ -1,12 +1,14 @@
 #include <iostream>
 #include <QApplication>
 #include <QGLFormat>
+#include <QDir>
 #include "MainWindow.h"
 
 int main(int argc, char *argv[])
 {
     try {
         QApplication a(argc, argv);
+        QDir::setCurrent(QCoreApplication::applicationDirPath());
 
         QGLFormat glf = QGLFormat::defaultFormat();
         glf.setSampleBuffers(true);
