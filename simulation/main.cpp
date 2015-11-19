@@ -5,8 +5,8 @@
 #include <unistd.h>
 #include <Robot.h>
 #include <Backend.h>
+#include <com/Server.h>
 #include "Controller.h"
-#include "GazeboRobot.h"
 #include "util.h"
 #include "verbose.h"
 
@@ -58,24 +58,34 @@ int main(int argc, char *argv[])
         usage();
     }
 
+    // Starting the server
+    Metabot::Server server;
+
     try { 
-        if (isVerbose()) std::cout << "Connecting to Gazebo..." << std::endl;
-        gazebo::client::setup(argc, argv);
-
         // Loading the robot
-        if (isVerbose()) std::cout << "Loading the robot..." << std::endl;
-        GazeboRobot metabot("metabot");
-
         Metabot::Robot robot;
         if (isVerbose()) std::cout << "* Reading file..." << std::endl;
         robot.loadFromFile(robotFile);
+            
+        if (isVerbose()) std::cout << "* Compiling..." << std::endl;
+        robot.compile();
+        if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
+        robot.computeDynamics();
+        if (isVerbose()) std::cout << "* Exporting to bullet..." << std::endl;
+        robot.toBullet();
 
-        for (double dx=10; dx<80; dx+=10) {
-            if (isVerbose()) std::cout << "* Compiling..." << std::endl;
-            robot.compile();
-            if (isVerbose()) std::cout << "* Loading it to Gazebo..." << std::endl;
-            metabot.load(robot);
+        if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
+        server.loadRobot(&robot);
 
+        while (true) {
+            usleep(1000);
+            robot.world.stepSimulation(0.001);
+            if (isVerbose()) std::cout << "* Tick..." << std::endl;
+            server.updateRobot(&robot);
+        }
+
+        /*
+        for (double dx=75; dx<80; dx+=1) {
             // Initializing the controller
             if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
             Controller controller;
@@ -84,8 +94,7 @@ int main(int argc, char *argv[])
 
             float t = 0.0;
             if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
-            while (t < 10) {
-                metabot.tick(0.02);
+            while (t < 1) {
                 t += 0.02*controller.freq*metabot.factor;
                 auto angles = controller.compute(t);
                 for (int k=0; k<4; k++) {
@@ -101,8 +110,8 @@ int main(int argc, char *argv[])
             
             std::cout << dx << " " << d << std::endl;
         }
+        */
 
-        gazebo::client::shutdown();
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;
     }

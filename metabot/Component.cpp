@@ -21,7 +21,8 @@ namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
         : backend(backend_), robot(NULL), module(module_), highlight(false), 
-        hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS)
+        hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
+        body(NULL)
     {
         for (auto param : module->getParameters()) {
             values[param.second.name] = param.second.getValue();
@@ -301,6 +302,25 @@ namespace Metabot
         }
     }
             
+    TransformMatrix Component::getState()
+    {
+        if (body != NULL) {
+            btTransform trans;
+            body->getMotionState()->getWorldTransform(trans);
+            return TransformMatrix::fromBullet(trans);
+        } else {
+            return TransformMatrix::identity();
+        }
+    }
+
+    void Component::setState(TransformMatrix matrix)
+    {
+        if (body != NULL) {
+            auto trans = matrix.toBullet();
+            body->getMotionState()->setWorldTransform(trans);
+        }
+    }
+            
     btRigidBody *Component::toBullet(World *world, AnchorPoint *above, TransformMatrix matrix)
     {
         // Creating shapes
@@ -329,7 +349,7 @@ namespace Metabot
         }
 
         // Creating rigid body
-        auto body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
+        body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
                 btVector3(dynamics.ixx, dynamics.iyy, dynamics.izz));
 
         // Child
@@ -373,6 +393,13 @@ namespace Metabot
 #ifdef OPENGL
     void Component::openGLDraw(bool drawCollisions)
     {
+        glPushMatrix();
+        if (body != NULL) {
+            btTransform trans;
+            body->getMotionState()->getWorldTransform(trans);
+            TransformMatrix::fromBullet(trans).openGLMult();
+        }
+
         glStencilFunc(GL_ALWAYS, id, -1);
 
         if (drawCollisions) {
@@ -392,13 +419,14 @@ namespace Metabot
                 openGLDrawRef(ref);
             }
         }
+        glPopMatrix();
 
         // Rendering sub-components
         int anchorId = 1;
         for (auto anchor : anchors) {
             glPushMatrix();
             if (anchor->above) {
-                anchor->openGLDraw(anchorId, drawCollisions);
+                anchor->openGLDraw(anchorId, drawCollisions, body == NULL);
             }
             glPopMatrix();
             anchorId++;

@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <string>
 #include <iostream>
 #include <3d/stl.h>
@@ -15,6 +16,7 @@
 #include "TransformMatrix.h"
 #include "Backend.h"
 #include "util.h"
+#include "com/Client.h"
 
 using namespace std;
 using namespace Metabot;
@@ -26,6 +28,9 @@ void usage()
 {
     cerr << "Metabot v1.0 - Rhoban System" << endl;
     cerr << "Usage: metabot [option] [file.robot]" << endl;
+    cerr << "" << endl;
+    cerr << "Com operations" << endl;
+    cerr << "   -C: runs a client (debug)" << endl;
     cerr << "" << endl;
     cerr << "Backend operations" << endl;
     cerr << "   -c [backend]: Clears the cache" << endl;
@@ -70,7 +75,7 @@ int main(int argc, char *argv[])
     string output = "";
     string backendName = "";
 
-    while ((index = getopt(argc, argv, "p:bc:w:s:vS:dj:kD:")) != -1) {
+    while ((index = getopt(argc, argv, "p:bc:w:s:vS:dj:kD:C")) != -1) {
         switch (index) {
             case 'D': {
                     auto parts = split(string(optarg), '=', 2);
@@ -114,6 +119,9 @@ int main(int argc, char *argv[])
                 break;
             case 'k':
                 mode = "kinematic";
+                break;
+            case 'C':
+                mode = "client";
                 break;
         }
     }
@@ -253,6 +261,12 @@ int main(int argc, char *argv[])
                 }
             }
             */
+        } else if (mode == "client") {
+            Client client;
+            client.debug = true;
+            while (true) {
+                usleep(1000000);
+            }
         } else {
             usage();
         }

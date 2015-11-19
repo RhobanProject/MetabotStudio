@@ -206,34 +206,63 @@ namespace Metabot
                 throw ss.str();
             }
 
-            if (!json.isObject() || !json.isMember("backend") || !json["backend"].isString()) {
-                std::stringstream ss;
-                ss << "Malformed file " << filename << " (backend not specified)";
-                throw ss.str();
-            }
-
-            backend = Backend::get(json["backend"].asString());
-
-            if (json.isMember("parameters")) {
-                parameters = Values::fromJson(json["parameters"]);
-                for (auto entry : defines) {
-                    parameters.set(entry.first, entry.second);
-                }
-            }
-
-            if (!json.isMember("tree")) {
-                std::stringstream ss;
-                ss << "Malformed file " << filename << ": no tree";
-                throw ss.str();
-            }
-
-            root = backend->fromJson(json["tree"], this);
+            fromJson(json, defines);
         }
-
-        number();
     }
 
-    void Robot::saveToFile(std::string filename)
+    void Robot::fromJson(Json::Value json, Values defines)
+    {
+        if (!json.isObject() || !json.isMember("backend") || !json["backend"].isString()) {
+            std::stringstream ss;
+            ss << "Malformed (backend not specified)";
+            throw ss.str();
+        }
+
+        backend = Backend::get(json["backend"].asString());
+
+        if (json.isMember("parameters")) {
+            parameters = Values::fromJson(json["parameters"]);
+            for (auto entry : defines) {
+                parameters.set(entry.first, entry.second);
+            }
+        }
+
+        if (!json.isMember("tree")) {
+            std::stringstream ss;
+            ss << "Malformed json: no tree";
+            throw ss.str();
+        }
+
+        root = backend->fromJson(json["tree"], this);
+        number();
+    }
+    
+    Json::Value Robot::stateToJson()
+    {
+        Json::Value json(Json::objectValue);
+
+        foreachComponent([&json](Component *instance) {
+            std::stringstream ss;
+            ss << instance->id;
+            json[ss.str()] = instance->getState().toJson();
+        });
+        
+        return json;
+    }
+
+    void Robot::stateFromJson(Json::Value json)
+    {
+        foreachComponent([&json](Component *instance) {
+            std::stringstream ss;
+            ss << instance->id;
+            std::string id = ss.str();
+            if (json.isMember(id)) {
+                instance->setState(TransformMatrix::fromJSON(json[id]));
+            }
+        });
+    }
+
+    Json::Value Robot::toJson()
     {
         Json::Value json(Json::objectValue);
         json["backend"] = backend->name;
@@ -243,6 +272,12 @@ namespace Metabot
             json["tree"] = root->toJson();
         }
 
+        return json;
+    }
+
+    void Robot::saveToFile(std::string filename)
+    {
+        auto json = toJson();
         std::string data;
         Json::StyledWriter writer;
         data = writer.write(json);

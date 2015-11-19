@@ -97,6 +97,8 @@ private slots:
 
     void on_actionParameters_triggered();
 
+    void on_actionPhysics_triggered();
+
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;

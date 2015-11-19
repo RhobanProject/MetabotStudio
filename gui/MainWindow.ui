@@ -150,9 +150,16 @@
     <addaction name="actionCollisions"/>
     <addaction name="actionCenter_of_mass"/>
    </widget>
+   <widget class="QMenu" name="menuMode">
+    <property name="title">
+     <string>Mode</string>
+    </property>
+    <addaction name="actionPhysics"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
    <addaction name="menuRobot"/>
+   <addaction name="menuMode"/>
   </widget>
   <action name="actionAbout">
    <property name="text">
@@ -319,6 +326,14 @@
   <action name="actionParameters">
    <property name="text">
     <string>Parameters</string>
+   </property>
+  </action>
+  <action name="actionPhysics">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Physics client</string>
    </property>
   </action>
  </widget>

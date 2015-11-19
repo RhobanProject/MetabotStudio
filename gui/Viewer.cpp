@@ -14,6 +14,8 @@ using namespace Metabot;
 Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     : QGLWidget(parent), robot(NULL)
 {
+    // client.debug = true;
+    mode = MODE_NORMAL;
     shouldRedraw = true;
     drawXYZ = true;
     drawGrid = true;
@@ -181,16 +183,28 @@ void Viewer::paintGL()
 
     glTranslatef(tX, tY, 0);
     glPushMatrix();
-    robot->openGLDraw();
+    if (mode == MODE_NORMAL) {
+        robot->openGLDraw();
+    } else {
+        if (client.robot) {
+            client.lock();
+            client.robot->openGLDraw();
+            client.unlock();
+        }
+    }
     glPopMatrix();
     glStencilFunc(GL_ALWAYS, 255, -1);
 
     glDisable(GL_LIGHTING);
 
+    // Drawing Bullet debug, can be enabled for debug purpose
     glPushMatrix();
     glScalef(1000, 1000, 1000);
-    robot->world.stepSimulation(0.001);
-    robot->world.debugDraw();
+    /*
+    for (int k=0; k<12; k++)
+        robot->world.stepSimulation(0.001);
+    */
+    // robot->world.debugDraw();
     glPopMatrix();
 
     if (drawGrid) {
@@ -301,12 +315,28 @@ void Viewer::drawGridLines()
     glBegin(GL_TRIANGLES);
 
     float size = 15;
+    float pX1, pY1, pX2, pY2, pZ;
+
+    if (mode == MODE_NORMAL) {
+        pX1 = plateX1;
+        pY1 = plateY1;
+        pX2 = plateX2;
+        pY2 = plateY2;
+        pZ = plateZ;
+    } else {
+        pX1 = -5000;
+        pX2 = 5000;
+        pY1 = -5000;
+        pY2 = 5000;
+        pZ = 0;
+        size = 100;
+    }
 
     int xe=0;
-    for (float x=plateX1; x<=plateX2; x+=size) {
+    for (float x=pX1; x<=pX2; x+=size) {
         xe = (xe+1)%2;
         int ye=0;
-        for (float y=plateY1; y<=plateY2; y+=size) {
+        for (float y=pY1; y<=pY2; y+=size) {
             ye = (ye+1)%2;
 
             if ((xe%2) == (ye%2)) {
@@ -315,21 +345,21 @@ void Viewer::drawGridLines()
                 glColor4f(1.0, 1.0, 1.0, 0.5);
             }
 
-            glVertex3f(x, y, plateZ);
-            glVertex3f(x+size, y, plateZ);
-            glVertex3f(x+size, y+size, plateZ);
+            glVertex3f(x, y, pZ);
+            glVertex3f(x+size, y, pZ);
+            glVertex3f(x+size, y+size, pZ);
 
-            glVertex3f(x, y, plateZ);
-            glVertex3f(x+size, y+size, plateZ);
-            glVertex3f(x, y+size, plateZ);
+            glVertex3f(x, y, pZ);
+            glVertex3f(x+size, y+size, pZ);
+            glVertex3f(x, y+size, pZ);
 
-            glVertex3f(x+size, y+size, plateZ);
-            glVertex3f(x+size, y, plateZ);
-            glVertex3f(x, y, plateZ);
+            glVertex3f(x+size, y+size, pZ);
+            glVertex3f(x+size, y, pZ);
+            glVertex3f(x, y, pZ);
 
-            glVertex3f(x, y+size, plateZ);
-            glVertex3f(x+size, y+size, plateZ);
-            glVertex3f(x, y, plateZ);
+            glVertex3f(x, y+size, pZ);
+            glVertex3f(x+size, y+size, pZ);
+            glVertex3f(x, y, pZ);
         }
     }
     glEnd();
@@ -472,7 +502,7 @@ void Viewer::dontMove()
 
 void Viewer::timeOutSlot()
 {
-    if (shouldRedraw || autorotate) {
+    if (mode == MODE_PHYSICS || shouldRedraw || autorotate) {
         shouldRedraw = false;
         updateGL();
     }

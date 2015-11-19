@@ -109,17 +109,23 @@ namespace Metabot
         return matrix;
     }
             
-    TransformMatrix TransformMatrix::fromJSON(std::string json)
+    Json::Value TransformMatrix::toJson()
+    {
+        Json::Value json(Json::arrayValue);
+
+        for (int x=0; x<4; x++) {
+            json[x] = Json::Value(Json::arrayValue);
+            for (int y=0; y<4; y++) {
+                json[x][y] = values[x][y];
+            }
+        }
+
+        return json;
+    }
+    
+    TransformMatrix TransformMatrix::fromJSON(Json::Value root)
     {
         TransformMatrix matrix;
-        Json::Value root;
-        Json::Reader reader;
-
-        if (!reader.parse(json, root)) {
-            std::stringstream ss;
-            ss << "Unable to decode matrix from: " << json;
-            throw ss.str();
-        }
 
         if (!root.isArray() || root.size()!=4) {
             throw std::string("Bad value for matrix");
@@ -140,6 +146,20 @@ namespace Metabot
         }
 
         return matrix;
+    }
+            
+    TransformMatrix TransformMatrix::fromJSON(std::string json)
+    {
+        Json::Value root;
+        Json::Reader reader;
+
+        if (!reader.parse(json, root)) {
+            std::stringstream ss;
+            ss << "Unable to decode matrix from: " << json;
+            throw ss.str();
+        }
+
+        return fromJSON(root);
     }
 
     TransformMatrix TransformMatrix::multiply(TransformMatrix other)
@@ -281,5 +301,26 @@ namespace Metabot
                             values[2][0], values[2][1], values[2][2]),
                 btVector3(x()/1000.0, y()/1000.0, z()/1000.0)
                 );
+    }
+
+    TransformMatrix TransformMatrix::fromBullet(btTransform trans)
+    {
+        auto matrix = TransformMatrix::identity();
+        auto origin = trans.getOrigin();
+        auto base = trans.getBasis();
+
+        // Position
+        matrix.values[0][3] = origin.getX()*1000.0;
+        matrix.values[1][3] = origin.getY()*1000.0;
+        matrix.values[2][3] = origin.getZ()*1000.0;
+
+        // Rotation
+        for (int x=0; x<3; x++) {
+            for (int y=0; y<3; y++) {
+                matrix.values[x][y] = base[x][y];
+            }
+        }
+
+        return matrix;
     }
 }

@@ -45,9 +45,14 @@ namespace Metabot
             AnchorPoint *getHoveredAnchor(int id);
 
             void clear();
+            void fromJson(Json::Value json, Values values = Values());
             void loadFromFile(std::string filename, Values values = Values());
+            Json::Value toJson();
             void saveToFile(std::string filename);
             void number();
+
+            Json::Value stateToJson();
+            void stateFromJson(Json::Value json);
 
             void foreachComponent(std::function<void(Component *instance)> method);
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);

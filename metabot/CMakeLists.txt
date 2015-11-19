@@ -38,6 +38,9 @@ set(ALL_SOURCES
     scad/Module.cpp
     scad/SCAD.cpp
     scad/Shape.cpp
+
+    com/Server.cpp
+    com/Client.cpp
     
     AnchorPoint.cpp
     Backend.cpp
@@ -67,7 +70,7 @@ set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSP
 
 add_library(libmetabot ${ALL_SOURCES})
 
-target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json symbolic ${BULLET_LIBRARIES})
+target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json symbolic ${BULLET_LIBRARIES} zmq)
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()

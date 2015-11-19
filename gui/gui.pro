@@ -54,9 +54,9 @@ win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/l
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a
 else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../metabot/build/liblibmetabot.a $$PWD/../metabot/build/json/lib/libjson.a
 
-win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath
-mac: LIBS += -framework OpenGL
-else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath
+win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath -lzmq
+mac: LIBS += -framework OpenGL -lzmq
+else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath -lzmq
 
 RESOURCES += \
     icons.qrc

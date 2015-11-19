@@ -12,6 +12,7 @@
 #endif
 #endif
 #include <LinearMath/btTransform.h>
+#include <json/json.h>
 
 class Symbolic;
 #include "vvector.h"
@@ -38,11 +39,13 @@ namespace Metabot
             Symbolic toSymbolic();
 
             btTransform toBullet();
+            static TransformMatrix fromBullet(btTransform trans);
 
 #ifdef OPENGL
             void openGLMult();
             GLfloat glmatrix[4*4];
 #endif
+            Json::Value toJson();
             
             static TransformMatrix identity();
             static TransformMatrix zero();
@@ -50,6 +53,7 @@ namespace Metabot
             static TransformMatrix rotationY(float alpha);
             static TransformMatrix rotationZ(float alpha);
             static TransformMatrix translation(float x, float y, float z);
+            static TransformMatrix fromJSON(Json::Value json);
             static TransformMatrix fromJSON(std::string json);
 
             float x();

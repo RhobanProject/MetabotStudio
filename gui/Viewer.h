@@ -7,6 +7,10 @@
 #include <metabot/Robot.h>
 #include <metabot/Component.h>
 #include <metabot/TransformMatrix.h>
+#include <metabot/com/Client.h>
+
+#define MODE_NORMAL     0
+#define MODE_PHYSICS    1
 
 class Viewer : public QGLWidget
 {
@@ -51,6 +55,9 @@ public:
     float tX, tY;
     float mTX, mTY;
 
+    // Mode (normal? physics?)
+    int mode;
+
 public slots:
     virtual void timeOutSlot();
 
@@ -75,6 +82,7 @@ private:
     float mX, mY;
     bool pressed, movePressed, moved;
 
+    Metabot::Client client;
     QTimer *t_Timer;
 };
 

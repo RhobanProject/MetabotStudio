@@ -602,3 +602,13 @@ void MainWindow::on_actionParameters_triggered()
     parametersEditor = new ParametersEditor(this, robot, this);
     parametersEditor->show();
 }
+
+void MainWindow::on_actionPhysics_triggered()
+{
+    if (ui->actionPhysics->isChecked()) {
+        viewer->mode = MODE_PHYSICS;
+    } else {
+        viewer->mode = MODE_NORMAL;
+    }
+    viewer->redraw();
+}

@@ -22,6 +22,7 @@ GLDebugDrawer::~GLDebugDrawer()
 
 void	GLDebugDrawer::drawLine(const btVector3& from,const btVector3& to,const btVector3& fromColor, const btVector3& toColor)
 {
+#ifdef OPENGL
     float R = fromColor.getX();
     float G = fromColor.getY();
     float B = fromColor.getZ();
@@ -32,6 +33,7 @@ void	GLDebugDrawer::drawLine(const btVector3& from,const btVector3& to,const btV
     glColor3f(toColor.getX(), toColor.getY(), toColor.getZ());
     glVertex3d(to.getX(), to.getY(), to.getZ());
     glEnd();
+#endif
 }
 
 void GLDebugDrawer::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
@@ -41,6 +43,7 @@ void GLDebugDrawer::drawLine(const btVector3& from,const btVector3& to,const btV
 
 void GLDebugDrawer::drawSphere (const btVector3& p, btScalar radius, const btVector3& color)
 {
+#ifdef OPENGL
     glColor4f (color.getX(), color.getY(), color.getZ(), btScalar(1.0f));
     glPushMatrix ();
     glTranslatef (p.getX(), p.getY(), p.getZ());
@@ -73,14 +76,12 @@ void GLDebugDrawer::drawSphere (const btVector3& p, btScalar radius, const btVec
     }
 
     glPopMatrix();
+#endif
 }
-
-
 
 void	GLDebugDrawer::drawTriangle(const btVector3& a,const btVector3& b,const btVector3& c,const btVector3& color,btScalar alpha)
 {
-    std::cout << "DRAW TRIANGLE!" << std::endl;
-
+#ifdef OPENGL
     //	if (m_debugMode > 0)
     {
         const btVector3	n=btCross(b-a,c-a).normalized();
@@ -92,19 +93,20 @@ void	GLDebugDrawer::drawTriangle(const btVector3& a,const btVector3& b,const btV
         glVertex3d(c.getX(),c.getY(),c.getZ());
         glEnd();
     }
+#endif
 }
 
 void	GLDebugDrawer::setDebugMode(int debugMode)
 {
-    std::cout << "SETTING DEBUG MODE TO " << debugMode << std::endl;
     m_debugMode = debugMode;
-
 }
 
 void	GLDebugDrawer::draw3dText(const btVector3& location,const char* textString)
 {
+#ifdef OPENGL
     glRasterPos3f(location.x(),  location.y(),  location.z());
     //BMF_DrawString(BMF_GetFont(BMF_kHelvetica10),textString);
+#endif
 }
 
 void	GLDebugDrawer::reportErrorWarning(const char* warningString)
@@ -114,7 +116,7 @@ void	GLDebugDrawer::reportErrorWarning(const char* warningString)
 
 void	GLDebugDrawer::drawContactPoint(const btVector3& pointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color)
 {
-
+#ifdef OPENGL
     {
         btVector3 to=pointOnB+normalOnB*1;//distance;
         const btVector3&from = pointOnB;
@@ -133,9 +135,5 @@ void	GLDebugDrawer::drawContactPoint(const btVector3& pointOnB,const btVector3& 
 
 
     }
+#endif
 }
-
-
-
-
-
