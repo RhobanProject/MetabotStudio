@@ -22,10 +22,11 @@ static void usage()
 
 int main(int argc, char *argv[])
 {
+    bool realTime = false;
     int index;
     std::string robotFile = "";
 
-    while ((index = getopt(argc, argv, "r:v")) != -1) {
+    while ((index = getopt(argc, argv, "r:vt")) != -1) {
         switch (index) {
             case 'r':
                 robotFile = std::string(optarg);
@@ -35,6 +36,9 @@ int main(int argc, char *argv[])
                 break;
             case 'v':
                 setVerbosity(1);
+                break;
+            case 't':
+                realTime = true;
                 break;
         }
     }
@@ -57,8 +61,7 @@ int main(int argc, char *argv[])
         if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
         robot.computeDynamics();
 
-            
-        for (float l1=45; l1<100; l1+=5) {
+        for (float l1=30; l1<100; l1+=5) {
             if (isVerbose()) std::cout << "* Exporting to bullet..." << std::endl;
             robot.parameters.set("L1", l1);
             robot.compile();
@@ -88,12 +91,17 @@ int main(int argc, char *argv[])
                 t += 0.001;
                 // usleep(10000);
                 float elapsed = (getTime()-rT);
-                if (elapsed - lastUpdate > 0.02) {
+                if ((elapsed - lastUpdate) > 0.02) {
                     lastUpdate += 0.02;
                     server.updateRobot(&robot);
                     k = 0;
                     float factor = t/(elapsed);
                     // std::cout << t << " " << (elapsed) << " (factor=" << factor << ")" << std::endl;
+                }
+                if (realTime) {
+                    if (elapsed < t) {
+                        usleep(1000000*(t-elapsed));
+                    }
                 }
             }
             auto state = robot.getState();
