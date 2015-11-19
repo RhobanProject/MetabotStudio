@@ -55,16 +55,16 @@ int main(int argc, char *argv[])
         Metabot::Robot robot;
         if (isVerbose()) std::cout << "* Reading file..." << std::endl;
         robot.loadFromFile(robotFile);
-            
-        if (isVerbose()) std::cout << "* Compiling..." << std::endl;
-        robot.compile();
-        if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
-        robot.computeDynamics();
 
-        for (float l1=30; l1<100; l1+=5) {
+        for (float l1=30; l1<100; l1+=20) {
             if (isVerbose()) std::cout << "* Exporting to bullet..." << std::endl;
             robot.parameters.set("L1", l1);
+            if (isVerbose()) std::cout << "* Compiling..." << std::endl;
             robot.compile();
+            if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
+            robot.computeDynamics();
+            //robot.printDynamics();
+            if (isVerbose()) std::cout << "* Exporting it to bullet..." << std::endl;
             robot.toBullet();
             if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
             server.loadRobot(&robot);

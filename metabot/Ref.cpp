@@ -62,15 +62,13 @@ namespace Metabot
     void Ref::analyze(Backend *backend)
     {
         auto module = backend->getModule(name);
-        std::stringstream ss;
-        ss << module.getFilename() << "#" << module.getName() << " dynamics";
-        std::string key = hash_sha1(ss.str()) + ".dynamics";
+        std::string key = hash() + ".dynamics";
 
         std::string data = backend->cache->get(key, [this]() {
-            std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
+            // std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
             auto dynamics = Voxels::voxelize(this->getModel(), this->density, this->mass);
-            std::cout << dynamics.toString();
-            std::cout << std::endl;
+            // std::cout << dynamics.toString();
+            // std::cout << std::endl;
 
             return dynamics.serialize();
         }, module.getFilename());
