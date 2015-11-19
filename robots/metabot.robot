@@ -41,7 +41,7 @@
                         }
                      },
                      "orientationX" : 0.0,
-                     "orientationY" : 0.0,
+                     "orientationY" : 3.141592741012573,
                      "orientationZ" : 0.0,
                      "remote" : 1,
                      "zero" : 0.0
@@ -99,7 +99,7 @@
                         }
                      },
                      "orientationX" : 0.0,
-                     "orientationY" : 0.0,
+                     "orientationY" : 3.141592741012573,
                      "orientationZ" : 0.0,
                      "remote" : 1,
                      "zero" : 0.0
@@ -157,7 +157,7 @@
                         }
                      },
                      "orientationX" : 0.0,
-                     "orientationY" : 0.0,
+                     "orientationY" : 3.141592741012573,
                      "orientationZ" : 0.0,
                      "remote" : 1,
                      "zero" : 0.0
@@ -215,7 +215,7 @@
                         }
                      },
                      "orientationX" : 0.0,
-                     "orientationY" : 0.0,
+                     "orientationY" : 3.141592741012573,
                      "orientationZ" : 0.0,
                      "remote" : 1,
                      "zero" : 0.0
