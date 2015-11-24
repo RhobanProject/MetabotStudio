@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <Component.h>
 #include "kinematic.h"
 #include "Controller.h"
 
@@ -70,8 +71,9 @@ void Controller::setupFunctions()
     }
 }
 
-Controller::Angles Controller::compute(float t)
+Controller::Angles Controller::compute(float t_)
 {
+    float t = freq*t_;
     Angles angles;
     float turnRad = DEG2RAD(turn);
 
@@ -146,4 +148,15 @@ Controller::Angles Controller::compute(float t)
     }
 
     return angles;
+}
+        
+void Controller::update(float t, Metabot::Robot &robot)
+{
+    auto angles = compute(t);
+    for (int k=0; k<4; k++) {
+        int leg = (k+2)%4;
+        robot.getComponentById(k*3+2)->setTarget(angles.l1[leg]);
+        robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg]);
+        robot.getComponentById(k*3+4)->setTarget(angles.l3[leg]);
+    }
 }

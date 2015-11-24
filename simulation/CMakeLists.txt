@@ -7,16 +7,22 @@ set (BASE
 set (METABOT_DIR
     "${BASE}/metabot/" CACHE STRING "Metabot directory")
 
+set (RHIO_DIR
+    "${BASE}/../RhIO")
+
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors")
 
 include_directories("${METABOT_DIR}")
 include_directories("${METABOT_DIR}/sym")
 add_subdirectory(${METABOT_DIR} metabot)
 include_directories(${BULLET_INCLUDE_DIRS})
+add_subdirectory(${RHIO_DIR} rhio)
+include_directories("${RHIO_DIR}/include")
 
 set (SOURCES
     Controller.cpp
     Function.cpp
+    Simulation.cpp
 
     util.cpp
     kinematic.cpp
@@ -25,4 +31,4 @@ set (SOURCES
     )
 
 add_executable(sim ${SOURCES})
-target_link_libraries(sim pthread libmetabot)
+target_link_libraries(sim pthread libmetabot RhIO)
