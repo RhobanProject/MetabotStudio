@@ -6,6 +6,7 @@ namespace Metabot
 {
     Vect::Vect()
     {
+        values[3] = 1;
     }
 
     Vect::Vect(float x, float y, float z)
