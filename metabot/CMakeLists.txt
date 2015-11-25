@@ -16,6 +16,7 @@ endif()
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors")
 
 set(ALL_SOURCES
+    util/Benchmark.cpp
     util/Cache.cpp
     util/sha1.cpp
     util/util.cpp
