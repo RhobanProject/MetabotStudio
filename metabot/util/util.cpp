@@ -186,10 +186,17 @@ void file_put_contents(std::string path, std::string contents)
 
 std::string file_get_contents(std::string path)
 {
-    std::ifstream ifs(path.c_str());
-    std::string content((std::istreambuf_iterator<char>(ifs)),
-            (std::istreambuf_iterator<char>()));
-    return content;
+    std::string result = ""; 
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd > 0) {
+        char buffer[1024];
+        int n;
+        while ((n = read(fd, buffer, sizeof(buffer))) > 0) {
+            result += std::string(buffer, n); 
+        }
+        close(fd);
+    }   
+    return result;
 }
 
 bool startswith(std::string str, std::string start)
