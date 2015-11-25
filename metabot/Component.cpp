@@ -131,6 +131,7 @@ namespace Metabot
     {
         dynamics = Dynamics();
 
+        // std::cout << "Combining refs for " << module->getName() << std::endl;
         for (auto ref : refs()) {
             dynamics.combine(ref->getDynamics(), ref->matrix);
         }
@@ -771,10 +772,14 @@ namespace Metabot
             
     void Component::setTarget(float alpha)
     {
+        float speedLimit = 4*M_PI;
         if (hinge != NULL) {
             float current = hinge->getHingeAngle();
             float error = (alpha - current);
-            hinge->enableAngularMotor(true, 10*error, 0.0005);
+            float targetSpeed = error*10;
+            if (targetSpeed < -speedLimit) targetSpeed = -speedLimit;
+            if (targetSpeed > speedLimit) targetSpeed = speedLimit;
+            hinge->enableAngularMotor(true, targetSpeed, 0.0005);
         }
     }
 }
