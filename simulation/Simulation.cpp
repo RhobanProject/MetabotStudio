@@ -12,18 +12,19 @@ Simulation::Simulation(float duration, Metabot::Server &server,
     factor = 10.0;
 }
 
-void Simulation::run()
+double Simulation::run()
 {
     float realTimeStart = getTime();
     float controllerTime = 0.0;
     float simTime = 0.0;
     float lastUpdate = 0.0;
+    double cost = 0;
 
     int k = 0;
     if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
 
     for (;controllerTime < duration; controllerTime += 0.001) {
-        controller.update(controllerTime, robot);
+        cost += controller.update(controllerTime, robot);
         robot.world.stepSimulation(0.001);
         simTime += 0.001/factor;
         
@@ -37,4 +38,6 @@ void Simulation::run()
             usleep(1000000*(simTime-realTime));
         }
     }
+
+    return cost;
 }

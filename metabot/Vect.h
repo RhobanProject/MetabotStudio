@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bullet/btBulletDynamicsCommon.h>
 #include <string>
 
 namespace Metabot
@@ -17,5 +18,8 @@ namespace Metabot
             float z() const;
 
             std::string toString() const;
+
+            double dot(Vect other);
+            static Vect fromBullet(btVector3 bvect);
     };
 }

@@ -61,7 +61,7 @@ namespace Metabot
             void setZeros(std::vector<float> zeros);
 
 #ifdef OPENGL
-            void openGLDraw(float alpha=1.0);
+            void openGLDraw(bool bullet=false, float alpha=1.0);
 #endif
             void unHighlight();
             void unHover();

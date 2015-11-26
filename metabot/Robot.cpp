@@ -303,10 +303,10 @@ namespace Metabot
     }
             
 #ifdef OPENGL
-    void Robot::openGLDraw(float alpha)
+    void Robot::openGLDraw(bool bullet, float alpha)
     {
         if (root != NULL) {
-            root->openGLDraw(drawCollisions, alpha);
+            root->openGLDraw(bullet, drawCollisions, alpha);
 
             if (drawCOM) {
                 Dynamics global;

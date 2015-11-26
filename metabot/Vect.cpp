@@ -52,4 +52,17 @@ namespace Metabot
     {
         return values[2];
     }
+            
+    double Vect::dot(Vect other)
+    {
+        return values[0]*other.values[0] +
+            values[1]*other.values[1] +
+            values[2]*other.values[2]
+            ;
+    }
+
+    Vect Vect::fromBullet(btVector3 bvect)
+    {
+        return Vect(bvect.x(), bvect.y(), bvect.z());
+    }
 }

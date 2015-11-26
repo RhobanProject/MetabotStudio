@@ -150,13 +150,15 @@ Controller::Angles Controller::compute(float t_)
     return angles;
 }
         
-void Controller::update(float t, Metabot::Robot &robot)
+double Controller::update(float t, Metabot::Robot &robot)
 {
+    double cost = 0;
     auto angles = compute(t);
     for (int k=0; k<4; k++) {
         int leg = (k+2)%4;
-        robot.getComponentById(k*3+2)->setTarget(angles.l1[leg]);
-        robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg]);
-        robot.getComponentById(k*3+4)->setTarget(angles.l3[leg]);
+        cost += fabs(robot.getComponentById(k*3+2)->setTarget(angles.l1[leg]));
+        cost += fabs(robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg]));
+        cost += fabs(robot.getComponentById(k*3+4)->setTarget(angles.l3[leg]));
     }
+    return cost;
 }

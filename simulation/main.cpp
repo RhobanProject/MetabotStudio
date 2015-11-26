@@ -60,13 +60,13 @@ int main(int argc, char *argv[])
         if (isVerbose()) std::cout << "* Reading file..." << std::endl;
         robot.loadFromFile(robotFile);
 
-        for (float l1=50; l1<250; l1+=50) {
+        for (float l1=50; l1<550; l1+=20) {
             robot.parameters.set("L1", l1);
             if (isVerbose()) std::cout << "* Compiling..." << std::endl;
             robot.compile();
             if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
             robot.computeDynamics();
-            //robot.printDynamics();
+            // robot.printDynamics();
             if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
             server.loadRobot(&robot);
 
@@ -77,11 +77,11 @@ int main(int argc, char *argv[])
 
             Simulation simulation(15.0, server, robot, controller);
             simulation.factor = factor;
-            simulation.run();
+            auto cost = simulation.run();
 
             auto state = robot.getState();
             auto score = sqrt(state.x()*state.x() + state.y()*state.y() + state.z()*state.z());
-            std::cout << l1 << " " << score << std::endl;
+            std::cout << l1 << " " << cost << " " << score << std::endl;
         }
 
     } catch (std::string err) {

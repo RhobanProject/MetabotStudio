@@ -26,7 +26,7 @@ class Controller : public Simulation::Controller
         Angles compute(float t);
 
         // Compute angles & update the robot
-        void update(float t, Metabot::Robot &robot);
+        double update(float t, Metabot::Robot &robot);
 
         // Resets the motion
         void reset();

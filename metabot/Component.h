@@ -55,6 +55,7 @@ namespace Metabot
             btRigidBody *toBullet(World *world, AnchorPoint *above=NULL, TransformMatrix matrix=TransformMatrix::identity());
             TransformMatrix getState();
             void setState(TransformMatrix matrix);
+            double getVelocity();
             double setTarget(float alpha);
 
             Model toModel();
@@ -75,7 +76,7 @@ namespace Metabot
 #endif
             
 #ifdef OPENGL
-            void openGLDraw(bool drawCollisions=false, float alpha=1.0);
+            void openGLDraw(bool bullet=false, bool drawCollisions=false, float alpha=1.0);
             void openGLDrawRef(Ref *ref, float alpha=1.0);
 #endif
             bool highlight;

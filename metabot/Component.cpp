@@ -121,12 +121,12 @@ namespace Metabot
             kinematic.addTip(matrix(0,3).simplify(), matrix(1,3).simplify(), matrix(2,3).simplify(), chain);
         }
     }
-            
+
     Dynamics Component::getDynamics()
     {
         return dynamics;
     }
-            
+
     void Component::computeDynamics()
     {
         dynamics = Dynamics();
@@ -136,7 +136,7 @@ namespace Metabot
             dynamics.combine(ref->getDynamics(), ref->matrix);
         }
     }
-            
+
     void Component::walkDynamics(Dynamics &global, TransformMatrix matrix, bool verbose)
     {
         Dynamics my_dynamics = getDynamics();
@@ -154,7 +154,7 @@ namespace Metabot
             }
         }
     }
-            
+
     void Component::writeJS(std::stringstream &ss, std::string parent,
             TransformMatrix parentPreTransform, AnchorPoint *above)
     {
@@ -172,14 +172,14 @@ namespace Metabot
         ss << "var " << linkName << " = new Joint();" << std::endl;
         for (auto ref : refs()) {
             unsigned int color =
-                 (((int)(ref->r*255))<<16)
+                (((int)(ref->r*255))<<16)
                 |(((int)(ref->g*255))<<8)
                 |(((int)(ref->b*255))<<0)
                 ;
             ss << linkName << ".addSTL(\"" << ref->hash() << ".stl\"," << color << ",";
             ss << preTransform.multiply(ref->matrix).toJS() << ");" << std::endl;
         }
-        
+
         if (above != NULL) {
             auto jointName = linkName + "_joint";
             ss << "var " << jointName << " = new Joint();" << std::endl;
@@ -188,14 +188,14 @@ namespace Metabot
             ss << linkName << ".setSign(" << above->sign() << ");" << std::endl;
             ss << "joints.push(" << linkName << ");" << std::endl;
         } 
-        
+
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor!=NULL) {
                 anchor->anchor->component->writeJS(ss, linkName, preTransform, anchor->anchor);
             }
         }
     }
-            
+
     void Component::writeSDF(std::stringstream &ss, std::string parent, TransformMatrix transform, AnchorPoint *above)
     {
         Dynamics dynamics;
@@ -208,7 +208,7 @@ namespace Metabot
         tmp << module->getName() << "_" << id;
         std::string name = tmp.str();
         ss << "  <link name=\"" << name << "\">" << std::endl;
-            
+
         // Adding parts and models, linked to component
         int refid = 0;
         if (above != NULL) {
@@ -270,10 +270,10 @@ namespace Metabot
             ss << shape.toSDF(TransformMatrix::identity()) << std::endl;
             ss << "  </collision>" << std::endl;
         }
-            
+
         ss << "  </link>" << std::endl;
 
-        
+
         // Linking it to the parent
         if (above != NULL) {
             ss << "  <joint name=\"joint_" << id << "\" type=\"revolute\">" << std::endl;
@@ -297,12 +297,12 @@ namespace Metabot
             if (anchor->above && anchor->anchor!=NULL) {
                 TransformMatrix t = transform.multiply(anchor->transformationForward());
                 // t = anchor->anchor->transformationBackward().multiply(t);
-                 t = t.multiply(anchor->anchor->transformationBackward());
+                t = t.multiply(anchor->anchor->transformationBackward());
                 anchor->anchor->component->writeSDF(ss, name, t, anchor->anchor);
             }
         }
     }
-            
+
     TransformMatrix Component::getState()
     {
         if (body != NULL) {
@@ -321,7 +321,7 @@ namespace Metabot
             body->getMotionState()->setWorldTransform(trans);
         }
     }
-            
+
     btRigidBody *Component::toBullet(World *world, AnchorPoint *above, TransformMatrix matrix)
     {
         // Creating shapes
@@ -330,7 +330,7 @@ namespace Metabot
             btCollisionShape *colShape = NULL;
             switch (shape.type) {
                 case SHAPE_BOX:
-                     colShape = world->createBox(shape.a/1000.0, shape.b/1000.0, shape.c/1000.0);
+                    colShape = world->createBox(shape.a/1000.0, shape.b/1000.0, shape.c/1000.0);
                     break;
                 case SHAPE_SPHERE:
                     colShape = world->createSphere(shape.r/1000.0);
@@ -365,7 +365,7 @@ namespace Metabot
                         anchor->anchor->transformationForward().toBullet());
             }
         }
-        
+
         vel = 0;
         targetForce = 0;
         lastPos = 0;
@@ -397,10 +397,10 @@ namespace Metabot
     }
 
 #ifdef OPENGL
-    void Component::openGLDraw(bool drawCollisions, float alpha)
+    void Component::openGLDraw(bool bullet, bool drawCollisions, float alpha)
     {
         glPushMatrix();
-        if (body != NULL) {
+        if (bullet) {
             btTransform trans;
             body->getMotionState()->getWorldTransform(trans);
             TransformMatrix::fromBullet(trans).openGLMult();
@@ -432,7 +432,7 @@ namespace Metabot
         for (auto anchor : anchors) {
             glPushMatrix();
             if (anchor->above) {
-                anchor->openGLDraw(anchorId, drawCollisions, body == NULL, alpha);
+                anchor->openGLDraw(anchorId, bullet, drawCollisions, alpha);
             }
             glPopMatrix();
             anchorId++;
@@ -532,7 +532,7 @@ namespace Metabot
         bom = document->bom;
         tips = document->tips;
         delete document;
-        
+
         // Collision CSG & STL
         std::string collisionsCsg = module->openscad("csg", parameters(robot), DEFINE_COLLISIONS);
         collisions = loadModelSTL_string(stl(robot, true));
@@ -634,7 +634,7 @@ namespace Metabot
             anchor->detach(false);
         }
     }
-            
+
     AnchorPoint *Component::belowAnchor()
     {
         for (auto anchor : anchors) {
@@ -773,20 +773,40 @@ namespace Metabot
 
         return refs;
     }
-            
+
+    double Component::getVelocity()
+    {
+        if (!hinge) {
+            return 0;
+        }
+        double result = 0;
+        Vect axis;
+
+        btVector3 vec =
+            hinge->getRigidBodyA().getCenterOfMassTransform().getBasis() *
+            hinge->getFrameOffsetA().getBasis().getColumn(2);
+        axis = Vect::fromBullet(vec);
+
+        result += axis.dot(Vect::fromBullet(hinge->getRigidBodyB().getAngularVelocity()));
+        result -= axis.dot(Vect::fromBullet(hinge->getRigidBodyA().getAngularVelocity()));
+
+        return -result;
+    }
+
     double Component::setTarget(float alpha)
     {
         float maxVel = 4*M_PI;
         float maxForce = 0.5;
         auto pos = hinge->getHingeAngle();
-        auto inst = (pos-lastPos)/0.001;
-        vel = 0.8*vel + 0.2*inst;
+        vel = vel*0.92 + 0.08*getVelocity();
+
         float error = alpha-pos;
-        float targetVel = error*20;
+        float targetVel = error*15;
         if (targetVel > maxVel) targetVel = maxVel;
         if (targetVel < -maxVel) targetVel = -maxVel;
+
         float errorVel = targetVel-vel;
-        targetForce = errorVel*0.1;
+        targetForce = errorVel*0.4;
         if (targetForce > maxForce) targetForce = maxForce;
         if (targetForce < -maxForce) targetForce = -maxForce;
 
