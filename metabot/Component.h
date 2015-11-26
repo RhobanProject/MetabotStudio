@@ -47,12 +47,15 @@ namespace Metabot
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 
             // Bullet
+            float lastPos;
+            float vel;
+            float targetForce;
             btRigidBody *body;
             btHingeConstraint *hinge;
             btRigidBody *toBullet(World *world, AnchorPoint *above=NULL, TransformMatrix matrix=TransformMatrix::identity());
             TransformMatrix getState();
             void setState(TransformMatrix matrix);
-            void setTarget(float alpha);
+            double setTarget(float alpha);
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);

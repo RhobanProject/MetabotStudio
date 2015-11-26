@@ -365,6 +365,10 @@ namespace Metabot
                         anchor->anchor->transformationForward().toBullet());
             }
         }
+        
+        vel = 0;
+        targetForce = 0;
+        lastPos = 0;
 
         return body;
     }
@@ -770,16 +774,29 @@ namespace Metabot
         return refs;
     }
             
-    void Component::setTarget(float alpha)
+    double Component::setTarget(float alpha)
     {
-        float speedLimit = 4*M_PI;
-        if (hinge != NULL) {
-            float current = hinge->getHingeAngle();
-            float error = (alpha - current);
-            float targetSpeed = error*10;
-            if (targetSpeed < -speedLimit) targetSpeed = -speedLimit;
-            if (targetSpeed > speedLimit) targetSpeed = speedLimit;
-            hinge->enableAngularMotor(true, targetSpeed, 0.0005);
-        }
+        float maxVel = 4*M_PI;
+        float maxForce = 0.5;
+        auto pos = hinge->getHingeAngle();
+        auto inst = (pos-lastPos)/0.001;
+        vel = 0.8*vel + 0.2*inst;
+        float error = alpha-pos;
+        float targetVel = error*20;
+        if (targetVel > maxVel) targetVel = maxVel;
+        if (targetVel < -maxVel) targetVel = -maxVel;
+        float errorVel = targetVel-vel;
+        targetForce = errorVel*0.1;
+        if (targetForce > maxForce) targetForce = maxForce;
+        if (targetForce < -maxForce) targetForce = -maxForce;
+
+        btVector3 hingeAxisLocal = hinge->getAFrame().getBasis().getColumn(2); // z-axis of constraint frame
+        btVector3 hingeAxisWorld = hinge->getRigidBodyA().getWorldTransform().getBasis() * hingeAxisLocal;
+        btVector3 hingeTorque = targetForce * hingeAxisWorld;
+        hinge->getRigidBodyA().applyTorque(hingeTorque);
+        hinge->getRigidBodyB().applyTorque(-hingeTorque);
+        lastPos = pos;
+
+        return fabs(targetForce*0.001);
     }
 }
