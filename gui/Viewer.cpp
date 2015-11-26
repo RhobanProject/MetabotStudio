@@ -154,6 +154,12 @@ void Viewer::resizeGL(int width, int height)
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+    if (mode == MODE_PHYSICS && client.robot) {
+        auto state = client.robot->getState();
+        tX = -state.x();
+        tY = -state.y();
+    }
 }
 
 void Viewer::paintGL()
@@ -184,17 +190,16 @@ void Viewer::paintGL()
     glTranslatef(tX, tY, 0);
     glPushMatrix();
     if (mode == MODE_NORMAL) {
-        robot->openGLDraw();
+        robot->openGLDraw(false);
     } else {
         if (client.robot) {
             client.lock();
-            client.robot->openGLDraw();
+            client.robot->openGLDraw(true);
 
             // Mirror
             glScalef(1.0, 1.0, -1.0);
-            glColor4f(1.0, 1.0, 1.0, 0.2);
             if (sin(beta) > 0) {
-                client.robot->openGLDraw(0.25);
+                client.robot->openGLDraw(true, 0.25);
             }
             client.unlock();
         }
