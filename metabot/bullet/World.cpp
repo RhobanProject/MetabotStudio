@@ -49,12 +49,7 @@
         last = body;
     }
     */
-
-    /*
-    auto shape = createCylinder(0.01, 0.01);
-    createRigidBody(0.0, btTransform::getIdentity(), shape);
-    */
-
+    
     clear();
 }
 
@@ -186,19 +181,40 @@ btCollisionShape *World::createCylinder(btScalar r, btScalar h)
 
     return shape;
 }
+
+btCollisionShape *World::createEmpty()
+{
+    auto shape = new btEmptyShape();
+    shapes.push_back(shape);
+
+    return shape;
+}
         
 btHingeConstraint *World::createHinge(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame)
 {
     auto hinge = new btHingeConstraint(*A, *B, AFrame, BFrame);
-    m_dynamicsWorld->addConstraint(hinge);
+    m_dynamicsWorld->addConstraint(hinge, true);
 
     hinges.push_back(hinge);
     return hinge;
+}
+
+btConeTwistConstraint *World::createCone(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame)
+{
+    auto cone = new btConeTwistConstraint(*A, *B, AFrame, BFrame);
+    m_dynamicsWorld->addConstraint(cone, true);
+
+    cones.push_back(cone);
+    return cone;
 }
         
 void World::clear()
 {
     zOffset = 0;
+    for (auto cone : cones) {
+        m_dynamicsWorld->removeConstraint(cone);
+        delete cone;
+    }
     for (auto hinge : hinges) {
         m_dynamicsWorld->removeConstraint(hinge);
         delete hinge;
@@ -212,6 +228,7 @@ void World::clear()
     }
 
     bodies.clear();
+    cones.clear();
     hinges.clear();
     shapes.clear();
     

@@ -357,12 +357,43 @@ namespace Metabot
         // Child
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor) {
-                auto m = matrix.multiply(anchor->transformationForward());
-                m = m.multiply(anchor->anchor->transformationBackward());
-                auto child = anchor->anchor->component->toBullet(world, anchor->anchor, m);
+                // From body frame to anchor frame
+                auto toAnchor = anchor->transformationForward();
+                // Rotation for cone
+                auto rot = TransformMatrix::rotationZ(M_PI/2);
+                // From world frame to child
+                auto worldToChild = matrix.multiply(toAnchor);
+                auto worldToDummy = worldToChild;
+                worldToChild = worldToChild.multiply(anchor->anchor->transformationBackward());
 
-                anchor->anchor->component->hinge = world->createHinge(body, child, anchor->transformationForward().toBullet(),
-                        anchor->anchor->transformationForward().toBullet());
+                // Recursion
+                auto child = anchor->anchor->component->toBullet(world, anchor->anchor, worldToChild);
+                
+                // Creating dummy body for backlash simulation
+                auto empty = world->createEmpty();
+                auto dummy = world->createRigidBody(0.01, worldToDummy.toBullet(), empty, 
+                        btVector3(1e-5, 1e-5, 1e-5));
+              
+                /*
+                // Creating hinge
+                anchor->anchor->component->hinge = world->createHinge(body, child,
+                        anchor->transformationForward().toBullet(),
+                        anchor->anchor->transformationBackward().toBullet()
+                        )
+                */
+              
+                // Creating hinge
+                anchor->anchor->component->hinge = world->createHinge(body, dummy,
+                        anchor->transformationForward().toBullet(),
+                        btTransform::getIdentity()
+                        );
+            
+                // Creating cone
+                auto cone = world->createCone(dummy, child,
+                        rot.toBullet(),
+                        anchor->anchor->transformationForward().multiply(rot).toBullet()
+                        );
+                cone->setLimit(0.03, 0.03, 0.015);
             }
         }
 
