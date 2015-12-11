@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <bullet/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include "GLDebugDrawer.h"
 
 class World

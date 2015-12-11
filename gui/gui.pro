@@ -45,9 +45,12 @@ CONFIG += c++11
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljson
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljson
 else:symbian: LIBS += -llibmetabot -ljson
-else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib -llibmetabot -ljson -lsymbolic
+else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/-L$$PWD/../metabot/build/json/lib -llibmetabot -ljson -lsymbolic
+unix: LIBS += -L$$PWD/../metabot/build/bullet/src/BulletCollision
+unix: LIBS += -L$$PWD/../metabot/build/bullet/src/BulletDynamics
+unix: LIBS += -L$$PWD/../metabot/build/bullet/src/LinearMath
 
-INCLUDEPATH += /usr/include/bullet/ $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/json/include/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
+INCLUDEPATH += $$PWD/../ $$PWD/../../bullet3/src/ $$PWD/../metabot/ $$PWD/../metabot/json/include/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
 DEPENDPATH += $$PWD/../
 
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a

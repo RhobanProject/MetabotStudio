@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(metabot)
 find_package (Threads)
-find_package (Bullet)
+
+set (BULLET_DIR
+    "${CMAKE_SOURCE_DIR}/../bullet3/" CACHE STRING "bullet dir")
 
 option (OPENGL "Enable OpenGL" OFF)
 
@@ -66,12 +68,23 @@ include_directories("${PROJECT_SOURCE_DIR}/json/include")
 include_directories(${BULLET_INCLUDE_DIRS})
 add_subdirectory("${PROJECT_SOURCE_DIR}/json")
 
+include_directories("${BULLET_DIR}/src")
+add_subdirectory(${BULLET_DIR} bullet)
+
 add_library(symbolic sym/symbolicc++.cpp)
 set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSPLUS")
 
 add_library(libmetabot ${ALL_SOURCES})
 
-target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} json symbolic ${BULLET_LIBRARIES} zmq)
+target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} 
+    json 
+    symbolic 
+    zmq
+    )
+target_link_libraries(libmetabot BulletDynamics)
+target_link_libraries(libmetabot BulletCollision)
+target_link_libraries(libmetabot LinearMath)
+target_link_libraries(libmetabot BulletSoftBody)
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()

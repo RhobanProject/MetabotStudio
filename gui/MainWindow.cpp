@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     robot->loadFromFile(filename.toStdString());
     robot->number();
     robot->computeDynamics();
-    robot->toBullet();
+    // robot->toBullet();
     ui->actionSave->setEnabled(true);
 
     // Viewer

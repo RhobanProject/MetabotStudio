@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         if (isVerbose()) std::cout << "* Reading file..." << std::endl;
         robot.loadFromFile(robotFile);
 
-        for (float l1=50; l1<550; l1+=20) {
+        for (float l1=60; l1<550; l1+=20) {
             robot.parameters.set("L1", l1);
             if (isVerbose()) std::cout << "* Compiling..." << std::endl;
             robot.compile();
@@ -73,7 +73,8 @@ int main(int argc, char *argv[])
             if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
             Controller controller;
             controller.dx = 60;
-            controller.freq = 2.0;
+            controller.h = -35;
+            controller.freq = 1.0;
 
             Simulation simulation(15.0, server, robot, controller);
             simulation.factor = factor;

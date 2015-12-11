@@ -193,6 +193,7 @@ namespace Metabot
             
     void Module::setColor(std::string color)
     {
+        setlocale(LC_NUMERIC, "C");
         Json::Reader reader;
         Json::Value json;
 

@@ -307,7 +307,8 @@ namespace Metabot
     {
         if (body != NULL) {
             btTransform trans;
-            body->getMotionState()->getWorldTransform(trans);
+            auto state = body->getMotionState();
+            state->getWorldTransform(trans);
             return TransformMatrix::fromBullet(trans);
         } else {
             return TransformMatrix::identity();
@@ -371,15 +372,15 @@ namespace Metabot
                 
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
-                auto dummy = world->createRigidBody(0.01, worldToDummy.toBullet(), empty, 
+                auto dummy = world->createRigidBody(0.001, worldToDummy.toBullet(), empty, 
                         btVector3(1e-5, 1e-5, 1e-5));
               
-                /*
                 // Creating hinge
+                /*
                 anchor->anchor->component->hinge = world->createHinge(body, child,
                         anchor->transformationForward().toBullet(),
                         anchor->anchor->transformationBackward().toBullet()
-                        )
+                        );
                 */
               
                 // Creating hinge
@@ -393,7 +394,7 @@ namespace Metabot
                         rot.toBullet(),
                         anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
-                cone->setLimit(0.03, 0.03, 0.015);
+                cone->setLimit(0.03, 0.04, 0.02);
             }
         }
 
