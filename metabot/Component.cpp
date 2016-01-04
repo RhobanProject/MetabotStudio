@@ -571,6 +571,9 @@ namespace Metabot
         collisions = loadModelSTL_string(stl(robot, true));
         CSG *collisionsDocument = CSG::parse(collisionsCsg);
         shapes = collisionsDocument->shapes;
+        for (auto anchor : collisionsDocument->anchors) {
+            delete anchor;
+        }
         delete collisionsDocument;
 
         main.compile(backend);
