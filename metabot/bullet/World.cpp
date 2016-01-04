@@ -68,7 +68,6 @@ World::~World()
 
     if (m_dynamicsWorld)
     {
-
         int i;
         for (i = m_dynamicsWorld->getNumConstraints() - 1; i >= 0; i--)
         {
@@ -324,6 +323,7 @@ void World::clear(bool makeGround)
         auto trans = btTransform::getIdentity();
         trans.getOrigin().setZ(-10);
         ground = createRigidBody(0.0, trans, plane);
+        bodies.push_back(ground);
     }
 }
 
