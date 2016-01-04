@@ -1,5 +1,6 @@
 #include <sstream>
 #include <cmath>
+#include <btBulletDynamicsCommon.h>
 #include "Vect.h"
 
 namespace Metabot
@@ -26,6 +27,41 @@ namespace Metabot
         }
 
         return str.str();
+    }
+            
+    Json::Value Vect::toJson()
+    {
+        Json::Value json(Json::arrayValue);
+        json[0] = values[0];
+        json[1] = values[1];
+        json[2] = values[2];
+
+        return json;
+    }
+
+    Vect Vect::fromJson(Json::Value json)
+    {
+        if (json.isArray() && json.size()==3) {
+            return Vect(json[0].asFloat(), json[1].asFloat(), json[2].asFloat());
+        } else {
+            return Vect(0, 0, 0);
+        }
+    }
+            
+    Vect Vect::add(const Vect &other)
+    {
+        return Vect(values[0]+other.values[0], values[1]+other.values[1],
+                values[2]+other.values[2]);
+    }
+            
+    Vect Vect::multiply(double f)
+    {
+        return Vect(values[0]*f, values[1]*f, values[2]*f);
+    }
+            
+    float Vect::norm()
+    {
+        return distance(Vect(0, 0, 0));
     }
             
     float Vect::distance(const Vect &other)

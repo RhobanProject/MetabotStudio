@@ -11,9 +11,9 @@
 #include <GL/glu.h>
 #endif
 #endif
-#include <LinearMath/btTransform.h>
 #include <json/json.h>
 
+class btTransform;
 class Symbolic;
 #include "vvector.h"
 

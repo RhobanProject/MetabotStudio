@@ -240,26 +240,63 @@ namespace Metabot
     Json::Value Robot::stateToJson()
     {
         Json::Value json(Json::objectValue);
+        json["components"] = Json::Value(Json::objectValue);
 
         foreachComponent([&json](Component *instance) {
             std::stringstream ss;
             ss << instance->id;
-            json[ss.str()] = instance->getState().toJson();
+            json["components"][ss.str()] = instance->getState().toJson();
         });
+
+        json["collisions"] = Json::Value(Json::arrayValue);
+        auto points = world.getGroundCollisions();
+        for (auto point : points) {
+            Json::Value collision(Json::objectValue);
+            collision["point"] = point.first.toJson();
+            collision["normal"] = point.second.toJson();
+
+            json["collisions"].append(collision);
+        }
         
         return json;
     }
 
     void Robot::stateFromJson(Json::Value json)
     {
-        foreachComponent([&json](Component *instance) {
-            std::stringstream ss;
-            ss << instance->id;
-            std::string id = ss.str();
-            if (json.isMember(id)) {
-                instance->setState(TransformMatrix::fromJSON(json[id]));
+        try {
+            foreachComponent([&json](Component *instance) {
+                std::stringstream ss;
+                ss << instance->id;
+                std::string id = ss.str();
+                if (json["components"].isMember(id)) {
+                    instance->setState(TransformMatrix::fromJSON(json["components"][id]));
+                }
+            });
+
+            collisionPoints.clear();
+            for (unsigned int k=0; k<json["collisions"].size(); k++) {
+                auto point = Vect::fromJson(json["collisions"][k]["point"]);
+                auto normal = Vect::fromJson(json["collisions"][k]["normal"]);
+                collisionPoints.push_back(std::pair<Vect, Vect>(point, normal));
             }
-        });
+        } catch (std::string err) {
+            std::cout << "Robot::stateFromJson error: " << err << std::endl;
+        }
+    }
+            
+    Vect Robot::getCollisionsCOP()
+    {
+        double total;
+        Vect cop(0, 0, 0);
+        for (auto point : collisionPoints) {
+            double w = point.second.norm();
+            total += w;
+            cop.values[0] += point.first.x()*w;
+            cop.values[1] += point.first.y()*w;
+            cop.values[2] += point.first.z()*w;
+        }
+
+        return cop.multiply(1/total);
     }
 
     Json::Value Robot::toJson()

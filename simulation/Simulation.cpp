@@ -26,6 +26,8 @@ double Simulation::run()
     for (;controllerTime < duration; controllerTime += 0.001) {
         cost += controller.update(controllerTime, robot);
         robot.world.stepSimulation(0.001);
+        //auto force = robot.world.getGroundForce();
+        //printf("%g %g %g %g\n", controllerTime-(int)controllerTime, force.x(), force.y(), force.z());
         simTime += 0.001/factor;
         
         float realTime = (getTime()-realTimeStart);

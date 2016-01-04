@@ -1,8 +1,12 @@
 #pragma once
 
+#include <utility>
 #include <vector>
+#include <Vect.h>
 #include <btBulletDynamicsCommon.h>
 #include "GLDebugDrawer.h"
+
+using namespace Metabot;
 
 class World
 {
@@ -31,6 +35,9 @@ class World
         // Creating a rigid body
         btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0));
 
+        Vect getGroundForce(bool friction=true);
+        std::vector<std::pair<Vect, Vect>> getGroundCollisions();
+
         void debugDraw();
         float zOffset;
         GLDebugDrawer drawer;
@@ -41,6 +48,7 @@ class World
         // Elements
         std::vector<btCollisionShape *> shapes;
         std::vector<btRigidBody *> bodies;
+        btRigidBody *ground;
         std::vector<btHingeConstraint *> hinges;
         std::vector<btConeTwistConstraint *> cones;
 

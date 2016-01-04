@@ -51,8 +51,10 @@ namespace Metabot
             void saveToFile(std::string filename);
             void number();
 
+            std::vector<std::pair<Vect, Vect>> collisionPoints;
             Json::Value stateToJson();
             void stateFromJson(Json::Value json);
+            Vect getCollisionsCOP();
 
             void foreachComponent(std::function<void(Component *instance)> method);
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);

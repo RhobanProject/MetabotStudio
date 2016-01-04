@@ -6,8 +6,8 @@ set (BASE
 set (METABOT_DIR
     "${BASE}/metabot/" CACHE STRING "Metabot directory")
 
-set (RHIO_DIR
-    "${BASE}/../RhIO")
+set (CMAES_DIR
+    "${BASE}/libcmaes" CACHE STRING "cmaes directory")
 
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors")
 
@@ -15,9 +15,12 @@ include_directories("${METABOT_DIR}")
 include_directories("${METABOT_DIR}/sym")
 include_directories("${BULLET_DIR}/src")
 add_subdirectory(${METABOT_DIR} metabot)
+include_directories("${BULLET_DIR}/src")
 include_directories(${BULLET_INCLUDE_DIRS})
-add_subdirectory(${RHIO_DIR} rhio)
-include_directories("${RHIO_DIR}/include")
+include_directories("${CMAES_DIR}/src")
+include_directories("${CMAES_DIR}/")
+add_subdirectory(${CMAES_DIR} cmaes)
+include_directories("${EIGEN3_INCLUDE_DIR}")
 
 set (SOURCES
     Controller.cpp
@@ -31,4 +34,4 @@ set (SOURCES
     )
 
 add_executable(sim ${SOURCES})
-target_link_libraries(sim pthread libmetabot RhIO)
+target_link_libraries(sim pthread libmetabot cmaes gomp)

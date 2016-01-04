@@ -5,6 +5,8 @@ find_package (Threads)
 set (BULLET_DIR
     "${CMAKE_SOURCE_DIR}/../bullet3/" CACHE STRING "bullet dir")
 
+OPTION(BUILD_UNIT_TESTS "Build Unit Tests" OFF)
+
 option (OPENGL "Enable OpenGL" OFF)
 
 if (OPENGL)

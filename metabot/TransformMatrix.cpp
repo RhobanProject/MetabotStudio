@@ -11,6 +11,7 @@
 #endif
 #endif
 #include <symbolicc++.h>
+#include <LinearMath/btTransform.h>
 
 bool closeEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon()) {
     return (epsilon > fabs(a - b));

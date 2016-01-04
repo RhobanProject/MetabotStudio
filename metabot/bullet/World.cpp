@@ -26,30 +26,38 @@
     m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
     m_dynamicsWorld->setDebugDrawer(&drawer);
 
+    m_dynamicsWorld->getSolverInfo().m_solverMode |=
+        SOLVER_SIMD |
+        SOLVER_USE_WARMSTARTING |
+        SOLVER_CACHE_FRIENDLY |
+        SOLVER_RANDMIZE_ORDER |
+        SOLVER_USE_2_FRICTION_DIRECTIONS
+        ;
+
     /*
     // Adding a box
     btRigidBody *last = NULL;
     for (int k=0; k<10; k++) {
-        auto box = new btSphereShape(0.03);
-        box->setMargin(0.00001);
-        trans = btTransform::getIdentity();
-        trans.getOrigin().setZ(k*0.08+0.03);
-        trans.getOrigin().setX(k*0.01);
-        auto body = createRigidBody(last == NULL ? 0.0 : 1.0, trans, box);
-    
-        if (last != NULL) {
-            auto A = btVector3(0.0, 0.0, 0.04);
-            auto B = btVector3(0.0, 0.0, -0.04);
-            auto X = btVector3(0.0, 1.0, 0.0);
-            auto hinge = new btHingeConstraint(*last, *body, A, B, X, X);
-            hinge->enableAngularMotor(true, 100.0, 1000.0);
-            m_dynamicsWorld->addConstraint(hinge, false);
-            hinges.push_back(hinge);
-        }
-        last = body;
+    auto box = new btSphereShape(0.03);
+    box->setMargin(0.00001);
+    trans = btTransform::getIdentity();
+    trans.getOrigin().setZ(k*0.08+0.03);
+    trans.getOrigin().setX(k*0.01);
+    auto body = createRigidBody(last == NULL ? 0.0 : 1.0, trans, box);
+
+    if (last != NULL) {
+    auto A = btVector3(0.0, 0.0, 0.04);
+    auto B = btVector3(0.0, 0.0, -0.04);
+    auto X = btVector3(0.0, 1.0, 0.0);
+    auto hinge = new btHingeConstraint(*last, *body, A, B, X, X);
+    hinge->enableAngularMotor(true, 100.0, 1000.0);
+    m_dynamicsWorld->addConstraint(hinge, false);
+    hinges.push_back(hinge);
+    }
+    last = body;
     }
     */
-    
+
     clear();
 }
 
@@ -96,22 +104,96 @@ World::~World()
 
 void World::stepSimulation(float deltaTime)
 {
-    /*
-    static float t = 0.0;
-    t += deltaTime;
-    int k = 0;
-    for (auto hinge : hinges) {
-        auto angle = hinge->getHingeAngle();
-        angle -= sin(t);
-        std::cout << "[" << (k++) << "] ERR: " << angle << std::endl;
-        hinge->enableAngularMotor(true, -100*angle, 1.0);
-
-    }
-    */
-
     if (m_dynamicsWorld) {
         m_dynamicsWorld->stepSimulation(deltaTime, 1, deltaTime);
     }
+    /*
+       static float t = 0.0;
+       t += deltaTime;
+       int k = 0;
+       for (auto hinge : hinges) {
+       auto angle = hinge->getHingeAngle();
+       angle -= sin(t);
+       std::cout << "[" << (k++) << "] ERR: " << angle << std::endl;
+       hinge->enableAngularMotor(true, -100*angle, 1.0);
+
+       }
+       */
+}
+
+std::vector<std::pair<Vect, Vect>> World::getGroundCollisions()
+{
+    std::vector<std::pair<Vect, Vect>> points;
+
+    if (m_dynamicsWorld) {
+        int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+        for (int i=0;i<numManifolds;i++) {
+            btPersistentManifold* contactManifold =  m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+            auto A = contactManifold->getBody0();
+            auto B = contactManifold->getBody1();
+
+            if (A == ground || B == ground) {
+                int nb = contactManifold->getNumContacts();
+                for (int k=0; k<nb; k++) {
+                    auto contactPoint = contactManifold->getContactPoint(k);
+                    auto force = fabs(contactPoint.m_appliedImpulse);
+                    auto lat1 = contactPoint.m_lateralFrictionDir1;
+                    auto lat2 = contactPoint.m_lateralFrictionDir2;
+                    auto friction = Vect::fromBullet(lat1).multiply(contactPoint.m_appliedImpulseLateral1);
+                    if (lat1 != lat2) {
+                        friction = friction.add(
+                                Vect::fromBullet(lat2).multiply(contactPoint.m_appliedImpulseLateral2)
+                                );
+                    }
+
+                    auto point = Vect::fromBullet(contactPoint.m_positionWorldOnB);
+                    auto normal = Vect::fromBullet(contactPoint.m_normalWorldOnB).multiply(force);
+
+                    points.push_back(std::pair<Vect, Vect>(point, normal.add(friction)));
+                }
+            }
+        }
+    }
+
+    return points;
+}
+
+Vect World::getGroundForce(bool frictions)
+{
+    Vect total(0, 0, 0);
+    if (m_dynamicsWorld) {
+        int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+        for (int i=0;i<numManifolds;i++) {
+            btPersistentManifold* contactManifold =  m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+            auto A = contactManifold->getBody0();
+            auto B = contactManifold->getBody1();
+
+            if (A == ground || B == ground) {
+                int nb = contactManifold->getNumContacts();
+                for (int k=0; k<nb; k++) {
+                    auto contactPoint = contactManifold->getContactPoint(k);
+                    auto force = contactPoint.m_appliedImpulse;
+                    auto lat1 = contactPoint.m_lateralFrictionDir1;
+                    auto lat2 = contactPoint.m_lateralFrictionDir2;
+                    auto friction = Vect::fromBullet(lat1).multiply(contactPoint.m_appliedImpulseLateral1);
+                    if (lat1 != lat2) {
+                        friction = friction.add(
+                                Vect::fromBullet(lat2).multiply(contactPoint.m_appliedImpulseLateral2)
+                                );
+                    }
+
+                    auto normal = Vect::fromBullet(contactPoint.m_normalWorldOnB).multiply(force);
+                   
+                    total = total.add(normal);
+                    if (frictions) {
+                        total = total.add(friction);
+                    }
+                }
+            }
+        }
+    }
+
+    return total;
 }
 
 btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape,  btVector3 inertia)
@@ -135,6 +217,7 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
     btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
+    cInfo.m_friction = 0.8;
 
     btRigidBody* body = new btRigidBody(cInfo);
     //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
@@ -149,7 +232,7 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
 
     return body;
 }
-        
+
 btCompoundShape *World::createCompound()
 {
     auto shape = new btCompoundShape();
@@ -189,7 +272,7 @@ btCollisionShape *World::createEmpty()
 
     return shape;
 }
-        
+
 btHingeConstraint *World::createHinge(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame)
 {
     auto hinge = new btHingeConstraint(*A, *B, AFrame, BFrame);
@@ -207,7 +290,7 @@ btConeTwistConstraint *World::createCone(btRigidBody *A, btRigidBody *B, btTrans
     cones.push_back(cone);
     return cone;
 }
-        
+
 void World::clear()
 {
     zOffset = 0;
@@ -231,13 +314,13 @@ void World::clear()
     cones.clear();
     hinges.clear();
     shapes.clear();
-    
+
     // Adding a ground
-    auto plane = new btBoxShape(btVector3(10, 10, 10));
+    auto plane = new btBoxShape(btVector3(1000, 1000, 10));
     plane->setMargin(0.0);
     auto trans = btTransform::getIdentity();
     trans.getOrigin().setZ(-10);
-    auto ground = createRigidBody(0.0, trans, plane);
+    ground = createRigidBody(0.0, trans, plane);
 }
 
 void World::debugDraw()
