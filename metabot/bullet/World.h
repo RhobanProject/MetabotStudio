@@ -18,7 +18,7 @@ class World
         virtual void stepSimulation(float deltaTime);
 
         // Clear (empty the world)
-        void clear();
+        void clear(bool makeGround=true);
         void freeze();
 
         // Creating shapes
