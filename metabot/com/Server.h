@@ -7,6 +7,7 @@ namespace Metabot
     {
         public:
             Server();
+            virtual ~Server();
             void loadRobot(Robot *robot);
             void updateRobot(Robot *robot);
 

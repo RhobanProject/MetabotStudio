@@ -10,6 +10,12 @@ namespace Metabot
         zmq_bind(pub, "tcp://*:8374");
     }
 
+    Server::~Server()
+    {
+        zmq_close(pub);
+        zmq_ctx_destroy(context);
+    }
+
     void Server::loadRobot(Robot *robot)
     {
         invoke("load", robot->toJson());
