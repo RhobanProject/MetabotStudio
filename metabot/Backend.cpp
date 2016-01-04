@@ -36,6 +36,9 @@ namespace Metabot
         if (cache != NULL) {
             delete cache;
         }
+        for (auto entry : backends) {
+            delete entry.second;
+        }
     }
             
     void Backend::buildCache()
