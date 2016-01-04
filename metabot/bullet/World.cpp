@@ -64,6 +64,7 @@
 World::~World()
 {
     //remove the rigidbodies from the dynamics world and delete them
+    clear(false);
 
     if (m_dynamicsWorld)
     {
@@ -291,7 +292,7 @@ btConeTwistConstraint *World::createCone(btRigidBody *A, btRigidBody *B, btTrans
     return cone;
 }
 
-void World::clear()
+void World::clear(bool makeGround)
 {
     zOffset = 0;
     for (auto cone : cones) {
@@ -315,12 +316,15 @@ void World::clear()
     hinges.clear();
     shapes.clear();
 
-    // Adding a ground
-    auto plane = new btBoxShape(btVector3(1000, 1000, 10));
-    plane->setMargin(0.0);
-    auto trans = btTransform::getIdentity();
-    trans.getOrigin().setZ(-10);
-    ground = createRigidBody(0.0, trans, plane);
+    if (makeGround) {
+        // Adding a ground
+        auto plane = new btBoxShape(btVector3(1000, 1000, 10));
+        shapes.push_back(plane);
+        plane->setMargin(0.0);
+        auto trans = btTransform::getIdentity();
+        trans.getOrigin().setZ(-10);
+        ground = createRigidBody(0.0, trans, plane);
+    }
 }
 
 void World::debugDraw()
