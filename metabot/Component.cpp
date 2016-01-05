@@ -530,13 +530,11 @@ namespace Metabot
     {
         compile(robot, true);
 
-        /*
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor && anchor->anchor->component != NULL) {
                 anchor->anchor->component->update(robot);
             }
         }
-        */
     }
 
     void Component::compile(Robot *robot, bool update)
@@ -548,7 +546,7 @@ namespace Metabot
         for (auto anchor : anchors) {
             if (!anchor->above && anchor->anchor) {
                 parentAnchor = anchor->anchor;
-                parentAnchor->detach();
+                parentAnchor->detach(false);
                 parentId = index;
             }
             index++;
