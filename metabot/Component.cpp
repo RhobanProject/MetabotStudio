@@ -24,6 +24,7 @@ namespace Metabot
         hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
         body(NULL), hinge(NULL)
     {
+        // std::cout << "Instanciating a component, type " << module->getName() << std::endl;
         for (auto param : module->getParameters()) {
             values[param.second.name] = param.second.getValue();
         }
@@ -31,11 +32,13 @@ namespace Metabot
 
     Component::~Component()
     {
+        // std::cout << "Deleting a component, type " << module->getName() << std::endl;
         for (auto anchor : anchors) {
             if (anchor->above) {
                 delete anchor;
             }
         }
+        values.clear();
     }
 
     Component *Component::clone()
@@ -527,19 +530,18 @@ namespace Metabot
     {
         compile(robot, true);
 
+        /*
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor && anchor->anchor->component != NULL) {
                 anchor->anchor->component->update(robot);
             }
         }
+        */
     }
 
     void Component::compile(Robot *robot, bool update)
     {
-        Component *old = NULL;
-        if (update) {
-            old = clone();
-        }
+        auto oldAnchors = anchors;
         AnchorPoint *parentAnchor = NULL;
         int index = 0;
         int parentId = -1;
@@ -592,23 +594,25 @@ namespace Metabot
         }
 
         if (update) {
-            moveAnchors(old);
+            moveAnchors(oldAnchors);
             if (parentAnchor) {
                 parentAnchor->attach(anchors[parentId]);
             }
-            delete old;
+        }
+        for (auto anchor : oldAnchors) {
+            delete anchor;
         }
     }
 
-    void Component::moveAnchors(Component *other)
+    void Component::moveAnchors(std::vector<AnchorPoint*> otherAnchors)
     {
         // First step:
         // Trying to take the items that matches *exactly* the anchor from the
         // old component
         for (unsigned int i=0; i<anchors.size(); i++) {
-            if (i < other->anchors.size()) {
+            if (i < otherAnchors.size()) {
                 AnchorPoint *myAnchor = anchors[i];
-                AnchorPoint *otherAnchor = other->anchors[i];
+                AnchorPoint *otherAnchor = otherAnchors[i];
 
                 if (otherAnchor->anchor && myAnchor->isCompatible(otherAnchor->anchor)) {
                     myAnchor->copyData(otherAnchor);
@@ -624,7 +628,7 @@ namespace Metabot
 
         // Second step:
         // Trying to get the anchors 
-        for (auto anchor : other->anchors) {
+        for (auto anchor : otherAnchors) {
             AnchorPoint *remote = anchor->anchor;
             if (remote != NULL) {
                 AnchorPoint *candidate = findCompatible(remote);

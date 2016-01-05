@@ -21,6 +21,14 @@ namespace Metabot
 
         return backends[name];
     }
+            
+    void Backend::clean()
+    {
+        for (auto backend : backends) {
+            delete backend.second;
+        }
+        backends.clear();
+    }
 
     Backend::Backend(std::string name_)
         : name(name_)
@@ -35,9 +43,6 @@ namespace Metabot
     {
         if (cache != NULL) {
             delete cache;
-        }
-        for (auto entry : backends) {
-            delete entry.second;
         }
     }
             

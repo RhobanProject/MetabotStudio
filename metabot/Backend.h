@@ -16,6 +16,7 @@ namespace Metabot
     {
         public:
             static Backend *get(std::string name);
+            static void clean();
 
             Backend(std::string);
             virtual ~Backend();

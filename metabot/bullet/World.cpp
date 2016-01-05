@@ -63,28 +63,7 @@
 
 World::~World()
 {
-    //remove the rigidbodies from the dynamics world and delete them
     clear(false);
-
-    if (m_dynamicsWorld)
-    {
-        int i;
-        for (i = m_dynamicsWorld->getNumConstraints() - 1; i >= 0; i--)
-        {
-            m_dynamicsWorld->removeConstraint(m_dynamicsWorld->getConstraint(i));
-        }
-        for (i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-        {
-            btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
-            btRigidBody* body = btRigidBody::upcast(obj);
-            if (body && body->getMotionState())
-            {
-                delete body->getMotionState();
-            }
-            m_dynamicsWorld->removeCollisionObject(obj);
-            delete obj;
-        }
-    }
 
     delete m_dynamicsWorld;
     m_dynamicsWorld=0;
@@ -140,11 +119,11 @@ std::vector<std::pair<Vect, Vect>> World::getGroundCollisions()
                     auto lat1 = contactPoint.m_lateralFrictionDir1;
                     auto lat2 = contactPoint.m_lateralFrictionDir2;
                     auto friction = Vect::fromBullet(lat1).multiply(contactPoint.m_appliedImpulseLateral1);
-                    if (lat1 != lat2) {
+                    // if (lat1 != lat2) {
                         friction = friction.add(
                                 Vect::fromBullet(lat2).multiply(contactPoint.m_appliedImpulseLateral2)
                                 );
-                    }
+                    // }
 
                     auto point = Vect::fromBullet(contactPoint.m_positionWorldOnB);
                     auto normal = Vect::fromBullet(contactPoint.m_normalWorldOnB).multiply(force);
@@ -303,6 +282,9 @@ void World::clear(bool makeGround)
         delete hinge;
     }
     for (auto body : bodies) {
+        if (body && body->getMotionState()) {
+            delete body->getMotionState();
+        }
         m_dynamicsWorld->removeRigidBody(body);
         delete body;
     }
@@ -323,7 +305,6 @@ void World::clear(bool makeGround)
         auto trans = btTransform::getIdentity();
         trans.getOrigin().setZ(-10);
         ground = createRigidBody(0.0, trans, plane);
-        bodies.push_back(ground);
     }
 }
 

@@ -86,7 +86,7 @@ namespace Metabot
             // Merge the anchors from another entity
             // If detach is true, anchor will be detached from the other objects, and thus
             // "taken" from it
-            void moveAnchors(Component *other);
+            void moveAnchors(std::vector<AnchorPoint*> otherAnchors);
             void detachDiffAnchors(Component *other);
             void restore();
             void detachAll();

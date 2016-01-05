@@ -91,6 +91,10 @@ int main(int argc, char *argv[])
         cmaparams.set_max_iter(500);
         cmaparams.set_elitism(1);
         cmaparams.set_ftarget(0.0);
+            
+        // robot.compile();
+        robot.computeDynamics();
+        // server.loadRobot(&robot);
 
         FitFunc robotSim = [factor, &server, &robot](const double *x, const int N)
         {
@@ -105,9 +109,10 @@ int main(int argc, char *argv[])
             PARAM_BOUND(x[6], 0, 50);
             PARAM_BOUND(x[7], 0, 300);
 
-            robot.parameters.set("L1", (int)x[0]);
-            robot.parameters.set("L2", (int)x[1]);
-            robot.parameters.set("L3", (int)x[2]);
+            robot.parameters.set("L1", round(x[0]));
+            robot.parameters.set("L2", round(x[1]));
+            robot.parameters.set("L3", round(x[2]));
+            printf("L1=%g, L2=%g, L3=%g\n", x[0], x[1], x[2]);
             if (isVerbose()) std::cout << "* Compiling..." << std::endl;
             robot.compile();
             if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
@@ -124,7 +129,7 @@ int main(int argc, char *argv[])
             controller.alt = x[6];
             controller.dx = x[7];
 
-            Simulation simulation(15.0, server, robot, controller);
+            Simulation simulation(3.0, server, robot, controller);
             simulation.factor = factor;
             auto cost = simulation.run();
 
@@ -134,9 +139,13 @@ int main(int argc, char *argv[])
             return cost/state.x();
         };
 
-        CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
+        // CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
+        // std::cout << "~ OVER" << std::endl;
+        // std::cout << cmasols << std::endl;
 
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;
     }
+
+    Backend::clean();
 }
