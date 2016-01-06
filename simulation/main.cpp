@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
         std::vector<double> parameters(8, 0.0);
 
         // Morphology
-        parameters[0] = 45;     // L1
-        parameters[1] = 65;     // L2
-        parameters[2] = 75;     // L3
+        parameters[0] = 60;     // L1
+        parameters[1] = 70;     // L2
+        parameters[2] = 70;     // L3
         
         // Position
         parameters[3] = 125;    // r
@@ -85,19 +85,17 @@ int main(int argc, char *argv[])
         parameters[7] = 65;     // dx
 
         // CMAES parameters
-        CMAParameters<> cmaparams(parameters, -1);
+        CMAParameters<> cmaparams(parameters, 10);
         cmaparams.set_algo(BIPOP_CMAES);
         cmaparams.set_quiet(false);
         cmaparams.set_max_iter(500);
-        cmaparams.set_elitism(1);
+        // cmaparams.set_elitism(1);
         cmaparams.set_ftarget(0.0);
-            
-        // robot.compile();
-        robot.computeDynamics();
-        // server.loadRobot(&robot);
-
+           
         FitFunc robotSim = [factor, &server, &robot](const double *x, const int N)
         {
+            printf("L1=%g, L2=%g, L3=%g, r=%g, h=%g, freq=%g, alt=%g, dx=%g\n", x[0], x[1], x[2],
+                    x[3], x[4], x[5], x[6], x[7]);
             PARAM_BOUND(x[0], 20, 250);
             PARAM_BOUND(x[1], 50, 250);
             PARAM_BOUND(x[2], 50, 250);
@@ -112,7 +110,6 @@ int main(int argc, char *argv[])
             robot.parameters.set("L1", round(x[0]));
             robot.parameters.set("L2", round(x[1]));
             robot.parameters.set("L3", round(x[2]));
-            printf("L1=%g, L2=%g, L3=%g\n", x[0], x[1], x[2]);
             if (isVerbose()) std::cout << "* Compiling..." << std::endl;
             robot.compile();
             if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
@@ -129,20 +126,19 @@ int main(int argc, char *argv[])
             controller.alt = x[6];
             controller.dx = x[7];
 
-            Simulation simulation(3.0, server, robot, controller);
+            Simulation simulation(15.0, server, robot, controller);
             simulation.factor = factor;
             auto cost = simulation.run();
 
             auto state = robot.getState();
             // auto score = sqrt(state.x()*state.x() + state.y()*state.y() + state.z()*state.z());
 
-            return cost/state.x();
+            return cost/fabs(state.x());
         };
 
-        // CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
-        // std::cout << "~ OVER" << std::endl;
-        // std::cout << cmasols << std::endl;
-
+        CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
+        std::cout << "~ OVER" << std::endl;
+        std::cout << cmasols << std::endl;
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;
     }
