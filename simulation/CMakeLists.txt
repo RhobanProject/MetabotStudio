@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+find_package(Eigen3 REQUIRED)
 
 set (BASE
     "${CMAKE_SOURCE_DIR}/..")
