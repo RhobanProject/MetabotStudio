@@ -35,10 +35,14 @@ namespace Metabot
     {
         std::string filename = directory + "/" + key;
 
+        mutex.lock();
         if (!file_exists(filename) || older=="" || filemtime(filename) < filemtime(older)) {
+            mutex.unlock();
             std::string data = generate();
+            mutex.lock();
             file_put_contents(filename, data);
         }
+        mutex.unlock();
  
         return file_get_contents(filename);
     }

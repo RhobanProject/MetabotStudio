@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <functional>
 #include <string>
 
@@ -16,5 +17,8 @@ namespace Metabot
             std::string get(std::string key, std::function<std::string(void)> generate, std::string older="");
 
             std::string directory;
+
+        protected:
+            std::mutex mutex;
     };
 }
