@@ -92,18 +92,19 @@ int main(int argc, char *argv[])
         cmaparams.set_ftarget(0.0);
 
         pthread_t serverThread = 0;
+        std::map<pthread_t, Robot*> robots;
            
-        FitFunc robotSim = [robotFile, factor, &server, &serverThread](const double *x, const int N)
+        FitFunc robotSim = [robotFile, &robots, factor, &server, &serverThread](const double *x, const int N)
         {
             auto id = pthread_self();
             if (serverThread == 0) {
                 serverThread = id;
             }
-
-            // Loading the robot
-            Metabot::Robot robot;
-            if (isVerbose()) std::cout << "* Reading file..." << std::endl;
-            robot.loadFromFile(robotFile);
+            if (!robots.count(id)) {
+                robots[id] = new Metabot::Robot;
+                robots[id]->loadFromFile(robotFile);
+            }
+            auto robot = robots[id];
 
             printf("[%lu] L1=%g, L2=%g, L3=%g, r=%g, h=%g, freq=%g, alt=%g, dx=%g\n", pthread_self(), 
                     x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]);
@@ -118,16 +119,16 @@ int main(int argc, char *argv[])
             PARAM_BOUND(x[6], 0, 50);
             PARAM_BOUND(x[7], 0, 300);
 
-            robot.parameters.set("L1", round(x[0]));
-            robot.parameters.set("L2", round(x[1]));
-            robot.parameters.set("L3", round(x[2]));
+            robot->parameters.set("L1", round(x[0]));
+            robot->parameters.set("L2", round(x[1]));
+            robot->parameters.set("L3", round(x[2]));
             if (isVerbose()) std::cout << "* Compiling..." << std::endl;
-            robot.compile();
+            robot->compile();
             if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
-            robot.computeDynamics();
+            robot->computeDynamics();
             // robot.printDynamics();
             if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
-            if (id == serverThread) server.loadRobot(&robot);
+            if (id == serverThread) server.loadRobot(robot);
 
             if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
             Controller controller;
@@ -137,11 +138,11 @@ int main(int argc, char *argv[])
             controller.alt = x[6];
             controller.dx = x[7];
 
-            Simulation simulation(10.0, id==serverThread ? &server : NULL, robot, controller);
+            Simulation simulation(6.0, id==serverThread ? &server : NULL, *robot, controller);
             simulation.factor = factor;
             auto cost = simulation.run();
 
-            auto state = robot.getState();
+            auto state = robot->getState();
             // auto score = sqrt(state.x()*state.x() + state.y()*state.y() + state.z()*state.z());
 
             return cost/fabs(state.x());
@@ -150,6 +151,10 @@ int main(int argc, char *argv[])
         CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
         std::cout << "~ OVER" << std::endl;
         std::cout << cmasols << std::endl;
+
+        for (auto robot : robots) {
+            delete robot.second;
+        }
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;
     }
