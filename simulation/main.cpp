@@ -77,20 +77,22 @@ int main(int argc, char *argv[])
         parameters[4] = -55;    // h
 
         // Controller
-        // parameters[5] = 1.0;    // freq
-        parameters[5] = 5.0;    // freq
+        parameters[5] = 2.0;    // freq
         parameters[6] = 15;     // alt
         parameters[7] = 65;     // dx
 
         // CMAES parameters
-        CMAParameters<> cmaparams(parameters, 10);
+        CMAParameters<> cmaparams(parameters, 64, 64);
+
         cmaparams.set_algo(BIPOP_CMAES);
+        cmaparams.set_restarts(3);
         cmaparams.set_quiet(false);
-        cmaparams.set_max_iter(500);
-        cmaparams.set_elitism(2);
+        cmaparams.set_max_iter(300);
+        cmaparams.set_elitism(1);
         cmaparams.set_mt_feval(true);
         cmaparams.set_ftarget(0.0);
 
+        std::mutex mutex;
         pthread_t serverThread = 0;
         std::map<pthread_t, Robot*> robots;
            
@@ -100,14 +102,18 @@ int main(int argc, char *argv[])
             if (serverThread == 0) {
                 serverThread = id;
             }
+            Metabot::Robot *robot = NULL;
+            mutex.lock();
             if (!robots.count(id)) {
                 robots[id] = new Metabot::Robot;
                 robots[id]->loadFromFile(robotFile);
             }
-            auto robot = robots[id];
+            robot = robots[id];
+            mutex.unlock();
 
             printf("[%lu] L1=%g, L2=%g, L3=%g, r=%g, h=%g, freq=%g, alt=%g, dx=%g\n", pthread_self(), 
                     x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]);
+            fflush(stdout);
             PARAM_BOUND(x[0], 20, 250);
             PARAM_BOUND(x[1], 50, 250);
             PARAM_BOUND(x[2], 50, 250);
@@ -151,6 +157,7 @@ int main(int argc, char *argv[])
         CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
         std::cout << "~ OVER" << std::endl;
         std::cout << cmasols << std::endl;
+        fflush(stdout);
 
         for (auto robot : robots) {
             delete robot.second;
