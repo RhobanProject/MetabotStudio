@@ -4,7 +4,7 @@
 #include "util.h"
 #include "verbose.h"
 
-Simulation::Simulation(float duration, Metabot::Server &server,
+Simulation::Simulation(float duration, Metabot::Server *server,
         Metabot::Robot &robot, Controller &controller)
     : duration(duration), server(server), robot(robot), controller(controller)
 {
@@ -33,7 +33,7 @@ double Simulation::run()
         float realTime = (getTime()-realTimeStart);
         if ((realTime - lastUpdate) > 0.02) {
             lastUpdate += 0.02;
-            server.updateRobot(&robot);
+            if (server) server->updateRobot(&robot);
         }
         
         if (realTime < simTime) {

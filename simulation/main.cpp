@@ -7,6 +7,7 @@
 #include <Robot.h>
 #include <Backend.h>
 #include <com/Server.h>
+#include <pthread.h>
 #include "Controller.h"
 #include "util.h"
 #include "verbose.h"
@@ -62,10 +63,6 @@ int main(int argc, char *argv[])
     Metabot::Server server;
 
     try { 
-        // Loading the robot
-        Metabot::Robot robot;
-        if (isVerbose()) std::cout << "* Reading file..." << std::endl;
-        robot.loadFromFile(robotFile);
 
         // Parameters
         std::vector<double> parameters(8, 0.0);
@@ -80,7 +77,8 @@ int main(int argc, char *argv[])
         parameters[4] = -55;    // h
 
         // Controller
-        parameters[5] = 1.0;    // freq
+        // parameters[5] = 1.0;    // freq
+        parameters[5] = 5.0;    // freq
         parameters[6] = 15;     // alt
         parameters[7] = 65;     // dx
 
@@ -89,13 +87,26 @@ int main(int argc, char *argv[])
         cmaparams.set_algo(BIPOP_CMAES);
         cmaparams.set_quiet(false);
         cmaparams.set_max_iter(500);
-        // cmaparams.set_elitism(1);
+        cmaparams.set_elitism(2);
+        cmaparams.set_mt_feval(true);
         cmaparams.set_ftarget(0.0);
+
+        pthread_t serverThread = 0;
            
-        FitFunc robotSim = [factor, &server, &robot](const double *x, const int N)
+        FitFunc robotSim = [robotFile, factor, &server, &serverThread](const double *x, const int N)
         {
-            printf("L1=%g, L2=%g, L3=%g, r=%g, h=%g, freq=%g, alt=%g, dx=%g\n", x[0], x[1], x[2],
-                    x[3], x[4], x[5], x[6], x[7]);
+            auto id = pthread_self();
+            if (serverThread == 0) {
+                serverThread = id;
+            }
+
+            // Loading the robot
+            Metabot::Robot robot;
+            if (isVerbose()) std::cout << "* Reading file..." << std::endl;
+            robot.loadFromFile(robotFile);
+
+            printf("[%lu] L1=%g, L2=%g, L3=%g, r=%g, h=%g, freq=%g, alt=%g, dx=%g\n", pthread_self(), 
+                    x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]);
             PARAM_BOUND(x[0], 20, 250);
             PARAM_BOUND(x[1], 50, 250);
             PARAM_BOUND(x[2], 50, 250);
@@ -116,7 +127,7 @@ int main(int argc, char *argv[])
             robot.computeDynamics();
             // robot.printDynamics();
             if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
-            server.loadRobot(&robot);
+            if (id == serverThread) server.loadRobot(&robot);
 
             if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
             Controller controller;
@@ -126,7 +137,7 @@ int main(int argc, char *argv[])
             controller.alt = x[6];
             controller.dx = x[7];
 
-            Simulation simulation(15.0, server, robot, controller);
+            Simulation simulation(15.0, id==serverThread ? &server : NULL, robot, controller);
             simulation.factor = factor;
             auto cost = simulation.run();
 

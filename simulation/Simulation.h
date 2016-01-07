@@ -12,7 +12,7 @@ class Simulation
                 virtual double update(float duration, Metabot::Robot &robot)=0;
         };
 
-        Simulation(float duration, Metabot::Server &server, Metabot::Robot &robot,
+        Simulation(float duration, Metabot::Server *server, Metabot::Robot &robot,
                 Controller &controller);
         double run();
         
@@ -21,6 +21,6 @@ class Simulation
     protected:
         float duration;
         Metabot::Robot &robot;
-        Metabot::Server &server;
+        Metabot::Server *server;
         Controller &controller;
 };
