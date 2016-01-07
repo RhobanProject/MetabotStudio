@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <mutex>
 #include <vector>
 #include <string>
 #include <3d/Model.h>
@@ -43,6 +44,7 @@ namespace Metabot
             std::map<std::string, Model> models;
 
         protected:
+            std::mutex mutex;
             std::map<std::string, Module> modules;
     };
 }

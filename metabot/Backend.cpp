@@ -14,12 +14,16 @@ namespace Metabot
 
     Backend *Backend::get(std::string name)
     {
+        mutex.lock();
         if (!backends.count(name)) {
             backends[name] = new Backend(name);
             backends[name]->load();
         }
 
-        return backends[name];
+        auto backend = backends[name];
+        mutex.unlock();
+
+        return backend;
     }
             
     void Backend::clean()
