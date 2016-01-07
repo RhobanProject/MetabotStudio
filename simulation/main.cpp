@@ -3,6 +3,7 @@
 #include <sstream>
 #include <deque>
 #include <map>
+#include <mutex>
 #include <unistd.h>
 #include <Robot.h>
 #include <Backend.h>
@@ -96,7 +97,7 @@ int main(int argc, char *argv[])
         pthread_t serverThread = 0;
         std::map<pthread_t, Robot*> robots;
            
-        FitFunc robotSim = [robotFile, &robots, factor, &server, &serverThread](const double *x, const int N)
+        FitFunc robotSim = [&mutex, robotFile, &robots, factor, &server, &serverThread](const double *x, const int N)
         {
             auto id = pthread_self();
             if (serverThread == 0) {
