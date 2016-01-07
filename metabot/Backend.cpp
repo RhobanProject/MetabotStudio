@@ -10,6 +10,7 @@
 
 namespace Metabot
 {
+    static std::mutex mutex;
     static std::map<std::string, Backend *> backends;
 
     Backend *Backend::get(std::string name)

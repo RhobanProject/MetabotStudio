@@ -44,7 +44,6 @@ namespace Metabot
             std::map<std::string, Model> models;
 
         protected:
-            std::mutex mutex;
             std::map<std::string, Module> modules;
     };
 }
