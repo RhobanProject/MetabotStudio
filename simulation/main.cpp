@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
             controller.alt = x[6];
             controller.dx = x[7];
 
-            Simulation simulation(15.0, id==serverThread ? &server : NULL, robot, controller);
+            Simulation simulation(10.0, id==serverThread ? &server : NULL, robot, controller);
             simulation.factor = factor;
             auto cost = simulation.run();
 
