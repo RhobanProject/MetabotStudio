@@ -18,10 +18,6 @@
 
 #include <iostream>
 
-#define PARAM_BOUND(p,low,high) \
-    if (p<low) return (1000+fabs(p-low)); \
-    if (p>high) return (1000+fabs(p-high)); \
-
 using namespace libcmaes;
 
 static void usage()
@@ -34,6 +30,8 @@ static void usage()
     std::cout << "  -t: real time mode (like -f 1)" << std::endl;
     std::cout << "  -c: run CMA-ES optimisation" << std::endl;
     std::cout << "  -d [duration]: simulation duration" << std::endl;
+    std::cout << "  -e: enable external mode for simulation" << std::endl;
+    std::cout << "  -N: no server mode" << std::endl;
     exit(1);
 }
 
@@ -42,11 +40,20 @@ int main(int argc, char *argv[])
     float factor = 100.0;
     float duration = 6.0;
     int index;
+    bool external = false;
+    bool noServer = false;
     std::string robotFile = "";
     std::string mode = "sim";
 
-    while ((index = getopt(argc, argv, "r:vtf:d:c")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceN")) != -1) {
         switch (index) {
+            case 'N':
+                noServer = true;
+                break;
+            case 'e':
+                external = true;
+                noServer = true; 
+                break;
             case 'd':
                 duration = atof(optarg);
                 break;
@@ -97,7 +104,7 @@ int main(int argc, char *argv[])
                 parameters.push(atof(argv[k]));
             }
         }
-        Simulator simulator(robotFile, factor);
+        Simulator simulator(robotFile, factor, !noServer);
 
         if (mode == "sim") {
             std::cout << "score=" << simulator.run(parameters, duration) << std::endl;
@@ -109,12 +116,13 @@ int main(int argc, char *argv[])
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
             cmaparams.set_max_iter(100);
+            cmaparams.set_max_hist(3);
             cmaparams.set_elitism(2);
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
             cmaparams.set_max_hist(3);
             
-            FitFunc robotSim = [&parameters, &simulator, duration](const double *x, const int N)
+            FitFunc robotSim = [robotFile, external, &parameters, &simulator, duration](const double *x, const int N)
             {
                 Simulator::Parameters params = parameters;
                 
@@ -124,6 +132,18 @@ int main(int argc, char *argv[])
                     return err.error;
                 }
                 std::cout << params.toString() << std::endl;
+
+                if (external) {
+                    std::stringstream ss;
+                    ss << "./sim -N -r " << robotFile << " " << params.toString();
+                    auto result = execute(ss.str());
+                    auto parts = split(result, '=');
+                    if (parts.size() == 2 && parts[0] == "score") {
+                        return atof(parts[1].c_str());
+                    } else {
+                        return 9999.0;
+                    }
+                }
                 
                 return simulator.run(params, duration);
             };

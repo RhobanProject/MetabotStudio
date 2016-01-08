@@ -49,13 +49,13 @@ class Simulator
                 std::map<std::string, Parameter> values;
         };
 
-        Simulator(std::string robotFile, double factor);
+        Simulator(std::string robotFile, double factor, bool runServer);
         virtual ~Simulator();
 
         double run(Parameters &parameters, double duration=6.0);
 
     protected:
-        Metabot::Server server;
+        Metabot::Server *server;
         std::string robotFile;
         double factor;
         std::mutex mutex;

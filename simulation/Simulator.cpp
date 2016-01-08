@@ -87,9 +87,12 @@ void Simulator::Parameters::push(double value)
     pushIndex++;
 }
         
-Simulator::Simulator(std::string robotFile, double factor)
-    : serverThread(0), robotFile(robotFile), factor(factor)
+Simulator::Simulator(std::string robotFile, double factor, bool runServer)
+    : serverThread(0), robotFile(robotFile), factor(factor), server(NULL)
 {
+    if (runServer) {
+        server = new Metabot::Server;
+    }
 }
 
 Simulator::~Simulator()
@@ -97,17 +100,24 @@ Simulator::~Simulator()
     for (auto robot : robots) {
         delete robot.second;
     }
+    if (server) {
+        delete server;
+    }
 }
         
 double Simulator::run(Parameters &parameters, double duration)
 {
     auto id = pthread_self();
     Metabot::Robot *robot = NULL;
+    Metabot::Server *serv = NULL;
     
     mutex.lock();
     // Checking for serverThread
     if (serverThread == 0) {
         serverThread = id;
+    }
+    if (serverThread == id) {
+        serv = server;
     }
 
     // Getting this thread robot
@@ -131,7 +141,7 @@ double Simulator::run(Parameters &parameters, double duration)
     // robot.printDynamics();
     //
     if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
-    if (id == serverThread) server.loadRobot(robot);
+    if (serv) serv->loadRobot(robot);
 
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
     Controller controller;
@@ -142,7 +152,7 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.dx = parameters.get("dx");
 
     // Creating the simulation
-    Simulation simulation(duration, id==serverThread ? &server : NULL, *robot, controller);
+    Simulation simulation(duration, serv, *robot, controller);
     simulation.factor = factor;
     auto cost = simulation.run();
     auto state = robot->getState();
