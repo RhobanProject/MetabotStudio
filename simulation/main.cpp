@@ -117,10 +117,10 @@ int main(int argc, char *argv[])
             cmaparams.set_quiet(false);
             cmaparams.set_max_iter(100);
             cmaparams.set_max_hist(3);
+            cmaparams.set_max_fevals(10000000);
             cmaparams.set_elitism(2);
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
-            cmaparams.set_max_hist(3);
             
             FitFunc robotSim = [robotFile, external, &parameters, &simulator, duration](const double *x, const int N)
             {
