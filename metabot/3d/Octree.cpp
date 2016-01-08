@@ -7,6 +7,14 @@ namespace Metabot
     {
     }
 
+    Octree::~Octree()
+    {
+        for (auto face : faces) {
+            delete face;
+        }
+        faces.clear();
+    }
+
     void Octree::load(Model model)
     {
         auto min = model.min();

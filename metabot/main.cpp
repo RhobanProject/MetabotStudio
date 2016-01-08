@@ -280,5 +280,6 @@ int main(int argc, char *argv[])
         delete robot;
     }
 
+    Backend::clean();
     return EXIT_SUCCESS;
 }

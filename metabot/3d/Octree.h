@@ -30,6 +30,8 @@ namespace Metabot
     {
         public:
             Octree();
+            virtual ~Octree();
+
             void load(Model model);
             void add(Face face);
             std::set<Face*> facesFor(Line line);
