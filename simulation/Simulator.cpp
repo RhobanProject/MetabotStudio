@@ -75,7 +75,6 @@ void Simulator::Parameters::fromArray(const double *x, const int N)
     int k = 0;
     for (auto name : order) {
         values[name].fromNormalized(x[k++]);
-        values[name].value = x[k++];
         values[name].check();
     }
 }
