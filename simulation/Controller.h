@@ -40,6 +40,8 @@ class Controller : public Simulation::Controller
 
         // State
         float t;
+        float ut;
+        Angles angles;
 
         Function rise;
         Function step;

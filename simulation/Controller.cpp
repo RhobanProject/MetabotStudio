@@ -14,6 +14,7 @@ Controller::Controller()
     dx = 0;
     dy = 0;
     turn = 0;
+    ut = 1.0;
     setupFunctions();
 }
 
@@ -153,7 +154,11 @@ Controller::Angles Controller::compute(float t_)
 double Controller::update(float t, Metabot::Robot &robot)
 {
     double cost = 0;
-    auto angles = compute(t);
+    ut += 0.001;
+    if (ut > 0.02) {
+        angles = compute(t);
+        ut = 0;
+    }
     for (int k=0; k<4; k++) {
         int leg = (k+2)%4;
         cost += fabs(robot.getComponentById(k*3+2)->setTarget(angles.l1[leg]));

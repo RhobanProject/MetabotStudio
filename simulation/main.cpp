@@ -10,8 +10,10 @@
 #include <pthread.h>
 #include "Controller.h"
 #include "util.h"
+#include "util/util.h"
 #include "verbose.h"
 #include <cmaes.h>
+#include "Simulator.h"
 
 #include <iostream>
 
@@ -26,17 +28,30 @@ static void usage()
     std::cout << "Metabot simulation (w/ Gazebo)" << std::endl;
     std::cout << "Usage:" << std::endl;
     std::cout << "  -r [file.robot]: The robot file to simulate" << std::endl;
+    std::cout << "  -v: verbose" << std::endl;
+    std::cout << "  -f [factor]: set time factor" << std::endl;
+    std::cout << "  -t: real time mode (like -f 1)" << std::endl;
+    std::cout << "  -c: run CMA-ES optimisation" << std::endl;
+    std::cout << "  -d [duration]: simulation duration" << std::endl;
     exit(1);
 }
 
 int main(int argc, char *argv[])
 {
     float factor = 100.0;
+    float duration = 6.0;
     int index;
     std::string robotFile = "";
+    std::string mode = "sim";
 
-    while ((index = getopt(argc, argv, "r:vtf:")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:c")) != -1) {
         switch (index) {
+            case 'd':
+                duration = atof(optarg);
+                break;
+            case 'c':
+                mode = "cmaes";
+                break;
             case 'r':
                 robotFile = std::string(optarg);
                 break;
@@ -59,101 +74,61 @@ int main(int argc, char *argv[])
         usage();
     }
 
-    // Starting the server
-    Metabot::Server server;
-
     try { 
+        Simulator::Parameters parameters;
+        parameters.add("L1", 20, 250, 32);
+        parameters.add("L2", 50, 250, 54);
+        parameters.add("L3", 50, 250, 92);
 
-        // Parameters
-        std::vector<double> parameters(8, 0.0);
-
-        // Morphology
-        parameters[0] = 60;     // L1
-        parameters[1] = 70;     // L2
-        parameters[2] = 70;     // L3
+        parameters.add("r", 50, 150, 120);
+        parameters.add("h", -150, 0, -50);
         
-        // Position
-        parameters[3] = 125;    // r
-        parameters[4] = -55;    // h
-
-        // Controller
-        // parameters[5] = 1.0;    // freq
-        parameters[5] = 5.0;    // freq
-        parameters[6] = 15;     // alt
-        parameters[7] = 65;     // dx
-
-        // CMAES parameters
-        CMAParameters<> cmaparams(parameters, 10);
-        cmaparams.set_algo(BIPOP_CMAES);
-        cmaparams.set_quiet(false);
-        cmaparams.set_max_iter(500);
-        cmaparams.set_elitism(2);
-        cmaparams.set_mt_feval(true);
-        cmaparams.set_ftarget(0.0);
-
-        pthread_t serverThread = 0;
-        std::map<pthread_t, Robot*> robots;
-           
-        FitFunc robotSim = [robotFile, &robots, factor, &server, &serverThread](const double *x, const int N)
-        {
-            auto id = pthread_self();
-            if (serverThread == 0) {
-                serverThread = id;
+        parameters.add("freq", 0, 5, 2.0);
+        parameters.add("alt", 0, 100, 27);
+        parameters.add("dx", 0, 300, 68);
+    
+        for (int k=optind; k<argc; k++) {
+            std::string value(argv[k]);
+            auto parts = split(value, '=');
+            if (parts.size() == 2) {
+                parameters.set(parts[0], atof(parts[1].c_str()));
+            } else {
+                parameters.push(atof(argv[k]));
             }
-            if (!robots.count(id)) {
-                robots[id] = new Metabot::Robot;
-                robots[id]->loadFromFile(robotFile);
-            }
-            auto robot = robots[id];
+        }
+        Simulator simulator(robotFile, factor);
 
-            printf("[%lu] L1=%g, L2=%g, L3=%g, r=%g, h=%g, freq=%g, alt=%g, dx=%g\n", pthread_self(), 
-                    x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]);
-            PARAM_BOUND(x[0], 20, 250);
-            PARAM_BOUND(x[1], 50, 250);
-            PARAM_BOUND(x[2], 50, 250);
+        if (mode == "sim") {
+            simulator.run(parameters, duration);
+        }
+
+        if (mode == "cmaes") {
+            // CMAES parameters
+            CMAParameters<> cmaparams(parameters.toVector(), 10);
+            cmaparams.set_algo(BIPOP_CMAES);
+            cmaparams.set_quiet(false);
+            cmaparams.set_max_iter(500);
+            cmaparams.set_elitism(2);
+            cmaparams.set_mt_feval(true);
+            cmaparams.set_ftarget(0.0);
             
-            PARAM_BOUND(x[3], 50, 250);
-            PARAM_BOUND(x[4], -150, 0);
+            FitFunc robotSim = [&parameters, &simulator, duration](const double *x, const int N)
+            {
+                Simulator::Parameters params = parameters;
+                
+                try {
+                    params.fromArray(x, N);
+                } catch (Simulator::ParameterError err) {
+                    return err.error;
+                }
+                std::cout << params.toString() << std::endl;
+                
+                return simulator.run(params, duration);
+            };
 
-            PARAM_BOUND(x[5], 0, 5);
-            PARAM_BOUND(x[6], 0, 50);
-            PARAM_BOUND(x[7], 0, 300);
-
-            robot->parameters.set("L1", round(x[0]));
-            robot->parameters.set("L2", round(x[1]));
-            robot->parameters.set("L3", round(x[2]));
-            if (isVerbose()) std::cout << "* Compiling..." << std::endl;
-            robot->compile();
-            if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
-            robot->computeDynamics();
-            // robot.printDynamics();
-            if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
-            if (id == serverThread) server.loadRobot(robot);
-
-            if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-            Controller controller;
-            controller.r = x[3];
-            controller.h = x[4];
-            controller.freq = x[5];
-            controller.alt = x[6];
-            controller.dx = x[7];
-
-            Simulation simulation(6.0, id==serverThread ? &server : NULL, *robot, controller);
-            simulation.factor = factor;
-            auto cost = simulation.run();
-
-            auto state = robot->getState();
-            // auto score = sqrt(state.x()*state.x() + state.y()*state.y() + state.z()*state.z());
-
-            return cost/fabs(state.x());
-        };
-
-        CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
-        std::cout << "~ OVER" << std::endl;
-        std::cout << cmasols << std::endl;
-
-        for (auto robot : robots) {
-            delete robot.second;
+            CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
+            std::cout << "*** OVER" << std::endl;
+            std::cout << cmasols << std::endl;
         }
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;

@@ -10,7 +10,7 @@ set (METABOT_DIR
 set (CMAES_DIR
     "${BASE}/libcmaes" CACHE STRING "cmaes directory")
 
-set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors")
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors -fopenmp")
 
 include_directories("${METABOT_DIR}")
 include_directories("${METABOT_DIR}/sym")
@@ -28,6 +28,7 @@ set (SOURCES
     Controller.cpp
     Function.cpp
     Simulation.cpp
+    Simulator.cpp
 
     util.cpp
     kinematic.cpp
