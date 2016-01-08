@@ -160,7 +160,11 @@ std::string trim(std::string s) {
 }
 
 std::string tempname() {
-    return tempnam(NULL, "metabot");
+    char *tname = tempnam(NULL, "metabot");
+    std::string t(tname);
+    delete tname;
+
+    return t;
 }
 
 bool file_exists(std::string filename)
@@ -297,7 +301,11 @@ void remove_file(std::string filename)
 
 std::string current_dir()
 {
-    return std::string(get_current_dir_name());
+    char *dname = get_current_dir_name();
+    std::string dirname(dname);
+    delete dname;
+
+    return dirname;
 }
 
 class Random
