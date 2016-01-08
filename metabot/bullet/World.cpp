@@ -196,7 +196,7 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
     btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
-    cInfo.m_friction = 0.8;
+    cInfo.m_friction = 0.65;
 
     btRigidBody* body = new btRigidBody(cInfo);
     //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
