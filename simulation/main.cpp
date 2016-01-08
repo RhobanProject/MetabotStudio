@@ -3,6 +3,7 @@
 #include <sstream>
 #include <deque>
 #include <map>
+#include <mutex>
 #include <unistd.h>
 #include <Robot.h>
 #include <Backend.h>
