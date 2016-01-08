@@ -77,15 +77,15 @@ int main(int argc, char *argv[])
 
     try { 
         Simulator::Parameters parameters;
-        parameters.add("L1", 20, 250, 32);
-        parameters.add("L2", 50, 250, 54);
-        parameters.add("L3", 50, 250, 92);
+        parameters.add("L1", 20, 250, 50);
+        parameters.add("L2", 50, 250, 70);
+        parameters.add("L3", 50, 250, 70);
 
-        parameters.add("r", 50, 150, 120);
-        parameters.add("h", -150, 0, -50);
+        parameters.add("r", 50, 150, 130);
+        parameters.add("h", -150, 0, -55);
         
-        parameters.add("freq", 0, 5, 2.0);
-        parameters.add("alt", 0, 100, 27);
+        parameters.add("freq", 0, 5, 2.5);
+        parameters.add("alt", 0, 100, 15);
         parameters.add("dx", 0, 300, 68);
     
         for (int k=optind; k<argc; k++) {
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
         Simulator simulator(robotFile, factor);
 
         if (mode == "sim") {
-            simulator.run(parameters, duration);
+            std::cout << "score=" << simulator.run(parameters, duration) << std::endl;
         }
 
         if (mode == "cmaes") {
