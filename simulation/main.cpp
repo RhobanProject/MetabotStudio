@@ -105,13 +105,14 @@ int main(int argc, char *argv[])
 
         if (mode == "cmaes") {
             // CMAES parameters
-            CMAParameters<> cmaparams(parameters.toVector(), 10);
+            CMAParameters<> cmaparams(parameters.toVector(), 64, 48);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
-            cmaparams.set_max_iter(500);
+            cmaparams.set_max_iter(100);
             cmaparams.set_elitism(2);
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
+            cmaparams.set_max_hist(3);
             
             FitFunc robotSim = [&parameters, &simulator, duration](const double *x, const int N)
             {
