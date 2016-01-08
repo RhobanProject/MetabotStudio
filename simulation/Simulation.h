@@ -9,7 +9,7 @@ class Simulation
         class Controller
         {
             public:
-                virtual double update(float duration, Metabot::Robot &robot)=0;
+                virtual double update(float dt, float duration, Metabot::Robot &robot)=0;
         };
 
         Simulation(float duration, Metabot::Server *server, Metabot::Robot &robot,

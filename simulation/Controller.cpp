@@ -151,19 +151,22 @@ Controller::Angles Controller::compute(float t_)
     return angles;
 }
         
-double Controller::update(float t, Metabot::Robot &robot)
+double Controller::update(float dt, float t, Metabot::Robot &robot)
 {
     double cost = 0;
-    ut += 0.001;
+    ut += dt;
+
     if (ut > 0.02) {
         angles = compute(t);
         ut = 0;
     }
+
     for (int k=0; k<4; k++) {
         int leg = (k+2)%4;
-        cost += fabs(robot.getComponentById(k*3+2)->setTarget(angles.l1[leg]));
-        cost += fabs(robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg]));
-        cost += fabs(robot.getComponentById(k*3+4)->setTarget(angles.l3[leg]));
+        cost += fabs(robot.getComponentById(k*3+2)->setTarget(angles.l1[leg], dt));
+        cost += fabs(robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg], dt));
+        cost += fabs(robot.getComponentById(k*3+4)->setTarget(angles.l3[leg], dt));
     }
+
     return cost;
 }

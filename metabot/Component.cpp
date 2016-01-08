@@ -831,13 +831,13 @@ namespace Metabot
         return -result;
     }
 
-    double Component::setTarget(float alpha)
+    double Component::setTarget(float alpha, float dt)
     {
         float maxVel = 4*M_PI;
         float maxForce = 0.5;
         auto pos = hinge->getHingeAngle();
         // vel = vel*0.9 + 0.1*getVelocity();
-        vel = vel*0.8 + 0.2*(pos-lastPos)/0.001;
+        vel = vel*0.8 + 0.2*(pos-lastPos)/dt;
 
         float error = alpha-pos;
         float targetVel = error*35;
@@ -854,16 +854,16 @@ namespace Metabot
         btVector3 hingeTorque = targetForce * hingeAxisWorld;
 // #define METHOD_MOTOR
 #ifdef METHOD_MOTOR
-        hinge->enableAngularMotor(true, targetVel, 0.001*maxForce);
+        hinge->enableAngularMotor(true, targetVel, dt*maxForce);
 #else
         hinge->getRigidBodyA().applyTorque(hingeTorque);
         hinge->getRigidBodyB().applyTorque(-hingeTorque);
-#endif
-        lastPos = pos;
 
         // This can be used to add some frictions
         // hinge->enableAngularMotor(true, 0.0, 0.00001);
+#endif
+        lastPos = pos;
 
-        return fabs(targetForce*0.001);
+        return fabs(targetForce*dt);
     }
 }
