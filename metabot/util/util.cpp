@@ -162,7 +162,7 @@ std::string trim(std::string s) {
 std::string tempname() {
     char *tname = tempnam(NULL, "metabot");
     std::string t(tname);
-    delete tname;
+    delete[] tname;
 
     return t;
 }
@@ -303,7 +303,7 @@ std::string current_dir()
 {
     char *dname = get_current_dir_name();
     std::string dirname(dname);
-    delete dname;
+    delete[] dname;
 
     return dirname;
 }
