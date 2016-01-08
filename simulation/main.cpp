@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
         if (mode == "cmaes") {
             // CMAES parameters
-            CMAParameters<> cmaparams(parameters.toVector(), 64, 48);
+            CMAParameters<> cmaparams(parameters.toVector(), 0.5, 48);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
             cmaparams.set_max_iter(100);
