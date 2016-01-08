@@ -11,6 +11,18 @@ Simulator::ParameterError::ParameterError(double error)
 {
 }
 
+double Simulator::Parameter::normalize()
+{
+    double delta = max-min;
+    return (value-min)/delta;
+}
+
+void Simulator::Parameter::fromNormalized(double n)
+{
+    double delta = max-min;
+    value = min+n*delta;
+}
+
 void Simulator::Parameter::check()
 {
     if (value < min) throw ParameterError(fabs(value-min));
@@ -53,7 +65,7 @@ std::vector<double> Simulator::Parameters::toVector()
 {
     std::vector<double> vector;
     for (auto name : order) {
-        vector.push_back(values[name].value);
+        vector.push_back(values[name].normalize());
     }
     return vector;
 }
@@ -62,6 +74,7 @@ void Simulator::Parameters::fromArray(const double *x, const int N)
 {
     int k = 0;
     for (auto name : order) {
+        values[name].fromNormalized(x[k++]);
         values[name].value = x[k++];
         values[name].check();
     }

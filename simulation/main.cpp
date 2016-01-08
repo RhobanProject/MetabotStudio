@@ -151,6 +151,9 @@ int main(int argc, char *argv[])
             CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
             std::cout << "*** OVER" << std::endl;
             std::cout << cmasols << std::endl;
+            auto best = cmasols.get_best_seen_candidate();
+            parameters.fromArray(best.get_x_ptr(), best.get_x_size());
+            std::cout << parameters.toString() << std::endl;
         }
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;

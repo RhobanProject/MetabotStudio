@@ -23,6 +23,8 @@ class Simulator
         {
             public:
                 void check();
+                double normalize();
+                void fromNormalized(double n);
 
                 std::string name;
                 double value;
