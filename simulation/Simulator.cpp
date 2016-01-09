@@ -109,9 +109,6 @@ Simulator::Simulator(std::string robotFile, double factor, bool runServer)
 
 Simulator::~Simulator()
 {
-    for (auto robot : robots) {
-        delete robot.second;
-    }
     if (server) {
         delete server;
     }
@@ -120,7 +117,6 @@ Simulator::~Simulator()
 double Simulator::run(Parameters &parameters, double duration)
 {
     auto id = pthread_self();
-    Metabot::Robot *robot = NULL;
     Metabot::Server *serv = NULL;
     
     mutex.lock();
@@ -131,29 +127,23 @@ double Simulator::run(Parameters &parameters, double duration)
     if (serverThread == id) {
         serv = server;
     }
-
-    // Getting this thread robot
-    if (!robots.count(id)) {
-        robots[id] = new Metabot::Robot;
-        robots[id]->loadFromFile(robotFile);
-    }
-    robot = robots[id];
     mutex.unlock();
 
+    Values defines;
+    Metabot::Robot robot;
+
     // Setting parameters
-    robot->parameters.set("L1", round(parameters.get("L1")));
-    robot->parameters.set("L2", round(parameters.get("L2")));
-    robot->parameters.set("L3", round(parameters.get("L3")));
-    
-    if (isVerbose()) std::cout << "* Compiling..." << std::endl;
-    robot->compile();
+    defines.set("L1", round(parameters.get("L1")));
+    defines.set("L2", round(parameters.get("L2")));
+    defines.set("L3", round(parameters.get("L3")));
+    robot.loadFromFile(robotFile, defines);
     
     if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
-    robot->computeDynamics();
+    robot.computeDynamics();
     // robot.printDynamics();
     //
     if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
-    if (serv) serv->loadRobot(robot);
+    if (serv) serv->loadRobot(&robot);
 
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
     Controller controller;
@@ -164,10 +154,10 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.dx = parameters.get("dx");
 
     // Creating the simulation
-    Simulation simulation(duration, serv, *robot, controller);
+    Simulation simulation(duration, serv, robot, controller);
     simulation.factor = factor;
     auto cost = simulation.run();
-    auto state = robot->getState();
+    auto state = robot.getState();
 
     return cost/(duration*fabs(state.x()));
 }
