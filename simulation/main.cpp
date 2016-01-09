@@ -111,6 +111,8 @@ int main(int argc, char *argv[])
         }
 
         if (mode == "cmaes") {
+            double start = getTime();
+
             // CMAES parameters
             CMAParameters<> cmaparams(parameters.toVector(), 0.5, 48);
             cmaparams.set_algo(BIPOP_CMAES);
@@ -155,6 +157,7 @@ int main(int argc, char *argv[])
             auto best = cmasols.get_best_seen_candidate();
             parameters.fromArray(best.get_x_ptr(), best.get_x_size());
             std::cout << parameters.toString() << std::endl;
+            std::cout << "Time: " << getTime()-start << std::endl;
         }
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;
