@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 
                 if (external) {
                     std::stringstream ss;
-                    ss << "./sim -N -r " << robotFile << " " << params.toString();
+                    ss << "./sim -N -d " << duration << " -r " << robotFile << " " << params.toString();
                     auto result = execute(ss.str());
                     auto parts = split(result, '=');
                     if (parts.size() == 2 && parts[0] == "score") {
