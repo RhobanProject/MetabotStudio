@@ -25,8 +25,8 @@ void Simulator::Parameter::fromNormalized(double n)
 
 void Simulator::Parameter::check()
 {
-    if (value < min) throw ParameterError(fabs(value-min));
-    if (value > max) throw ParameterError(fabs(value-max));
+    if (value < min) throw ParameterError(1000+fabs(value-min));
+    if (value > max) throw ParameterError(1000+fabs(value-max));
 }
 
 Simulator::Parameters::Parameters()
