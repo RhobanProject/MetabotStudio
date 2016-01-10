@@ -111,11 +111,14 @@ int main(int argc, char *argv[])
         }
 
         if (mode == "cmaes") {
+            double start = getTime();
+
             // CMAES parameters
             CMAParameters<> cmaparams(parameters.toVector(), 0.5, 48);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
-            cmaparams.set_max_iter(100);
+            //cmaparams.set_max_iter(100);
+            cmaparams.set_restarts(2);
             cmaparams.set_max_hist(3);
             cmaparams.set_max_fevals(10000000);
             cmaparams.set_elitism(2);
@@ -135,7 +138,7 @@ int main(int argc, char *argv[])
 
                 if (external) {
                     std::stringstream ss;
-                    ss << "./sim -N -r " << robotFile << " " << params.toString();
+                    ss << "./sim -N -d " << duration << " -r " << robotFile << " " << params.toString();
                     auto result = execute(ss.str());
                     auto parts = split(result, '=');
                     if (parts.size() == 2 && parts[0] == "score") {
@@ -154,6 +157,7 @@ int main(int argc, char *argv[])
             auto best = cmasols.get_best_seen_candidate();
             parameters.fromArray(best.get_x_ptr(), best.get_x_size());
             std::cout << parameters.toString() << std::endl;
+            std::cout << "Time: " << getTime()-start << std::endl;
         }
     } catch (std::string err) {
         std::cerr << "Error: " << err << std::endl;

@@ -62,5 +62,4 @@ class Simulator
         double factor;
         std::mutex mutex;
         pthread_t serverThread;
-        std::map<pthread_t, Metabot::Robot*> robots;
 };
