@@ -19,7 +19,10 @@ class Controller : public Simulation::Controller
             float l3[4];
         };
 
-        Controller();
+        Controller(float l1, float l2, float l3);
+
+        // Robot parameters
+        float l1, l2, l3;
 
         // Initializes the motion
         void setupFunctions();
