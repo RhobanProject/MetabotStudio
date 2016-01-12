@@ -133,9 +133,13 @@ double Simulator::run(Parameters &parameters, double duration)
     Metabot::Robot robot;
 
     // Setting parameters
-    defines.set("L1", round(parameters.get("L1")));
-    defines.set("L2", round(parameters.get("L2")));
-    defines.set("L3", round(parameters.get("L3")));
+    auto l1 =  round(parameters.get("L1"));
+    auto l2 =  round(parameters.get("L2"));
+    auto l3 =  round(parameters.get("L3"));
+
+    defines.set("L1", l1);
+    defines.set("L2", l2);
+    defines.set("L3", l3);
     robot.loadFromFile(robotFile, defines);
     
     if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
@@ -146,7 +150,7 @@ double Simulator::run(Parameters &parameters, double duration)
     if (serv) serv->loadRobot(&robot);
 
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-    Controller controller;
+    Controller controller(l1, l2, l3);
     controller.r = parameters.get("r");
     controller.h = parameters.get("h");
     controller.freq = parameters.get("freq");

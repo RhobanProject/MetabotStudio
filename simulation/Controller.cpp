@@ -4,7 +4,8 @@
 #include "kinematic.h"
 #include "Controller.h"
 
-Controller::Controller()
+Controller::Controller(float l1, float l2, float l3)
+    : l1(l1), l2(l2), l3(l3)
 {
     gait = GAIT_TROT;
     alt = 15;
@@ -141,7 +142,7 @@ Controller::Angles Controller::compute(float t_)
         // if (i < 2) z += frontH;
 
         // Computing inverse kinematics
-        if (computeIK(x, y, z, &a, &b, &c, L1, L2, L3)) {
+        if (computeIK(x, y, z, &a, &b, &c, l1, l2, l3)) {
             angles.l1[i] = a;
             angles.l2[i] = b;
             angles.l3[i] = c;
