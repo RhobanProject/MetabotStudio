@@ -558,7 +558,7 @@ namespace Metabot
             
     void Robot::setMotorsLimit(float maxSpeed, float maxTorque)
     {
-        foreachComponent([&bom](Component *instance) {
+        foreachComponent([maxSpeed, maxTorque](Component *instance) {
             instance->maxSpeed = maxSpeed;
             instance->maxTorque = maxTorque;
         });
