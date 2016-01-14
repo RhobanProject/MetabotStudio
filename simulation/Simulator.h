@@ -30,13 +30,14 @@ class Simulator
                 double value;
                 double min;
                 double max;
+                bool optimize;
         };
 
         class Parameters
         {
             public:
                 Parameters();
-                void add(std::string name, double min, double max, double value);
+                void add(std::string name, double min, double max, double value, bool optimize=true);
                 void set(std::string name, double value);
                 double get(std::string name);
 

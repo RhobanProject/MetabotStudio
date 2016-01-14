@@ -94,6 +94,10 @@ int main(int argc, char *argv[])
         parameters.add("freq", 0, 5, 2.5);
         parameters.add("alt", 0, 100, 15);
         parameters.add("dx", 0, 300, 68);
+        
+        parameters.add("friction", 0, 1, 0.65, false);
+        parameters.add("maxSpeed", 0, 100, 4*M_PI, false);
+        parameters.add("maxTorque", 0, 100, 0.5, false);
     
         for (int k=optind; k<argc; k++) {
             std::string value(argv[k]);

@@ -34,13 +34,14 @@ Simulator::Parameters::Parameters()
 {
 }
                 
-void Simulator::Parameters::add(std::string name, double min, double max, double value)
+void Simulator::Parameters::add(std::string name, double min, double max, double value, bool optimize)
 {
     Parameter param;
     param.name = name;
     param.value = value;
     param.min = min;
     param.max = max;
+    param.optimize = optimize;
     order.push_back(name);
     values[name] = param;
 }
@@ -65,7 +66,9 @@ std::vector<double> Simulator::Parameters::toVector()
 {
     std::vector<double> vector;
     for (auto name : order) {
-        vector.push_back(values[name].normalize());
+        if (values[name].optimize) {
+            vector.push_back(values[name].normalize());
+        }
     }
     return vector;
 }
@@ -74,8 +77,10 @@ void Simulator::Parameters::fromArray(const double *x, const int N)
 {
     int k = 0;
     for (auto name : order) {
-        values[name].fromNormalized(x[k++]);
-        values[name].check();
+        if (values[name].optimize) {
+            values[name].fromNormalized(x[k++]);
+            values[name].check();
+        }
     }
 }
                 
@@ -140,10 +145,12 @@ double Simulator::run(Parameters &parameters, double duration)
     defines.set("L1", l1);
     defines.set("L2", l2);
     defines.set("L3", l3);
+    robot.world.friction = parameters.get("friction");
     robot.loadFromFile(robotFile, defines);
     
     if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
     robot.computeDynamics();
+    robot.setMotorsLimit(parameters.get("maxSpeed"), parameters.get("maxTorque"));
     // robot.printDynamics();
     //
     if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
