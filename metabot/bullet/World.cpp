@@ -8,7 +8,8 @@
     m_solver(0),
     m_collisionConfiguration(0),
     m_dynamicsWorld(0),
-    zOffset(0)
+    zOffset(0),
+    friction(0.65)
 {
     // Collision configuration contains default setup for memory, collision setup
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -196,7 +197,7 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
     btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
-    cInfo.m_friction = 0.65;
+    cInfo.m_friction = friction;
 
     btRigidBody* body = new btRigidBody(cInfo);
     //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);

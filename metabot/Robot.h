@@ -62,6 +62,11 @@ namespace Metabot
             std::vector<AnchorPoint*> getAnchors();
             void setZeros(std::vector<float> zeros);
 
+            // Drawing
+            bool drawCollisions;
+            void setDrawCollisions(bool draw=false);
+            bool drawCOM;
+            void setDrawCOM(bool draw=false);
 #ifdef OPENGL
             void openGLDraw(bool bullet=false, float alpha=1.0);
 #endif
@@ -75,17 +80,13 @@ namespace Metabot
 
             Component *root;
             Values parameters;
-
-            bool drawCollisions;
-            void setDrawCollisions(bool draw=false);
-            bool drawCOM;
-            void setDrawCOM(bool draw=false);
-
             Backend *backend;
 
             Refs getParts();
             BOM getBOM();
 
+            // Bullet
             World world;
+            void setMotorsLimit(float maxSpeed, float maxTorque);
     };
 }

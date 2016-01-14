@@ -22,7 +22,8 @@ namespace Metabot
     Component::Component(Backend *backend_, Module *module_)
         : backend(backend_), module(module_), highlight(false), 
         hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
-        body(NULL), hinge(NULL)
+        body(NULL), hinge(NULL),
+        maxSpeed(4*M_PI), maxTorque(0.5)
     {
         // std::cout << "Instanciating a component, type " << module->getName() << std::endl;
         for (auto param : module->getParameters()) {
@@ -833,18 +834,17 @@ namespace Metabot
 
     double Component::setTarget(float alpha, float dt)
     {
-        float maxVel = 4*M_PI;
         auto pos = hinge->getHingeAngle();
         // vel = vel*0.9 + 0.1*getVelocity();
         vel = vel*0.8 + 0.2*(pos-lastPos)/dt;
 
         // Speed servoing
         float error = alpha-pos;
-        float targetVel = bound(error*35, -maxVel, maxVel);
+        float targetVel = bound(error*35, -maxSpeed, maxSpeed);
 
         // Limiting torque in function of current speed
-        float coef = bound(fabs(vel/maxVel), 0, 1);
-        float maxForce = 0.5*(1-coef);
+        float coef = bound(fabs(vel/maxSpeed), 0, 1);
+        float maxForce = maxTorque*(1-coef);
 
         // Torque servoing
         float errorVel = targetVel-vel;

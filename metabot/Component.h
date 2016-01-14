@@ -57,6 +57,7 @@ namespace Metabot
             void setState(TransformMatrix matrix);
             double getVelocity();
             double setTarget(float alpha, float dt);
+            float maxSpeed, maxTorque;
 
             Model toModel();
             AnchorPoint *findCompatible(AnchorPoint *anchor);

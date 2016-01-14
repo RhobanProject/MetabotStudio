@@ -555,4 +555,12 @@ namespace Metabot
             return TransformMatrix::identity();
         }
     }
+            
+    void Robot::setMotorsLimit(float maxSpeed, float maxTorque)
+    {
+        foreachComponent([&bom](Component *instance) {
+            instance->maxSpeed = maxSpeed;
+            instance->maxTorque = maxTorque;
+        });
+    }
 }

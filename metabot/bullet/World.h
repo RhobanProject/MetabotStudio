@@ -40,6 +40,7 @@ class World
 
         void debugDraw();
         float zOffset;
+        float friction;
         GLDebugDrawer drawer;
 	
         btDiscreteDynamicsWorld* m_dynamicsWorld;
