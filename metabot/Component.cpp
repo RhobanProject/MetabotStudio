@@ -20,7 +20,7 @@
 namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
-        : backend(backend_), robot(NULL), module(module_), highlight(false), 
+        : backend(backend_), module(module_), highlight(false), 
         hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
         body(NULL), hinge(NULL)
     {

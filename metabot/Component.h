@@ -101,7 +101,6 @@ namespace Metabot
 
             // Backend and module
             Backend *backend;
-            Robot *robot;
             Module *module;
 
             // Accessing parameter values
