@@ -834,28 +834,30 @@ namespace Metabot
     double Component::setTarget(float alpha, float dt)
     {
         float maxVel = 4*M_PI;
-        float maxForce = 0.5;
         auto pos = hinge->getHingeAngle();
         // vel = vel*0.9 + 0.1*getVelocity();
         vel = vel*0.8 + 0.2*(pos-lastPos)/dt;
 
+        // Speed servoing
         float error = alpha-pos;
-        float targetVel = error*35;
-        if (targetVel > maxVel) targetVel = maxVel;
-        if (targetVel < -maxVel) targetVel = -maxVel;
+        float targetVel = bound(error*35, -maxVel, maxVel);
 
+        // Limiting torque in function of current speed
+        float coef = bound(fabs(vel/maxVel), 0, 1);
+        float maxForce = 0.5*(1-coef);
+
+        // Torque servoing
         float errorVel = targetVel-vel;
-        targetForce = errorVel*0.05;
-        if (targetForce > maxForce) targetForce = maxForce;
-        if (targetForce < -maxForce) targetForce = -maxForce;
+        targetForce = bound(errorVel*0.05, -maxForce, maxForce);
 
-        btVector3 hingeAxisLocal = hinge->getAFrame().getBasis().getColumn(2); // z-axis of constraint frame
-        btVector3 hingeAxisWorld = hinge->getRigidBodyA().getWorldTransform().getBasis() * hingeAxisLocal;
-        btVector3 hingeTorque = targetForce * hingeAxisWorld;
 // #define METHOD_MOTOR
 #ifdef METHOD_MOTOR
         hinge->enableAngularMotor(true, targetVel, dt*maxForce);
 #else
+        btVector3 hingeAxisLocal = hinge->getAFrame().getBasis().getColumn(2); // z-axis of constraint frame
+        btVector3 hingeAxisWorld = hinge->getRigidBodyA().getWorldTransform().getBasis() * hingeAxisLocal;
+        btVector3 hingeTorque = targetForce * hingeAxisWorld;
+
         hinge->getRigidBodyA().applyTorque(hingeTorque);
         hinge->getRigidBodyB().applyTorque(-hingeTorque);
 

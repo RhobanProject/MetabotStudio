@@ -43,3 +43,10 @@ std::string current_dir();
 // Random
 int random_int();
 double random_number(double min, double max, double precision=0.0001);
+
+static inline double bound(double x, double min, double max)
+{
+    if (x < min) return min;
+    if (x > max) return max;
+    return x;
+}
