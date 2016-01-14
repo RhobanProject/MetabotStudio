@@ -845,8 +845,8 @@ namespace Metabot
         // Limiting torque in function of current speed
         float errorVel = targetVel-vel;
         float coef = bound(fabs(vel/maxSpeed), 0, 1);
-        if (targetVel < 0 && vel > 0
-                || targetVel > 0 && vel < 0) coef = 0;
+        if ((targetVel < 0 && vel > 0)
+                || (targetVel > 0 && vel < 0)) coef = 0;
         float maxForce = maxTorque*(1-coef);
 
         // Torque servoing
