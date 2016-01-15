@@ -28,5 +28,6 @@ namespace Metabot
 
             double dot(Vect other);
             static Vect fromBullet(btVector3 bvect);
+            btVector3 toBullet();
     };
 }

@@ -176,7 +176,7 @@ Vect World::getGroundForce(bool frictions)
     return total;
 }
 
-btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape,  btVector3 inertia)
+btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape,  btVector3 inertia, btVector3 com)
 {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
@@ -194,7 +194,9 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
 
 #define USE_MOTIONSTATE 1
 #ifdef USE_MOTIONSTATE
-    btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+    btTransform comTransform = btTransform::getIdentity();
+    comTransform.setOrigin(com);
+    btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform, comTransform);
 
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
     cInfo.m_friction = friction;
@@ -258,7 +260,16 @@ btHingeConstraint *World::createHinge(btRigidBody *A, btRigidBody *B, btTransfor
     auto hinge = new btHingeConstraint(*A, *B, AFrame, BFrame);
     m_dynamicsWorld->addConstraint(hinge, true);
 
-    hinges.push_back(hinge);
+    constraints.push_back(hinge);
+    return hinge;
+}
+
+btHingeConstraint *World::createHinge(btRigidBody *A, btVector3 pivot, btVector3 axis, bool AFrame)
+{
+    auto hinge = new btHingeConstraint(*A, pivot, axis, AFrame);
+    m_dynamicsWorld->addConstraint(hinge, true);
+
+    constraints.push_back(hinge);
     return hinge;
 }
 
@@ -267,20 +278,34 @@ btConeTwistConstraint *World::createCone(btRigidBody *A, btRigidBody *B, btTrans
     auto cone = new btConeTwistConstraint(*A, *B, AFrame, BFrame);
     m_dynamicsWorld->addConstraint(cone, true);
 
-    cones.push_back(cone);
+    constraints.push_back(cone);
     return cone;
+}
+
+btGearConstraint *World::createGear(btRigidBody *A, btRigidBody *B, btVector3 AFrame, btVector3 BFrame, btScalar ratio)
+{
+    auto gear = new btGearConstraint(*A, *B, AFrame, BFrame, ratio);
+    m_dynamicsWorld->addConstraint(gear, true);
+
+    constraints.push_back(gear);
+    return gear;
+}
+
+btFixedConstraint *World::createFixed(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame)
+{
+    auto fixed = new btFixedConstraint(*A, *B, AFrame, BFrame);
+    m_dynamicsWorld->addConstraint(fixed, true);
+
+    constraints.push_back(fixed);
+    return fixed;
 }
 
 void World::clear(bool makeGround)
 {
     zOffset = 0;
-    for (auto cone : cones) {
-        m_dynamicsWorld->removeConstraint(cone);
-        delete cone;
-    }
-    for (auto hinge : hinges) {
-        m_dynamicsWorld->removeConstraint(hinge);
-        delete hinge;
+    for (auto constraint : constraints) {
+        m_dynamicsWorld->removeConstraint(constraint);
+        delete constraint;
     }
     for (auto body : bodies) {
         if (body && body->getMotionState()) {
@@ -294,9 +319,8 @@ void World::clear(bool makeGround)
     }
 
     bodies.clear();
-    cones.clear();
-    hinges.clear();
     shapes.clear();
+    constraints.clear();
 
     if (makeGround) {
         // Adding a ground

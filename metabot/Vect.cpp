@@ -101,4 +101,9 @@ namespace Metabot
     {
         return Vect(bvect.x(), bvect.y(), bvect.z());
     }
+            
+    btVector3 Vect::toBullet()
+    {
+        return btVector3(x(), y(), z());
+    }
 }

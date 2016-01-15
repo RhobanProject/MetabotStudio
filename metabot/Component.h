@@ -52,6 +52,7 @@ namespace Metabot
             float targetForce;
             btRigidBody *body;
             btHingeConstraint *hinge;
+            btHingeConstraint *posHinge;
             btRigidBody *toBullet(World *world, AnchorPoint *above=NULL, TransformMatrix matrix=TransformMatrix::identity());
             TransformMatrix getState();
             void setState(TransformMatrix matrix);
@@ -125,6 +126,8 @@ namespace Metabot
 
             Model collisions;
             Dynamics dynamics;
+
+            double dbg;
 
             int id;
     };

@@ -30,10 +30,13 @@ class World
 
         // Creating hinges
         btHingeConstraint *createHinge(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame);
+        btHingeConstraint *createHinge(btRigidBody *A, btVector3 pivot, btVector3 axis, bool AFrame=false);
         btConeTwistConstraint *createCone(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame);
+        btGearConstraint *createGear(btRigidBody *A, btRigidBody *B, btVector3 AFrame, btVector3 BFrame, btScalar ratio);
+        btFixedConstraint *createFixed(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame);
 	
         // Creating a rigid body
-        btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0));
+        btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0), btVector3 com = btVector3(0, 0, 0));
 
         Vect getGroundForce(bool friction=true);
         std::vector<std::pair<Vect, Vect>> getGroundCollisions();
@@ -50,8 +53,7 @@ class World
         std::vector<btCollisionShape *> shapes;
         std::vector<btRigidBody *> bodies;
         btRigidBody *ground;
-        std::vector<btHingeConstraint *> hinges;
-        std::vector<btConeTwistConstraint *> cones;
+        std::vector<btTypedConstraint *> constraints;
 
         //keep the collision shapes, for deletion/cleanup
 	// btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
