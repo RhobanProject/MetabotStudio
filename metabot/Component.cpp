@@ -22,7 +22,7 @@ namespace Metabot
     Component::Component(Backend *backend_, Module *module_)
         : backend(backend_), module(module_), highlight(false), 
         hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
-        body(NULL), hinge(NULL),
+        body(NULL), hinge(NULL), posHinge(NULL),
         maxSpeed(4*M_PI), maxTorque(0.5)
     {
         // std::cout << "Instanciating a component, type " << module->getName() << std::endl;
@@ -38,6 +38,9 @@ namespace Metabot
             if (anchor->above) {
                 delete anchor;
             }
+        }
+        if (posHinge) {
+            delete posHinge;
         }
         values.clear();
     }
@@ -423,6 +426,9 @@ namespace Metabot
                 
 #if 1
                 ////////////////// MODE GEAR
+                if (anchor->anchor->component->posHinge != NULL) {
+                    delete anchor->anchor->component->posHinge;
+                }
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy2,
                         anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
