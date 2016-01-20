@@ -104,8 +104,8 @@ void Simulator::Parameters::push(double value)
     pushIndex++;
 }
         
-Simulator::Simulator(std::string robotFile, double factor, bool runServer)
-    : serverThread(0), robotFile(robotFile), factor(factor), server(NULL)
+Simulator::Simulator(std::string robotFile, double factor, bool runServer, double dt)
+    : serverThread(0), robotFile(robotFile), factor(factor), server(NULL), dt(dt)
 {
     if (runServer) {
         server = new Metabot::Server;
@@ -165,7 +165,7 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.dx = parameters.get("dx");
 
     // Creating the simulation
-    Simulation simulation(duration, serv, robot, controller);
+    Simulation simulation(duration, serv, robot, controller, dt);
     simulation.factor = factor;
     auto cost = simulation.run();
     auto state = robot.getState();

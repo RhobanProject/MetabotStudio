@@ -89,15 +89,17 @@ int main(int argc, char *argv[])
         parameters.add("L3", 50, 250, 70);
 
         parameters.add("r", 50, 150, 130);
-        parameters.add("h", -150, 0, -55);
+        parameters.add("h", -150, 0, -35);
         
-        parameters.add("freq", 0, 5, 2.5);
-        parameters.add("alt", 0, 100, 15);
-        parameters.add("dx", 0, 300, 68);
+        parameters.add("freq", 0, 5, 2);
+        parameters.add("alt", 0, 100, 18);
+        parameters.add("dx", 0, 300, 60);
         
-        parameters.add("friction", 0, 1, 0.65, false);
+        parameters.add("friction", 0, 1, 0.5, false);
         parameters.add("maxSpeed", 0, 100, 4*M_PI, false);
         parameters.add("maxTorque", 0, 100, 0.5, false);
+        
+        parameters.add("dt", 0, 1, 0.001, false);
     
         for (int k=optind; k<argc; k++) {
             std::string value(argv[k]);
@@ -108,7 +110,7 @@ int main(int argc, char *argv[])
                 parameters.push(atof(argv[k]));
             }
         }
-        Simulator simulator(robotFile, factor, !noServer);
+        Simulator simulator(robotFile, factor, !noServer, parameters.get("dt"));
 
         if (mode == "sim") {
             std::cout << "score=" << simulator.run(parameters, duration) << std::endl;

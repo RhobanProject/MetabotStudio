@@ -13,12 +13,13 @@ class Simulation
         };
 
         Simulation(float duration, Metabot::Server *server, Metabot::Robot &robot,
-                Controller &controller);
+                Controller &controller, double dt);
         double run();
         
         float factor;
 
     protected:
+        double dt;
         float duration;
         Metabot::Robot &robot;
         Metabot::Server *server;

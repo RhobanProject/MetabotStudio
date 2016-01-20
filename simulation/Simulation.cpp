@@ -5,8 +5,8 @@
 #include "verbose.h"
 
 Simulation::Simulation(float duration, Metabot::Server *server,
-        Metabot::Robot &robot, Controller &controller)
-    : duration(duration), server(server), robot(robot), controller(controller)
+        Metabot::Robot &robot, Controller &controller, double dt)
+    : duration(duration), server(server), robot(robot), controller(controller), dt(dt)
 {
     robot.toBullet();
     factor = 10.0;
@@ -14,7 +14,6 @@ Simulation::Simulation(float duration, Metabot::Server *server,
 
 double Simulation::run()
 {
-    double dt = 0.001;
     float realTimeStart = getTime();
     float controllerTime = 0.0;
     float simTime = 0.0;

@@ -52,7 +52,7 @@ class Simulator
                 std::map<std::string, Parameter> values;
         };
 
-        Simulator(std::string robotFile, double factor, bool runServer);
+        Simulator(std::string robotFile, double factor, bool runServer, double dt);
         virtual ~Simulator();
 
         double run(Parameters &parameters, double duration=6.0);
@@ -61,6 +61,7 @@ class Simulator
         Metabot::Server *server;
         std::string robotFile;
         double factor;
+        double dt;
         std::mutex mutex;
         pthread_t serverThread;
 };
