@@ -399,7 +399,7 @@ namespace Metabot
 #endif
                 
 
-#if 1
+#if 0
                 //////////////// MODE CONE
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy,
                         anchor->transformationForward().toBullet(),
@@ -421,8 +421,7 @@ namespace Metabot
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
                 
-
-#if 0
+#if 1
                 ////////////////// MODE GEAR
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy2,
                         anchor->transformationForward().toBullet(),
@@ -443,19 +442,19 @@ namespace Metabot
                         btVector3(0, 0, 1),
                         -50
                         );
-                
-                auto cone = world->createFixed(dummy2, child,
+               
+                /*
+                world->createFixed(dummy2, child,
                         btTransform::getIdentity(),
                         anchor->anchor->transformationForward().toBullet()
                         );
+                */
                 
-                /*
                 auto cone = world->createCone(dummy2, child,
                         rot.toBullet(),
                         anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
-                cone->setLimit(0.03, 0.04, 0.02);
-                */
+                cone->setLimit(0.02, 0.02, 0.02);
 #endif
             }
         }
