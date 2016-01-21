@@ -25,6 +25,11 @@ void Controller::setupFunctions()
     step.clear();
 
     if (gait == GAIT_WALK) {
+        phases[0] = 0.0;
+        phases[1] = 0.5;
+        phases[2] = 0.75;
+        phases[3] = 0.25;
+        
         // Rising the legs
         rise.addPoint(0.0, 0.0);
         rise.addPoint(0.1, 1.0);
@@ -41,6 +46,11 @@ void Controller::setupFunctions()
     }
 
     if (gait == GAIT_TROT) {
+        phases[0] = 0.0;
+        phases[1] = 0.5;
+        phases[2] = 0.0;
+        phases[3] = 0.5;
+
         // Rising the legs
         rise.addPoint(0.0, 1.0);
         rise.addPoint(0.3, 1.0);
@@ -84,15 +94,7 @@ Controller::Angles Controller::compute(float t_)
         bool group = ((i&1)==1);
 
         // This defines the phase of the gait
-        float legPhase;
-
-        if (gait == GAIT_WALK) {
-            float phases[] = {0.0, 0.5, 0.75, 0.25};
-            legPhase = t + phases[i];
-        }
-        if (gait == GAIT_TROT) {
-            legPhase = t + group*0.5;
-        }
+        float legPhase = t + phases[i];
 
         float x, y, z, a, b, c;
 

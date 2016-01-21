@@ -84,16 +84,21 @@ int main(int argc, char *argv[])
 
     try { 
         Simulator::Parameters parameters;
-        parameters.add("L1", 20, 250, 50);
-        parameters.add("L2", 50, 250, 70);
-        parameters.add("L3", 50, 250, 70);
+        parameters.add("L1", 20, 250, 50, false);
+        parameters.add("L2", 50, 250, 70, false);
+        parameters.add("L3", 50, 250, 70, false);
 
-        parameters.add("r", 50, 150, 130);
-        parameters.add("h", -150, 0, -35);
+        parameters.add("r", 50, 150, 130, false);
+        parameters.add("h", -150, 0, -35, false);
         
-        parameters.add("freq", 0, 5, 2);
-        parameters.add("alt", 0, 100, 18);
-        parameters.add("dx", 0, 300, 60);
+        parameters.add("freq", 0, 5, 2, false);
+        parameters.add("alt", 0, 100, 18, false);
+        parameters.add("dx", 0, 300, 60, false);
+        
+        parameters.add("p1", 0, 1, 0.5);
+        parameters.add("p2", 0, 1, 0.0);
+        parameters.add("p3", 0, 1, 0.5);
+        parameters.add("p4", 0, 1, 0.0);
         
         parameters.add("friction", 0, 1, 0.5, false);
         parameters.add("maxSpeed", 0, 100, 4*M_PI, false);

@@ -46,6 +46,9 @@ class Controller : public Simulation::Controller
         float ut;
         Angles angles;
 
+        // Leg phases
+        float phases[4];
+
         Function rise;
         Function step;
 };
