@@ -460,7 +460,7 @@ namespace Metabot
                         rot.toBullet(),
                         anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
-                cone->setLimit(0.02, 0.02, 0.02);
+                cone->setLimit(0.03, 0.04, 0.02);
 #endif
             }
         }
