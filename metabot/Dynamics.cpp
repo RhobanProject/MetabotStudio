@@ -65,10 +65,10 @@ namespace Metabot
         ixx = iyy = izz = ixy = iyz = ixz = 0;
 
         for (auto &cube : cubes) {
-            float X = cube.pos.x()/1000.0;
-            float Y = cube.pos.y()/1000.0;
-            float Z = cube.pos.z()/1000.0;
-            float m = cube.mass/1000.0;
+            float X = cube.pos.x();
+            float Y = cube.pos.y();
+            float Z = cube.pos.z();
+            float m = cube.mass;
 
             ixx += (Y*Y + Z*Z)*m;
             iyy += (X*X + Z*Z)*m;

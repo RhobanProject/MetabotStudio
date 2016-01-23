@@ -257,12 +257,12 @@ namespace Metabot
         ss << "</pose>" << std::endl;
         ss << "    <mass>" << (dynamics.mass/1000.0) << "</mass>" << std::endl;
         ss << "    <inertia>" << std::endl;
-        ss << "        <ixx>" << dynamics.ixx << "</ixx>" << std::endl;
-        ss << "        <ixy>" << dynamics.ixy << "</ixy>" << std::endl;
-        ss << "        <ixz>" << dynamics.ixz << "</ixz>" << std::endl;
-        ss << "        <iyy>" << dynamics.iyy << "</iyy>" << std::endl;
-        ss << "        <iyz>" << dynamics.iyz << "</iyz>" << std::endl;
-        ss << "        <izz>" << dynamics.izz << "</izz>" << std::endl;
+        ss << "        <ixx>" << dynamics.ixx/1e9 << "</ixx>" << std::endl;
+        ss << "        <ixy>" << dynamics.ixy/1e9 << "</ixy>" << std::endl;
+        ss << "        <ixz>" << dynamics.ixz/1e9 << "</ixz>" << std::endl;
+        ss << "        <iyy>" << dynamics.iyy/1e9 << "</iyy>" << std::endl;
+        ss << "        <iyz>" << dynamics.iyz/1e9 << "</iyz>" << std::endl;
+        ss << "        <izz>" << dynamics.izz/1e9 << "</izz>" << std::endl;
         ss << "    </inertia>" << std::endl;
         ss << "  </inertial>" << std::endl;
 
@@ -360,7 +360,7 @@ namespace Metabot
 
         // Creating rigid body
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
-                btVector3(dynamics.ixx, dynamics.iyy, dynamics.izz),
+                btVector3(dynamics.ixx/1e9, dynamics.iyy/1e9, dynamics.izz/1e9),
                 dynamics.com.multiply(1/1000.0).toBullet());
 
         // Child
@@ -401,7 +401,7 @@ namespace Metabot
                         );
 #endif
                 
-#if 1
+#if 0
                 //////////////// MODE CONE
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy,
                         anchor->transformationForward().toBullet(),
@@ -423,7 +423,7 @@ namespace Metabot
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
                 
-#if 0
+#if 1
                 ////////////////// MODE GEAR
                 if (anchor->anchor->component->posHinge != NULL) {
                     delete anchor->anchor->component->posHinge;
