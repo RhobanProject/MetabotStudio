@@ -381,8 +381,8 @@ namespace Metabot
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
                 auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
-                        btVector3(1e-5, 1e-5, 1e-5));
-                //        btVector3(1e-6, 1e-6, 1e-6));
+                //        btVector3(1e-5, 1e-5, 1e-5));
+                       btVector3(1e-6, 1e-6, 1e-6));
                 auto empty2 = world->createEmpty();
                 auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
                         btVector3(1e-5, 1e-5, 1e-5));
