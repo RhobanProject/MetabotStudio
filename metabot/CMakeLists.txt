@@ -5,6 +5,8 @@ find_package (Threads)
 set (BULLET_DIR
     "${CMAKE_SOURCE_DIR}/../bullet3/" CACHE STRING "bullet dir")
 
+OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
+
 OPTION(BUILD_UNIT_TESTS "Build Unit Tests" OFF)
 
 option (OPENGL "Enable OpenGL" OFF)
@@ -61,6 +63,10 @@ set(ALL_SOURCES
     Vect.cpp
     Voxels.cpp
     )
+
+if (USE_DOUBLE_PRECISION)
+add_definitions( -DBT_USE_DOUBLE_PRECISION)
+endif (USE_DOUBLE_PRECISION)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/util/")
