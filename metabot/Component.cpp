@@ -381,8 +381,8 @@ namespace Metabot
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
                 auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
-                //        btVector3(1e-5, 1e-5, 1e-5));
-                        btVector3(1e-6, 1e-6, 1e-6));
+                        btVector3(1e-5, 1e-5, 1e-5));
+                //        btVector3(1e-6, 1e-6, 1e-6));
                 auto empty2 = world->createEmpty();
                 auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
                         btVector3(1e-5, 1e-5, 1e-5));
@@ -401,8 +401,7 @@ namespace Metabot
                         );
 #endif
                 
-
-#if 0
+#if 1
                 //////////////// MODE CONE
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy,
                         anchor->transformationForward().toBullet(),
@@ -424,7 +423,7 @@ namespace Metabot
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
                 
-#if 1
+#if 0
                 ////////////////// MODE GEAR
                 if (anchor->anchor->component->posHinge != NULL) {
                     delete anchor->anchor->component->posHinge;
@@ -904,7 +903,7 @@ namespace Metabot
 
         // Speed servoing
         float error = alpha-pos;
-        float targetVel = bound(error*35, -maxSpeed, maxSpeed);
+        float targetVel = bound(error*30, -maxSpeed, maxSpeed);
 
         // Limiting torque in function of current speed
         float errorVel = targetVel-vel;
