@@ -54,7 +54,7 @@ void Viewer::updateRatio()
 {
     tX = 0;
     tY = 0;
-    setAutorotate(true);
+    setAutorotate(false);
     beta = M_PI/4.0;
     matrix = TransformMatrix::identity();
 

@@ -202,7 +202,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         instance->compile(robot);
 
         if (oldInstance != NULL) {
-            instance->moveAnchors(oldInstance);
+            instance->moveAnchors(oldInstance->anchors);
             delete oldInstance;
         }
 
@@ -272,7 +272,7 @@ void ComponentWizard::on_generate_clicked()
     }
 
     instance->compile(robot);
-    instance->moveAnchors(previous);
+    instance->moveAnchors(previous->anchors);
 
     for (auto anchor : instance->anchors) {
         if (anchor->above == false) {
