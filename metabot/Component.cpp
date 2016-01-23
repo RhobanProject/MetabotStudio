@@ -380,9 +380,6 @@ namespace Metabot
                 
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
-                auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
-                //        btVector3(1e-5, 1e-5, 1e-5));
-                       btVector3(1e-6, 1e-6, 1e-6));
                 auto empty2 = world->createEmpty();
                 auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
                         btVector3(1e-5, 1e-5, 1e-5));
@@ -401,7 +398,10 @@ namespace Metabot
                         );
 #endif
                 
-#if 0
+#if 1
+                auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
+                        btVector3(1e-5, 1e-5, 1e-5));
+
                 //////////////// MODE CONE
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy,
                         anchor->transformationForward().toBullet(),
@@ -423,7 +423,10 @@ namespace Metabot
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
                 
-#if 1
+#if 0
+                auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
+                       btVector3(1e-6, 1e-6, 1e-6));
+
                 ////////////////// MODE GEAR
                 if (anchor->anchor->component->posHinge != NULL) {
                     delete anchor->anchor->component->posHinge;
@@ -448,18 +451,18 @@ namespace Metabot
                         -50
                         );
                
-                /*
                 world->createFixed(dummy2, child,
                         btTransform::getIdentity(),
                         anchor->anchor->transformationForward().toBullet()
                         );
-                */
-                
+               
+                /*
                 auto cone = world->createCone(dummy2, child,
                         rot.toBullet(),
                         anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
                 cone->setLimit(0.03, 0.04, 0.02);
+                */
 #endif
             }
         }
