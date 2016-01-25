@@ -187,15 +187,18 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
         shape->calculateLocalInertia(mass, inertia);
     }
 
-    auto origin = startTransform.getOrigin();
+    auto &origin = startTransform.getOrigin();
     origin.setZ(origin.getZ()-zOffset);
-    startTransform.setOrigin(origin);
+    auto trans = btTransform::getIdentity();
+    //trans.getBasis().setEulerYPR(0.01, 0.01, 0.01);
+    //startTransform *= trans;
     //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
 #define USE_MOTIONSTATE 1
 #ifdef USE_MOTIONSTATE
     btTransform comTransform = btTransform::getIdentity();
     comTransform.setOrigin(com);
+    startTransform = startTransform * comTransform;
     btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform, comTransform);
 
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);

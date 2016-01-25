@@ -442,8 +442,7 @@ namespace Metabot
         unsigned int i = 0;
         foreachAnchor([&i,&zeros](AnchorPoint *anchor) {
             if (i < zeros.size()) {
-                anchor->zero = zeros[i++];
-                anchor->computeMatrixes();
+                anchor->setZero(zeros[i++]);
             }
         });
     }

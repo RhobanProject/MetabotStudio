@@ -26,7 +26,7 @@ namespace Metabot
             // Is this dynamics computed?
             bool computed;
             // Inertia
-            float ixx, ixy, ixz, iyy, iyz, izz;
+            double ixx, ixy, ixz, iyy, iyz, izz;
             // Cubes
             std::vector<DynamicsCube> cubes;
             

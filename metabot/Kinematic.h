@@ -20,14 +20,15 @@ namespace Metabot
             {
                 int type;
                 TransformMatrix matrix;
-                int alpha;
+                float alpha;
+                float min, max;
                 int jointId;
             };
             class Chain
             {
                 public:
                     void addMatrix(TransformMatrix matrix);
-                    void addRotation(int alpha, int jointId);
+                    void addRotation(float alpha, int jointId, float min, float max);
                     Point3 position();
                     std::vector<ChainItem> items;
                     std::map<int, int> angles;

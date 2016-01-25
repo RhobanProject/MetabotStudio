@@ -9,7 +9,8 @@ namespace Metabot
 {
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
         : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0), 
-        orientationX(0), orientationY(0), orientationZ(0), cached(false)
+        orientationX(0), orientationY(0), orientationZ(0), cached(false),
+        minimum(-M_PI), maximum(M_PI)
     {
         if (json.isObject()) {
             type = json["type"].asString();
@@ -60,6 +61,8 @@ namespace Metabot
         orientationX = other->orientationX;
         orientationY = other->orientationY;
         orientationZ = other->orientationZ;
+        minimum = other->minimum;
+        maximum = other->maximum;
         alpha = other->alpha;
         zero = other->zero;
         computeMatrixes();
@@ -152,6 +155,15 @@ namespace Metabot
         if (orientationZ) rotation = rotation.multiply(TransformMatrix::rotationZ(orientationZ));
 
         return rotation;
+    }
+            
+    void AnchorPoint::setZero(float zero_)
+    {
+        zero = zero_;
+        if (zero < minimum) zero = minimum;
+        if (zero > maximum) zero = maximum;
+
+        computeMatrixes();
     }
 
     void AnchorPoint::computeMatrixes()

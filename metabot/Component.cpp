@@ -91,7 +91,7 @@ namespace Metabot
         if (above != NULL) {
             auto alpha = kinematic.addJoint();
             chain.addMatrix(above->transformationForward());
-            chain.addRotation(kinematic.alpha-1, id);
+            chain.addRotation(0.0, id, above->minimum, above->maximum);
             chain.addMatrix(above->anchor->transformationBackward());
             auto myTransformation = above->symbolicTransformation(alpha);
             myTransformation *= above->anchor->transformationBackward().toSymbolic();
@@ -359,10 +359,11 @@ namespace Metabot
         }
 
         // Creating rigid body
+//        if (above == NULL) dynamics.mass = 0;
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
                 btVector3(dynamics.ixx/1e9, dynamics.iyy/1e9, dynamics.izz/1e9),
                 dynamics.com.multiply(1/1000.0).toBullet());
-
+        
         // Child
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor) {
@@ -394,7 +395,7 @@ namespace Metabot
                 // Creating hinge
                 anchor->anchor->component->hinge = world->createHinge(body, child,
                         anchor->transformationForward().toBullet(),
-                        anchor->anchor->transformationBackward().toBullet()
+                        anchor->anchor->transformationForward().toBullet()
                         );
 #endif
                 
@@ -825,6 +826,8 @@ namespace Metabot
                 json["anchors"][id]["orientationX"] = anchor->orientationX;
                 json["anchors"][id]["orientationY"] = anchor->orientationY;
                 json["anchors"][id]["orientationZ"] = anchor->orientationZ;
+                json["anchors"][id]["minimum"] = anchor->minimum;
+                json["anchors"][id]["maximum"] = anchor->maximum;
                 json["anchors"][id]["remote"] = anchor->anchor->id;
                 json["anchors"][id]["component"] = anchor->anchor->component->toJson();
             }
@@ -906,7 +909,7 @@ namespace Metabot
 
         // Speed servoing
         float error = alpha-pos;
-        float targetVel = bound(error*30, -maxSpeed, maxSpeed);
+        float targetVel = bound(error*35, -maxSpeed, maxSpeed);
 
         // Limiting torque in function of current speed
         float errorVel = targetVel-vel;

@@ -197,6 +197,12 @@ namespace Metabot
                 if (anchors[id].isMember("orientationZ")) {
                     anchor->orientationZ = anchors[id]["orientationZ"].asFloat();
                 }
+                if (anchors[id].isMember("minimum")) {
+                    anchor->minimum = anchors[id]["minimum"].asFloat();
+                }
+                if (anchors[id].isMember("maximum")) {
+                    anchor->maximum = anchors[id]["maximum"].asFloat();
+                }
                 anchor->attach(instance->getAnchor(remote));
             }
         }

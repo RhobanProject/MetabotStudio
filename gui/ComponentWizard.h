@@ -47,6 +47,10 @@ private slots:
     void on_orientationY_editingFinished();
     void on_orientationZ_editingFinished();
 
+    void on_min_editingFinished();
+
+    void on_max_editingFinished();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;

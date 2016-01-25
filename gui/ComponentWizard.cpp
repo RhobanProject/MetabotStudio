@@ -31,6 +31,7 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     ui->scrollArea->hide();
     ui->anchor->hide();
     ui->orientation->hide();
+    ui->range->hide();
     ui->parameters->hide();
     ui->generate->hide();
     ui->ok->setEnabled(false);
@@ -155,6 +156,11 @@ void ComponentWizard::setupInstance()
         ui->orientationX->setText(QString("%1").arg(RAD2DEG(anchor->orientationX)));
         ui->orientationY->setText(QString("%1").arg(RAD2DEG(anchor->orientationY)));
         ui->orientationZ->setText(QString("%1").arg(RAD2DEG(anchor->orientationZ)));
+
+        // Range
+        ui->range->show();
+        ui->min->setText(QString("%1").arg(RAD2DEG(anchor->minimum)));
+        ui->max->setText(QString("%1").arg(RAD2DEG(anchor->maximum)));
     }
     ui->anchor->update();
     ui->anchor->adjustSize();
@@ -324,4 +330,14 @@ void ComponentWizard::on_orientationZ_editingFinished()
     anchor->orientationZ = DEG2RAD(ui->orientationZ->text().toFloat());
     anchor->computeMatrixes();
     viewer->redraw();
+}
+
+void ComponentWizard::on_min_editingFinished()
+{
+    anchor->minimum = DEG2RAD(ui->min->text().toFloat());
+}
+
+void ComponentWizard::on_max_editingFinished()
+{
+    anchor->maximum = DEG2RAD(ui->max->text().toFloat());
 }

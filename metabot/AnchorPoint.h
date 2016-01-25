@@ -47,6 +47,7 @@ namespace Metabot
             TransformMatrix forwardAbove, backwardAbove;
             TransformMatrix forward, backward;
             bool cached;
+            void setZero(float zero);
             void computeMatrixes();
 
             // Anchor id
@@ -70,5 +71,8 @@ namespace Metabot
 
             // Orientation
             float orientationX, orientationY, orientationZ;
+
+            // Valid range
+            float minimum, maximum;
     };
 }

@@ -3,15 +3,97 @@
 #include <Component.h>
 #include "kinematic.h"
 #include "Controller.h"
+            
+Controller::Leg::Leg(Metabot::Kinematic::Tip tip_)
+    : tip(tip_)
+{
+    for (auto &item : tip.chain.items) {
+        item.alpha = 0.0;
+    }
+    auto pos = tip.chain.position();
+    pos.z = 0;
+    auto norm = pos.norm();
 
-Controller::Controller(float l1, float l2, float l3)
+    xVec = pos.x/norm;
+    yVec = pos.y/norm;
+    theta = atan2(yVec, xVec);
+    if (theta < 0) theta += 2*M_PI;
+}
+    
+float Controller::Leg::error(std::vector<float> deltas, float x, float y, float z)
+{
+    auto tmp = tip;
+    int k = 0;
+    for (auto &item : tmp.chain.items) {
+        if (item.type == CHAIN_ROTATION) {
+            item.alpha += deltas[k++];
+            if (item.alpha < item.min) item.alpha = item.min+0.05;
+            if (item.alpha > item.max) item.alpha = item.max-0.05;
+        }
+    }
+    auto pos = tmp.chain.position();
+    // printf("Test: (%g %g) %g/%g %g/%g %g/%g\n", xVec, yVec, pos.x, x, pos.y, y, pos.z, z);
+
+    return pow(pos.x-x, 2) + pow(pos.y-y, 2) + pow(pos.z-z, 2);
+}
+            
+void Controller::Leg::gotoXYZ(float x, float y, float z)
+{
+    std::vector<float> deltas;
+    for (auto item : tip.chain.items) {
+        if (item.type == CHAIN_ROTATION) {
+            deltas.push_back(0.0);
+        }
+    }
+    float err, newErr = error(deltas, x, y, z);
+
+    do {
+        err = newErr;
+        for (int k=0; k<30; k++) {
+            std::vector<float> tmpD = deltas;
+            for (int n=0; n<tmpD.size(); n++) {
+                if (k < 3) {
+                    tmpD[n] += 0.1-0.2*rand()/(float)RAND_MAX;
+                } else {
+                    tmpD[n] += 0.01-0.02*rand()/(float)RAND_MAX;
+                }
+            }
+            auto test = error(tmpD, x, y, z);
+            if (test < err) {
+                newErr = test;
+                deltas = tmpD;
+            }
+        }
+    } while (newErr < err);
+
+    int k = 0;
+    for (auto &item : tip.chain.items) {
+        if (item.type == CHAIN_ROTATION) {
+            item.alpha += deltas[k++];
+            if (item.alpha < item.min) item.alpha = item.min+0.05;
+            if (item.alpha > item.max) item.alpha = item.max-0.05;
+        }
+    }
+}
+
+Controller::Controller(Metabot::Robot *robot, float l1, float l2, float l3)
     : l1(l1), l2(l2), l3(l3)
 {
+    // Getting legs
+    auto kinematic = robot->computeKinematic();
+
+    for (auto tip : kinematic.tips) {
+        Leg leg(tip);
+        legs.push_back(leg);
+    }
+
+    // Sorting legs using theta
+    std::sort(legs.begin(), legs.end(), [](const Leg &a, const Leg &b) {
+        return (a.theta < b.theta);
+    });
+
+    // Initialisation
     gait = GAIT_TROT;
-    alt = 15;
-    freq = 1.0;
-    h = -55;
-    r = 125;
     dx = 0;
     dy = 0;
     turn = 0;
@@ -83,75 +165,24 @@ void Controller::setupFunctions()
     }
 }
 
-Controller::Angles Controller::compute(float t_)
+void Controller::compute(float t_)
 {
     float t = freq*t_;
-    Angles angles;
     float turnRad = DEG2RAD(turn);
 
-    for (int i=0; i<4; i++) {
-        // Defining in which group of diagonaly opposite legs this leg is
-        bool group = ((i&1)==1);
+    int k = 0;
+    auto &leg = legs[0];
+    for (auto &leg : legs) {
+        k++;
+        float phase = t + 0.5*(k%2);
 
-        // This defines the phase of the gait
-        float legPhase = t + phases[i];
-
-        float x, y, z, a, b, c;
-
-        // Computing the order in the referencial of the body
-        float stepping = step.getMod(legPhase);
-
-        // Set X and Y to the moving vector
-        float X = stepping*dx;
-        float Y = stepping*dy;
-
-        // Add the radius to the leg, in the right direction
-
-        switch (i) {
-            case 0:
-                X += cos(M_PI/4)*r;
-                Y += cos(M_PI/4)*r;
-                break;
-            case 1:
-                X += cos(M_PI/4)*r;
-                Y -= cos(M_PI/4)*r;
-                break;
-            case 2:
-                X -= cos(M_PI/4)*r;
-                Y -= cos(M_PI/4)*r;
-                break;
-            case 3:
-                X -= cos(M_PI/4)*r;
-                Y += cos(M_PI/4)*r;
-                break;
-        }
-
-        // Rotate around the center of the robot
-        float xOrder = cos(stepping*turnRad)*X - sin(stepping*turnRad)*Y;
-        float yOrder = sin(stepping*turnRad)*X + cos(stepping*turnRad)*Y;
-
-        // Move to the leg frame
-        float vx, vy;
-        legFrame(xOrder, yOrder, &vx, &vy, i, L0);
-
-        // Avoid moving legs when dynamic parameters are low
-        float enableRise = (fabs(dx)>0.5 || fabs(dy)>0.5 || fabs(turn)>5) ? 1 : 0;
-
-        // This is the x,y,z order in the referencial of the leg
-        x = vx;
-        y = vy;
-        z = h + rise.getMod(legPhase)*alt*enableRise;
-        // if (i < 2) z += frontH;
-
-        // Computing inverse kinematics
-        if (computeIK(x, y, z, &a, &b, &c, l1, l2, l3)) {
-            angles.l1[i] = a;
-            angles.l2[i] = b;
-            angles.l3[i] = c;
-        }
+        // Following the spline
+        float tx = leg.xVec*x + step.getMod(phase)*dx;
+        float ty = leg.yVec*y + step.getMod(phase)*dy;
+        float tz = rise.getMod(phase)*alt - z;
+        
+        leg.gotoXYZ(tx, ty, tz);
     }
-
-    return angles;
 }
         
 double Controller::update(float dt, float t, Metabot::Robot &robot)
@@ -160,15 +191,16 @@ double Controller::update(float dt, float t, Metabot::Robot &robot)
     ut += dt;
 
     if (ut > 0.02) {
-        angles = compute(t);
+        compute(t);
         ut = 0;
     }
 
-    for (int k=0; k<4; k++) {
-        int leg = (k+2)%4;
-        cost += fabs(robot.getComponentById(k*3+2)->setTarget(angles.l1[leg], dt));
-        cost += fabs(robot.getComponentById(k*3+3)->setTarget(-angles.l2[leg], dt));
-        cost += fabs(robot.getComponentById(k*3+4)->setTarget(angles.l3[leg], dt));
+    for (auto &leg : legs) {
+        for (auto &item : leg.tip.chain.items) {
+            if (item.type == CHAIN_ROTATION) {
+                cost += fabs(robot.getComponentById(item.jointId)->setTarget(-item.alpha, dt));
+            }
+        }
     }
 
     return cost;

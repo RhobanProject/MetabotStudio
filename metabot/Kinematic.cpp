@@ -11,14 +11,15 @@ namespace Metabot
         items.push_back(item);
     }
 
-    void Kinematic::Chain::addRotation(int alpha, int jointId)
+    void Kinematic::Chain::addRotation(float alpha, int jointId, float min, float max)
     {
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
         item.alpha = alpha;
+        item.min = min;
+        item.max = max;
         item.jointId = jointId;
         items.push_back(item);
-        angles[alpha] = 0.0;
     }
                     
     Point3 Kinematic::Chain::position()
@@ -29,7 +30,7 @@ namespace Metabot
             if (item.type == CHAIN_MATRIX) {
                 matrix = matrix.multiply(item.matrix);
             } else if (item.type == CHAIN_ROTATION) {
-                matrix = matrix.multiply(TransformMatrix::rotationZ(angles[item.alpha]));
+                matrix = matrix.multiply(TransformMatrix::rotationZ(item.alpha));
             }
         }
 

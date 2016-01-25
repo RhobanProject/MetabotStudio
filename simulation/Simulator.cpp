@@ -157,9 +157,10 @@ double Simulator::run(Parameters &parameters, double duration)
     if (serv) serv->loadRobot(&robot);
 
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-    Controller controller(l1, l2, l3);
-    controller.r = parameters.get("r");
-    controller.h = parameters.get("h");
+    Controller controller(&robot, l1, l2, l3);
+    controller.x = parameters.get("x");
+    controller.y = parameters.get("y");
+    controller.z = parameters.get("z");
     controller.freq = parameters.get("freq");
     controller.alt = parameters.get("alt");
     controller.dx = parameters.get("dx");

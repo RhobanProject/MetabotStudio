@@ -88,8 +88,9 @@ int main(int argc, char *argv[])
         parameters.add("L2", 50, 250, 70, false);
         parameters.add("L3", 50, 250, 70, false);
 
-        parameters.add("r", 50, 150, 130, false);
-        parameters.add("h", -150, 0, -35, false);
+        parameters.add("x", 0, 200, 120, false);
+        parameters.add("y", 0, 200, 120, false);
+        parameters.add("z", 0, 150, 50, false);
         
         parameters.add("freq", 0, 5, 2, false);
         parameters.add("alt", 0, 100, 18, false);
