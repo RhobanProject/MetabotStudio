@@ -11,6 +11,7 @@ use <../parts/square_body_plate.scad>;
 //:Parameter Thickness
 module square_body_side(Width=40, LegsSpacing=90, Legs=4, Thickness=2.2)
 {
+    rotate([0,0,90]) {
     Length = LegsSpacing*(Legs/2-1)+24;
     translate([0,0,MotorDepth/2]) {
         square_body_plate(width=Width, length=Length, legsSpacing=LegsSpacing, legs=Legs, thickness=Thickness, double=true);
@@ -31,6 +32,7 @@ module square_body_side(Width=40, LegsSpacing=90, Legs=4, Thickness=2.2)
                 }
         }
     }
+}
 }
 
 square_body_side();
