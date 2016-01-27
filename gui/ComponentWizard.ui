@@ -177,6 +177,21 @@
              </widget>
             </item>
             <item>
+             <widget class="QGroupBox" name="range">
+              <property name="title">
+               <string>Range</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QLineEdit" name="min"/>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="max"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="parameters">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">

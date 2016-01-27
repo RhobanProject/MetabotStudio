@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 project(metabot)
 find_package (Threads)
 
-set (BULLET_DIR
-    "${CMAKE_SOURCE_DIR}/../bullet3/" CACHE STRING "bullet dir")
-
 OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
 
 OPTION(BUILD_UNIT_TESTS "Build Unit Tests" OFF)
@@ -72,12 +69,6 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/util/")
 include_directories("${PROJECT_SOURCE_DIR}/scad/")
 include_directories("${PROJECT_SOURCE_DIR}/sym/")
-include_directories("${PROJECT_SOURCE_DIR}/json/include")
-include_directories(${BULLET_INCLUDE_DIRS})
-add_subdirectory("${PROJECT_SOURCE_DIR}/json")
-
-include_directories("${BULLET_DIR}/src")
-add_subdirectory(${BULLET_DIR} bullet)
 
 add_library(symbolic sym/symbolicc++.cpp)
 set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSPLUS")
@@ -85,7 +76,7 @@ set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSP
 add_library(libmetabot ${ALL_SOURCES})
 
 target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} 
-    json 
+    jsoncpp
     symbolic 
     zmq
     )

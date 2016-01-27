@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
         parameters.add("freq", 0, 5, 2, false);
         parameters.add("alt", 0, 100, 18, false);
         parameters.add("dx", 0, 300, 60, false);
+        parameters.add("dy", 0, 300, 0, false);
         
         parameters.add("p1", 0, 1, 0.5);
         parameters.add("p2", 0, 1, 0.0);

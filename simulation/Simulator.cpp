@@ -164,6 +164,7 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.freq = parameters.get("freq");
     controller.alt = parameters.get("alt");
     controller.dx = parameters.get("dx");
+    controller.dy = parameters.get("dy");
     controller.phases[0] = parameters.get("p1");
     controller.phases[1] = parameters.get("p2");
     controller.phases[2] = parameters.get("p3");

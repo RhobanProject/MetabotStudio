@@ -42,15 +42,15 @@ FORMS    += MainWindow.ui \
 DEFINES += OPENGL
 CONFIG += c++11
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljson
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljson
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljsoncpp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljsoncpp
 else:symbian: LIBS += -llibmetabot -ljson
-else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/-L$$PWD/../metabot/build/json/lib -llibmetabot -ljson -lsymbolic
+else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/-L$$PWD/../metabot/build/json/lib -llibmetabot -ljsoncpp -lsymbolic
 unix: LIBS += -L$$PWD/../metabot/build/bullet/src/BulletCollision
 unix: LIBS += -L$$PWD/../metabot/build/bullet/src/BulletDynamics
 unix: LIBS += -L$$PWD/../metabot/build/bullet/src/LinearMath
 
-INCLUDEPATH += $$PWD/../ $$PWD/../../bullet3/src/ $$PWD/../metabot/ $$PWD/../metabot/json/include/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
+INCLUDEPATH += $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
 DEPENDPATH += $$PWD/../
 
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib $$PWD/../metabot/build/json/lib/libjson.a
@@ -58,7 +58,7 @@ else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/buil
 else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../metabot/build/liblibmetabot.a $$PWD/../metabot/build/json/lib/libjson.a
 
 win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath -lzmq
-mac: LIBS += -framework OpenGL -lzmq
+mac: LIBS += -framework OpenGL -lzmq -ljsoncpp
 else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath -lzmq
 
 RESOURCES += \

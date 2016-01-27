@@ -1,0 +1,9 @@
+{
+    "name": "rhobanproject/metabot",
+    "deps": [
+        "rhobandeps/bullet3",
+        "rhobandeps/jsoncpp", 
+        "rhobandeps/libcmaes",
+        "rhobandeps/libzmq"
+    ]
+}
