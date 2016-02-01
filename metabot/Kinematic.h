@@ -29,7 +29,9 @@ namespace Metabot
                 public:
                     void addMatrix(TransformMatrix matrix);
                     void addRotation(float alpha, int jointId, float min, float max);
+                    std::vector<double> alphas();
                     Point3 position();
+                    std::vector<Point3> positions(const std::vector<double> &alphas);
                     std::vector<ChainItem> items;
                     std::map<int, int> angles;
             };

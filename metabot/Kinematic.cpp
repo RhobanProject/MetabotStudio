@@ -21,6 +21,38 @@ namespace Metabot
         item.jointId = jointId;
         items.push_back(item);
     }
+    
+    std::vector<Point3> Kinematic::Chain::positions(const std::vector<double> &alphas)
+    {
+        std::vector<Point3> positions;
+        auto matrix = TransformMatrix::identity();
+        int k=0;
+
+        for (auto item : items) {
+            if (item.type == CHAIN_MATRIX) {
+                matrix = matrix.multiply(item.matrix);
+            } else if (item.type == CHAIN_ROTATION) {
+                matrix = matrix.multiply(TransformMatrix::rotationZ(alphas[k++]));
+            }
+        
+            positions.push_back(Point3(matrix.x(), matrix.y(), matrix.z()));
+        }
+
+        return positions;
+    }
+
+    std::vector<double> Kinematic::Chain::alphas()
+    {
+        std::vector<double> result;
+
+        for (auto item : items) {
+            if (item.type == CHAIN_ROTATION) {
+                result.push_back(item.alpha);
+            }
+        }
+
+        return result;
+    }
                     
     Point3 Kinematic::Chain::position()
     {
