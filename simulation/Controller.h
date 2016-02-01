@@ -16,6 +16,8 @@ class Controller : public Simulation::Controller
         struct Leg
         {
             Leg(Metabot::Kinematic::Tip tip);
+            void gotoXYZ_rand(float x, float y, float z);
+            void gotoXYZ_cmaes(float x, float y, float z);
             void gotoXYZ(float x, float y, float z);
             float error(std::vector<float> delta, float x, float y, float z);
 

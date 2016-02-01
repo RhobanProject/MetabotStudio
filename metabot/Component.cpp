@@ -86,16 +86,21 @@ namespace Metabot
     }
 
     void Component::computeKinematic(Kinematic &kinematic, Symbolic parent,
-            Kinematic::Chain chain, AnchorPoint *above)
+            Kinematic::Tip tip, AnchorPoint *above)
     {
         if (above != NULL) {
             auto alpha = kinematic.addJoint();
-            chain.addMatrix(above->transformationForward());
-            chain.addRotation(0.0, id, above->minimum, above->maximum);
-            chain.addMatrix(above->anchor->transformationBackward());
+
+            // Adding transformations to the kinematic chain
+            tip.addMatrix(above->transformationForward());
+            tip.addRotation(alpha, id, above->minimum, above->maximum);
+            tip.addMatrix(above->anchor->transformationBackward());
+
+            // Adding transformation to symbolic equations
             auto myTransformation = above->symbolicTransformation(alpha);
             myTransformation *= above->anchor->transformationBackward().toSymbolic();
 
+            // Adding transformation to the comments
             std::stringstream ss;
             ss << "/*" << std::endl;
             ss << above->component->id << "_to_" << id << std::endl;
@@ -110,22 +115,30 @@ namespace Metabot
 
         for (auto anchor : anchors) {
             if (anchor->above == true && anchor->anchor!=NULL) {
-                anchor->anchor->component->computeKinematic(kinematic, parent, chain, anchor);
+                // Recursive
+                anchor->anchor->component->computeKinematic(kinematic, parent, tip, anchor);
             }
         }
 
-        for (auto tip : tips) {
+        for (auto t : tips) {
+            // Adding the tip transformation to the comments
             std::stringstream ss;
             ss << "/*" << std::endl;
             ss << "Tip" << std::endl;
-            chain.addMatrix(tip);
-            auto sym = tip.toSymbolic();
+            tip.addMatrix(t);
+            auto sym = t.toSymbolic();
             ss << sym;
             ss << "*/" << std::endl << std::endl;
             kinematic.code += ss.str();
-            Symbolic matrix = parent*sym;
 
-            kinematic.addTip(matrix(0,3).simplify(), matrix(1,3).simplify(), matrix(2,3).simplify(), chain);
+            // Computing x, y and z for this tip
+            Symbolic matrix = parent*sym;
+            tip.x = matrix(0,3).simplify();
+            tip.y = matrix(1,3).simplify();
+            tip.z = matrix(2,3).simplify();
+
+            // Adding this tip
+            kinematic.addTip(tip);
         }
     }
 
@@ -359,7 +372,7 @@ namespace Metabot
         }
 
         // Creating rigid body
-//        if (above == NULL) dynamics.mass = 0;
+        // if (above == NULL) dynamics.mass = 0;
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
                 btVector3(dynamics.ixx/1e9, dynamics.iyy/1e9, dynamics.izz/1e9),
                 dynamics.com.multiply(1/1000.0).toBullet());

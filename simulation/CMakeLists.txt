@@ -23,6 +23,7 @@ set (SOURCES
     Function.cpp
     Simulation.cpp
     Simulator.cpp
+    Generator.cpp
 
     util.cpp
     kinematic.cpp

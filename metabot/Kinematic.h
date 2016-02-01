@@ -20,36 +20,34 @@ namespace Metabot
             {
                 int type;
                 TransformMatrix matrix;
+                std::string id;
                 float alpha;
                 float min, max;
                 int jointId;
             };
-            class Chain
+            class Tip
             {
                 public:
                     void addMatrix(TransformMatrix matrix);
-                    void addRotation(float alpha, int jointId, float min, float max);
+                    void addRotation(std::string id, int jointId, float min, float max);
                     std::vector<double> alphas();
                     Point3 position();
                     std::vector<Point3> positions(const std::vector<double> &alphas);
-                    std::vector<ChainItem> items;
+                    std::vector<ChainItem> chain;
                     std::map<int, int> angles;
+                    Symbolic x, y, z;
             };
 
             Kinematic();
             void display();
 
             std::string addJoint();
-            void addTip(Symbolic x, Symbolic y, Symbolic z, Chain chain);
+            void addTip(Tip tip);
 
             std::string code;
-            int alpha;
-            int tip;
+            int alphaId;
+            int tipId;
             
-            struct Tip { 
-                Symbolic x, y, z;
-                Chain chain;
-            };
             std::vector<Tip> tips;
     };
 }

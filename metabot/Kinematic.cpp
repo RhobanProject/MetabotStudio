@@ -3,32 +3,33 @@
 
 namespace Metabot
 {
-    void Kinematic::Chain::addMatrix(TransformMatrix matrix)
+    void Kinematic::Tip::addMatrix(TransformMatrix matrix)
     {
         Kinematic::ChainItem item;
         item.type = CHAIN_MATRIX;
         item.matrix = matrix;
-        items.push_back(item);
+        chain.push_back(item);
     }
 
-    void Kinematic::Chain::addRotation(float alpha, int jointId, float min, float max)
+    void Kinematic::Tip::addRotation(std::string id, int jointId, float min, float max)
     {
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
-        item.alpha = alpha;
+        item.alpha = 0.0;
+        item.id = id;
         item.min = min;
         item.max = max;
         item.jointId = jointId;
-        items.push_back(item);
+        chain.push_back(item);
     }
     
-    std::vector<Point3> Kinematic::Chain::positions(const std::vector<double> &alphas)
+    std::vector<Point3> Kinematic::Tip::positions(const std::vector<double> &alphas)
     {
         std::vector<Point3> positions;
         auto matrix = TransformMatrix::identity();
         int k=0;
 
-        for (auto item : items) {
+        for (auto item : chain) {
             if (item.type == CHAIN_MATRIX) {
                 matrix = matrix.multiply(item.matrix);
             } else if (item.type == CHAIN_ROTATION) {
@@ -41,11 +42,11 @@ namespace Metabot
         return positions;
     }
 
-    std::vector<double> Kinematic::Chain::alphas()
+    std::vector<double> Kinematic::Tip::alphas()
     {
         std::vector<double> result;
 
-        for (auto item : items) {
+        for (auto item : chain) {
             if (item.type == CHAIN_ROTATION) {
                 result.push_back(item.alpha);
             }
@@ -54,11 +55,11 @@ namespace Metabot
         return result;
     }
                     
-    Point3 Kinematic::Chain::position()
+    Point3 Kinematic::Tip::position()
     {
         auto matrix = TransformMatrix::identity();
 
-        for (auto item : items) {
+        for (auto item : chain) {
             if (item.type == CHAIN_MATRIX) {
                 matrix = matrix.multiply(item.matrix);
             } else if (item.type == CHAIN_ROTATION) {
@@ -70,7 +71,7 @@ namespace Metabot
     }
 
     Kinematic::Kinematic()
-        : alpha(0), tip(0)
+        : alphaId(0), tipId(0)
     {
     }
 
@@ -79,7 +80,7 @@ namespace Metabot
         std::cout << "class RobotKinematic {" << std::endl;
         std::cout << "public:" << std::endl;
         std::cout << "  struct Point3D { double x, y, z; };" << std::endl;
-        std::cout << "double alpha[" << alpha << "];" << std::endl;
+        std::cout << "double alpha[" << alphaId << "];" << std::endl;
         std::cout << code << std::endl;
         std::cout << "};" << std::endl;
     }
@@ -87,29 +88,24 @@ namespace Metabot
     std::string Kinematic::addJoint()
     {
         std::stringstream ss;
-        ss << "alpha[" << alpha << "]";
-        alpha++;
+        ss << "alpha[" << alphaId << "]";
+        alphaId++;
 
         return ss.str();
     }
 
-    void Kinematic::addTip(Symbolic x, Symbolic y, Symbolic z, Chain chain)
+    void Kinematic::addTip(Tip tip)
     {
         std::stringstream ss;
-        ss << "RobotKinematic::Point3D tip_" << (tip++) << "_position() {" << std::endl;
+        ss << "RobotKinematic::Point3D tip_" << (tipId++) << "_position() {" << std::endl;
         ss << "  RobotKinematic::Point3D point;" << std::endl;
-        ss << "  point.x = " << x << ";" << std::endl;
-        ss << "  point.y = " << y << ";" << std::endl;
-        ss << "  point.z = " << z << ";" << std::endl;
+        ss << "  point.x = " << tip.x << ";" << std::endl;
+        ss << "  point.y = " << tip.y << ";" << std::endl;
+        ss << "  point.z = " << tip.z << ";" << std::endl;
         ss << "  return point;" << std::endl;
         ss << "}" << std::endl <<  std::endl;
         code += ss.str();
 
-        Kinematic::Tip tip;
-        tip.x = x;
-        tip.y = y;
-        tip.z = z;
-        tip.chain = chain;
         tips.push_back(tip);
     }
 }

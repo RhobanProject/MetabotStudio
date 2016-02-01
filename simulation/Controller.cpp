@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include <math.h>
+#include <cmaes.h>
 #include <Component.h>
 #include "kinematic.h"
 #include "Controller.h"
+
+using namespace libcmaes;
             
 Controller::Leg::Leg(Metabot::Kinematic::Tip tip_)
     : tip(tip_)
 {
-    for (auto &item : tip.chain.items) {
+    for (auto &item : tip.chain) {
         item.alpha = 0.0;
     }
-    auto pos = tip.chain.position();
+    auto pos = tip.position();
     pos.z = 0;
     auto norm = pos.norm();
 
@@ -24,23 +27,79 @@ float Controller::Leg::error(std::vector<float> deltas, float x, float y, float 
 {
     auto tmp = tip;
     int k = 0;
-    for (auto &item : tmp.chain.items) {
+    for (auto &item : tmp.chain) {
         if (item.type == CHAIN_ROTATION) {
             item.alpha += deltas[k++];
             if (item.alpha < item.min) item.alpha = item.min+0.05;
             if (item.alpha > item.max) item.alpha = item.max-0.05;
         }
     }
-    auto pos = tmp.chain.position();
+    auto pos = tmp.position();
     // printf("Test: (%g %g) %g/%g %g/%g %g/%g\n", xVec, yVec, pos.x, x, pos.y, y, pos.z, z);
 
     return pow(pos.x-x, 2) + pow(pos.y-y, 2) + pow(pos.z-z, 2);
 }
-            
-void Controller::Leg::gotoXYZ(float x, float y, float z)
+
+void Controller::Leg::gotoXYZ_cmaes(float x, float y, float z)
+{
+    auto alphas = tip.alphas();
+    int dim = alphas.size();
+    CMAParameters<> cmaparams(alphas, -1);
+    // cmaparams.set_algo(BIPOP_CMAES);
+    // cmaparams.set_quiet(false);
+    Point3 target(x, y, z);
+
+    FitFunc kin = [this, &target](const double *x, const int N) {
+        std::vector<double> alphas;
+        for (int k=0; k<N; k++) {
+            if (x[k] < -M_PI) return 1e6;
+            if (x[k] > M_PI) return 1e6;
+            alphas.push_back(x[k]);
+        }
+        auto positions = this->tip.positions(alphas);
+
+        auto end = positions[positions.size()-1];
+        auto score = target.distance(end);
+
+        double p = 0;
+        for (int k=0; k<positions.size()-2; k++) {
+            auto &pos = positions[k];
+            pos.z += 100;
+            if (pos.z > 0) {
+                p += pos.z*pos.z;
+            }
+            auto Y = this->yVec*pos.y;
+            if (Y > 0) p += Y*Y;
+            auto X = this->xVec*pos.x;
+            if (X > 0) p += X*X;
+        }
+        score += 1e7/(1.0+p);
+
+        return score;
+    };
+
+    CMASolutions cmasols = cmaes<>(kin, cmaparams);
+    auto best = cmasols.get_best_seen_candidate();
+    auto X = best.get_x_ptr();
+    int k = 0;
+    //std::cout << "Candidate: ";
+    for (auto &item : tip.chain) {
+        if (item.type == CHAIN_ROTATION) {
+            //std::cout << X[k] << " ";
+            item.alpha = X[k++];
+        }
+    }
+    //std::cout << std::endl;
+    //std::cout << "Best candidate value: " << best.get_fvalue() << std::endl;
+    auto end = tip.position();
+    //printf("%g/%g, %g/%g, %g/%g\n",
+    //        end.x, target.x, end.y, target.y, end.z, target.z);
+}
+
+void Controller::Leg::gotoXYZ_rand(float x, float y, float z)
 {
     std::vector<float> deltas;
-    for (auto item : tip.chain.items) {
+    for (auto item : tip.chain) {
         if (item.type == CHAIN_ROTATION) {
             deltas.push_back(0.0);
         }
@@ -67,13 +126,18 @@ void Controller::Leg::gotoXYZ(float x, float y, float z)
     } while (newErr < err);
 
     int k = 0;
-    for (auto &item : tip.chain.items) {
+    for (auto &item : tip.chain) {
         if (item.type == CHAIN_ROTATION) {
             item.alpha += deltas[k++];
             if (item.alpha < item.min) item.alpha = item.min+0.05;
             if (item.alpha > item.max) item.alpha = item.max-0.05;
         }
     }
+}
+
+void Controller::Leg::gotoXYZ(float x, float y, float z)
+{
+    gotoXYZ_rand(x,y,z);
 }
 
 Controller::Controller(Metabot::Robot *robot, float l1, float l2, float l3)
@@ -196,7 +260,7 @@ double Controller::update(float dt, float t, Metabot::Robot &robot)
     }
 
     for (auto &leg : legs) {
-        for (auto &item : leg.tip.chain.items) {
+        for (auto &item : leg.tip.chain) {
             if (item.type == CHAIN_ROTATION) {
                 cost += fabs(robot.getComponentById(item.jointId)->setTarget(-item.alpha, dt));
             }
