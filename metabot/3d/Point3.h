@@ -15,6 +15,7 @@ namespace Metabot
             double x, y, z;
             Point3();
             Point3(double x, double y, double z);
+            double distance(const Point3 &other);
             double norm();
     };
 }

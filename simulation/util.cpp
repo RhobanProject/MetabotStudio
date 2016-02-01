@@ -1,3 +1,4 @@
+#include <random>
 #include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,4 +34,12 @@ std::string execute(std::string command)
     }   
     pclose(process);
     return result;
+}
+
+static std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+
+int uniform(int a, int b)
+{
+    std::uniform_int_distribution<int> distribution(a,b);
+    return distribution(generator);
 }

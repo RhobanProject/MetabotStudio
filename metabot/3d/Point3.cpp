@@ -16,4 +16,9 @@ namespace Metabot
     {
         return sqrt(x*x + y*y + z*z);
     }
+            
+    double Point3::distance(const Point3 &other)
+    {
+        return sqrt(pow(x-other.x, 2) + pow(y-other.y, 2) + pow(z-other.z, 2));
+    }
 }
