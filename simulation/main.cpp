@@ -15,6 +15,7 @@
 #include "verbose.h"
 #include <cmaes.h>
 #include "Simulator.h"
+#include "Generator.h"
 
 #include <iostream>
 
@@ -32,6 +33,7 @@ static void usage()
     std::cout << "  -d [duration]: simulation duration" << std::endl;
     std::cout << "  -e: enable external mode for simulation" << std::endl;
     std::cout << "  -N: no server mode" << std::endl;
+    std::cout << "  -G: generate a robot" << std::endl;
     exit(1);
 }
 
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
     std::string robotFile = "";
     std::string mode = "sim";
 
-    while ((index = getopt(argc, argv, "r:vtf:d:ceN")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceNG")) != -1) {
         switch (index) {
             case 'N':
                 noServer = true;
@@ -75,7 +77,20 @@ int main(int argc, char *argv[])
             case 'f':
                 factor = atof(optarg);
                 break;
+            case 'G':
+                mode = "generate";
+                break;
         }
+    }
+
+    if (mode == "generate") {
+        Generator generator(Backend::get("xl-320"));
+        auto robot = generator.generate();
+        auto json = robot->toJson();
+        Json::StyledWriter writer;
+        std::cout << writer.write(json) << std::endl;
+        delete robot;
+        return 0;
     }
 
     if (robotFile == "") {
