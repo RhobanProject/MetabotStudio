@@ -36,7 +36,7 @@ class World
         btFixedConstraint *createFixed(btRigidBody *A, btRigidBody *B, btTransform AFrame, btTransform BFrame);
 	
         // Creating a rigid body
-        btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0), btVector3 com = btVector3(0, 0, 0));
+        btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0), btTransform com = btTransform::getIdentity());
 
         Vect getGroundForce(bool friction=true);
         std::vector<std::pair<Vect, Vect>> getGroundCollisions();

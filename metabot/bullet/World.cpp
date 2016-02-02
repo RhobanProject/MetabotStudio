@@ -176,7 +176,7 @@ Vect World::getGroundForce(bool frictions)
     return total;
 }
 
-btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape,  btVector3 inertia, btVector3 com)
+btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape,  btVector3 inertia, btTransform com)
 {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
@@ -196,10 +196,9 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
 
 #define USE_MOTIONSTATE 1
 #ifdef USE_MOTIONSTATE
-    btTransform comTransform = btTransform::getIdentity();
-    comTransform.setOrigin(com);
-    startTransform = startTransform * comTransform;
-    btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform, comTransform);
+    //comTransform.getBasis().setEulerYPR(2.0, 3.0, 0.5);
+    // startTransform = startTransform * comTransform;
+    btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform, com);
 
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, inertia);
     cInfo.m_friction = friction;

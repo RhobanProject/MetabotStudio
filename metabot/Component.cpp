@@ -327,8 +327,8 @@ namespace Metabot
     {
         if (body != NULL) {
             btTransform trans;
-            auto state = body->getMotionState();
-            state->getWorldTransform(trans);
+            auto state = (btDefaultMotionState*)body->getMotionState();
+            trans = state->m_graphicsWorldTrans;
             return TransformMatrix::fromBullet(trans);
         } else {
             return TransformMatrix::identity();
@@ -345,6 +345,26 @@ namespace Metabot
 
     btRigidBody *Component::toBullet(World *world, AnchorPoint *above, TransformMatrix matrix)
     {
+        // Computing com matrix
+        btMatrix3x3 inertia(
+                dynamics.ixx/1e9, dynamics.ixy/1e9, dynamics.ixz/1e9,
+                dynamics.ixy/1e9, dynamics.iyy/1e9, dynamics.iyz/1e9,
+                dynamics.ixz/1e9, dynamics.iyz/1e9, dynamics.izz/1e9
+        );
+        btMatrix3x3 rot;
+
+        // Getting inertia principal axes
+        inertia.diagonalize(rot, 0.00001, 20);
+        auto nInertia = inertia*rot;
+        btVector3 localInertia(
+                nInertia[0][0], nInertia[1][1], nInertia[2][2]
+        );
+
+        // Center of mass transformation
+        com = btTransform::getIdentity();
+        com.setOrigin(dynamics.com.multiply(1/1000.0).toBullet());
+        com.setBasis(rot);
+
         // Creating shapes
         auto *compound = world->createCompound();
         for (auto shape : shapes) {
@@ -367,15 +387,16 @@ namespace Metabot
                     matrix = matrix.multiply(TransformMatrix::rotationX(M_PI/2));
                 }
                 colShape->setMargin(0.0);
-                compound->addChildShape(matrix.toBullet(), colShape);
+                auto trans = matrix.toBullet();
+                trans = com.inverse()*trans;
+                compound->addChildShape(trans, colShape);
             }
         }
 
         // Creating rigid body
         // if (above == NULL) dynamics.mass = 0;
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
-                btVector3(dynamics.ixx/1e9, dynamics.iyy/1e9, dynamics.izz/1e9),
-                dynamics.com.multiply(1/1000.0).toBullet());
+                localInertia, com.inverse());
         
         // Child
         for (auto anchor : anchors) {
@@ -390,7 +411,8 @@ namespace Metabot
                 worldToChild = worldToChild.multiply(anchor->anchor->transformationBackward());
 
                 // Recursion
-                auto child = anchor->anchor->component->toBullet(world, anchor->anchor, worldToChild);
+                auto childComponent = anchor->anchor->component;
+                auto child = childComponent->toBullet(world, anchor->anchor, worldToChild);
                 
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
@@ -418,20 +440,20 @@ namespace Metabot
 
                 //////////////// MODE CONE
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy,
-                        anchor->transformationForward().toBullet(),
+                        com.inverse()*anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
                     );
         
                 // Creating hinge
                 anchor->anchor->component->hinge = world->createHinge(body, dummy,
-                        anchor->transformationForward().toBullet(),
+                        com.inverse()*anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
                         );
             
                 // Creating cone
                 auto cone = world->createCone(dummy, child,
                         rot.toBullet(),
-                        anchor->anchor->transformationForward().multiply(rot).toBullet()
+                        childComponent->com.inverse()*anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
                 cone->setLimit(0.03, 0.04, 0.02);
                 // cone->setLimit(0.0, 0.0, 0.0);
