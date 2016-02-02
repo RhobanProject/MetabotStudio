@@ -17,7 +17,7 @@
                            "0" : {
                               "component" : {
                                  "anchors" : {},
-                                 "component" : "side_leg",
+                                 "component" : "bottom_leg",
                                  "parameters" : {
                                     "FixationAngle" : "$A",
                                     "SizeA" : "60",
@@ -76,7 +76,7 @@
                            "0" : {
                               "component" : {
                                  "anchors" : {},
-                                 "component" : "side_leg",
+                                 "component" : "bottom_leg",
                                  "parameters" : {
                                     "FixationAngle" : "$A",
                                     "SizeA" : "60",
@@ -135,7 +135,7 @@
                            "0" : {
                               "component" : {
                                  "anchors" : {},
-                                 "component" : "side_leg",
+                                 "component" : "bottom_leg",
                                  "parameters" : {
                                     "FixationAngle" : "$A",
                                     "SizeA" : "60",
@@ -194,7 +194,7 @@
                            "0" : {
                               "component" : {
                                  "anchors" : {},
-                                 "component" : "side_leg",
+                                 "component" : "bottom_leg",
                                  "parameters" : {
                                     "FixationAngle" : "$A",
                                     "SizeA" : "60",
