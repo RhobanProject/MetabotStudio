@@ -2,7 +2,7 @@ use <../parts/leg.scad>;
 use <../models/motor_arm.scad>;
 
 //:Component "Side leg"
-//:Description "Leg on motor bottom"
+//:Description "Leg on motor side"
 //:Parameter SizeA "Size of the first part"
 //:Parameter SizeB "Size of the second part"
 //:Parameter SizeC "Size of the third part"
@@ -16,8 +16,8 @@ module side_leg(SizeA=60, SizeB=20, SizeC=20, SizeBottom=10,
     //:Anchor motor male
     motorArm();
 
-    translate([0,-(24),0]) {
-    rotate([0,-90,FixationAngle]) {
+    translate([0,-(18),0]) {
+    rotate([0,0,FixationAngle]) {
 	leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "side", FixationAngle, Thickness);
     }
     }
