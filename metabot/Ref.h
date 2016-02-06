@@ -16,6 +16,7 @@ namespace Metabot
     {
         public:
             Ref(Json::Value json, TransformMatrix matrix, int default_defines=0);
+            virtual ~Ref();
 
             /**
              * This compiles the part, calling the according method on the

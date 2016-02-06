@@ -84,12 +84,14 @@ int main(int argc, char *argv[])
     }
 
     if (mode == "generate") {
-        Generator generator(Backend::get("xl-320"));
+        auto backend = Backend::get("xl-320");
+        Generator generator(backend);
         auto robot = generator.generate();
         auto json = robot->toJson();
         Json::StyledWriter writer;
         std::cout << writer.write(json) << std::endl;
         delete robot;
+
         return 0;
     }
 
@@ -99,15 +101,15 @@ int main(int argc, char *argv[])
 
     try { 
         Simulator::Parameters parameters;
-        parameters.add("L1", 20, 250, 50, false);
-        parameters.add("L2", 50, 250, 70, false);
-        parameters.add("L3", 50, 250, 70, false);
+        parameters.add("L1", 20, 250, 50);
+        parameters.add("L2", 50, 250, 70);
+        parameters.add("L3", 50, 250, 70);
 
-        parameters.add("x", 0, 200, 120, false);
-        parameters.add("y", 0, 200, 120, false);
-        parameters.add("z", 0, 150, 50, false);
+        parameters.add("x", 0, 200, 120);
+        parameters.add("y", 0, 200, 120);
+        parameters.add("z", 0, 150, 50);
         
-        parameters.add("freq", 0, 5, 2, false);
+        parameters.add("freq", 0, 5, 2);
         parameters.add("alt", 0, 100, 18, false);
         parameters.add("dx", 0, 300, 60, false);
         parameters.add("dy", 0, 300, 0, false);

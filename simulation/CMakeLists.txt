@@ -18,6 +18,10 @@ include_directories("${BULLET_DIR}/src")
 include_directories(${BULLET_INCLUDE_DIRS})
 include_directories("${EIGEN3_INCLUDE_DIR}")
 
+if (USE_DOUBLE_PRECISION)
+add_definitions( -DBT_USE_DOUBLE_PRECISION)
+endif (USE_DOUBLE_PRECISION)
+
 set (SOURCES
     Controller.cpp
     Function.cpp

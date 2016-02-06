@@ -8,12 +8,12 @@
 {
     auto all = backend->getModules();
 
-    for (auto module : all) {
-        auto name = module.getName();
-        auto instance = backend->instanciate(name);
+    for (auto &module : all) {
+        std::string name = module->getName();
+        Metabot::Component *instance = backend->instanciate(name);
         instance->compile();
-        auto tipsSize = instance->tips.size();
-        auto anchorsSize = instance->anchors.size();
+        size_type tipsSize = instance->tips.size();
+        size_type anchorsSize = instance->anchors.size();
 
         if (tipsSize == 1) {
             for (auto anchor : instance->anchors) {
@@ -28,6 +28,14 @@
         } else {
             delete instance;
         }
+        components.push_back(instance);
+    }
+}
+
+Generator::~Generator()
+{
+    for (auto component : components) {
+        delete component;
     }
 }
 
@@ -80,7 +88,8 @@ Metabot::Robot *Generator::generate()
     robot->root = bodies[uniform(0, bodies.size()-1)]->clone();
 
     // Getting all robot anchors
-    std::vector<Metabot::AnchorPoint *> anchors = robot->root->anchors;
+    std::vector<Metabot::AnchorPoint *> anchors;
+    anchors = robot->root->anchors;
 
     // Adding segments
     anchors = add(anchors, false);

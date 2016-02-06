@@ -38,12 +38,12 @@ namespace Metabot
 
             Cache *cache;
 
-            std::vector<Module> getModules();
-            Module &getModule(std::string name);
+            std::vector<Module*> getModules();
+            Module *getModule(std::string name);
             Model &getModel(std::string name);
             std::map<std::string, Model> models;
 
         protected:
-            std::map<std::string, Module> modules;
+            std::map<std::string, Module*> modules;
     };
 }

@@ -20,10 +20,17 @@
 namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
-        : backend(backend_), module(module_), highlight(false), 
-        hover(false), main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
-        body(NULL), hinge(NULL), posHinge(NULL),
-        maxSpeed(4*M_PI), maxTorque(0.5)
+        : 
+        main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
+        backend(backend_), 
+        module(module_), 
+        highlight(false), 
+        hover(false), 
+        body(NULL),
+        hinge(NULL),
+        posHinge(NULL),
+        maxSpeed(4*M_PI),
+        maxTorque(0.5)
     {
         // std::cout << "Instanciating a component, type " << module->getName() << std::endl;
         for (auto param : module->getParameters()) {

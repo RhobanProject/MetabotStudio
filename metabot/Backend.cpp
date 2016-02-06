@@ -49,14 +49,17 @@ namespace Metabot
         if (cache != NULL) {
             delete cache;
         }
+        for (auto module : modules) {
+            delete module.second;
+        }
     }
             
     void Backend::buildCache()
     {
         for (auto module : modules) {
-            if (module.second.getType() == "component") {
+            if (module.second->getType() == "component") {
                 // Creating component
-                auto component = instanciate(module.second.getName());
+                auto component = instanciate(module.first);
                 component->compile();
                 delete component;
             }
@@ -106,23 +109,25 @@ namespace Metabot
     {
         auto scadModules = SCAD::load(path);
 
-        for (auto module : scadModules) {
-            module.setBackend(this);
-            modules[module.getName()] = module;
+        for (auto &module : scadModules) {
+            auto mod = new Module;
+            *mod = module;
+            mod->setBackend(this);
+            modules[module.getName()] = mod;
         }
     }
             
-    Module &Backend::getModule(std::string name)
+    Module *Backend::getModule(std::string name)
     {
         return modules[name];
     }
 
-    std::vector<Module> Backend::getModules()
+    std::vector<Module*> Backend::getModules()
     {
-        std::vector<Module> allModules;
+        std::vector<Module*> allModules;
 
-        for (auto entry : modules) {
-            allModules.push_back(entry.second);
+        for (auto module : modules) {
+            allModules.push_back(module.second);
         }
 
         return allModules;
@@ -132,7 +137,7 @@ namespace Metabot
     {
         if (!models.count(name)) {
             if (modules.count(name)) {
-                Model model = loadModelSTL_string(getModule(name).openscad("stl"));
+                Model model = loadModelSTL_string(getModule(name)->openscad("stl"));
                 models[name] = model;
             } else {
                 models[name] = Model();
@@ -145,8 +150,7 @@ namespace Metabot
     Component *Backend::instanciate(std::string name)
     {
         if (modules.count(name)) {
-            Module *module = &modules[name];
-            Component *component = new Component(this, module);
+            Component *component = new Component(this, modules[name]);
 
             return component;
         }

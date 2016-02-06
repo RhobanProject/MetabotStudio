@@ -33,6 +33,10 @@ namespace Metabot
         }
     }
 
+    Ref::~Ref()
+    {
+    }
+
     void Ref::compile(Backend *backend, int defines)
     {
         model = doCompile(backend, defines);
@@ -44,18 +48,18 @@ namespace Metabot
         auto module = backend->getModule(name);
         auto params = parameters;
 
-        r = module.r;
-        g = module.g;
-        b = module.b;
-        mass = module.mass;
-        density = module.density;
+        r = module->r;
+        g = module->g;
+        b = module->b;
+        mass = module->mass;
+        density = module->density;
 
-        if (print && module.hasParameter("print")) {
+        if (print && module->hasParameter("print")) {
             std::cout << "[Debug] Passing print to true for " << name << std::endl;
             params.set("print", "true");
         }
 
-        std::string stl = module.openscad("stl", params, defines);
+        std::string stl = module->openscad("stl", params, defines);
         return loadModelSTL_string(stl);
     }
 
@@ -71,7 +75,7 @@ namespace Metabot
             // std::cout << std::endl;
 
             return dynamics.serialize();
-        }, module.getFilename());
+        }, module->getFilename());
 
         dynamics = Dynamics::unserialize(data);
     }
