@@ -429,15 +429,15 @@ namespace Metabot
                 
 #if 0
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *child,
-                        anchor->transformationForward().toBullet(),
-                        anchor->anchor->transformationForward().toBullet()
+                        com.inverse()*anchor->transformationForward().toBullet(),
+                        childComponent()->com.inverse()*anchor->anchor->transformationForward().toBullet()
                     );
               
                 /////////////// MODE SIMPLE
                 // Creating hinge
                 anchor->anchor->component->hinge = world->createHinge(body, child,
-                        anchor->transformationForward().toBullet(),
-                        anchor->anchor->transformationForward().toBullet()
+                        com.inverse()*anchor->transformationForward().toBullet(),
+                        childComponent->com.inverse()*anchor->anchor->transformationForward().toBullet()
                         );
 #endif
                 
