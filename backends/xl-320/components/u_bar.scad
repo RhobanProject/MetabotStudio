@@ -28,7 +28,7 @@ module u_bar(BarLength=60, BarRadius=3, BarBottomRadius=10, UHeight=25,
                     screwsCount=ScrewsCount, thickness=Thickness
                );
             translate([0,0,Thickness+BarLength]) {
-                sphere(r=BarRadius);
+                sphere(r=BarRadius*2);
                 //:Tip
             }
         }
