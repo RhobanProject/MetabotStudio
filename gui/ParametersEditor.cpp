@@ -1,6 +1,6 @@
 #include "ParametersEditor.h"
 #include "ui_ParametersEditor.h"
-#include "Values.h"
+#include "Parameters.h"
 #include "MainWindow.h"
 
 ParametersEditor::ParametersEditor(MainWindow *main_, Metabot::Robot *robot_, QWidget *parent) :
@@ -11,7 +11,7 @@ ParametersEditor::ParametersEditor(MainWindow *main_, Metabot::Robot *robot_, QW
 
     for (auto entry : robot->parameters) {
         auto value = new ValueWidget(this);
-        value->set(QString::fromStdString(entry.first), QString::fromStdString(entry.second));
+        value->set(QString::fromStdString(entry.first), entry.second);
         addValue(value);
     }
 }
@@ -33,12 +33,12 @@ void ParametersEditor::addValue(ValueWidget *value)
 
 void ParametersEditor::update()
 {
-    robot->parameters = Metabot::Values();
+    robot->parameters = Metabot::Parameters();
     for (auto value : values) {
         auto key = value->getKey();
-        auto v = value->getValue();
+        auto p = value->getValue();
         if (key != "") {
-            robot->parameters.set(key.toStdString(), v.toStdString());
+            robot->parameters.set(key.toStdString(), p);
         }
     }
 }

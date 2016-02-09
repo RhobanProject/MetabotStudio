@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
+#include <Parameters.h>
 
 class ValueWidget : public QWidget
 {
@@ -12,12 +13,12 @@ public:
     explicit ValueWidget(QWidget *parent = 0);
     virtual ~ValueWidget();
 
-    void set(QString key, QString value);
+    void set(QString key, Metabot::Parameter parameter);
     QString getKey();
-    QString getValue();
+    Metabot::Parameter getValue();
 
 protected:
-    QLineEdit key, value;
+    QLineEdit key, value, min, max;
 
 signals:
 

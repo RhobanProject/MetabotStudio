@@ -44,8 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer->setRobot(robot);
 
     // Debugging auto-open
-    // filename = "/home/gregwar/Metabot/robots/remi.robot";
-    filename = "/home/gregwar/Metabot/robots/metabot.robot";
+    filename = "/home/gregwar/MetabotStudio/robots/metabot.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
     robot->computeDynamics();

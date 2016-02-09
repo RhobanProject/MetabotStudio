@@ -23,7 +23,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>Parameters</string>
+      <string>Parameters (name, value, min, max)</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>

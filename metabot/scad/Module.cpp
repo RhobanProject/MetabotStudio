@@ -97,7 +97,7 @@ namespace Metabot
             
     Parameter &Module::getParameter(std::string pname)
     {
-        return parameters.get(pname);
+        return parameters.getParameter(pname);
     }
 
     std::string Module::openscad(std::string format, Parameters parameters, int defines)

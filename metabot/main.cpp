@@ -47,7 +47,7 @@ void usage()
     exit(EXIT_FAILURE);
 }
 
-Values defines;
+Parameters defines;
 
 void needRobot()
 {

@@ -14,7 +14,7 @@ ParameterWidget::ParameterWidget(Metabot::Component *instance_,
     label(NULL), line(NULL), checkbox(NULL)
 {
     auto param = instance->module->getParameter(name);
-    std::string value = instance->getValue(param.name);
+    std::string value = instance->get(param.name);
 
     label = new QLabel;
     label->setText(QString::fromStdString(param.description));

@@ -34,7 +34,7 @@ namespace Metabot
     {
         // std::cout << "Instanciating a component, type " << module->getName() << std::endl;
         for (auto param : module->getParameters()) {
-            values[param.second.name] = param.second.getValue();
+            parameters.set(param.second.name, param.second.getValue());
         }
     }
 
@@ -49,13 +49,13 @@ namespace Metabot
         if (posHinge) {
             delete posHinge;
         }
-        values.clear();
+        parameters.clear();
     }
 
     Component *Component::clone()
     {
         Component *component = new Component(backend, module);
-        component->values = values;
+        component->parameters = parameters;
 
         int index = 0;
         for (auto anchor : anchors) {
@@ -626,12 +626,12 @@ namespace Metabot
 
     std::string Component::get(std::string name)
     {
-        return values[name];
+        return parameters.get(name, "");
     }
 
     void Component::set(std::string name, std::string value)
     {
-        values[name] = value;
+        parameters.set(name, value);
     }
 
     void Component::update(Robot *robot)
@@ -661,10 +661,10 @@ namespace Metabot
         }
 
         // Creating CSG 
-        std::string csg = module->openscad("csg", parameters(robot));
+        std::string csg = module->openscad("csg", compiledParameters(robot));
         // Main reference
         main.name = module->getName();
-        main.parameters = parameters(robot);
+        main.parameters = compiledParameters(robot);
         // Parsing the CSG document
         CSG *document = CSG::parse(csg);
         anchors = document->anchors;
@@ -675,7 +675,7 @@ namespace Metabot
         delete document;
 
         // Collision CSG & STL
-        std::string collisionsCsg = module->openscad("csg", parameters(robot), DEFINE_COLLISIONS);
+        std::string collisionsCsg = module->openscad("csg", compiledParameters(robot), DEFINE_COLLISIONS);
         collisions = loadModelSTL_string(stl(robot, true));
         CSG *collisionsDocument = CSG::parse(collisionsCsg);
         shapes = collisionsDocument->shapes;
@@ -802,26 +802,17 @@ namespace Metabot
         return NULL;
     }
 
-    std::string Component::getValue(std::string name)
-    {
-        if (values.count(name)) {
-            return values[name];
-        }
-
-        return "";
-    }
-
-    Parameters Component::parameters(Robot *robot)
+    Parameters Component::compiledParameters(Robot *robot)
     {
         Parameters params = module->getParameters();
 
-        for (auto entry : values) {
+        for (auto entry : parameters) {
             auto key = entry.first;
-            auto value = entry.second;
-            if (value.size()>0 && value[0]=='$' && robot!=NULL) {
-                params.update(key, robot->getValue(value.substr(1)));
+            auto param = entry.second;
+            if (param.value.size()>0 && param.value[0]=='$' && robot!=NULL) {
+                params.update(key, robot->getValue(param.value.substr(1)));
             } else {
-                params.update(key, value);
+                params.update(key, param.value);
             }
         }
 
@@ -831,7 +822,7 @@ namespace Metabot
     std::string Component::stl(Robot *robot, bool drawCollisions)
     {
         int defines = drawCollisions ? DEFINE_COLLISIONS : DEFINE_NO_MODELS;
-        return module->openscad("stl", parameters(robot), defines);
+        return module->openscad("stl", compiledParameters(robot), defines);
     }
 
     AnchorPoint *Component::getAnchor(int id)
@@ -847,7 +838,7 @@ namespace Metabot
 
     void Component::parametersFromJson(Json::Value json)
     {
-        values = Values::fromJson(json);
+        parameters = Parameters::fromJson(json);
     }
 
     Json::Value Component::toJson()
@@ -855,7 +846,7 @@ namespace Metabot
         Json::Value json(Json::objectValue);
 
         json["component"] = module->getName();
-        json["parameters"] = values.toJson();
+        json["parameters"] = parameters.toJson();
         json["anchors"] = Json::Value(Json::objectValue);
 
         for (auto anchor : anchors) {

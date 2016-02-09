@@ -8,7 +8,7 @@
 #include "Vect.h"
 #include "Dynamics.h"
 #include "scad/BOM.h"
-#include "Values.h"
+#include "Parameters.h"
 #include "Kinematic.h"
 #include "bullet/World.h"
 
@@ -45,8 +45,8 @@ namespace Metabot
             AnchorPoint *getHoveredAnchor(int id);
 
             void clear();
-            void fromJson(Json::Value json, Values values = Values());
-            void loadFromFile(std::string filename, Values values = Values());
+            void fromJson(Json::Value json, Parameters parameters = Parameters());
+            void loadFromFile(std::string filename, Parameters parameters = Parameters());
             Json::Value toJson();
             void saveToFile(std::string filename);
             void number();
@@ -79,7 +79,7 @@ namespace Metabot
             TransformMatrix getState();
 
             Component *root;
-            Values parameters;
+            Parameters parameters;
             Backend *backend;
 
             Refs getParts();

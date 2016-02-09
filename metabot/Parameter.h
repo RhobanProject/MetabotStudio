@@ -18,5 +18,6 @@ namespace Metabot
             std::string name;
             std::string value;
             std::string description;
+            std::string min, max;
     };
 }

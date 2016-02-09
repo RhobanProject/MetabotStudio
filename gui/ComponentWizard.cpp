@@ -70,16 +70,16 @@ void ComponentWizard::fill()
     auto modules = robot->backend->getModules();
 
     for (auto module : modules) {
-        if (module.getType() == "component") {
-            auto *instance = robot->backend->instanciate(module.getName());
+        if (module->getType() == "component") {
+            auto *instance = robot->backend->instanciate(module->getName());
             instance->compile();
 
             // If we're working on the robot root, any instance is OK
             if (anchor == NULL || instance->isCompatible(anchor)) {
                 QListWidgetItem *item = new QListWidgetItem();
-                item->setData(ROLE_COMPONENT, QString::fromStdString(module.getName()));
+                item->setData(ROLE_COMPONENT, QString::fromStdString(module->getName()));
                 ComponentItem *widget = new ComponentItem();
-                widget->setInfo(module.getPrettyName(), module.getDescription());
+                widget->setInfo(module->getPrettyName(), module->getDescription());
                 item->setSizeHint(widget->size());
                 ui->listWidget->addItem(item);
                 ui->listWidget->setItemWidget(item, widget);
@@ -274,7 +274,7 @@ void ComponentWizard::on_generate_clicked()
     instance = robot->backend->instanciate(name);
 
     for (auto parameter : parameters) {
-        instance->values[parameter->name] = parameter->getValue();
+        instance->parameters.set(parameter->name, parameter->getValue());
     }
 
     instance->compile(robot);

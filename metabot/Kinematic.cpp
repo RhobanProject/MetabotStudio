@@ -15,7 +15,6 @@ namespace Metabot
     {
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
-        item.alpha = 0.0;
         item.id = id;
         item.min = min;
         item.max = max;
@@ -41,29 +40,22 @@ namespace Metabot
 
         return positions;
     }
-
-    std::vector<double> Kinematic::Tip::alphas()
-    {
-        std::vector<double> result;
-
-        for (auto item : chain) {
-            if (item.type == CHAIN_ROTATION) {
-                result.push_back(item.alpha);
-            }
-        }
-
-        return result;
-    }
                     
-    Point3 Kinematic::Tip::position()
+    Point3 Kinematic::Tip::position(std::vector<double> &alphas)
     {
         auto matrix = TransformMatrix::identity();
 
-        for (auto item : chain) {
+        int k = 0;
+        for (auto &item : chain) {
             if (item.type == CHAIN_MATRIX) {
                 matrix = matrix.multiply(item.matrix);
             } else if (item.type == CHAIN_ROTATION) {
-                matrix = matrix.multiply(TransformMatrix::rotationZ(item.alpha));
+                auto alpha = alphas[k];
+                if (alpha < item.min) alpha = item.min+0.05;
+                if (alpha > item.max) alpha = item.max-0.05;
+                matrix = matrix.multiply(TransformMatrix::rotationZ(alpha));
+                alphas[k] = alpha;
+                k++;
             }
         }
 

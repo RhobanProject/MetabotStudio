@@ -193,7 +193,7 @@ namespace Metabot
         root = NULL;
     }
             
-    void Robot::loadFromFile(std::string filename, Values defines)
+    void Robot::loadFromFile(std::string filename, Parameters defines)
     {
         if (file_exists(filename)) {
             std::string data = file_get_contents(filename);
@@ -210,7 +210,7 @@ namespace Metabot
         }
     }
 
-    void Robot::fromJson(Json::Value json, Values defines)
+    void Robot::fromJson(Json::Value json, Parameters defines)
     {
         if (!json.isObject() || !json.isMember("backend") || !json["backend"].isString()) {
             std::stringstream ss;
@@ -221,10 +221,8 @@ namespace Metabot
         backend = Backend::get(json["backend"].asString());
 
         if (json.isMember("parameters")) {
-            parameters = Values::fromJson(json["parameters"]);
-            for (auto entry : defines) {
-                parameters.set(entry.first, entry.second);
-            }
+            parameters = Parameters::fromJson(json["parameters"]);
+            parameters.merge(defines);
         }
 
         if (!json.isMember("tree")) {

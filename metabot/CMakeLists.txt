@@ -56,7 +56,6 @@ set(ALL_SOURCES
     Ref.cpp
     Robot.cpp
     TransformMatrix.cpp
-    Values.cpp
     Vect.cpp
     Voxels.cpp
     )

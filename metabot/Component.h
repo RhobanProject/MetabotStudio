@@ -9,7 +9,7 @@
 #include <string>
 #include <3d/Model.h>
 #include <json/json.h>
-#include "Values.h"
+#include "Parameters.h"
 #include "scad/BOM.h"
 #include "Ref.h"
 #include "scad/Shape.h"
@@ -100,7 +100,7 @@ namespace Metabot
 
             std::string getValue(std::string name);
             std::string stl(Robot *robot=NULL, bool drawCollisions=false);
-            Parameters parameters(Robot *robot);
+            Parameters compiledParameters(Robot *robot);
 
             // Backend and module
             Backend *backend;
@@ -112,7 +112,7 @@ namespace Metabot
             
             AnchorPoint *getAnchor(int id);
 
-            Values values;
+            Parameters parameters;
             Component *component;
 
             std::vector<Ref*> refs();
