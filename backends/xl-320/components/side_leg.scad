@@ -17,7 +17,7 @@ module side_leg(SizeA=60, SizeB=20, SizeC=20, SizeBottom=10,
     motorArm();
 
     translate([0,-(18),0]) {
-    rotate([0,0,FixationAngle]) {
+    rotate([-FixationAngle,0,0]) {
 	leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "side", FixationAngle, Thickness);
     }
     }

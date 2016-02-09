@@ -17,7 +17,7 @@ module bottom_leg(SizeA=20, SizeB=10, SizeC=20, SizeBottom=10,
     motorArm();
 
     translate([0,-(24),0]) {
-    rotate([0,90,90+FixationAngle]) {
+    rotate([0,90,90-FixationAngle]) {
 	leg(SizeA, SizeB, SizeC, SizeBottom, SizeTop, "bottom", FixationAngle, Thickness, holesPosition=5);
     }
     }
