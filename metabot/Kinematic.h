@@ -23,12 +23,13 @@ namespace Metabot
                 std::string id;
                 float min, max;
                 int jointId;
+                int sign;
             };
             class Tip
             {
                 public:
                     void addMatrix(TransformMatrix matrix);
-                    void addRotation(std::string id, int jointId, float min, float max);
+                    void addRotation(std::string id, int jointId, float min, float max, int sign);
                     Point3 position(std::vector<double> &alphas);
                     std::vector<Point3> positions(const std::vector<double> &alphas);
                     std::vector<ChainItem> chain;

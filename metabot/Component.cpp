@@ -100,7 +100,7 @@ namespace Metabot
 
             // Adding transformations to the kinematic chain
             tip.addMatrix(above->transformationForward());
-            tip.addRotation(alpha, id, above->minimum, above->maximum);
+            tip.addRotation(alpha, id, above->minimum, above->maximum, above->sign());
             tip.addMatrix(above->anchor->transformationBackward());
 
             // Adding transformation to symbolic equations

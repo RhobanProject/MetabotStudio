@@ -11,13 +11,18 @@ namespace Metabot
         chain.push_back(item);
     }
 
-    void Kinematic::Tip::addRotation(std::string id, int jointId, float min, float max)
+    void Kinematic::Tip::addRotation(std::string id, int jointId, float min, float max, int sign)
     {
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
         item.id = id;
-        item.min = min;
-        item.max = max;
+        if (sign == 1) {
+            item.min = min;
+            item.max = max;
+        } else {
+            item.min = -max;
+            item.max = -min;
+        }
         item.jointId = jointId;
         chain.push_back(item);
     }
