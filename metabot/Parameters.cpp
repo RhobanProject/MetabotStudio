@@ -12,6 +12,13 @@ namespace Metabot
         getParameter(name).value = value;
     }
             
+    void Parameters::set(std::string name, double value)
+    {
+        std::stringstream ss;
+        ss << value;
+        set(name, ss.str());
+    }
+            
     void Parameters::set(std::string name, Parameter parameter)
     {
         (*this)[name] = parameter;

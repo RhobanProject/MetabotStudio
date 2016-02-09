@@ -35,7 +35,7 @@ namespace Metabot
     {
         return value.size() && value[0] == '"';
     }
-            
+
     std::string Parameter::getValue()
     {
         if (isString()) {
@@ -43,5 +43,20 @@ namespace Metabot
         } else {
             return value;
         }
+    }
+
+    double Parameter::getNumericValue()
+    {
+        return atof(value.c_str());
+    }
+
+    double Parameter::getMin()
+    {
+        return atof(min.c_str());
+    }
+
+    double Parameter::getMax()
+    {
+        return atof(max.c_str());
     }
 }

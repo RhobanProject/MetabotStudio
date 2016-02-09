@@ -15,6 +15,10 @@ namespace Metabot
             void updateValue(std::string value);
             std::string getValue();
 
+            double getNumericValue();
+            double getMin();
+            double getMax();
+
             std::string name;
             std::string value;
             std::string description;

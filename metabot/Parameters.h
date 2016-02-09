@@ -13,6 +13,7 @@ namespace Metabot
             Parameters();
 
             void set(std::string name, std::string value);
+            void set(std::string name, double value);
             void set(std::string name, Parameter parameter);
             void update(std::string name, std::string value);
             Parameter &getParameter(std::string name);
