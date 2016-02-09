@@ -101,23 +101,32 @@ int main(int argc, char *argv[])
 
     try { 
         Simulator::Parameters parameters;
-        parameters.add("L1", 20, 250, 50);
-        parameters.add("L2", 50, 250, 70);
-        parameters.add("L3", 50, 250, 70);
 
-        parameters.add("x", 0, 200, 120);
-        parameters.add("y", 0, 200, 120);
-        parameters.add("z", 0, 150, 50);
-        
-        parameters.add("freq", 0, 5, 2);
+        // Robot parameters
+        Metabot::Robot robot;
+        robot.loadFromFile(robotFile);
+        for (auto entry : robot.parameters) {
+            auto param = entry.second;
+            parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue(), false);
+        }
+
+        // Posture parameters
+        parameters.add("x", 0, 200, 120, false);
+        parameters.add("y", 0, 200, 120, false);
+        parameters.add("z", 0, 150, 50, false);
+       
+        // Controller parameters
+        parameters.add("freq", 0, 5, 2, false);
         parameters.add("alt", 0, 100, 18, false);
         parameters.add("dx", 0, 300, 60, false);
         parameters.add("dy", 0, 300, 0, false);
         
-        parameters.add("p1", 0, 1, 0.5);
-        parameters.add("p2", 0, 1, 0.0);
-        parameters.add("p3", 0, 1, 0.5);
-        parameters.add("p4", 0, 1, 0.0);
+        // Leg phases
+        for (int k=1; k<=robot.tips(); k++) {
+            std::stringstream p;
+            p << "p" << k;
+            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5, false);
+        }
         
         parameters.add("friction", 0, 1, 0.5, false);
         parameters.add("maxSpeed", 0, 100, 4*M_PI, false);
@@ -130,8 +139,6 @@ int main(int argc, char *argv[])
             auto parts = split(value, '=');
             if (parts.size() == 2) {
                 parameters.set(parts[0], atof(parts[1].c_str()));
-            } else {
-                parameters.push(atof(argv[k]));
             }
         }
         Simulator simulator(robotFile, factor, !noServer, parameters.get("dt"));

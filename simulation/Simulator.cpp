@@ -30,7 +30,6 @@ void Simulator::Parameter::check()
 }
 
 Simulator::Parameters::Parameters()
-    : pushIndex(0)
 {
 }
                 
@@ -94,16 +93,6 @@ std::string Simulator::Parameters::toString()
     return ss.str();
 }
 
-void Simulator::Parameters::push(double value)
-{
-    if (pushIndex < order.size()) {
-        values[order[pushIndex]].value = value;
-    } else {
-        throw std::string("Too much parameters pushed");
-    }
-    pushIndex++;
-}
-        
 Simulator::Simulator(std::string robotFile, double factor, bool runServer, double dt)
     : serverThread(0), robotFile(robotFile), factor(factor), server(NULL), dt(dt)
 {
@@ -134,7 +123,7 @@ double Simulator::run(Parameters &parameters, double duration)
     }
     mutex.unlock();
 
-    Values defines;
+    Metabot::Parameters defines;
     Metabot::Robot robot;
 
     // Setting parameters
@@ -165,10 +154,12 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.alt = parameters.get("alt");
     controller.dx = parameters.get("dx");
     controller.dy = parameters.get("dy");
-    controller.phases[0] = parameters.get("p1");
-    controller.phases[1] = parameters.get("p2");
-    controller.phases[2] = parameters.get("p3");
-    controller.phases[3] = parameters.get("p4");
+
+    for (int k=1; k<=robot.tips(); k++) {
+        std::stringstream p;
+        p << "p" << k;
+        controller.phases[k-1] = parameters.get(p.str());
+    }
 
     // Creating the simulation
     Simulation simulation(duration, serv, robot, controller, dt);

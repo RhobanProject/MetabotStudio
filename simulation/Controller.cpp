@@ -11,38 +11,31 @@ Controller::Leg::Leg(Metabot::Kinematic::Tip tip_)
     : tip(tip_)
 {
     for (auto &item : tip.chain) {
-        item.alpha = 0.0;
+        if (item.type == CHAIN_ROTATION) {
+            alphas.push_back(0.0);
+        }
     }
-    auto pos = tip.position();
+
+    // Leg vector
+    auto pos = tip.position(alphas);
     pos.z = 0;
     auto norm = pos.norm();
-
     xVec = pos.x/norm;
     yVec = pos.y/norm;
+
+    // Theta is between 0 and 2pi
     theta = atan2(yVec, xVec);
     if (theta < 0) theta += 2*M_PI;
 }
     
-float Controller::Leg::error(std::vector<float> deltas, float x, float y, float z)
+float Controller::Leg::error(std::vector<double> &candidate, float x, float y, float z)
 {
-    auto tmp = tip;
-    int k = 0;
-    for (auto &item : tmp.chain) {
-        if (item.type == CHAIN_ROTATION) {
-            item.alpha += deltas[k++];
-            if (item.alpha < item.min) item.alpha = item.min+0.05;
-            if (item.alpha > item.max) item.alpha = item.max-0.05;
-        }
-    }
-    auto pos = tmp.position();
-    // printf("Test: (%g %g) %g/%g %g/%g %g/%g\n", xVec, yVec, pos.x, x, pos.y, y, pos.z, z);
-
+    auto pos = tip.position(candidate);
     return pow(pos.x-x, 2) + pow(pos.y-y, 2) + pow(pos.z-z, 2);
 }
 
 void Controller::Leg::gotoXYZ_cmaes(float x, float y, float z)
 {
-    auto alphas = tip.alphas();
     int dim = alphas.size();
     CMAParameters<> cmaparams(alphas, -1);
     // cmaparams.set_algo(BIPOP_CMAES);
@@ -82,57 +75,33 @@ void Controller::Leg::gotoXYZ_cmaes(float x, float y, float z)
     auto best = cmasols.get_best_seen_candidate();
     auto X = best.get_x_ptr();
     int k = 0;
-    //std::cout << "Candidate: ";
-    for (auto &item : tip.chain) {
-        if (item.type == CHAIN_ROTATION) {
-            //std::cout << X[k] << " ";
-            item.alpha = X[k++];
-        }
+    for (k=0; k<dim; k++) {
+        alphas[k] = X[k];
     }
-    //std::cout << std::endl;
-    //std::cout << "Best candidate value: " << best.get_fvalue() << std::endl;
-    auto end = tip.position();
-    //printf("%g/%g, %g/%g, %g/%g\n",
-    //        end.x, target.x, end.y, target.y, end.z, target.z);
 }
 
 void Controller::Leg::gotoXYZ_rand(float x, float y, float z)
 {
-    std::vector<float> deltas;
-    for (auto item : tip.chain) {
-        if (item.type == CHAIN_ROTATION) {
-            deltas.push_back(0.0);
-        }
-    }
-    float err, newErr = error(deltas, x, y, z);
+    float err, newErr = error(alphas, x, y, z);
 
     do {
         err = newErr;
         for (int k=0; k<30; k++) {
-            std::vector<float> tmpD = deltas;
-            for (int n=0; n<tmpD.size(); n++) {
+            auto tmp = alphas;
+            for (int n=0; n<tmp.size(); n++) {
                 if (k < 3) {
-                    tmpD[n] += 0.1-0.2*rand()/(float)RAND_MAX;
+                    tmp[n] += 0.1-0.2*rand()/(float)RAND_MAX;
                 } else {
-                    tmpD[n] += 0.01-0.02*rand()/(float)RAND_MAX;
+                    tmp[n] += 0.01-0.02*rand()/(float)RAND_MAX;
                 }
             }
-            auto test = error(tmpD, x, y, z);
+            auto test = error(tmp, x, y, z);
             if (test < err) {
                 newErr = test;
-                deltas = tmpD;
+                alphas = tmp;
             }
         }
     } while (newErr < err);
-
-    int k = 0;
-    for (auto &item : tip.chain) {
-        if (item.type == CHAIN_ROTATION) {
-            item.alpha += deltas[k++];
-            if (item.alpha < item.min) item.alpha = item.min+0.05;
-            if (item.alpha > item.max) item.alpha = item.max-0.05;
-        }
-    }
 }
 
 void Controller::Leg::gotoXYZ(float x, float y, float z)
@@ -143,6 +112,10 @@ void Controller::Leg::gotoXYZ(float x, float y, float z)
 Controller::Controller(Metabot::Robot *robot, float l1, float l2, float l3)
     : l1(l1), l2(l2), l3(l3)
 {
+    // Phases
+    int tips = robot->tips();
+    phases = new float[tips];
+
     // Getting legs
     auto kinematic = robot->computeKinematic();
 
@@ -170,75 +143,30 @@ void Controller::setupFunctions()
     rise.clear();
     step.clear();
 
-    if (gait == GAIT_WALK) {
-        phases[0] = 0.0;
-        phases[1] = 0.5;
-        phases[2] = 0.75;
-        phases[3] = 0.25;
-        
-        // Rising the legs
-        rise.addPoint(0.0, 0.0);
-        rise.addPoint(0.1, 1.0);
-        rise.addPoint(0.3, 1.0);
-        rise.addPoint(0.35, 0.0);
-        rise.addPoint(1.0, 0.0);
+    // Rising the legs
+    rise.addPoint(0.0, 1.0);
+    rise.addPoint(0.3, 1.0);
+    rise.addPoint(0.4, 0.0);
+    rise.addPoint(0.9, 0.0);
+    rise.addPoint(1.0, 1.0);
 
-        // Taking the leg forward
-        step.addPoint(0.0, -0.5);
-        step.addPoint(0.12, -0.5);
-        step.addPoint(0.3, 0.5);
-        step.addPoint(0.35, 0.5);
-        step.addPoint(1.0, -0.5);
-    }
-
-    if (gait == GAIT_TROT) {
-        phases[0] = 0.0;
-        phases[1] = 0.5;
-        phases[2] = 0.0;
-        phases[3] = 0.5;
-
-        // Rising the legs
-        rise.addPoint(0.0, 1.0);
-        rise.addPoint(0.3, 1.0);
-        rise.addPoint(0.4, 0.0);
-        rise.addPoint(0.9, 0.0);
-        rise.addPoint(1.0, 1.0);
-
-        // Taking the leg forward
-        step.addPoint(0.0, -0.5);
-        step.addPoint(0.1, -0.5);
-        step.addPoint(0.3, 0.5);
-        step.addPoint(0.5, 0.5);
-        step.addPoint(0.85, -0.5);
-        step.addPoint(1.0, -0.5);
-
-        /*
-         // Rising the legs
-         rise.addPoint(0.0, 0.0);
-         rise.addPoint(0.1, 1.0);
-         rise.addPoint(0.4, 1.0);
-         rise.addPoint(0.5, 0.0);
-         rise.addPoint(1.0, 0.0);
- 
-         // Taking the leg forward
-         step.addPoint(0.0, -0.5);
-         step.addPoint(0.1, -0.5);
-         step.addPoint(0.5, 0.5);
-         step.addPoint(1.0, -0.5);
-         */
-    }
+    // Taking the leg forward
+    step.addPoint(0.0, -0.5);
+    step.addPoint(0.1, -0.5);
+    step.addPoint(0.3, 0.5);
+    step.addPoint(0.5, 0.5);
+    step.addPoint(0.85, -0.5);
+    step.addPoint(1.0, -0.5);
 }
 
 void Controller::compute(float t_)
 {
     float t = freq*t_;
-    float turnRad = DEG2RAD(turn);
 
     int k = 0;
     auto &leg = legs[0];
     for (auto &leg : legs) {
-        k++;
-        float phase = t + 0.5*(k%2);
+        float phase = phases[k++] + t;
 
         // Following the spline
         float tx = leg.xVec*x + step.getMod(phase)*dx;
@@ -251,21 +179,24 @@ void Controller::compute(float t_)
         
 double Controller::update(float dt, float t, Metabot::Robot &robot)
 {
-    double cost = 0;
+    // Refresh controller at 50hz
     ut += dt;
-
     if (ut > 0.02) {
         compute(t);
         ut = 0;
     }
 
+    // Sets the target on each component
+    double cost = 0;
     for (auto &leg : legs) {
+        int k = 0;
         for (auto &item : leg.tip.chain) {
             if (item.type == CHAIN_ROTATION) {
-                cost += fabs(robot.getComponentById(item.jointId)->setTarget(-item.alpha, dt));
+                cost += fabs(robot.getComponentById(item.jointId)->setTarget(-leg.alphas[k++], dt));
             }
         }
     }
 
+    // The total cost is the sum of the cost of each joint
     return cost;
 }

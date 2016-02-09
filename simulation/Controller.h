@@ -19,10 +19,15 @@ class Controller : public Simulation::Controller
             void gotoXYZ_rand(float x, float y, float z);
             void gotoXYZ_cmaes(float x, float y, float z);
             void gotoXYZ(float x, float y, float z);
-            float error(std::vector<float> delta, float x, float y, float z);
+            float error(std::vector<double> &candidate, float x, float y, float z);
 
+            std::vector<double> alphas;
+
+            // Leg vector and angle
             float xVec, yVec;
             float theta;
+
+            // A kinematic tip
             Metabot::Kinematic::Tip tip;
         };
 
@@ -53,11 +58,11 @@ class Controller : public Simulation::Controller
         float t;
         float ut;
 
-        // Leg phases
-        float phases[4];
-
         Function rise;
         Function step;
+
+        // Legs phases
+        float *phases;
 
     protected:
         std::vector<Leg> legs;
