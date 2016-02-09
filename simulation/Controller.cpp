@@ -109,8 +109,7 @@ void Controller::Leg::gotoXYZ(float x, float y, float z)
     gotoXYZ_rand(x,y,z);
 }
 
-Controller::Controller(Metabot::Robot *robot, float l1, float l2, float l3)
-    : l1(l1), l2(l2), l3(l3)
+Controller::Controller(Metabot::Robot *robot)
 {
     // Phases
     int tips = robot->tips();
@@ -192,7 +191,8 @@ double Controller::update(float dt, float t, Metabot::Robot &robot)
         int k = 0;
         for (auto &item : leg.tip.chain) {
             if (item.type == CHAIN_ROTATION) {
-                cost += fabs(robot.getComponentById(item.jointId)->setTarget(-leg.alphas[k++], dt));
+                auto alpha = -leg.alphas[k++];
+                cost += fabs(robot.getComponentById(item.jointId)->setTarget(alpha, dt));
             }
         }
     }

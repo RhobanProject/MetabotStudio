@@ -16,13 +16,9 @@ namespace Metabot
         Kinematic::ChainItem item;
         item.type = CHAIN_ROTATION;
         item.id = id;
-        if (sign == 1) {
-            item.min = min;
-            item.max = max;
-        } else {
-            item.min = -max;
-            item.max = -min;
-        }
+        item.min = min;
+        item.max = max;
+        item.sign = sign;
         item.jointId = jointId;
         chain.push_back(item);
     }
@@ -37,7 +33,7 @@ namespace Metabot
             if (item.type == CHAIN_MATRIX) {
                 matrix = matrix.multiply(item.matrix);
             } else if (item.type == CHAIN_ROTATION) {
-                matrix = matrix.multiply(TransformMatrix::rotationZ(alphas[k++]));
+                matrix = matrix.multiply(TransformMatrix::rotationZ(item.sign*alphas[k++]));
             }
         
             positions.push_back(Point3(matrix.x(), matrix.y(), matrix.z()));
@@ -58,7 +54,7 @@ namespace Metabot
                 auto alpha = alphas[k];
                 if (alpha < item.min) alpha = item.min+0.05;
                 if (alpha > item.max) alpha = item.max-0.05;
-                matrix = matrix.multiply(TransformMatrix::rotationZ(alpha));
+                matrix = matrix.multiply(TransformMatrix::rotationZ(item.sign*alpha));
                 alphas[k] = alpha;
                 k++;
             }

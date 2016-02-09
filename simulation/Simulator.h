@@ -42,6 +42,7 @@ class Simulator
                 double get(std::string name);
 
                 std::vector<double> toVector();
+                std::vector<std::string> getAll();
                 void fromArray(const double *x, const int N);
                 std::string toString();
                 void push(double value);

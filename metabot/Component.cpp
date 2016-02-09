@@ -934,6 +934,8 @@ namespace Metabot
 
     double Component::setTarget(float alpha, float dt)
     {
+        auto above = aboveAnchor();
+        alpha = alpha*above->sign();
         auto pos = posHinge->getHingeAngle();
         //auto pos = hinge->getHingeAngle();
 

@@ -31,7 +31,7 @@ class Controller : public Simulation::Controller
             Metabot::Kinematic::Tip tip;
         };
 
-        Controller(Metabot::Robot *robot, float l1, float l2, float l3);
+        Controller(Metabot::Robot *robot);
 
         // Robot parameters
         float l1, l2, l3;

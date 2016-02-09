@@ -8,6 +8,7 @@ ParametersEditor::ParametersEditor(MainWindow *main_, Metabot::Robot *robot_, QW
     ui(new Ui::ParametersEditor)
 {
     ui->setupUi(this);
+    setWindowTitle("Parameters");
 
     for (auto entry : robot->parameters) {
         auto value = new ValueWidget(this);

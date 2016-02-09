@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    setWindowTitle("Metabot");
+    setWindowTitle("Metabot Studio");
 
     // Loading metabot backend
     backend = new Metabot::Backend("xl-320");
@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer->setRobot(robot);
 
     // Debugging auto-open
-    filename = "/home/gregwar/MetabotStudio/robots/metabot.robot";
+    filename = "/home/gregwar/MetabotStudio/robots/1.robot";
     robot->loadFromFile(filename.toStdString());
     robot->number();
     robot->computeDynamics();

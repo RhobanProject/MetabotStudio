@@ -60,6 +60,17 @@ double Simulator::Parameters::get(std::string name)
 
     return 0.0;
 }
+                
+std::vector<std::string> Simulator::Parameters::getAll()
+{
+    std::vector<std::string> names;
+
+    for (auto &entry : values) {
+        names.push_back(entry.first);
+    }
+
+    return names;
+}
 
 std::vector<double> Simulator::Parameters::toVector()
 {
@@ -127,13 +138,9 @@ double Simulator::run(Parameters &parameters, double duration)
     Metabot::Robot robot;
 
     // Setting parameters
-    auto l1 =  round(parameters.get("L1"));
-    auto l2 =  round(parameters.get("L2"));
-    auto l3 =  round(parameters.get("L3"));
-
-    defines.set("L1", l1);
-    defines.set("L2", l2);
-    defines.set("L3", l3);
+    for (auto name : parameters.getAll()) {
+        defines.set(name, round(parameters.get(name)));
+    }
     robot.world.friction = parameters.get("friction");
     robot.loadFromFile(robotFile, defines);
     
@@ -146,7 +153,7 @@ double Simulator::run(Parameters &parameters, double duration)
     if (serv) serv->loadRobot(&robot);
 
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-    Controller controller(&robot, l1, l2, l3);
+    Controller controller(&robot);
     controller.x = parameters.get("x");
     controller.y = parameters.get("y");
     controller.z = parameters.get("z");
