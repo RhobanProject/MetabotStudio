@@ -29,7 +29,9 @@ module u_bar(BarLength=60, BarRadius=3, BarBottomRadius=10, UHeight=25,
                );
             translate([0,0,Thickness+BarLength]) {
                 sphere(r=BarRadius*2);
-                //:Tip
+                translate([0,0,BarRadius]) {
+                    //:Tip
+                }
             }
         }
     }
