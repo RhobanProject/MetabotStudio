@@ -27,8 +27,12 @@ module u_bar(BarLength=60, BarRadius=3, BarBottomRadius=10, UHeight=25,
                     screwsSpacing=ScrewsSpacing, screwsDiameter=ScrewsDiameter,
                     screwsCount=ScrewsCount, thickness=Thickness
                );
-            translate([0,0,Thickness+BarLength])
+            translate([0,0,Thickness+BarLength]) {
                 sphere(r=BarRadius);
+                //:Tip
+            }
         }
     }
 }
+
+u_bar();
