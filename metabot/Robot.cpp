@@ -49,6 +49,17 @@ namespace Metabot
 
         return groups;
     }
+            
+    int Robot::tips()
+    {
+        int n = 0;
+
+        foreachComponent([&n](Component *instance) {
+            n += instance->tips.size();
+        });
+
+        return n;
+    }
 
     Kinematic Robot::computeKinematic()
     {

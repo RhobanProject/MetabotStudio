@@ -35,6 +35,7 @@ namespace Metabot
             Dynamics getDynamics();
             void printDynamics();
             Kinematic computeKinematic();
+            int tips();
 
             Robot *clone();
             void setRoot(Component *root);
