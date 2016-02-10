@@ -444,9 +444,9 @@ void MainWindow::on_contextmenu_paste()
 {
     if (copyBuffer && contextmenu_anchor->isCompatible(copyBuffer->freeAnchor())) {
         auto component = copyBuffer->clone();
-        contextmenu_anchor->attach(copyBuffer->freeAnchor());
-        drawTree();
+        contextmenu_anchor->attach(component->freeAnchor());
         robot->number();
+        drawTree();
         viewer->redraw();
     }
 }
