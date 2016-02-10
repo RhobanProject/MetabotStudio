@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     rootComponent("Root", this),
     centerComponent("Center", this),
     dynamicsComponent("Dynamics", this),
+    copyComponent("Copy", this),
+    pasteComponent("Paste", this),
+    copyBuffer(NULL),
     robot(NULL), robotSave(NULL),
     wizard(NULL), dynamics(NULL), parametersEditor(NULL),
     filename(""),
@@ -75,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&rootComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_root()));
     QObject::connect(&centerComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_center()));
     QObject::connect(&dynamicsComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_dynamics()));
+    QObject::connect(&copyComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_copy()));
+    QObject::connect(&pasteComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_paste()));
     QObject::connect(ui->tree, SIGNAL(itemSelectionChanged()), this, SLOT(on_tree_itemSelectionChanged()));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
     drawTree();
@@ -87,6 +92,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if (copyBuffer) {
+        delete copyBuffer;
+    }
 }
 
 void MainWindow::drawTreeRecursive(QTreeWidgetItem *parentItem,
@@ -229,7 +237,8 @@ void MainWindow::on_viewer_contextmenu_request(QPoint pt)
 {
     auto items = ui->tree->selectedItems();
 
-    auto instance = viewer->getInstanceAt(pt.x(), pt.y());
+    int id;
+    auto instance = viewer->getInstanceAt(pt.x(), pt.y(), &id);
     if (instance) {
         on_viewer_clicked(instance);
     }
@@ -239,6 +248,11 @@ void MainWindow::on_viewer_contextmenu_request(QPoint pt)
     } else {
         if (robot->root == NULL) {
             showContextMenu(viewer->mapToGlobal(pt), NULL);
+        } else {
+            auto anchor = robot->getHoveredAnchor(id);
+            if (anchor) {
+                showAnchorContextMenu(viewer->mapToGlobal(pt), anchor);
+            }
         }
     }
 }
@@ -265,8 +279,21 @@ void MainWindow::showContextMenu(QPoint pos, QTreeWidgetItem *item)
         menu.addAction(&rootComponent);
         menu.addAction(&centerComponent);
         menu.addAction(&dynamicsComponent);
+        menu.addAction(&copyComponent);
     }
     contextmenu_item = item;
+    contextmenu_anchor = NULL;
+    menu.exec(pos);
+}
+
+void MainWindow::showAnchorContextMenu(QPoint pos, AnchorPoint *anchor)
+{
+    menu.clear();
+    menu.addAction(&addComponent);
+    menu.addAction(&pasteComponent);
+    pasteComponent.setEnabled(copyBuffer && anchor->isCompatible(copyBuffer->freeAnchor()));
+    contextmenu_item = NULL;
+    contextmenu_anchor = anchor;
     menu.exec(pos);
 }
 
@@ -399,6 +426,31 @@ void MainWindow::on_contextmenu_dynamics()
     }
 }
 
+void MainWindow::on_contextmenu_copy()
+{
+    auto component = selectedComponent();
+    if (copyBuffer) {
+        delete copyBuffer;
+    }
+    auto copy = component->clone();
+    if (copy->freeAnchor()) {
+       copyBuffer = copy;
+    } else {
+        delete copy;
+    }
+}
+
+void MainWindow::on_contextmenu_paste()
+{
+    if (copyBuffer && contextmenu_anchor->isCompatible(copyBuffer->freeAnchor())) {
+        auto component = copyBuffer->clone();
+        contextmenu_anchor->attach(copyBuffer->freeAnchor());
+        drawTree();
+        robot->number();
+        viewer->redraw();
+    }
+}
+
 void MainWindow::on_clicked()
 {
 }
@@ -407,6 +459,9 @@ Metabot::AnchorPoint *MainWindow::selectedAnchor()
 {
     if (contextmenu_item != NULL && items.count(contextmenu_item)) {
         return items[contextmenu_item];
+    }
+    if (contextmenu_anchor != NULL) {
+        return contextmenu_anchor;
     }
 
     return NULL;

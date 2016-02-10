@@ -427,10 +427,10 @@ namespace Metabot
                 auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
                         btVector3(1e-5, 1e-5, 1e-5));
                 
-#if 0
+#if 1
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *child,
                         com.inverse()*anchor->transformationForward().toBullet(),
-                        childComponent()->com.inverse()*anchor->anchor->transformationForward().toBullet()
+                        childComponent->com.inverse()*anchor->anchor->transformationForward().toBullet()
                     );
               
                 /////////////// MODE SIMPLE
@@ -441,7 +441,7 @@ namespace Metabot
                         );
 #endif
                 
-#if 1
+#if 0
                 auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
                         btVector3(1e-5, 1e-5, 1e-5));
 
@@ -462,7 +462,7 @@ namespace Metabot
                         rot.toBullet(),
                         childComponent->com.inverse()*anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
-                cone->setLimit(0.03, 0.04, 0.02);
+                cone->setLimit(0.02, 0.02, 0.02);
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
                 
@@ -780,6 +780,17 @@ namespace Metabot
             anchor->detach(false);
         }
     }
+            
+    AnchorPoint *Component::freeAnchor()
+    {
+        for (auto anchor : anchors) {
+            if (anchor->anchor == NULL) {
+                return anchor;
+            }
+        }
+
+        return NULL;
+    }
 
     AnchorPoint *Component::belowAnchor()
     {
@@ -944,7 +955,7 @@ namespace Metabot
 
         // Speed servoing
         float error = alpha-pos;
-        float targetVel = bound(error*35, -maxSpeed, maxSpeed);
+        float targetVel = bound(error*30, -maxSpeed, maxSpeed);
 
         // Limiting torque in function of current speed
         float errorVel = targetVel-vel;
@@ -954,7 +965,7 @@ namespace Metabot
         float maxForce = maxTorque*(1-coef);
 
         // Torque servoing
-        targetForce = bound(errorVel*0.05, -maxForce, maxForce);
+        targetForce = bound(errorVel*0.04, -maxForce, maxForce);
 
 // #define METHOD_MOTOR
 #ifdef METHOD_MOTOR

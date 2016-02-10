@@ -34,6 +34,7 @@ public:
     void drawTreeRecursive(QTreeWidgetItem *parentItem, Metabot::Component *instance);
 
     void showContextMenu(QPoint pos, QTreeWidgetItem *item);
+    void showAnchorContextMenu(QPoint pos, Metabot::AnchorPoint *anchor);
     void showDynamicsWindow(Metabot::Dynamics dynamics);
     void runWizard(Metabot::AnchorPoint *anchor);
     void highlightAnchor(Metabot::AnchorPoint *anchor);
@@ -68,6 +69,8 @@ private slots:
     void on_contextmenu_root();
     void on_contextmenu_center();
     void on_contextmenu_dynamics();
+    void on_contextmenu_copy();
+    void on_contextmenu_paste();
 
     void on_clicked();
     void on_close();
@@ -102,7 +105,10 @@ private slots:
 private:
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
-    QAction addComponent, editComponent, removeComponent, rootComponent, centerComponent, dynamicsComponent;
+    Metabot::AnchorPoint *contextmenu_anchor;
+    Metabot::Component *copyBuffer;
+    QAction addComponent, editComponent, removeComponent, rootComponent;
+    QAction centerComponent, dynamicsComponent, copyComponent, pasteComponent;
     QMenu menu;
     Metabot::Robot *robot;
     Metabot::Robot *robotSave;

@@ -97,6 +97,7 @@ namespace Metabot
             // Gets the point that is attached with the robot upper
             AnchorPoint *belowAnchor();
             AnchorPoint *aboveAnchor();
+            AnchorPoint *freeAnchor();
 
             std::string getValue(std::string name);
             std::string stl(Robot *robot=NULL, bool drawCollisions=false);
