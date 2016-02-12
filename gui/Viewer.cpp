@@ -192,8 +192,8 @@ void Viewer::paintGL()
     if (mode == MODE_NORMAL) {
         robot->openGLDraw(false);
     } else {
+        client.lock();
         if (client.robot) {
-            client.lock();
             client.robot->openGLDraw(true);
 
             // Mirror
@@ -201,8 +201,8 @@ void Viewer::paintGL()
             if (sin(beta) > 0) {
                 client.robot->openGLDraw(true, 0.25);
             }
-            client.unlock();
         }
+        client.unlock();
     }
     glPopMatrix();
     glStencilFunc(GL_ALWAYS, 255, -1);
@@ -226,6 +226,24 @@ void Viewer::paintGL()
     if (drawXYZ) {
         drawAxis();
     }
+
+    // Drawing ground collisions
+    client.lock();
+    glLineWidth(3.0);
+    glColor3f(1.0, 0.6, 0.0);
+    glScalef(1000, 1000, 1000);
+    if (mode == MODE_PHYSICS && client.robot) {
+        for (auto point : client.robot->collisionPoints) {
+            auto A = point.first;
+            auto B = point.second;
+            B = B.multiply(75);
+            glBegin(GL_LINES);
+            glVertex3f(A.x(), A.y(), A.z());
+            glVertex3f(A.x()+B.x(), A.y()+B.y(), A.z()+B.z());
+            glEnd();
+        }
+    }
+    client.unlock();
 }
 
 void Viewer::keyPressEvent(QKeyEvent *keyEvent)
