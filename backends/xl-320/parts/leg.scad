@@ -6,7 +6,7 @@ use <../util/rounded.scad>;
 
 //:Part
 module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
-        sizeTop=15, mode="arm", fixationAngle=0, thickness=2.2, holesPosition=15, print=false)
+        sizeTop=15, mode="arm", fixationAngle=0, thickness=2.2, holesPosition=15, bevelCorner=false, print=false)
 {
     xOffset = (mode == "side") ? -10 : 0;
     spacing = (mode == "side" || mode == "bottom") ? MotorWidth : MotorWidth+6;
