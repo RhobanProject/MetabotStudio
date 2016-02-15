@@ -49,6 +49,7 @@ void ParametersEditor::on_ok_clicked()
     update();
     robot->compile();
     robot->number();
+    main->drawTree();
     main->getViewer()->redraw();
     this->close();
 }
@@ -63,5 +64,6 @@ void ParametersEditor::on_generate_clicked()
     update();
     robot->compile();
     robot->number();
+    main->drawTree();
     main->getViewer()->redraw();
 }
