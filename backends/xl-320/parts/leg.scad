@@ -74,6 +74,7 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
             leg(sizeA, sizeB, sizeC, sizeBottom,
                     sizeTop, mode, fixationAngle, thickness, false);
     } else {
+        difference() {
         translate([0,xOffset,-sizeA+holesPosition]) {
             cube([spacing+thickness*2, 20, thickness], center=true);
 
@@ -104,6 +105,13 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
                         //:Tip
 			//sphere(7);
 		}
+        }
+        
+        if (bevelCorner && !Collisions) {
+            translate([0,10,15])
+            rotate([45,0,0])
+            cube([100,20,20], center=true);
+        }
         }
     }
 }
