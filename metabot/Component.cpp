@@ -427,7 +427,7 @@ namespace Metabot
                 auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
                         btVector3(1e-5, 1e-5, 1e-5));
                 
-#if 1
+#if 0
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *child,
                         com.inverse()*anchor->transformationForward().toBullet(),
                         childComponent->com.inverse()*anchor->anchor->transformationForward().toBullet()
@@ -441,7 +441,7 @@ namespace Metabot
                         );
 #endif
                 
-#if 0
+#if 1
                 auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
                         btVector3(1e-5, 1e-5, 1e-5));
 
@@ -462,7 +462,7 @@ namespace Metabot
                         rot.toBullet(),
                         childComponent->com.inverse()*anchor->anchor->transformationForward().multiply(rot).toBullet()
                         );
-                cone->setLimit(0.02, 0.02, 0.02);
+                cone->setLimit(0.04, 0.02, 0.02);
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
                 
