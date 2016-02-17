@@ -158,9 +158,13 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.y = parameters.get("y");
     controller.z = parameters.get("z");
     controller.freq = parameters.get("freq");
-    controller.alt = parameters.get("alt");
+    controller.lX = parameters.get("lX");
+    controller.lS = parameters.get("lS");
+    controller.lH = parameters.get("lH");
+    controller.support = parameters.get("support");
     controller.dx = parameters.get("dx");
     controller.dy = parameters.get("dy");
+    controller.setupFunctions();
 
     for (int k=1; k<=robot.tips(); k++) {
         std::stringstream p;

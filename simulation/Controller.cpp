@@ -19,9 +19,8 @@ Controller::Leg::Leg(Metabot::Kinematic::Tip tip_)
     // Leg vector
     auto pos = tip.position(alphas);
     pos.z = 0;
-    auto norm = pos.norm();
-    xVec = pos.x/norm;
-    yVec = pos.y/norm;
+    xVec = pos.x;
+    yVec = pos.y;
 
     // Theta is between 0 and 2pi
     theta = atan2(yVec, xVec);
@@ -129,12 +128,17 @@ Controller::Controller(Metabot::Robot *robot)
     });
 
     // Initialisation
-    gait = GAIT_TROT;
     dx = 0;
     dy = 0;
     turn = 0;
+
+    // Locus
+    support=0.5;
+    lX = 0;
+    lH = 30;
+    lS = 1;
+
     ut = 1.0;
-    setupFunctions();
 }
 
 void Controller::setupFunctions()
@@ -142,20 +146,15 @@ void Controller::setupFunctions()
     rise.clear();
     step.clear();
 
-    // Rising the legs
-    rise.addPoint(0.0, 1.0);
-    rise.addPoint(0.3, 1.0);
-    rise.addPoint(0.4, 0.0);
-    rise.addPoint(0.9, 0.0);
-    rise.addPoint(1.0, 1.0);
+    step.addPoint(0, 0.5, -1);
+    step.addPoint(support, -0.5, -1);
+    step.addPoint(support+(1-support)/2, lX, lS);
+    step.addPoint(1, 0.5, -1);
 
-    // Taking the leg forward
-    step.addPoint(0.0, -0.5);
-    step.addPoint(0.1, -0.5);
-    step.addPoint(0.3, 0.5);
-    step.addPoint(0.5, 0.5);
-    step.addPoint(0.85, -0.5);
-    step.addPoint(1.0, -0.5);
+    rise.addPoint(0, 0, 0);
+    rise.addPoint(support, 0, 0);
+    rise.addPoint(support+(1-support)/2, lH, 0);
+    rise.addPoint(1, 0, 0);
 }
 
 void Controller::compute(float t_)
@@ -170,7 +169,7 @@ void Controller::compute(float t_)
         // Following the spline
         float tx = leg.xVec*x + step.getMod(phase)*dx;
         float ty = leg.yVec*y + step.getMod(phase)*dy;
-        float tz = rise.getMod(phase)*alt - z;
+        float tz = rise.getMod(phase) - z;
         
         leg.gotoXYZ(tx, ty, tz);
     }

@@ -23,6 +23,7 @@ set(ALL_SOURCES
     util/Cache.cpp
     util/sha1.cpp
     util/util.cpp
+    util/PolySpline.cpp
 
     bullet/World.cpp
     bullet/GLDebugDrawer.cpp

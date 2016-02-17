@@ -111,13 +111,16 @@ int main(int argc, char *argv[])
         }
 
         // Posture parameters
-        parameters.add("x", 0, 200, 120, false);
-        parameters.add("y", 0, 200, 120, false);
+        parameters.add("x", 0, 3, 1, false);
+        parameters.add("y", 0, 3, 1, false);
         parameters.add("z", 0, 150, 50, false);
        
         // Controller parameters
         parameters.add("freq", 0, 5, 2, false);
-        parameters.add("alt", 0, 100, 18, false);
+        parameters.add("lX", -0.5, 0.5, 0, false);
+        parameters.add("lH", 0, 100, 20, false);
+        parameters.add("lS", 0, 10, 1, false);
+        parameters.add("support", 0, 1, 0.5, false);
         parameters.add("dx", 0, 300, 60, false);
         parameters.add("dy", 0, 300, 0, false);
         

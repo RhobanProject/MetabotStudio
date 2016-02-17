@@ -2,6 +2,7 @@
 #define _METABOT_MOTION_H
 
 #include <Robot.h>
+#include <util/PolySpline.h>
 #include "Simulation.h"
 #include "Function.h"
 #include "Robot.h"
@@ -46,10 +47,16 @@ class Controller : public Simulation::Controller
         // Resets the motion
         void reset();
 
-        // Parameters
+        // Posture parameters
         float x, y, z;
-        float freq, alt;
-        int gait;
+
+        // Leg trajectory
+        float support;
+        float lX, lH, lS;
+        
+        // Legs phases
+        float freq;
+        float *phases;
 
         // Dynamic parameters
         float dx, dy, turn;
@@ -58,11 +65,8 @@ class Controller : public Simulation::Controller
         float t;
         float ut;
 
-        Function rise;
-        Function step;
-
-        // Legs phases
-        float *phases;
+        PolySpline rise;
+        PolySpline step;
 
     protected:
         std::vector<Leg> legs;
