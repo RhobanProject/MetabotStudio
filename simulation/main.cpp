@@ -111,10 +111,10 @@ int main(int argc, char *argv[])
         }
 
         // Posture parameters
-        parameters.add("x", 0, 3, 1);
-        parameters.add("y", 0, 3, 1);
+        parameters.add("x", 0, 3, 0.8);
+        parameters.add("y", 0, 3, 0.8);
         parameters.add("z", 0, 150, 50);
-       
+
         // Controller parameters
         parameters.add("freq", 0, 4, 2);
         parameters.add("lX", -1, 1, 0);
@@ -123,20 +123,20 @@ int main(int argc, char *argv[])
         parameters.add("support", 0, 1, 0.5);
         parameters.add("dx", 0, 300, 60);
         parameters.add("dy", 0, 300, 0, false);
-        
+
         // Leg phases
         for (int k=1; k<=robot.tips(); k++) {
             std::stringstream p;
             p << "p" << k;
             parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5);
         }
-        
+
         parameters.add("friction", 0, 1, 0.5, false);
         parameters.add("maxSpeed", 0, 100, 4*M_PI, false);
         parameters.add("maxTorque", 0, 100, 0.5, false);
-        
+
         parameters.add("dt", 0, 1, 0.001, false);
-    
+
         for (int k=optind; k<argc; k++) {
             std::string value(argv[k]);
             auto parts = split(value, '=');
@@ -165,11 +165,11 @@ int main(int argc, char *argv[])
             //cmaparams.set_ftolerance(0.00001);
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
-            
+
             FitFunc robotSim = [robotFile, external, &parameters, &simulator, duration](const double *x, const int N)
             {
                 Simulator::Parameters params = parameters;
-                
+
                 try {
                     params.fromArray(x, N);
                 } catch (Simulator::ParameterError err) {
@@ -188,11 +188,22 @@ int main(int argc, char *argv[])
                         return 9999.0;
                     }
                 }
-                
+
                 return simulator.run(params, duration);
             };
 
-            CMASolutions cmasols = cmaes<>(robotSim, cmaparams);
+            ProgressFunc<CMAParameters<>,CMASolutions> progressFunc = [parameters](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
+            {
+                auto bestParameters = parameters;
+                auto best = cmasols.get_best_seen_candidate();
+                bestParameters.fromArray(best.get_x_ptr(), best.get_x_size());
+                std::cout << "*** CURRENT BEST (score: " << best.get_fvalue() << ") " << std::endl;
+                std::cout << bestParameters.toString() << std::endl;
+
+                return 0;
+            };
+
+            CMASolutions cmasols = cmaes<>(robotSim, cmaparams, progressFunc);
             std::cout << "*** OVER" << std::endl;
             std::cout << cmasols << std::endl;
             auto best = cmasols.get_best_seen_candidate();
