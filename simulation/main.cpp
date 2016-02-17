@@ -23,7 +23,7 @@ using namespace libcmaes;
 
 static void usage()
 {
-    std::cout << "Metabot simulation (w/ Gazebo)" << std::endl;
+    std::cout << "Metabot simulation (w/ Bullet)" << std::endl;
     std::cout << "Usage:" << std::endl;
     std::cout << "  -r [file.robot]: The robot file to simulate" << std::endl;
     std::cout << "  -v: verbose" << std::endl;
