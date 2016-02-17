@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 project(metabot)
 find_package (Threads)
 
+# Linking explicitly libraries from LIBRARY_PATH to override systems
+string(REPLACE ":" ";" LIBRARIES $ENV{LIBRARY_PATH})
+link_directories(${LIBRARIES})
+
 OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
 
 OPTION(BUILD_UNIT_TESTS "Build Unit Tests" OFF)
