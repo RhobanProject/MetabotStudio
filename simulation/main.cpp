@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
         robot.loadParametersFromFile(robotFile);
         for (auto entry : robot.parameters) {
             auto param = entry.second;
-            parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue(), false);
+            parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue());
         }
 
         // Posture parameters
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
         for (int k=1; k<=robot.tips(); k++) {
             std::stringstream p;
             p << "p" << k;
-            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5, true);
+            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5);
         }
         
         parameters.add("friction", 0, 1, 0.5, false);
