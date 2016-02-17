@@ -1,5 +1,5 @@
 {
-    "name": "rhobanproject/metabot",
+    "name": "rhobanproject/metabotstudio",
     "deps": [
         "rhobandeps/bullet3",
         "rhobandeps/jsoncpp", 
