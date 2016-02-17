@@ -263,7 +263,7 @@ namespace Metabot
 
         backend = Backend::get(json["backend"].asString());
 
-        parametersFromJson(json);
+        parametersFromJson(json, defines);
 
         if (!json.isMember("tree")) {
             std::stringstream ss;
