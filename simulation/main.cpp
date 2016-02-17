@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
         for (int k=1; k<=robot.tips(); k++) {
             std::stringstream p;
             p << "p" << k;
-            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5);
+            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5, k>1);
         }
 
         parameters.add("friction", 0, 1, 0.5, false);
