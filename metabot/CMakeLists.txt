@@ -23,7 +23,12 @@ set(ALL_SOURCES
     util/Cache.cpp
     util/sha1.cpp
     util/util.cpp
-    util/PolySpline.cpp
+
+    spline/Spline.cpp
+    spline/CubicSpline.cpp
+    spline/Polynom.cpp
+    spline/NewtonBinomial.cpp
+    spline/Combination.cpp
 
     bullet/World.cpp
     bullet/GLDebugDrawer.cpp

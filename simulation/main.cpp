@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
        
         // Controller parameters
         parameters.add("freq", 0, 5, 2, false);
-        parameters.add("lX", -0.5, 0.5, 0, false);
+        parameters.add("lX", -1, 1, 0, false);
         parameters.add("lH", 0, 100, 20, false);
         parameters.add("lS", 0, 10, 1, false);
         parameters.add("support", 0, 1, 0.5, false);

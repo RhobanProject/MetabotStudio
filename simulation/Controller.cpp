@@ -143,18 +143,23 @@ Controller::Controller(Metabot::Robot *robot)
 
 void Controller::setupFunctions()
 {
-    rise.clear();
-    step.clear();
-
-    step.addPoint(0, 0.5, -1);
-    step.addPoint(support, -0.5, -1);
-    step.addPoint(support+(1-support)/2, lX, lS);
-    step.addPoint(1, 0.5, -1);
+    step = Leph::CubicSpline();
+    rise = Leph::CubicSpline();
+    
+    step.addPoint(0, 0.5, -1/support);
+    step.addPoint(support, -0.5, -1/support);
+    step.addPoint(support+(1-support)/2, lX, lS/support);
+    step.addPoint(1, 0.5, -1/support);
 
     rise.addPoint(0, 0, 0);
     rise.addPoint(support, 0, 0);
     rise.addPoint(support+(1-support)/2, lH, 0);
     rise.addPoint(1, 0, 0);
+
+    for (float t=0; t<1; t+=0.01) {
+        printf("%g %g %g\n", t, step.pos(t), rise.pos(t));
+    }
+    exit(0);
 }
 
 void Controller::compute(float t_)
@@ -167,9 +172,9 @@ void Controller::compute(float t_)
         float phase = phases[k++] + t;
 
         // Following the spline
-        float tx = leg.xVec*x + step.getMod(phase)*dx;
-        float ty = leg.yVec*y + step.getMod(phase)*dy;
-        float tz = rise.getMod(phase) - z;
+        float tx = leg.xVec*x + step.posMod(phase)*dx;
+        float ty = leg.yVec*y + step.posMod(phase)*dy;
+        float tz = rise.posMod(phase) - z;
         
         leg.gotoXYZ(tx, ty, tz);
     }

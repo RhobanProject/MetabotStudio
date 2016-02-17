@@ -2,7 +2,7 @@
 #define _METABOT_MOTION_H
 
 #include <Robot.h>
-#include <util/PolySpline.h>
+#include <spline/CubicSpline.hpp>
 #include "Simulation.h"
 #include "Function.h"
 #include "Robot.h"
@@ -65,8 +65,8 @@ class Controller : public Simulation::Controller
         float t;
         float ut;
 
-        PolySpline rise;
-        PolySpline step;
+        Leph::CubicSpline rise;
+        Leph::CubicSpline step;
 
     protected:
         std::vector<Leg> legs;
