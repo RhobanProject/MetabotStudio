@@ -156,10 +156,12 @@ void Controller::setupFunctions()
     rise.addPoint(support+(1-support)/2, lH, 0);
     rise.addPoint(1, 0, 0);
 
+    /*
     for (float t=0; t<1; t+=0.01) {
         printf("%g %g %g\n", t, step.pos(t), rise.pos(t));
     }
     exit(0);
+    */
 }
 
 void Controller::compute(float t_)
