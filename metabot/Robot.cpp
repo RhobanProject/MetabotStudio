@@ -15,7 +15,7 @@
 namespace Metabot
 {
     Robot::Robot(Backend *backend_)
-        : root(NULL), backend(backend_), drawCollisions(false), drawCOM(false)
+        : root(NULL), backend(backend_), drawCollisions(false), drawCOM(false), numTips(0)
     {
     }
 
@@ -52,13 +52,17 @@ namespace Metabot
             
     int Robot::tips()
     {
-        int n = 0;
+        if (root == NULL) {
+            return numTips;
+        } else {
+            int n = 0;
 
-        foreachComponent([&n](Component *instance) {
-            n += instance->tips.size();
-        });
+            foreachComponent([&n](Component *instance) {
+                n += instance->tips.size();
+            });
 
-        return n;
+            return n;
+        }
     }
 
     Kinematic Robot::computeKinematic()
@@ -220,6 +224,34 @@ namespace Metabot
             fromJson(json, defines);
         }
     }
+    
+    void Robot::loadParametersFromFile(std::string filename, Parameters defines)
+    {
+        if (file_exists(filename)) {
+            std::string data = file_get_contents(filename);
+            Json::Value json;
+            Json::Reader reader;
+
+            if (!reader.parse(data, json)) {
+                std::stringstream ss;
+                ss << "Unable to read the file " << filename << ": " << std::endl << reader.getFormatedErrorMessages();
+                throw ss.str();
+            }
+
+            parametersFromJson(json, defines);
+        }
+    }
+
+    void Robot::parametersFromJson(Json::Value json, Parameters defines)
+    {
+        if (json.isMember("parameters")) {
+            parameters = Parameters::fromJson(json["parameters"]);
+            parameters.merge(defines);
+        }
+        if (json.isMember("tips")) {
+            numTips = json["tips"].asInt();
+        }
+    }
 
     void Robot::fromJson(Json::Value json, Parameters defines)
     {
@@ -231,10 +263,7 @@ namespace Metabot
 
         backend = Backend::get(json["backend"].asString());
 
-        if (json.isMember("parameters")) {
-            parameters = Parameters::fromJson(json["parameters"]);
-            parameters.merge(defines);
-        }
+        parametersFromJson(json);
 
         if (!json.isMember("tree")) {
             std::stringstream ss;
@@ -312,6 +341,7 @@ namespace Metabot
     {
         Json::Value json(Json::objectValue);
         json["backend"] = backend->name;
+        json["tips"] = tips();
         json["parameters"] = parameters.toJson();
         json["tree"] = Json::Value(Json::objectValue);
         if (root != NULL) {

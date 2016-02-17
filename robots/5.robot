@@ -7,6 +7,7 @@
          "val" : "5"
       }
    },
+   "tips" : 5,
    "tree" : {
       "anchors" : {
          "0" : {

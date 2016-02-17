@@ -48,6 +48,8 @@ namespace Metabot
             void clear();
             void fromJson(Json::Value json, Parameters parameters = Parameters());
             void loadFromFile(std::string filename, Parameters parameters = Parameters());
+            void parametersFromJson(Json::Value json, Parameters parameters = Parameters());
+            void loadParametersFromFile(std::string filename, Parameters parameters = Parameters());
             Json::Value toJson();
             void saveToFile(std::string filename);
             void number();
@@ -81,6 +83,7 @@ namespace Metabot
 
             Component *root;
             Parameters parameters;
+            int numTips;
             Backend *backend;
 
             Refs getParts();

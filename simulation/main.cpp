@@ -104,31 +104,31 @@ int main(int argc, char *argv[])
 
         // Robot parameters
         Metabot::Robot robot;
-        robot.loadFromFile(robotFile);
+        robot.loadParametersFromFile(robotFile);
         for (auto entry : robot.parameters) {
             auto param = entry.second;
             parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue(), false);
         }
 
         // Posture parameters
-        parameters.add("x", 0, 3, 1, false);
-        parameters.add("y", 0, 3, 1, false);
-        parameters.add("z", 0, 150, 50, false);
+        parameters.add("x", 0, 3, 1);
+        parameters.add("y", 0, 3, 1);
+        parameters.add("z", 0, 150, 50);
        
         // Controller parameters
-        parameters.add("freq", 0, 5, 2, false);
-        parameters.add("lX", -1, 1, 0, false);
-        parameters.add("lH", 0, 100, 20, false);
-        parameters.add("lS", 0, 10, 1, false);
-        parameters.add("support", 0, 1, 0.5, false);
-        parameters.add("dx", 0, 300, 60, false);
+        parameters.add("freq", 0, 4, 2);
+        parameters.add("lX", -1, 1, 0);
+        parameters.add("lH", 0, 100, 20);
+        parameters.add("lS", 0, 10, 1);
+        parameters.add("support", 0, 1, 0.5);
+        parameters.add("dx", 0, 300, 60);
         parameters.add("dy", 0, 300, 0, false);
         
         // Leg phases
         for (int k=1; k<=robot.tips(); k++) {
             std::stringstream p;
             p << "p" << k;
-            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5, false);
+            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5, true);
         }
         
         parameters.add("friction", 0, 1, 0.5, false);
