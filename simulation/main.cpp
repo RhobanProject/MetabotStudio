@@ -101,6 +101,16 @@ int main(int argc, char *argv[])
 
     try { 
         Simulator::Parameters parameters;
+        
+        // This tells to the parameters that given names should not be
+        // optimized
+        for (int k=optind; k<argc; k++) {
+            std::string value(argv[k]);
+            auto parts = split(value, '=');
+            if (parts.size() == 2) {
+                parameters.doNotOptimize(parts[0]);
+            }
+        }
 
         // Robot parameters
         Metabot::Robot robot;

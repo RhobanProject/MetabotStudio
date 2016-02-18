@@ -33,8 +33,14 @@ Simulator::Parameters::Parameters()
 {
 }
                 
+void Simulator::Parameters::doNotOptimize(std::string name)
+{
+    notOptimized.insert(name);
+}
+                
 void Simulator::Parameters::add(std::string name, double min, double max, double value, bool optimize)
 {
+    if (notOptimized.count(name)) optimize=false;
     Parameter param;
     param.name = name;
     param.value = value;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <mutex>
 #include <string>
 #include <map>
@@ -37,6 +38,7 @@ class Simulator
         {
             public:
                 Parameters();
+                void doNotOptimize(std::string name);
                 void add(std::string name, double min, double max, double value, bool optimize=true);
                 void set(std::string name, double value);
                 double get(std::string name);
@@ -50,6 +52,7 @@ class Simulator
             protected:
                 int pushIndex;
                 std::vector<std::string> order;
+                std::set<std::string> notOptimized;
                 std::map<std::string, Parameter> values;
         };
 
