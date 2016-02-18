@@ -19,6 +19,7 @@ double Simulation::run()
     float simTime = 0.0;
     float lastUpdate = 0.0;
     double cost = 0;
+    double collisions = 0;
 
     int k = 0;
     if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
@@ -26,7 +27,7 @@ double Simulation::run()
     for (;controllerTime < duration; controllerTime += dt) {
         cost += controller.update(dt, controllerTime, robot);
         robot.world.stepSimulation(dt);
-        //auto force = robot.world.getGroundForce();
+        collisions += robot.world.getAutoCollisions();
         //printf("%g %g %g %g\n", controllerTime-(int)controllerTime, force.x(), force.y(), force.z());
         simTime += dt/factor;
         
@@ -41,5 +42,5 @@ double Simulation::run()
         }
     }
 
-    return cost;
+    return cost*pow(collisions, 2);
 }

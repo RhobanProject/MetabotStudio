@@ -101,6 +101,31 @@ void World::stepSimulation(float deltaTime)
        */
 }
 
+double World::getAutoCollisions()
+{
+    double result = 0.0;
+
+    if (m_dynamicsWorld) {
+        int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+        for (int i=0;i<numManifolds;i++) {
+            btPersistentManifold* contactManifold =  m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+            auto A = contactManifold->getBody0();
+            auto B = contactManifold->getBody1();
+
+            if (A != ground && B != ground) {
+                int nb = contactManifold->getNumContacts();
+                for (int k=0; k<nb; k++) {
+                    auto contactPoint = contactManifold->getContactPoint(k);
+                    auto force = fabs(contactPoint.m_appliedImpulse);
+                    result += force;
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 std::vector<std::pair<Vect, Vect>> World::getGroundCollisions()
 {
     std::vector<std::pair<Vect, Vect>> points;
