@@ -19,7 +19,7 @@ double Simulation::run()
     float simTime = 0.0;
     float lastUpdate = 0.0;
     double cost = 0;
-    double collisions = 0;
+    double collisions = 1.0;
 
     int k = 0;
     if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
