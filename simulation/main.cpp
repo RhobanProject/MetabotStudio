@@ -206,9 +206,13 @@ int main(int argc, char *argv[])
             {
                 auto bestParameters = parameters;
                 auto best = cmasols.get_best_seen_candidate();
-                bestParameters.fromArray(best.get_x_ptr(), best.get_x_size());
                 std::cout << "*** CURRENT BEST (score: " << best.get_fvalue() << ") " << std::endl;
-                std::cout << bestParameters.toString() << std::endl;
+                try {
+                    bestParameters.fromArray(best.get_x_ptr(), best.get_x_size());
+                    std::cout << bestParameters.toString() << std::endl;
+                } catch (Simulator::ParameterError err) {
+                    std::cout << "(out of range)" << std::endl;
+                }
 
                 return 0;
             };
