@@ -1,5 +1,6 @@
 #include <iostream>
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
+#include <Component.h>
 #include "World.h"
 
     World::World()
@@ -118,6 +119,19 @@ double World::getAutoCollisions()
                     auto contactPoint = contactManifold->getContactPoint(k);
                     auto force = fabs(contactPoint.m_appliedImpulse);
                     result += force;
+                }
+            } else {
+                if (A == ground) A = B;
+                if (A->getUserPointer()) {
+                    Metabot::Component *component = (Metabot::Component*)(A->getUserPointer());
+                    if (component->tips.size() == 0) {
+                        int nb = contactManifold->getNumContacts();
+                        for (int k=0; k<nb; k++) {
+                            auto contactPoint = contactManifold->getContactPoint(k);
+                            auto force = fabs(contactPoint.m_appliedImpulse);
+                            result += force;
+                        }
+                    }
                 }
             }
         }

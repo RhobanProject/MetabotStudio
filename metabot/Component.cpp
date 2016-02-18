@@ -404,6 +404,7 @@ namespace Metabot
         // if (above == NULL) dynamics.mass = 0;
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
                 localInertia, com.inverse());
+        body->setUserPointer(this);
         
         // Child
         for (auto anchor : anchors) {
