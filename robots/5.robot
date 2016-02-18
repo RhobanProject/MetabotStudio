@@ -1,10 +1,25 @@
 {
    "backend" : "xl-320",
    "parameters" : {
-      "nrlegs" : {
-         "max" : "",
-         "min" : "",
-         "val" : "5"
+      "BODY" : {
+         "max" : "100",
+         "min" : "40",
+         "val" : "45"
+      },
+      "L1" : {
+         "max" : "150",
+         "min" : "30",
+         "val" : "45"
+      },
+      "L2" : {
+         "max" : "150",
+         "min" : "45",
+         "val" : "65"
+      },
+      "L3" : {
+         "max" : "150",
+         "min" : "45",
+         "val" : "60"
       }
    },
    "tips" : 5,
@@ -24,7 +39,7 @@
                                     "SizeA" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "60"
+                                       "val" : "$L3"
                                     },
                                     "SizeB" : {
                                        "max" : "",
@@ -72,7 +87,7 @@
                            "Size" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "65"
+                              "val" : "$L2"
                            },
                            "Thickness" : {
                               "max" : "",
@@ -100,7 +115,7 @@
                   "Height" : {
                      "max" : "",
                      "min" : "",
-                     "val" : "45"
+                     "val" : "$L1"
                   },
                   "Radius" : {
                      "max" : "",
@@ -156,7 +171,7 @@
                                     "SizeA" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "60"
+                                       "val" : "$L3"
                                     },
                                     "SizeB" : {
                                        "max" : "",
@@ -204,7 +219,7 @@
                            "Size" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "65"
+                              "val" : "$L2"
                            },
                            "Thickness" : {
                               "max" : "",
@@ -232,7 +247,7 @@
                   "Height" : {
                      "max" : "",
                      "min" : "",
-                     "val" : "45"
+                     "val" : "$L1"
                   },
                   "Radius" : {
                      "max" : "",
@@ -288,7 +303,7 @@
                                     "SizeA" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "60"
+                                       "val" : "$L3"
                                     },
                                     "SizeB" : {
                                        "max" : "",
@@ -336,7 +351,7 @@
                            "Size" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "65"
+                              "val" : "$L2"
                            },
                            "Thickness" : {
                               "max" : "",
@@ -364,7 +379,7 @@
                   "Height" : {
                      "max" : "",
                      "min" : "",
-                     "val" : "45"
+                     "val" : "$L1"
                   },
                   "Radius" : {
                      "max" : "",
@@ -420,7 +435,7 @@
                                     "SizeA" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "60"
+                                       "val" : "$L3"
                                     },
                                     "SizeB" : {
                                        "max" : "",
@@ -468,7 +483,7 @@
                            "Size" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "65"
+                              "val" : "$L2"
                            },
                            "Thickness" : {
                               "max" : "",
@@ -496,7 +511,7 @@
                   "Height" : {
                      "max" : "",
                      "min" : "",
-                     "val" : "45"
+                     "val" : "$L1"
                   },
                   "Radius" : {
                      "max" : "",
@@ -552,7 +567,7 @@
                                     "SizeA" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "60"
+                                       "val" : "$L3"
                                     },
                                     "SizeB" : {
                                        "max" : "",
@@ -600,7 +615,7 @@
                            "Size" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "65"
+                              "val" : "$L2"
                            },
                            "Thickness" : {
                               "max" : "",
@@ -628,7 +643,7 @@
                   "Height" : {
                      "max" : "",
                      "min" : "",
-                     "val" : "45"
+                     "val" : "$L1"
                   },
                   "Radius" : {
                      "max" : "",
@@ -681,7 +696,7 @@
          "Size" : {
             "max" : "",
             "min" : "",
-            "val" : "45"
+            "val" : "$BODY"
          },
          "Thickness" : {
             "max" : "",
