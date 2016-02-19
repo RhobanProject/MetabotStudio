@@ -425,8 +425,10 @@ namespace Metabot
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
                 auto empty2 = world->createEmpty();
+                /*
                 auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
                         btVector3(1e-5, 1e-5, 1e-5));
+                        */
                 
 #if 0
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *child,
