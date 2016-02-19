@@ -56,12 +56,13 @@ class Simulator
                 std::map<std::string, Parameter> values;
         };
 
-        Simulator(std::string robotFile, double factor, bool runServer, double dt);
+        Simulator(std::string robotFile, double factor, bool runServer, double dt, int experience);
         virtual ~Simulator();
 
         double run(Parameters &parameters, double duration=6.0);
 
     protected:
+        int experience;
         Metabot::Server *server;
         std::string robotFile;
         double factor;

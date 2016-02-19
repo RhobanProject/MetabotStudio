@@ -110,8 +110,8 @@ std::string Simulator::Parameters::toString()
     return ss.str();
 }
 
-Simulator::Simulator(std::string robotFile, double factor, bool runServer, double dt)
-    : serverThread(0), robotFile(robotFile), factor(factor), server(NULL), dt(dt)
+Simulator::Simulator(std::string robotFile, double factor, bool runServer, double dt, int experience)
+    : serverThread(0), robotFile(robotFile), factor(factor), server(NULL), dt(dt), experience(experience)
 {
     if (runServer) {
         server = new Metabot::Server;
@@ -178,8 +178,6 @@ double Simulator::run(Parameters &parameters, double duration)
         p << "p" << k;
         controller.phases[k-1] = parameters.get(p.str());
     }
-
-    int experience = parameters.get("experience") < 1.5 ? 1 : 2;
 
     // Creating the simulation
     Simulation simulation(duration, serv, robot, controller, dt, experience);

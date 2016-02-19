@@ -34,20 +34,22 @@ static void usage()
     std::cout << "  -e: enable external mode for simulation" << std::endl;
     std::cout << "  -N: no server mode" << std::endl;
     std::cout << "  -G: generate a robot" << std::endl;
+    std::cout << "  -x [exp]: specify experience" << std::endl;
     exit(1);
 }
 
 int main(int argc, char *argv[])
 {
     float factor = 100.0;
-    float duration = 6.0;
+    float duration = 0.0;
     int index;
+    int experience = 1;
     bool external = false;
     bool noServer = false;
     std::string robotFile = "";
     std::string mode = "sim";
 
-    while ((index = getopt(argc, argv, "r:vtf:d:ceNG")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:")) != -1) {
         switch (index) {
             case 'N':
                 noServer = true;
@@ -80,7 +82,16 @@ int main(int argc, char *argv[])
             case 'G':
                 mode = "generate";
                 break;
+            case 'x':
+                experience = atoi(optarg);
+                break;
         }
+    }
+
+    // Default durations
+    if (duration == 0.0) {
+        if (experience == 1) duration = 6;
+        if (experience == 2) duration = 15;
     }
 
     if (mode == "generate") {
@@ -120,9 +131,6 @@ int main(int argc, char *argv[])
             parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue());
         }
         
-        // Experience selection
-        parameters.add("experience", 1, 2, 1, false);
-
         // Posture parameters
         parameters.add("x", 0, 3, 0.8);
         parameters.add("y", 0, 3, 0.8);
@@ -136,7 +144,11 @@ int main(int argc, char *argv[])
         parameters.add("support", 0, 1, 0.5);
         parameters.add("dx", 0, 300, 60);
         parameters.add("dy", 0, 300, 0, false);
-        parameters.add("turn", -3, 3, 0, false);
+        if (experience == 1) {
+            parameters.add("turn", -3, 3, 0, false);
+        } else {
+            parameters.add("turn", -3, 3, 0.5, true);
+        }
 
         // Leg phases
         for (int k=1; k<=robot.tips(); k++) {
@@ -158,7 +170,7 @@ int main(int argc, char *argv[])
                 parameters.set(parts[0], atof(parts[1].c_str()));
             }
         }
-        Simulator simulator(robotFile, factor, !noServer, parameters.get("dt"));
+        Simulator simulator(robotFile, factor, !noServer, parameters.get("dt"), experience);
 
         if (mode == "sim") {
             std::cout << "score=" << simulator.run(parameters, duration) << std::endl;
@@ -180,7 +192,7 @@ int main(int argc, char *argv[])
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
 
-            FitFunc robotSim = [robotFile, external, &parameters, &simulator, duration](const double *x, const int N)
+            FitFunc robotSim = [robotFile, external, &parameters, &simulator, duration, experience](const double *x, const int N)
             {
                 Simulator::Parameters params = parameters;
 
@@ -193,7 +205,7 @@ int main(int argc, char *argv[])
 
                 if (external) {
                     std::stringstream ss;
-                    ss << "./sim -N -d " << duration << " -r " << robotFile << " " << params.toString();
+                    ss << "./sim -x " << experience << " -N -d " << duration << " -r " << robotFile << " " << params.toString();
                     auto result = execute(ss.str());
                     auto parts = split(result, '=');
                     if (parts.size() == 2 && parts[0] == "score") {
