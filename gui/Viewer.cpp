@@ -210,10 +210,10 @@ void Viewer::paintGL()
 
     if (mode == MODE_PHYSICS && client.hasMarker) {
         glPushMatrix();
-        glColor4ub(0, 250, 0, 128);
+        glColor4ub(0, 250, 0, 200);
         glTranslatef(client.markerX, client.markerY, 55);
         GLUquadric *quad = gluNewQuadric();
-        gluSphere(quad, 45, 100, 20);
+        gluSphere(quad, 30, 100, 20);
         gluDeleteQuadric(quad);
         glPopMatrix();
     }
