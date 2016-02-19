@@ -19,10 +19,10 @@ Simulation::Simulation(float duration, Metabot::Server *server,
         checkpoints.push_back(FPoint2(500, 0.0));
         checkpoints.push_back(FPoint2(500, 500));
         checkpoints.push_back(FPoint2(1000, -250));
-        server->updateMarker(checkpoints[0].x, checkpoints[0].y);
+        if (server) server->updateMarker(checkpoints[0].x, checkpoints[0].y);
         controlT = 0;
     } else {
-        server->disableMarker();
+        if (server) server->disableMarker();
     }
 }
 
@@ -46,7 +46,7 @@ void Simulation::control(double dt)
             if (distance < 100) {
                 if (currentCheckPoint < checkpoints.size()-1) {
                     currentCheckPoint++;
-                    server->updateMarker(checkpoints[currentCheckPoint].x, checkpoints[currentCheckPoint].y);
+                    if (server) server->updateMarker(checkpoints[currentCheckPoint].x, checkpoints[currentCheckPoint].y);
                 } else {
                     over = true;
                 }
