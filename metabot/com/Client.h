@@ -17,6 +17,8 @@ namespace Metabot
             void process(std::string command, Json::Value arguments);
 
             Robot *robot;
+            bool hasMarker;
+            double markerX, markerY;
             bool debug;
 
         protected:

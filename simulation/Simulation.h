@@ -2,23 +2,28 @@
 
 #include <Robot.h>
 #include <com/Server.h>
+#include <3d/Point3.h>
+#include "Controller.h"
 
 class Simulation
 {
     public:
-        class Controller
-        {
-            public:
-                virtual double update(float dt, float duration, Metabot::Robot &robot)=0;
-        };
-
         Simulation(float duration, Metabot::Server *server, Metabot::Robot &robot,
-                Controller &controller, double dt);
+                Controller &controller, double dt, int experience);
+
         double run();
+        void control(double dt);
         
         float factor;
 
     protected:
+        double controlT;
+        int currentCheckPoint;
+        std::vector<FPoint2> checkpoints;
+        double maxStep, maxTurn;
+
+        int experience;
+        bool over;
         double dt;
         float duration;
         Metabot::Robot &robot;

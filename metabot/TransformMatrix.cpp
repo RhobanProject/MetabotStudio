@@ -225,6 +225,13 @@ namespace Metabot
         m.values[1][1] = cos(alpha);
         return m;
     }
+            
+    Vect TransformMatrix::toRPY()
+    {
+        auto rpy = eulerAngles(values);
+
+        return Vect(rpy[0], rpy[1], rpy[2]);
+    }
     
     std::string TransformMatrix::toJS()
     {

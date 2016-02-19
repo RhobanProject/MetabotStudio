@@ -179,8 +179,10 @@ double Simulator::run(Parameters &parameters, double duration)
         controller.phases[k-1] = parameters.get(p.str());
     }
 
+    int experience = parameters.get("experience") < 1.5 ? 1 : 2;
+
     // Creating the simulation
-    Simulation simulation(duration, serv, robot, controller, dt);
+    Simulation simulation(duration, serv, robot, controller, dt, experience);
     simulation.factor = factor;
     auto cost = simulation.run();
     auto state = robot.getState();

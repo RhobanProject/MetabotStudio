@@ -29,6 +29,7 @@ namespace Metabot
             TransformMatrix invert();
             std::string toString();
 
+            Vect toRPY();
             std::string toJS();
             std::string toSDF();
 

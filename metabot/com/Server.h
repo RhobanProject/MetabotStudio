@@ -10,6 +10,8 @@ namespace Metabot
             virtual ~Server();
             void loadRobot(Robot *robot);
             void updateRobot(Robot *robot);
+            void updateMarker(double x, double y);
+            void disableMarker();
 
         protected:
             void *context;

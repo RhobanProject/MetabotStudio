@@ -25,6 +25,20 @@ namespace Metabot
     {
         invoke("update", robot->stateToJson());
     }
+            
+    void Server::updateMarker(double x, double y)
+    {
+        Json::Value marker(Json::arrayValue);
+        marker[0] = x;
+        marker[1] = y;
+        invoke("marker", marker);
+    }
+            
+    void Server::disableMarker()
+    {
+        Json::Value marker(Json::arrayValue);
+        invoke("marker", marker);
+    }
 
     void Server::invoke(std::string command, Json::Value arguments)
     {

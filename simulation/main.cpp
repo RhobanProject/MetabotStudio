@@ -119,6 +119,9 @@ int main(int argc, char *argv[])
             auto param = entry.second;
             parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue());
         }
+        
+        // Experience selection
+        parameters.add("experience", 1, 2, 1, false);
 
         // Posture parameters
         parameters.add("x", 0, 3, 0.8);

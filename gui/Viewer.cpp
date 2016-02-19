@@ -208,6 +208,16 @@ void Viewer::paintGL()
     glPopMatrix();
     glStencilFunc(GL_ALWAYS, 255, -1);
 
+    if (mode == MODE_PHYSICS && client.hasMarker) {
+        glPushMatrix();
+        glColor4ub(0, 250, 0, 128);
+        glTranslatef(client.markerX, client.markerY, 55);
+        GLUquadric *quad = gluNewQuadric();
+        gluSphere(quad, 45, 100, 20);
+        gluDeleteQuadric(quad);
+        glPopMatrix();
+    }
+
     glDisable(GL_LIGHTING);
 
     // Drawing Bullet debug, can be enabled for debug purpose
@@ -398,7 +408,7 @@ void Viewer::drawGridLines()
 
 void Viewer::drawAxis()
 {
-    glLineWidth(1.0);
+    glLineWidth(5.0);
     glBegin(GL_LINES);
     glColor3f(0.9, 0.0, 0.0);
     glVertex3f(0, 0, 0);

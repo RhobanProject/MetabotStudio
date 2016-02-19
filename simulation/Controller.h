@@ -3,14 +3,10 @@
 
 #include <Robot.h>
 #include <spline/CubicSpline.hpp>
-#include "Simulation.h"
 #include "Function.h"
 #include "Robot.h"
 
-#define GAIT_WALK       0
-#define GAIT_TROT       1
-
-class Controller : public Simulation::Controller
+class Controller
 {
     public:
         // A leg of the robot

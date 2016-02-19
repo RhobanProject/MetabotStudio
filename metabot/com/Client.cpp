@@ -67,5 +67,15 @@ namespace Metabot
                 robot->stateFromJson(arguments);
             }
         }
+
+        if (command == "marker") {
+            if (arguments.size() == 2) {
+                markerX = arguments[0].asFloat();
+                markerY = arguments[1].asFloat();
+                hasMarker = true;
+            } else {
+                hasMarker = false;
+            }
+        }
     }
 }
