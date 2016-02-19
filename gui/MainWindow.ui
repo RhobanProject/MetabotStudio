@@ -335,6 +335,9 @@
    <property name="text">
     <string>Physics client</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+K</string>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
