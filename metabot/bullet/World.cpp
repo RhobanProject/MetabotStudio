@@ -160,9 +160,9 @@ std::vector<std::pair<Vect, Vect>> World::getGroundCollisions()
                     auto lat2 = contactPoint.m_lateralFrictionDir2;
                     auto friction = Vect::fromBullet(lat1).multiply(contactPoint.m_appliedImpulseLateral1);
                     // if (lat1 != lat2) {
-                        friction = friction.add(
-                                Vect::fromBullet(lat2).multiply(contactPoint.m_appliedImpulseLateral2)
-                                );
+                    friction = friction.add(
+                            Vect::fromBullet(lat2).multiply(contactPoint.m_appliedImpulseLateral2)
+                            );
                     // }
 
                     auto point = Vect::fromBullet(contactPoint.m_positionWorldOnB);
@@ -202,7 +202,7 @@ Vect World::getGroundForce(bool frictions)
                     }
 
                     auto normal = Vect::fromBullet(contactPoint.m_normalWorldOnB).multiply(force);
-                   
+
                     total = total.add(normal);
                     if (frictions) {
                         total = total.add(friction);
@@ -222,9 +222,18 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
     //rigidbody is dynamic if and only if mass is non zero, otherwise static
     bool isDynamic = (mass != 0.f);
 
-    if (isDynamic && inertia==btVector3(0,0,0)) {
-        shape->calculateLocalInertia(mass, inertia);
-    }
+    /*
+    btVector3 debug;
+    shape->calculateLocalInertia(mass, debug);
+    std::cout << "Inertia:" << std::endl;
+    std::cout << inertia.x() << " " << inertia.y() << " " << inertia.z() << std::endl;
+    std::cout << "Debug:" << std::endl;
+    std::cout << debug.x() << " " << debug.y() << " " << debug.z() << std::endl;
+    */
+
+    // XXX: Too small inertia tensors cause problems, this is not really
+    // clean but avoid problems caused by too small pieces
+    while (isDynamic && inertia.norm()<1e-5) inertia *= 2;
 
     auto &origin = startTransform.getOrigin();
     origin.setZ(origin.getZ()-zOffset);
