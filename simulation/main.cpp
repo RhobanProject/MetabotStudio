@@ -133,6 +133,7 @@ int main(int argc, char *argv[])
         parameters.add("support", 0, 1, 0.5);
         parameters.add("dx", 0, 300, 60);
         parameters.add("dy", 0, 300, 0, false);
+        parameters.add("turn", -3, 3, 0, false);
 
         // Leg phases
         for (int k=1; k<=robot.tips(); k++) {

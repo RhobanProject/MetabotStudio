@@ -176,6 +176,11 @@ void Controller::compute(float t_)
         // Following the spline
         float tx = leg.xVec*x + step.posMod(phase)*dx;
         float ty = leg.yVec*y + step.posMod(phase)*dy;
+        float tx_ = tx;
+        float ty_ = ty;
+        float theta = step.posMod(phase)*turn;
+        tx = cos(theta)*tx_ - sin(theta)*ty_;
+        ty = sin(theta)*tx_ + cos(theta)*ty_;
         float tz = rise.posMod(phase) - z;
         
         leg.gotoXYZ(tx, ty, tz);

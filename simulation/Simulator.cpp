@@ -170,6 +170,7 @@ double Simulator::run(Parameters &parameters, double duration)
     controller.support = parameters.get("support");
     controller.dx = parameters.get("dx");
     controller.dy = parameters.get("dy");
+    controller.turn = parameters.get("turn");
     controller.setupFunctions();
 
     for (int k=1; k<=robot.tips(); k++) {
