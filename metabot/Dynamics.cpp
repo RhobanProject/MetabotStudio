@@ -48,6 +48,7 @@ namespace Metabot
     {
         std::stringstream ss;
         if (computed) {
+            ss << "Voxels: " << cubes.size() << std::endl;
             ss << "Volume: " << volume << "mm^3" << std::endl;
             ss << "Mass: " << mass << "g" << std::endl;
             ss << "COM: " << com.x() << ", " << com.y() << ", " << com.z() << std::endl;
