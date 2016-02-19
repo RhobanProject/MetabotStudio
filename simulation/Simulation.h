@@ -13,6 +13,7 @@ class Simulation
 
         double run();
         void control(double dt);
+        double score(double duration, double cost, double collisions);
         
         float factor;
 

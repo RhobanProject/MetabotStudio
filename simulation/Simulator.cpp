@@ -25,8 +25,8 @@ void Simulator::Parameter::fromNormalized(double n)
 
 void Simulator::Parameter::check()
 {
-    if (value < min) throw ParameterError(1000+fabs(value-min));
-    if (value > max) throw ParameterError(1000+fabs(value-max));
+    if (value < min) throw ParameterError(1e7+fabs(value-min));
+    if (value > max) throw ParameterError(1e7+fabs(value-max));
 }
 
 Simulator::Parameters::Parameters()
@@ -184,8 +184,7 @@ double Simulator::run(Parameters &parameters, double duration)
     // Creating the simulation
     Simulation simulation(duration, serv, robot, controller, dt, experience);
     simulation.factor = factor;
-    auto cost = simulation.run();
-    auto state = robot.getState();
+    auto score = simulation.run();
 
-    return cost/(duration*fabs(state.x()));
+    return score;
 }

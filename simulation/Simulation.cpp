@@ -18,7 +18,7 @@ Simulation::Simulation(float duration, Metabot::Server *server,
         maxTurn = controller.turn;
         checkpoints.push_back(FPoint2(500, 0.0));
         checkpoints.push_back(FPoint2(500, 500));
-        checkpoints.push_back(FPoint2(250, -250));
+        checkpoints.push_back(FPoint2(1000, -250));
         server->updateMarker(checkpoints[0].x, checkpoints[0].y);
         controlT = 0;
     } else {
@@ -50,22 +50,46 @@ void Simulation::control(double dt)
                 } else {
                     over = true;
                 }
-            } else {
+            } else {
                 double theta = atan2(dY, dX);
                 double error = theta-angles.z();
                 while (error < -M_PI) error += 2*M_PI;
                 while (error > M_PI) error -= 2*M_PI;
 
                 // The turn is the error 
-                controller.turn = error*0.7;
+                controller.turn = 0.6*controller.turn + 0.4*error*0.7;
                 if (controller.turn < -maxTurn) controller.turn = -maxTurn;
                 if (controller.turn > maxTurn) controller.turn = maxTurn;
 
                 // The stepping is maxStep multiplied with error cosine
-                controller.dx = maxStep*cos(error);
+                controller.dx = 0.6*controller.dx + 0.4*maxStep*cos(error);
                 if (controller.dx < 0) controller.dx = 0;
             }
         }
+    }
+}
+
+double Simulation::score(double duration, double cost, double collisions)
+{
+    if (experience == 2) {
+        if (over) {
+            // We reached all the checkpoints, we'll try to minimize the duration,
+            // and the energy cost
+            return duration*cost*pow(collisions, 2);
+        } else {
+            auto checkpoint = checkpoints[currentCheckPoint];
+            int missedCheckPoints = checkpoints.size()-currentCheckPoint;
+            auto state = robot.getState();
+            double dX = checkpoint.x-state.x();
+            double dY = checkpoint.y-state.y();
+            double distance = sqrt(dX*dX + dY*dY);
+
+            return 1e6*missedCheckPoints + distance;
+        }
+    } else {
+        auto state = robot.getState();
+        // Here, we try to maximize the distance across X axis
+        return cost*pow(collisions, 2)/(duration*fabs(state.x()));
     }
 }
 
@@ -78,7 +102,6 @@ double Simulation::run()
     double cost = 0;
     double collisions = 1.0;
 
-    int k = 0;
     if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
 
     for (;!over && controllerTime < duration; controllerTime += dt) {
@@ -103,5 +126,5 @@ double Simulation::run()
         // std::cout << state.toRPY().z() << std::endl;
     }
 
-    return cost*pow(collisions, 2);
+    return score(duration, cost, collisions);
 }
