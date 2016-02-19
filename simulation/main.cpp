@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
         if (experience == 1) {
             parameters.add("turn", -3, 3, 0, false);
         } else {
-            parameters.add("turn", -3, 3, 0.5, true);
+            parameters.add("turn", 0, 3, 0.5, true);
         }
 
         // Leg phases
