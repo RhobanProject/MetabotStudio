@@ -194,6 +194,7 @@ void Viewer::paintGL()
     } else {
         client.lock();
         if (client.robot) {
+            client.robot->setDrawCollisions(robot->drawCollisions);
             client.robot->openGLDraw(true);
 
             // Mirror
