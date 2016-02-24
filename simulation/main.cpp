@@ -14,7 +14,8 @@
 #include "util/util.h"
 #include "verbose.h"
 #include <cmaes.h>
-#include "Simulator.h"
+#include "Experience.h"
+#include "ExperienceWalk.h"
 #include "Generator.h"
 
 #include <iostream>
@@ -111,7 +112,12 @@ int main(int argc, char *argv[])
     }
 
     try { 
-        Simulator::Parameters parameters;
+        // Creating the experience
+        Experience::BaseRunner *runner = NULL;
+        runner = new Experience::Runner<ExperienceWalkEfficience>(robotFile, factor, !noServer, 0.001);
+
+        // Reading parameters
+        Experience::Parameters parameters;
         
         // This tells to the parameters that given names should not be
         // optimized
@@ -131,38 +137,15 @@ int main(int argc, char *argv[])
             parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue());
         }
         
-        // Posture parameters
-        parameters.add("x", 0, 3, 0.8);
-        parameters.add("y", 0, 3, 0.8);
-        parameters.add("z", 0, 150, 50);
+        // Experience parameters
+        runner->initParameters(parameters, &robot);
 
-        // Controller parameters
-        parameters.add("freq", 0, 4, 2);
-        parameters.add("lX", -1, 1, 0);
-        parameters.add("lH", 0, 100, 20);
-        parameters.add("lS", 0, 10, 1);
-        parameters.add("support", 0, 1, 0.5);
-        parameters.add("dx", 0, 300, 60);
-        parameters.add("dy", 0, 300, 0, false);
-        if (experience == 1) {
-            parameters.add("turn", -3, 3, 0, false);
-        } else {
-            parameters.add("turn", 0, 3, 0.5, true);
-        }
-
-        // Leg phases
-        for (int k=1; k<=robot.tips(); k++) {
-            std::stringstream p;
-            p << "p" << k;
-            parameters.add(p.str(), 0, 1, k%2 ? 0 : 0.5, k>1);
-        }
-
+        // Context parameters
         parameters.add("friction", 0, 1, 0.5, false);
         parameters.add("maxSpeed", 0, 100, 4*M_PI, false);
         parameters.add("maxTorque", 0, 100, 0.5, false);
 
-        parameters.add("dt", 0, 1, 0.001, false);
-
+        // Reading parameters from command line
         for (int k=optind; k<argc; k++) {
             std::string value(argv[k]);
             auto parts = split(value, '=');
@@ -170,10 +153,9 @@ int main(int argc, char *argv[])
                 parameters.set(parts[0], atof(parts[1].c_str()));
             }
         }
-        Simulator simulator(robotFile, factor, !noServer, parameters.get("dt"), experience);
 
         if (mode == "sim") {
-            std::cout << "score=" << simulator.run(parameters, duration) << std::endl;
+            std::cout << "score=" << runner->run(parameters, duration) << std::endl;
         }
 
         if (mode == "cmaes") {
@@ -192,13 +174,13 @@ int main(int argc, char *argv[])
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
 
-            FitFunc robotSim = [robotFile, external, &parameters, &simulator, duration, experience](const double *x, const int N)
+            FitFunc robotSim = [robotFile, external, &parameters, &runner, duration, experience](const double *x, const int N)
             {
-                Simulator::Parameters params = parameters;
+                Experience::Parameters params = parameters;
 
                 try {
                     params.fromArray(x, N);
-                } catch (Simulator::ParameterError err) {
+                } catch (Experience::ParameterError err) {
                     return err.error;
                 }
                 std::cout << params.toString() << std::endl;
@@ -215,7 +197,7 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                return simulator.run(params, duration);
+                return runner->run(params, duration);
             };
 
             ProgressFunc<CMAParameters<>,CMASolutions> progressFunc = [parameters](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
@@ -226,7 +208,7 @@ int main(int argc, char *argv[])
                 try {
                     bestParameters.fromArray(best.get_x_ptr(), best.get_x_size());
                     std::cout << bestParameters.toString() << std::endl;
-                } catch (Simulator::ParameterError err) {
+                } catch (Experience::ParameterError err) {
                     std::cout << "(out of range)" << std::endl;
                 }
 

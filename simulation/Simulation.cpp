@@ -5,111 +5,27 @@
 #include "verbose.h"
 
 Simulation::Simulation(float duration, Metabot::Server *server,
-        Metabot::Robot &robot, Controller &controller, double dt, int experience)
-    : duration(duration), server(server), robot(robot), controller(controller), dt(dt), experience(experience)
+        Metabot::Robot &robot, double dt)
+    : duration(duration), server(server), robot(robot), dt(dt)
 {
     over = false;
     robot.toBullet();
-    factor = 10.0;
-
-    if (experience == 2) {
-        currentCheckPoint = 0;
-        maxStep = controller.dx;
-        maxTurn = controller.turn;
-        checkpoints.push_back(FPoint2(500, 0.0));
-        checkpoints.push_back(FPoint2(500, 500));
-        checkpoints.push_back(FPoint2(1000, -250));
-        if (server) server->updateMarker(checkpoints[0].x, checkpoints[0].y);
-        controlT = 0;
-    } else {
-        if (server) server->disableMarker();
-    }
+    factor = 100.0;
 }
 
-void Simulation::control(double dt)
-{
-    if (experience == 2) {
-        controlT += dt;
-        if (controlT > 0.02) {
-            // Updating control orders
-            controlT -= 0.02;
-
-            // Getting robot state
-            auto checkpoint = checkpoints[currentCheckPoint];
-            auto state = robot.getState();
-            auto angles = state.toRPY();
-
-            // Getting the target vector
-            double dX = checkpoint.x-state.x();
-            double dY = checkpoint.y-state.y();
-            double distance = sqrt(dX*dX + dY*dY);
-            if (distance < 100) {
-                if (currentCheckPoint < checkpoints.size()-1) {
-                    currentCheckPoint++;
-                    if (server) server->updateMarker(checkpoints[currentCheckPoint].x, checkpoints[currentCheckPoint].y);
-                } else {
-                    over = true;
-                }
-            } else {
-                double theta = atan2(dY, dX);
-                double error = theta-angles.z();
-                while (error < -M_PI) error += 2*M_PI;
-                while (error > M_PI) error -= 2*M_PI;
-
-                // The turn is the error 
-                controller.turn = 0.6*controller.turn + 0.4*error*0.7;
-                if (controller.turn < -maxTurn) controller.turn = -maxTurn;
-                if (controller.turn > maxTurn) controller.turn = maxTurn;
-
-                // The stepping is maxStep multiplied with error cosine
-                controller.dx = 0.6*controller.dx + 0.4*maxStep*cos(error);
-                if (controller.dx < 0) controller.dx = 0;
-            }
-        }
-    }
-}
-
-double Simulation::score(double duration, double cost, double collisions)
-{
-    if (experience == 2) {
-        if (over) {
-            // We reached all the checkpoints, we'll try to minimize the duration,
-            // and the energy cost
-            return duration*cost*pow(collisions, 2);
-        } else {
-            auto checkpoint = checkpoints[currentCheckPoint];
-            int missedCheckPoints = checkpoints.size()-currentCheckPoint;
-            auto state = robot.getState();
-            double dX = checkpoint.x-state.x();
-            double dY = checkpoint.y-state.y();
-            double distance = sqrt(dX*dX + dY*dY);
-
-            return 1e6*missedCheckPoints + distance;
-        }
-    } else {
-        auto state = robot.getState();
-        // Here, we try to maximize the distance across X axis
-        return cost*pow(collisions, 2)/(duration*fabs(state.x()));
-    }
-}
-
-double Simulation::run()
+void Simulation::run(std::function<void (Simulation*)> control)
 {
     float realTimeStart = getTime();
-    float controllerTime = 0.0;
     float simTime = 0.0;
     float lastUpdate = 0.0;
-    double cost = 0;
-    double collisions = 1.0;
 
     if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
 
-    for (;!over && controllerTime < duration; controllerTime += dt) {
-        control(dt);
-        cost += controller.update(dt, controllerTime, robot);
+    for (t=0;!over && t < duration; t += dt) {
+        // Calling control function
+        control(this);
+
         robot.world.stepSimulation(dt);
-        collisions += robot.world.getAutoCollisions();
-        //printf("%g %g %g %g\n", controllerTime-(int)controllerTime, force.x(), force.y(), force.z());
         simTime += dt/factor;
         
         float realTime = (getTime()-realTimeStart);
@@ -125,6 +41,4 @@ double Simulation::run()
         // auto state = robot.getState();
         // std::cout << state.toRPY().z() << std::endl;
     }
-
-    return score(duration, cost, collisions);
 }

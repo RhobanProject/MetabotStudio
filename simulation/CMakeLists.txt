@@ -30,7 +30,10 @@ set (SOURCES
     Controller.cpp
     Function.cpp
     Simulation.cpp
-    Simulator.cpp
+    Experience.cpp
+    ExperienceController.cpp
+    ExperienceWalk.cpp
+    ExperienceCheckpoints.cpp
     Generator.cpp
 
     util.cpp
