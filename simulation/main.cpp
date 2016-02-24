@@ -162,12 +162,18 @@ int main(int argc, char *argv[])
             std::string value(argv[k]);
             auto parts = split(value, '=');
             if (parts.size() == 2) {
-                parameters.set(parts[0], atof(parts[1].c_str()));
+                try {
+                    parameters.set(parts[0], atof(parts[1].c_str()));
+                    parameters.check(parts[0]);
+                } catch (Experience::ParameterError error) {
+                    printf("score=%lf\n", error.error);
+                    exit(0);
+                }
             }
         }
 
         if (mode == "sim") {
-            std::cout << "score=" << runner->run(parameters, duration) << std::endl;
+            printf("score=%lf\n", runner->run(parameters, duration));
         }
 
         if (mode == "cmaes") {

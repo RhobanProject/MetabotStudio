@@ -43,6 +43,7 @@ class Experience
                 void doNotOptimize(std::string name);
                 void add(std::string name, double min, double max, double value, bool optimize=true);
                 void set(std::string name, double value);
+                void check(std::string name);
                 double get(std::string name);
 
                 std::vector<double> toVector();

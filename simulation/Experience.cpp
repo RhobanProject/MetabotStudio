@@ -57,6 +57,11 @@ void Experience::Parameters::set(std::string name, double value)
         values[name].value = value;
     }
 }
+
+void Experience::Parameters::check(std::string name)
+{
+    values[name].check();
+}
                 
 double Experience::Parameters::get(std::string name)
 {
