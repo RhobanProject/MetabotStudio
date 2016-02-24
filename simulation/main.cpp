@@ -117,6 +117,8 @@ int main(int argc, char *argv[])
             runner = new Experience::Runner<ExperienceCheckpointsEfficience>();
         } else if (experience == "checkpoints-speed") {
             runner = new Experience::Runner<ExperienceCheckpointsSpeed>();
+        } else if (experience == "none") {
+            runner = new Experience::Runner<Experience>();
         }
 
         runner->init(robotFile, factor, !noServer, 0.001);
