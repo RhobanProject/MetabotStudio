@@ -122,6 +122,8 @@ int main(int argc, char *argv[])
             runner = new Experience::Runner<Experience>();
         } else if (experience == "zero") {
             runner = new Experience::Runner<ExperienceZero>();
+        } else if (experience == "sinus") {
+            runner = new Experience::Runner<ExperienceSinus>();
         }
 
         runner->init(robotFile, factor, !noServer, 0.001);
