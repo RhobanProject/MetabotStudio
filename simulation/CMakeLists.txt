@@ -31,6 +31,7 @@ set (SOURCES
     Function.cpp
     Simulation.cpp
     Experience.cpp
+    ExperienceTest.cpp
     ExperienceController.cpp
     ExperienceWalk.cpp
     ExperienceCheckpoints.cpp
