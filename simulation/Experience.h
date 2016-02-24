@@ -61,6 +61,7 @@ class Experience
         class BaseRunner
         {
             public:
+                virtual void init(std::string robotFile_, double factor_, bool runServer, double dt_)=0;
                 virtual void initParameters(Parameters &parameters, Metabot::Robot *robot)=0;
                 virtual double run(Parameters &parameters, double duration=6.0)=0;
         };
@@ -69,9 +70,12 @@ class Experience
             class Runner : public BaseRunner
         {
             public:
-                Runner(std::string robotFile, double factor, bool runServer, double dt)
-                    : robotFile(robotFile), factor(factor), dt(dt)
+                void init(std::string robotFile_, double factor_, bool runServer, double dt_)
                 {
+                    robotFile = robotFile_;
+                    factor = factor_;
+                    dt = dt_;
+                    
                     if (runServer) {
                         server = new Metabot::Server;
                     }
@@ -127,6 +131,10 @@ class Experience
                     T experience;
                     experience.init(parameters, &robot);
 
+                    if (duration == 0.0) {
+                        duration = T::defaultDuration();
+                    }
+
                     // Creating the simulation
                     Simulation simulation(duration, serv, robot, dt);
                     simulation.factor = factor;
@@ -156,4 +164,7 @@ class Experience
 
         // Initialize parameters
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
+
+        // Default experience duration
+        static double defaultDuration();
 };

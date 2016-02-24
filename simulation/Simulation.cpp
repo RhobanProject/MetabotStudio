@@ -21,7 +21,7 @@ void Simulation::run(std::function<void (Simulation*)> control)
 
     if (isVerbose()) std::cout << "Starting simulation..." << std::endl;
 
-    for (t=0;!over && t < duration; t += dt) {
+    for (t=0; !over && t < duration; t += dt) {
         // Calling control function
         control(this);
 

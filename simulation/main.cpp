@@ -16,6 +16,7 @@
 #include <cmaes.h>
 #include "Experience.h"
 #include "ExperienceWalk.h"
+#include "ExperienceCheckpoints.h"
 #include "Generator.h"
 
 #include <iostream>
@@ -44,11 +45,11 @@ int main(int argc, char *argv[])
     float factor = 100.0;
     float duration = 0.0;
     int index;
-    int experience = 1;
     bool external = false;
     bool noServer = false;
     std::string robotFile = "";
     std::string mode = "sim";
+    std::string experience = "walk";
 
     while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:")) != -1) {
         switch (index) {
@@ -84,15 +85,9 @@ int main(int argc, char *argv[])
                 mode = "generate";
                 break;
             case 'x':
-                experience = atoi(optarg);
+                experience = std::string(optarg);
                 break;
         }
-    }
-
-    // Default durations
-    if (duration == 0.0) {
-        if (experience == 1) duration = 6;
-        if (experience == 2) duration = 15;
     }
 
     if (mode == "generate") {
@@ -111,10 +106,20 @@ int main(int argc, char *argv[])
         usage();
     }
 
-    try { 
+    try {
         // Creating the experience
         Experience::BaseRunner *runner = NULL;
-        runner = new Experience::Runner<ExperienceWalkEfficience>(robotFile, factor, !noServer, 0.001);
+        if (experience == "walk") {
+            runner = new Experience::Runner<ExperienceWalkEfficience>();
+        } else if (experience == "walk-speed") {
+            runner = new Experience::Runner<ExperienceWalkSpeed>();
+        } else if (experience == "checkpoints") {
+            runner = new Experience::Runner<ExperienceCheckpointsEfficience>();
+        } else if (experience == "checkpoints-speed") {
+            runner = new Experience::Runner<ExperienceCheckpointsSpeed>();
+        }
+
+        runner->init(robotFile, factor, !noServer, 0.001);
 
         // Reading parameters
         Experience::Parameters parameters;

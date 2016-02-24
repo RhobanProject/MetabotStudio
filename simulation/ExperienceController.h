@@ -10,6 +10,7 @@ class ExperienceController : public Experience
         virtual ~ExperienceController();
         void init(Experience::Parameters &parameters, Metabot::Robot *robot);
         void control(Simulation *simulation);
+        double collisionsPenalty();
         
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
 

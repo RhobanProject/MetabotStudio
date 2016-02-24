@@ -2,15 +2,16 @@
 
 double ExperienceWalkEfficience::score(Simulation *simulation)
 {
-    auto state = simulation->robot.getState();
     // Here, we try to maximize the distance across X axis, taking in
     // account the energy cost
-    return cost*pow(collisions, 2)/(simulation->duration*fabs(state.x()));
+    auto state = simulation->robot.getState();
+    return cost*collisionsPenalty()/(simulation->duration*fabs(state.x()));
 }
 
 double ExperienceWalkSpeed::score(Simulation *simulation)
 {
+    // Here, we try to maximize the distance across X axis, disregarding the
+    // cost
     auto state = simulation->robot.getState();
-    // Here, we try to maximize the distance across X axis
-    return pow(collisions, 2)/(simulation->duration*fabs(state.x()));
+    return collisionsPenalty()/(simulation->duration*fabs(state.x()));
 }

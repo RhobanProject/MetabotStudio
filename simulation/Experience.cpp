@@ -126,3 +126,8 @@ double Experience::score(Simulation *simulation)
 void Experience::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
 }
+        
+double Experience::defaultDuration()
+{
+    return 6.0;
+}

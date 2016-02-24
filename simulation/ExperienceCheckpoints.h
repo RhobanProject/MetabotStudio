@@ -9,7 +9,9 @@ class ExperienceCheckpoints : public ExperienceController
         virtual void control(Simulation *simulation);
         virtual double score(Simulation *simulation);
         virtual double scoreOver(Simulation *simulation)=0;
+
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
+        static double defaultDuration();
         
         virtual bool optimizeTurn();
 

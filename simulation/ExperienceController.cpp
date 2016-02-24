@@ -21,8 +21,8 @@ void ExperienceController::initParameters(Parameters &parameters, Metabot::Robot
     parameters.add("lH", 0, 100, 20);
     parameters.add("lS", 0, 10, 1);
     parameters.add("support", 0, 1, 0.5);
-    parameters.add("dx", 0, 300, 60);
-    parameters.add("dy", 0, 300, 0, false);
+    parameters.add("dx", -300, 300, 60);
+    parameters.add("dy", -300, 300, 0, false);
     parameters.add("turn", -3, 3, 0, false);
 
     // Leg phases
@@ -64,4 +64,9 @@ void ExperienceController::control(Simulation *simulation)
 {
     cost += controller->update(simulation->dt, simulation->t, simulation->robot);
     collisions += simulation->robot.world.getAutoCollisions();
+}
+        
+double ExperienceController::collisionsPenalty()
+{
+    return (1 + pow(collisions, 2));
 }

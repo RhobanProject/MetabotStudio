@@ -7,6 +7,11 @@ void ExperienceCheckpoints::initParameters(Parameters &parameters, Metabot::Robo
     parameters.add("maxTurn", 0, 3, 0.8);
 }
         
+double ExperienceCheckpoints::defaultDuration()
+{
+    return 15.0;
+}
+        
 bool ExperienceCheckpoints::optimizeTurn()
 {
     return true;
@@ -94,10 +99,10 @@ double ExperienceCheckpoints::score(Simulation *simulation)
                 
 double ExperienceCheckpointsEfficience::scoreOver(Simulation *simulation)
 {
-    return cost*pow(collisions, 2);
+    return cost*collisionsPenalty();
 }
 
 double ExperienceCheckpointsSpeed::scoreOver(Simulation *simulation)
 {
-    return simulation->t*pow(collisions, 2);
+    return simulation->t*collisionsPenalty();
 }
