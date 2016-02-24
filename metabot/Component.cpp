@@ -364,8 +364,10 @@ namespace Metabot
         inertia.diagonalize(rot, 0.00001, 20);
         auto nInertia = inertia*rot;
         btVector3 localInertia(
-                nInertia[0][0], nInertia[1][1], nInertia[2][2]
+            nInertia[0][0], nInertia[1][1], nInertia[2][2]
         );
+        // std::cout << module->getName() << std::endl;
+        // std::cout << localInertia.x() << " " << localInertia.y() << " " << localInertia.z() << std::endl;
 
         // Center of mass transformation
         com = btTransform::getIdentity();
