@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
             double start = getTime();
 
             // CMAES parameters
-            CMAParameters<> cmaparams(parameters.toVector(), 0.5, 48);
+            CMAParameters<> cmaparams(parameters.toVector(), 0.75, 64);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
             //cmaparams.set_max_iter(100);
