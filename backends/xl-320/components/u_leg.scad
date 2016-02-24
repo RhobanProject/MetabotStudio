@@ -9,4 +9,10 @@ module u_leg(Height=15, Thickness=2.2)
 {
     //:Anchor motor female
     u(Height, Thickness, screws=false);
+    
+    translate([0,Height,0]) {
+        //:Tip
+    }
 }
+
+u_leg();
