@@ -25,14 +25,10 @@
 
     m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration);
 
-    m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
+    m_dynamicsWorld->setGravity(btVector3(0, 0, -9.8));
     m_dynamicsWorld->setDebugDrawer(&drawer);
 
     m_dynamicsWorld->getSolverInfo().m_solverMode |=
-        SOLVER_SIMD |
-        SOLVER_USE_WARMSTARTING |
-        SOLVER_CACHE_FRIENDLY |
-        SOLVER_RANDMIZE_ORDER |
         SOLVER_USE_2_FRICTION_DIRECTIONS
         ;
 

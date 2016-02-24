@@ -5,6 +5,7 @@ void ExperienceCheckpoints::initParameters(Parameters &parameters, Metabot::Robo
     ExperienceController::initParameters(parameters, robot);
 
     parameters.add("maxTurn", 0, 3, 0.8);
+    parameters.add("kt", 0, 3, 0.7);
 }
         
 double ExperienceCheckpoints::defaultDuration()
@@ -25,6 +26,7 @@ void ExperienceCheckpoints::init(Experience::Parameters &parameters, Metabot::Ro
     currentCheckpoint = 0;
     maxStep = parameters.get("dx");
     maxTurn = parameters.get("maxTurn");
+    kT = parameters.get("kt");
 
     checkpoints.push_back(FPoint2(500, 0.0));
     checkpoints.push_back(FPoint2(500, 500));
@@ -68,7 +70,7 @@ void ExperienceCheckpoints::control(Simulation *simulation)
             while (error > M_PI) error -= 2*M_PI;
 
             // The turn is the error 
-            controller->turn = 0.6*controller->turn + 0.4*error*0.7;
+            controller->turn = 0.6*controller->turn + 0.4*error*kT;
             if (controller->turn < -maxTurn) controller->turn = -maxTurn;
             if (controller->turn > maxTurn) controller->turn = maxTurn;
 

@@ -20,7 +20,7 @@ class ExperienceCheckpoints : public ExperienceController
         int announcedCheckpoint;
         int currentCheckpoint;
         std::vector<FPoint2> checkpoints;
-        double maxStep, maxTurn;
+        double maxStep, maxTurn, kT;
 };
 
 class ExperienceCheckpointsEfficience : public ExperienceCheckpoints
