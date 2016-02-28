@@ -30,7 +30,8 @@ void ExperienceCheckpoints::init(Experience::Parameters &parameters, Metabot::Ro
 
     checkpoints.push_back(FPoint2(500, 0.0));
     checkpoints.push_back(FPoint2(500, 500));
-    checkpoints.push_back(FPoint2(1000, -250));
+    checkpoints.push_back(FPoint2(800, 500));
+    checkpoints.push_back(FPoint2(0, 0));
     controlT = 0;
 }
 
