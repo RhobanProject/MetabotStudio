@@ -124,8 +124,8 @@
                   }
                }
             },
-            "maximum" : 3.1415927410125732,
-            "minimum" : -3.1415927410125732,
+            "maximum" : 1.5707963705062866,
+            "minimum" : -1.5707963705062866,
             "orientationX" : 0,
             "orientationY" : 0,
             "orientationZ" : 0,
@@ -231,8 +231,8 @@
                   }
                }
             },
-            "maximum" : 3.1415927410125732,
-            "minimum" : -3.1415927410125732,
+            "maximum" : 1.5707963705062866,
+            "minimum" : -1.5707963705062866,
             "orientationX" : 0,
             "orientationY" : 0,
             "orientationZ" : 0,
@@ -338,8 +338,8 @@
                   }
                }
             },
-            "maximum" : 3.1415927410125732,
-            "minimum" : -3.1415927410125732,
+            "maximum" : 1.5707963705062866,
+            "minimum" : -1.5707963705062866,
             "orientationX" : 0,
             "orientationY" : 0,
             "orientationZ" : 0,
