@@ -21,16 +21,16 @@ namespace Metabot
 {
     Component::Component(Backend *backend_, Module *module_)
         : 
-        main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
-        backend(backend_), 
-        module(module_), 
-        highlight(false), 
-        hover(false), 
-        body(NULL),
-        hinge(NULL),
-        posHinge(NULL),
-        maxSpeed(4*M_PI),
-        maxTorque(0.5)
+            main(Json::Value(), TransformMatrix::identity(), DEFINE_NO_MODELS),
+            backend(backend_), 
+            module(module_), 
+            highlight(false), 
+            hover(false), 
+            body(NULL),
+            hinge(NULL),
+            posHinge(NULL),
+            maxSpeed(4*M_PI),
+            maxTorque(0.5)
     {
         // std::cout << "Instanciating a component, type " << module->getName() << std::endl;
         for (auto param : module->getParameters()) {
@@ -357,15 +357,15 @@ namespace Metabot
                 dynamics.ixx/1e9, dynamics.ixy/1e9, dynamics.ixz/1e9,
                 dynamics.ixy/1e9, dynamics.iyy/1e9, dynamics.iyz/1e9,
                 dynamics.ixz/1e9, dynamics.iyz/1e9, dynamics.izz/1e9
-        );
+                );
         btMatrix3x3 rot;
 
         // Getting inertia principal axes
         inertia.diagonalize(rot, 0.00001, 20);
         auto nInertia = inertia*rot;
         btVector3 localInertia(
-            nInertia[0][0], nInertia[1][1], nInertia[2][2]
-        );
+                nInertia[0][0], nInertia[1][1], nInertia[2][2]
+                );
         // std::cout << module->getName() << std::endl;
         // std::cout << localInertia.x() << " " << localInertia.y() << " " << localInertia.z() << std::endl;
 
@@ -407,7 +407,7 @@ namespace Metabot
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
                 localInertia, com.inverse());
         body->setUserPointer(this);
-        
+
         // Child
         for (auto anchor : anchors) {
             if (anchor->above && anchor->anchor) {
@@ -423,21 +423,21 @@ namespace Metabot
                 // Recursion
                 auto childComponent = anchor->anchor->component;
                 auto child = childComponent->toBullet(world, anchor->anchor, worldToChild);
-                
+
                 // Creating dummy body for backlash simulation
                 auto empty = world->createEmpty();
                 auto empty2 = world->createEmpty();
                 /*
-                auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
-                        btVector3(1e-5, 1e-5, 1e-5));
-                        */
-                
+                   auto dummy2 = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty2, 
+                   btVector3(1e-5, 1e-5, 1e-5));
+                   */
+
 #if 0
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *child,
                         com.inverse()*anchor->transformationForward().toBullet(),
                         childComponent->com.inverse()*anchor->anchor->transformationForward().toBullet()
-                    );
-              
+                        );
+
                 /////////////// MODE SIMPLE
                 // Creating hinge
                 anchor->anchor->component->hinge = world->createHinge(body, child,
@@ -445,7 +445,7 @@ namespace Metabot
                         childComponent->com.inverse()*anchor->anchor->transformationForward().toBullet()
                         );
 #endif
-                
+
 #if 1
                 auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
                         btVector3(1e-5, 1e-5, 1e-5));
@@ -454,14 +454,14 @@ namespace Metabot
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy,
                         com.inverse()*anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
-                    );
-        
+                        );
+
                 // Creating hinge
                 anchor->anchor->component->hinge = world->createHinge(body, dummy,
                         com.inverse()*anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
                         );
-            
+
                 // Creating cone
                 auto cone = world->createCone(dummy, child,
                         rot.toBullet(),
@@ -470,10 +470,10 @@ namespace Metabot
                 cone->setLimit(0.04, 0.02, 0.02);
                 // cone->setLimit(0.0, 0.0, 0.0);
 #endif
-                
+
 #if 0
                 auto dummy = world->createRigidBody(1e-3, worldToDummy.toBullet(), empty, 
-                       btVector3(1e-6, 1e-6, 1e-6));
+                        btVector3(1e-6, 1e-6, 1e-6));
 
                 ////////////////// MODE GEAR
                 if (anchor->anchor->component->posHinge != NULL) {
@@ -482,12 +482,12 @@ namespace Metabot
                 anchor->anchor->component->posHinge = new btHingeConstraint(*body, *dummy2,
                         anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
-                    );
-                 
+                        );
+
                 anchor->anchor->component->hinge = world->createHinge(body, dummy,
                         anchor->transformationForward().toBullet(),
                         btTransform::getIdentity()
-                    );
+                        );
 
                 auto hinge2 = world->createHinge(dummy, dummy2,
                         btTransform::getIdentity(),
@@ -498,19 +498,19 @@ namespace Metabot
                         btVector3(0, 0, 1),
                         -50
                         );
-               
+
                 world->createFixed(dummy2, child,
                         btTransform::getIdentity(),
                         anchor->anchor->transformationForward().toBullet()
                         );
-               
+
                 /*
-                auto cone = world->createCone(dummy2, child,
-                        rot.toBullet(),
-                        anchor->anchor->transformationForward().multiply(rot).toBullet()
-                        );
-                cone->setLimit(0.03, 0.04, 0.02);
-                */
+                   auto cone = world->createCone(dummy2, child,
+                   rot.toBullet(),
+                   anchor->anchor->transformationForward().multiply(rot).toBullet()
+                   );
+                   cone->setLimit(0.03, 0.04, 0.02);
+                   */
 #endif
             }
         }
@@ -785,7 +785,7 @@ namespace Metabot
             anchor->detach(false);
         }
     }
-            
+
     AnchorPoint *Component::freeAnchor()
     {
         for (auto anchor : anchors) {
@@ -976,21 +976,28 @@ namespace Metabot
         // Torque servoing
         targetForce = bound(errorVel*0.04, -maxForce, maxForce);
 
-// #define METHOD_MOTOR
+        // #define METHOD_MOTOR
 #ifdef METHOD_MOTOR
         hinge->enableAngularMotor(true, targetVel, dt*maxForce);
 #else
-        /*
-        auto test = hinge->getRigidBodyB();
-        auto vel = test.getAngularVelocity();
-        if (id==2) printf("%g %g %g\n", vel.x(), vel.y(), vel.z());
-        */
-        btVector3 hingeAxisLocal = hinge->getAFrame().getBasis().getColumn(2); // z-axis of constraint frame
-        btVector3 hingeAxisWorld = hinge->getRigidBodyA().getWorldTransform().getBasis() * hingeAxisLocal;
-        btVector3 hingeTorque = targetForce * hingeAxisWorld;
+        btVector3 hingeAxisLocalA =
+            hinge->getFrameOffsetA().getBasis().getColumn(2);
+        btVector3 hingeAxisLocalB =
+            hinge->getFrameOffsetB().getBasis().getColumn(2);
 
-        hinge->getRigidBodyA().applyTorque(hingeTorque);
-        hinge->getRigidBodyB().applyTorque(-hingeTorque);
+        btVector3 hingeAxisWorldA =
+            hinge->getRigidBodyA().getWorldTransform().getBasis() *
+            hingeAxisLocalA;
+        btVector3 hingeAxisWorldB =
+            hinge->getRigidBodyB().getWorldTransform().getBasis() *
+            hingeAxisLocalB;
+
+        btVector3 hingeTorqueA = targetForce * hingeAxisWorldA;
+        btVector3 hingeTorqueB = targetForce * hingeAxisWorldB;
+
+        hinge->getRigidBodyA().applyTorque(hingeTorqueA);
+        hinge->getRigidBodyB().applyTorque(-hingeTorqueB);
+
 
         // This can be used to add some frictions
         // hinge->enableAngularMotor(true, 0.0, 0.00001);
