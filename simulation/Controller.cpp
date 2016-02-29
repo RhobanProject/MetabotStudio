@@ -174,13 +174,20 @@ void Controller::compute(float t_)
         float phase = phases[k++] + t;
 
         // Following the spline
-        float tx = leg.xVec*x + step.posMod(phase)*dx;
-        float ty = leg.yVec*y + step.posMod(phase)*dy;
+        float tx = leg.xVec*x;
+        float ty = leg.yVec*y;
+
+        // Applying rotation
         float tx_ = tx;
         float ty_ = ty;
         float theta = step.posMod(phase)*turn;
         tx = cos(theta)*tx_ - sin(theta)*ty_;
         ty = sin(theta)*tx_ + cos(theta)*ty_;
+
+        // Applying trajectory
+        tx += step.posMod(phase)*dx;
+        ty += step.posMod(phase)*dy;
+
         float tz = rise.posMod(phase) - z;
         
         leg.gotoXYZ(tx, ty, tz);
