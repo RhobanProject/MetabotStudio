@@ -13,7 +13,7 @@ void ExperienceController::initParameters(Parameters &parameters, Metabot::Robot
     // Posture parameters
     parameters.add("x", 0, 3, 0.8);
     parameters.add("y", 0, 3, 0.8);
-    parameters.add("z", 0, 150, 50);
+    parameters.add("z", 0, 300, 50);
 
     // Controller parameters
     parameters.add("freq", 0, 4, 2);
