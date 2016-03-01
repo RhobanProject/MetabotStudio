@@ -3,7 +3,7 @@ include <ollo.scad>;
 include <motor_values.scad>;
 use <../util/rounded.scad>;
 
-//:Model "Motor" [0.4,0.45,0.4]
+//:Model "Motor" [0.15,0.2,0.15]
 //:Mass 16.7
 module motor(thickness=2.2) {
     //:BOM "XL-320 Servo" 21.9 http://www.robotis-shop-en.com/?act=shop_en.goods_view&GS=1611
