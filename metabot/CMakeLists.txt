@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(metabot)
 find_package (Threads)
+find_package (Deps)
 
-# Linking explicitly libraries from LIBRARY_PATH to override systems
-string(REPLACE ":" ";" LIBRARIES $ENV{LIBRARY_PATH})
-link_directories(${LIBRARIES})
+deps_add_library ("rhobandeps/jsoncpp")
+deps_add_library ("rhobandeps/bullet3")
 
 OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
 
@@ -85,14 +85,11 @@ set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSP
 add_library(libmetabot ${ALL_SOURCES})
 
 target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} 
-    jsoncpp
+    ${DEPS_LIBRARIES}
     symbolic 
     zmq
     )
-target_link_libraries(libmetabot BulletDynamics)
-target_link_libraries(libmetabot BulletCollision)
-target_link_libraries(libmetabot LinearMath)
-target_link_libraries(libmetabot BulletSoftBody)
+
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()

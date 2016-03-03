@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 find_package(Eigen3 REQUIRED)
+find_package(Deps)
 
-# Linking explicitly libraries from LIBRARY_PATH to override systems
-string(REPLACE ":" ";" LIBRARIES $ENV{LIBRARY_PATH})
-link_directories(${LIBRARIES})
+deps_add_library ("rhobandeps/jsoncpp")
+deps_add_library ("rhobandeps/bullet3")
+deps_add_library ("rhobandeps/libcmaes")
 
 set (BASE
     "${CMAKE_SOURCE_DIR}/..")
@@ -44,4 +45,4 @@ set (SOURCES
     )
 
 add_executable(sim ${SOURCES})
-target_link_libraries(sim pthread jsoncpp libmetabot cmaes gomp)
+target_link_libraries(sim pthread libmetabot ${DEPS_LIBRARIES})
