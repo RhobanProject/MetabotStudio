@@ -222,6 +222,10 @@ namespace Metabot
             }
 
             fromJson(json, defines);
+        } else {
+            std::stringstream ss;
+            ss << "Unable to read file " << filename;
+            throw ss.str();
         }
     }
     
