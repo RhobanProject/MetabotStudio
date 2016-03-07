@@ -29,7 +29,6 @@ endif (USE_DOUBLE_PRECISION)
 
 set (SOURCES
     Controller.cpp
-    Function.cpp
     Simulation.cpp
     Experience.cpp
     ExperienceTest.cpp
@@ -39,7 +38,6 @@ set (SOURCES
     Generator.cpp
 
     util.cpp
-    kinematic.cpp
     main.cpp
     verbose.cpp
     )
