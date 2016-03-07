@@ -3,7 +3,6 @@
 
 #include <Robot.h>
 #include <spline/CubicSpline.hpp>
-#include "Function.h"
 #include "Robot.h"
 
 class Controller
