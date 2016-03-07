@@ -180,14 +180,14 @@ int main(int argc, char *argv[])
             double start = getTime();
 
             // CMAES parameters
-            CMAParameters<> cmaparams(parameters.toVector(), 0.5, 64);
+            CMAParameters<> cmaparams(parameters.toVector(), -1, 64);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
             //cmaparams.set_max_iter(100);
             cmaparams.set_restarts(3);
             //cmaparams.set_max_hist(3);
             //cmaparams.set_max_fevals(10000000);
-            cmaparams.set_elitism(3);
+            cmaparams.set_elitism(1);
             cmaparams.set_x0(0, 1);
             //cmaparams.set_ftolerance(0.00001);
             cmaparams.set_mt_feval(true);
