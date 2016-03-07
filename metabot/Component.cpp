@@ -1000,7 +1000,7 @@ namespace Metabot
 
 
         // This can be used to add some frictions
-        // hinge->enableAngularMotor(true, 0.0, 0.00001);
+        // hinge->enableAngularMotor(true, 0.0, dt*0.02);
 #endif
         lastPos = pos;
 
