@@ -136,12 +136,15 @@ double Experience::defaultDuration()
     return 6.0;
 }
         
-void Experience::setMotorTargets(Simulation *simulation, std::vector<double> angles)
+double Experience::setMotorTargets(Simulation *simulation, std::vector<double> angles)
 {
     int k = 0;
-    simulation->robot.foreachComponent([simulation, &k, &angles](Metabot::Component *component) {
+    double cost = 0;
+    simulation->robot.foreachComponent([simulation, &cost, &k, &angles](Metabot::Component *component) {
         if (component->hinge) {
-            component->setTarget(angles[k++], simulation->dt);
+            cost += component->setTarget(angles[k++], simulation->dt);
         }
     });
+
+    return cost;
 }

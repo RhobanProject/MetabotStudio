@@ -170,5 +170,5 @@ class Experience
         static double defaultDuration();
 
         // Helper
-        void setMotorTargets(Simulation *simulation, std::vector<double> angles);
+        double setMotorTargets(Simulation *simulation, std::vector<double> angles);
 };

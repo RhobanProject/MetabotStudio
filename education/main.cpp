@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         robot.loadParametersFromFile(robotFile);
         for (auto entry : robot.parameters) {
             auto param = entry.second;
-            parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue());
+            parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue(), false);
         }
         
         // Experience parameters
