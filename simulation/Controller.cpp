@@ -2,7 +2,6 @@
 #include <math.h>
 #include <cmaes.h>
 #include <Component.h>
-#include "kinematic.h"
 #include "Controller.h"
 
 using namespace libcmaes;

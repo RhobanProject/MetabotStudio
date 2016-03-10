@@ -68,5 +68,5 @@ void ExperienceController::control(Simulation *simulation)
         
 double ExperienceController::collisionsPenalty()
 {
-    return (1 + pow(collisions, 2));
+    return (1 + pow(collisions, 4));
 }

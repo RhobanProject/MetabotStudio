@@ -28,14 +28,10 @@ add_definitions( -DBT_USE_DOUBLE_PRECISION)
 endif (USE_DOUBLE_PRECISION)
 
 set (SOURCES
-    Controller.cpp
     Simulation.cpp
     Experience.cpp
-    ExperienceTest.cpp
-    ExperienceController.cpp
     ExperienceWalk.cpp
-    ExperienceCheckpoints.cpp
-    Generator.cpp
+    ExperienceTest.cpp
 
     util.cpp
     main.cpp
@@ -44,3 +40,8 @@ set (SOURCES
 
 add_executable(sim ${SOURCES})
 target_link_libraries(sim pthread libmetabot ${DEPS_LIBRARIES})
+
+execute_process (COMMAND "${CMAKE_SOURCE_DIR}/makeln.sh" 
+    "${CMAKE_BINARY_DIR}/backends"
+    "${CMAKE_SOURCE_DIR}/../backends"
+    )
