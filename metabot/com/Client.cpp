@@ -5,7 +5,7 @@
 namespace Metabot
 {
     Client::Client()
-        : robot(NULL), debug(false)
+        : robot(NULL), debug(false), hasMarker(false)
     {
         context = zmq_ctx_new();
         client = zmq_socket(context, ZMQ_SUB);
