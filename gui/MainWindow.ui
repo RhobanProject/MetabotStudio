@@ -128,6 +128,8 @@
     <addaction name="actionExport_STLs"/>
     <addaction name="actionExport_URDF"/>
     <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionChange_backend"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuRobot">
@@ -337,6 +339,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+K</string>
+   </property>
+  </action>
+  <action name="actionChange_backend">
+   <property name="text">
+    <string>Change backend</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
  </widget>

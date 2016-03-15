@@ -14,6 +14,7 @@
 #include "ComponentWizard.h"
 #include "DynamicsWindow.h"
 #include "ParametersEditor.h"
+#include "BackendSelector.h"
 
 namespace Ui {
     class MainWindow;
@@ -88,7 +89,6 @@ private slots:
     void on_actionNew_triggered();
 
     void on_actionExport_STL_triggered();
-
     void on_treeButton_clicked();
 
     void on_action_tree_triggered();
@@ -99,10 +99,13 @@ private slots:
     void on_actionCenter_of_mass_triggered();
 
     void on_actionParameters_triggered();
-
     void on_actionPhysics_triggered();
+    void on_actionChange_backend_triggered();
+
+    void on_backendSelected(QString backend);
 
 private:
+    BackendSelector backendSelector;
     QSettings settings;
     QTreeWidgetItem *contextmenu_item;
     Metabot::AnchorPoint *contextmenu_anchor;

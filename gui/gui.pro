@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     ZerosEditor.cpp \
     DynamicsWindow.cpp \
     ParametersEditor.cpp \
-    ValueWidget.cpp
+    ValueWidget.cpp \
+    BackendSelector.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
@@ -30,14 +31,16 @@ HEADERS  += MainWindow.h \
     ZerosEditor.h \
     DynamicsWindow.h \
     ParametersEditor.h \
-    ValueWidget.h
+    ValueWidget.h \
+    BackendSelector.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \
     ComponentItem.ui \
     ZerosEditor.ui \
     DynamicsWindow.ui \
-    ParametersEditor.ui
+    ParametersEditor.ui \
+    BackendSelector.ui
 
 DEFINES += OPENGL BT_USE_DOUBLE_PRECISION
 CONFIG += c++11
@@ -57,9 +60,9 @@ win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/l
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib
 else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../metabot/build/liblibmetabot.a
 
-win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath -lzmq -ljsoncpp
-mac: LIBS += -framework OpenGL -lzmq -ljsoncpp
-else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath -lzmq -ljsoncpp
+win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath -lzmq -lrhoban_jsoncpp
+mac: LIBS += -framework OpenGL -lzmq -lrhoban_jsoncpp
+else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath -lzmq -lrhoban_jsoncpp
 
 RESOURCES += \
     icons.qrc

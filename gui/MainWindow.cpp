@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <metabot/AnchorPoint.h>
 #include <metabot/3d/stl.h>
+#include <util/util.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,8 +34,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Metabot Studio");
 
+    std::string backendName = "xl-320";
+    std::string backendFile = current_dir()+"/.metabot-backend";
+    std::cout << backendFile << std::endl;
+    if (!QFile::exists(QString::fromStdString(backendFile))) {
+        file_put_contents(backendFile, backendName);
+    } else {
+        backendName = file_get_contents(backendFile);
+    }
+
     // Loading metabot backend
-    backend = new Metabot::Backend("xl-320");
+    backend = Metabot::Backend::get(backendName);
     // backend = new Metabot::Backend("abstract");
     backend->load();
 
@@ -82,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&pasteComponent, SIGNAL(triggered()), this, SLOT(on_contextmenu_paste()));
     QObject::connect(ui->tree, SIGNAL(itemSelectionChanged()), this, SLOT(on_tree_itemSelectionChanged()));
     QObject::connect(ui->tree, SIGNAL(deselectedAll()), this, SLOT(on_tree_itemDeselected()));
+    QObject::connect(&backendSelector, SIGNAL(selectedBackend(QString)), this, SLOT(on_backendSelected(QString)));
     drawTree();
 
     ui->actionGrid->setChecked(true);
@@ -568,8 +579,7 @@ void MainWindow::on_actionAutorotate_triggered()
 
 void MainWindow::on_actionNew_triggered()
 {
-    robot->clear();
-    drawTree();
+    backendSelector.show();
 }
 
 void MainWindow::on_actionExport_STL_triggered()
@@ -665,4 +675,20 @@ void MainWindow::on_actionPhysics_triggered()
         viewer->mode = MODE_NORMAL;
     }
     viewer->redraw();
+}
+
+void MainWindow::on_actionChange_backend_triggered()
+{
+    backendSelector.show();
+}
+
+void MainWindow::on_backendSelected(QString backend)
+{
+    auto oldRobot = robot;
+
+    robot = new Metabot::Robot(Metabot::Backend::get(backend.toStdString()));
+    viewer->setRobot(robot);
+
+    delete oldRobot;
+    drawTree();
 }
