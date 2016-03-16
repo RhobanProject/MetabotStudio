@@ -4,9 +4,31 @@ use <../util/rounded.scad>
 use <../models/mx64-arm.scad>
 
 //:Part
-module mx64_arms_plate(length=100)
+module mx64_u(thickness=2, height=35, mode="arm")
 {
-    cube([30,10,3]);'
+    difference() {
+        union() {
+            for (i=[-1,1]) {
+                translate([i*(thickness/2+(MX64Depth+6)/2),0,0])
+                translate([-thickness/2,-15,0])
+                    cube([thickness,30,height+14]);
+            }
+            
+            cube([(MX64Depth+6)+2*thickness,30,thickness], center=true);
+        }
+        
+        if (mode == "arm") {
+            mx64_arm_holes();
+        }
+        
+        for (i=[-1,1]) {
+            translate([i*(thickness/2+(MX64Depth+6)/2),0,0])
+            translate([0,0,height]) {
+                rotate([0,90,0])
+                mx64_arm_holes();
+            }
+        }
+    }
 }
 
-mx64_arms_plate();
+mx64_u();
