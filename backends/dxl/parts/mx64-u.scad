@@ -17,15 +17,17 @@ module mx64_u(thickness=2, height=35, mode="arm")
             cube([(MX64Depth+6)+2*thickness,30,thickness], center=true);
         }
         
-        if (mode == "arm") {
-            mx64_arm_holes();
-        }
-        
-        for (i=[-1,1]) {
-            translate([i*(thickness/2+(MX64Depth+6)/2),0,0])
-            translate([0,0,height]) {
-                rotate([0,90,0])
+        if (!Collisions) {
+            if (mode == "arm") {
                 mx64_arm_holes();
+            }
+            
+            for (i=[-1,1]) {
+                translate([i*(thickness/2+(MX64Depth+6)/2),0,0])
+                translate([0,0,height]) {
+                    rotate([0,90,0])
+                    mx64_arm_holes();
+                }
             }
         }
     }

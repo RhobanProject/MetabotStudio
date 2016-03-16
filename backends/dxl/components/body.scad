@@ -14,8 +14,10 @@ module body(width=120, height=150, depth=80)
     
     for (x=[-width/2,width/2]) {
         translate([0,x,0]) {
-            mx64_with_arm();
-            //:Anchor mx64 male
+            rotate([180,0,0]) {
+                mx64_with_arm();
+                //:Anchor mx64 male
+            }
 
             translate([-18,0,height])
             rotate([0,270,90]) {
