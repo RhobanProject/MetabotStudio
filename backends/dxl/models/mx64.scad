@@ -9,15 +9,15 @@ module mx64()
     // See 
     // http://support.robotis.com/en/baggage_files/dynamixel/rx64dimension.pdf
     rotate([0,0,90])
-    translate([0,0,-41/2])
+    translate([0,0,-MX64Depth/2])
     color([0.15,0.2,0.15])
     difference() {
         translate([0, 18, 0])
             rounded(MX64Width, MX64Height, MX64Depth, center=true);
         
         if (!Collisions) {
-            translate([0,46,0])
-                cube([31,10,100], center=true);
+            translate([-50,43,3])
+                cube([100,10,34], center=false);
             
             cylinder(d=5, h=100, center=true);
         }
