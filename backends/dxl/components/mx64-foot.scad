@@ -15,7 +15,7 @@ module mx64_foot(height=30, thickness=2)
     }
     mx64_u(height=height, thickness=thickness, mode="none");
     
-    translate([0,0,-thickness])
+    translate([0,5,-thickness])
     foot(thickness=thickness);
 }
 
