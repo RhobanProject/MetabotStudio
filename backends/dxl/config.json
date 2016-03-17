@@ -1,0 +1,15 @@
+{
+    "backlash": false,
+    "mode": "motor",
+    "motors": {
+        "mx28": {
+            "maxTorque": 2.8,
+            "maxSpeed": 12
+        },
+        "mx64": {
+            "maxTorque": 6.4,
+            "maxSpeed": 14
+        }
+    },
+    "density": 2.5
+}
