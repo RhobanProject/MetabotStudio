@@ -13,7 +13,7 @@ namespace Metabot
         minimum(-M_PI), maximum(M_PI)
     {
         if (json.isObject()) {
-            type = json["type"].asString();
+            type = json["name"].asString();
             male = json["male"].asBool();
             female = json["female"].asBool();
         }

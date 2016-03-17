@@ -139,6 +139,7 @@ namespace Metabot
                     if (annotation == "anchor" && parts.size()==3) {
                         Json::Value json;
                         json["type"] = "anchor";
+                        json["name"] = parts[1];
                         json["male"] = (parts[2] == "male");
                         json["female"] = (parts[2] == "female");
                         oss << jsonMarker(json);
