@@ -16,7 +16,7 @@ namespace Metabot
         g = 0.8;
         b = 0.8;
         mass = 0.0;
-        density = 1.25;
+        density = 1.0;
     }
 
     Module::~Module()
@@ -36,6 +36,7 @@ namespace Metabot
     void Module::setBackend(Backend *backend_)
     {
         backend = backend_;
+        density = backend->config.density;
     }
 
     void Module::setName(std::string name_)

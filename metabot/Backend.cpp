@@ -13,6 +13,31 @@ namespace Metabot
     static std::mutex mutex;
     static std::map<std::string, Backend *> backends;
 
+    Backend::BackendConfig::BackendConfig()
+        : mode(MODE_TORQUE),
+        density(1.25),
+        backlash(true)
+    {
+    }
+
+    double Backend::BackendConfig::getMaxTorque(std::string motor)
+    {
+        if (motors.count(motor)) {
+            return motors[motor].maxTorque;
+        }
+
+        return 0.5;
+    }
+
+    double Backend::BackendConfig::getMaxSpeed(std::string motor)
+    {
+        if (motors.count(motor)) {
+            return motors[motor].maxSpeed;
+        }
+
+        return 4*M_PI;
+    }
+
     Backend *Backend::get(std::string name)
     {
         mutex.lock();
@@ -26,7 +51,7 @@ namespace Metabot
 
         return backend;
     }
-            
+
     void Backend::clean()
     {
         for (auto backend : backends) {
@@ -42,6 +67,45 @@ namespace Metabot
         std::string cacheDir = directory + "/cache";
         cache = new Cache();
         cache->setDirectory(cacheDir);
+
+        std::string configFile = directory+"/config.json";
+        if (file_exists(configFile)) {
+            loadConfig(configFile);
+        }
+    }
+
+    void Backend::loadConfig(std::string filename)
+    {
+        std::string data = file_get_contents(filename);
+        Json::Reader reader;
+        Json::Value json;
+
+        if (reader.parse(data, json)) {
+            if (json.isMember("backlash")) {
+                config.backlash = json["backlash"].asBool();
+            }
+            if (json.isMember("mode")) {
+                if (json["mode"].asString() == "motor") {
+                    config.mode = MODE_MOTORS;
+                } else {
+                    config.mode = MODE_TORQUE;
+                }
+            }
+            if (json.isMember("density")) {
+                config.density = json["density"].asDouble();
+            }
+            if (json.isMember("motors")) {
+                for (auto &entry : json["motors"].getMemberNames()) {
+                    auto &motor = json["motors"][entry];
+                    if (motor.isMember("maxTorque")) {
+                        config.motors[entry].maxTorque = motor["maxTorque"].asDouble();
+                    }
+                    if (motor.isMember("maxSpeed")) {
+                        config.motors[entry].maxTorque = motor["maxSpeed"].asDouble();
+                    }
+                }
+            }
+        }
     }
 
     Backend::~Backend()
@@ -53,7 +117,7 @@ namespace Metabot
             delete module.second;
         }
     }
-            
+
     void Backend::buildCache()
     {
         for (auto module : modules) {
@@ -116,7 +180,7 @@ namespace Metabot
             modules[module.getName()] = mod;
         }
     }
-            
+
     Module *Backend::getModule(std::string name)
     {
         return modules[name];
@@ -146,7 +210,7 @@ namespace Metabot
 
         return models[name];
     }
-            
+
     Component *Backend::instanciate(std::string name)
     {
         if (modules.count(name)) {
@@ -161,14 +225,14 @@ namespace Metabot
     Component *Backend::fromJson(Json::Value json, Robot *robot)
     {
         if (!json.isObject() || !json.isMember("component") 
-            || !json.isMember("parameters") || !json.isMember("anchors")
-            || !json["component"].isString() || !json["parameters"].isObject()
-            || !json["anchors"].isObject()) {
+                || !json.isMember("parameters") || !json.isMember("anchors")
+                || !json["component"].isString() || !json["parameters"].isObject()
+                || !json["anchors"].isObject()) {
             std::stringstream ss;
             ss << "Malformed Json component";
             throw ss.str();
         }
-            
+
         std::string component = json["component"].asString();
 
         if (!modules.count(component)) {

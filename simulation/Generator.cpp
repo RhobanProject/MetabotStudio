@@ -34,9 +34,6 @@
 
 Generator::~Generator()
 {
-    for (auto component : components) {
-        delete component;
-    }
 }
 
 Metabot::AnchorPoint *Generator::getRandom(Metabot::AnchorPoint *parent, bool tip)

@@ -121,7 +121,6 @@ class Experience
 
                     if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
                     robot.computeDynamics();
-                    robot.setMotorsLimit(parameters.get("maxSpeed"), parameters.get("maxTorque"));
                     // robot.printDynamics();
 
                     if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;

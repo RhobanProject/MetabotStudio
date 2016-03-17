@@ -91,6 +91,5 @@ namespace Metabot
 
             // Bullet
             World world;
-            void setMotorsLimit(float maxSpeed, float maxTorque);
     };
 }

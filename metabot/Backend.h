@@ -9,6 +9,10 @@
 #include "Component.h"
 #include "scad/Module.h"
 
+// Simulation mode
+#define MODE_TORQUE     0
+#define MODE_MOTORS     1
+
 namespace Metabot
 {
     class Robot;
@@ -16,6 +20,23 @@ namespace Metabot
     class Backend
     {
         public:
+            struct BackendMotor
+            {
+                double maxTorque;
+                double maxSpeed;
+            };
+
+            struct BackendConfig
+            {
+                BackendConfig();
+                int mode;
+                double density;
+                bool backlash;
+                std::map<std::string, BackendMotor> motors;
+                double getMaxTorque(std::string motor);
+                double getMaxSpeed(std::string motor);
+            };
+
             static Backend *get(std::string name);
             static void clean();
 
@@ -23,6 +44,7 @@ namespace Metabot
             virtual ~Backend();
 
             void load();
+            void loadConfig(std::string filename);
             void loadComponents(std::string directory);
             void loadComponent(std::string name);
             void buildCache();
@@ -42,6 +64,8 @@ namespace Metabot
             Module *getModule(std::string name);
             Model &getModel(std::string name);
             std::map<std::string, Model> models;
+
+            BackendConfig config;
 
         protected:
             std::map<std::string, Module*> modules;
