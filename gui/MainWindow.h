@@ -39,6 +39,7 @@ public:
     void showDynamicsWindow(Metabot::Dynamics dynamics);
     void runWizard(Metabot::AnchorPoint *anchor);
     void highlightAnchor(Metabot::AnchorPoint *anchor);
+    void setAutoOpenFile(std::string robotFile);
     void deselectAll();
     Viewer *getViewer();
 

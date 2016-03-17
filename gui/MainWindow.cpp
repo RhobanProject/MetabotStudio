@@ -34,17 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Metabot Studio");
 
-    std::string backendName = "xl-320";
-    std::string backendFile = current_dir()+"/.metabot-backend";
-    std::cout << backendFile << std::endl;
-    if (!QFile::exists(QString::fromStdString(backendFile))) {
-        file_put_contents(backendFile, backendName);
-    } else {
-        backendName = file_get_contents(backendFile);
-    }
-
     // Loading metabot backend
-    backend = Metabot::Backend::get(backendName);
+    backend = Metabot::Backend::get("xl-320");
     // backend = new Metabot::Backend("abstract");
     backend->load();
 
@@ -57,12 +48,14 @@ MainWindow::MainWindow(QWidget *parent) :
     viewer->setRobot(robot);
 
     // Debugging auto-open
-    filename = "/home/gregwar/MetabotStudio/robots/1.robot";
-    robot->loadFromFile(filename.toStdString());
-    robot->number();
-    robot->computeDynamics();
-    // robot->toBullet();
-    ui->actionSave->setEnabled(true);
+    std::string autoOpenFile = current_dir()+"/.robot";
+    if (file_exists(autoOpenFile)) {
+        filename = QString::fromStdString(file_get_contents(autoOpenFile));
+        robot->loadFromFile(filename.toStdString());
+        robot->number();
+        robot->computeDynamics();
+        ui->actionSave->setEnabled(true);
+    }
 
     // Viewer
     QObject::connect(viewer, SIGNAL(autorotate_changed(bool)), this, SLOT(on_viewer_autorotate_change(bool)));
@@ -226,6 +219,12 @@ void MainWindow::highlightAnchor(Metabot::AnchorPoint *anchor)
             robot->root->highlight = true;
         }
     }
+}
+
+void MainWindow::setAutoOpenFile(string robotFile)
+{
+    QString path = QDir::currentPath()+"/.robot";
+    file_put_contents(path.toStdString(), robotFile);
 }
 
 void MainWindow::deselectAll()
@@ -506,6 +505,7 @@ void MainWindow::on_actionOpen_triggered()
             robot->clear();
             try {
                 robot->loadFromFile(fn.toStdString());
+                setAutoOpenFile(fn.toStdString());
             } catch (std::string error) {
                 QMessageBox::warning(this,"Erreur de chargement", QString::fromStdString(error));
             }
@@ -519,6 +519,7 @@ void MainWindow::on_actionSave_triggered()
 {
     if (filename != "") {
         robot->saveToFile(filename.toStdString());
+        setAutoOpenFile(filename.toStdString());
     }
 }
 
