@@ -1,8 +1,16 @@
 
 //:Part
-module foot(thickness=2)
+module foot(width=142, height=82, thickness=2)
 {
-    cube([142, 82, thickness], center=true);
+    cube([width, height, thickness], center=true);
+    
+    for (x=[-width/2+5, -5+width/2]) {
+        for (y=[-height/2+5, -5+height/2]) {
+            translate([x,y,-10])
+           
+            sphere(r=10);
+        }
+    }
 }
 
 foot();
