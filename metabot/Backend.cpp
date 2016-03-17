@@ -101,7 +101,7 @@ namespace Metabot
                         config.motors[entry].maxTorque = motor["maxTorque"].asDouble();
                     }
                     if (motor.isMember("maxSpeed")) {
-                        config.motors[entry].maxTorque = motor["maxSpeed"].asDouble();
+                        config.motors[entry].maxSpeed = motor["maxSpeed"].asDouble();
                     }
                 }
             }
