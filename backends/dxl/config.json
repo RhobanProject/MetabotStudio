@@ -4,11 +4,15 @@
     "motors": {
         "mx28": {
             "maxTorque": 2.8,
-            "maxSpeed": 12
+            "maxSpeed": 12,
+            "speedGain": 60,
+            "torqueGain": 0.05
         },
         "mx64": {
             "maxTorque": 6.4,
-            "maxSpeed": 14
+            "maxSpeed": 14,
+            "speedGain": 60,
+            "torqueGain": 0.05
         }
     },
     "density": 2.5
