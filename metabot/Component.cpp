@@ -954,8 +954,9 @@ namespace Metabot
         }
 
         auto above = aboveAnchor();
-        auto maxTorque = backend->config.getMaxTorque(above->type);
-        auto maxSpeed = backend->config.getMaxSpeed(above->type);
+        auto motor = backend->config.motors[above->type];
+        double maxSpeed = motor.maxSpeed;
+        double maxTorque = motor.maxTorque;
 
         alpha = alpha*above->sign();
         auto pos = posHinge->getHingeAngle();
@@ -966,7 +967,7 @@ namespace Metabot
 
         // Speed servoing
         float error = alpha-pos;
-        float targetVel = bound(error*30, -maxSpeed, maxSpeed);
+        float targetVel = bound(error*motor.speedGain, -maxSpeed, maxSpeed);
 
         // Limiting torque in function of current speed
         float errorVel = targetVel-vel;
@@ -976,7 +977,7 @@ namespace Metabot
         float maxForce = maxTorque*(1-coef);
 
         // Torque servoing
-        targetForce = bound(errorVel*0.04, -maxForce, maxForce);
+        targetForce = bound(errorVel*motor.torqueGain, -maxForce, maxForce);
 
         if (backend->config.mode == MODE_MOTORS) {
             hinge->enableAngularMotor(true, targetVel, dt*maxForce);

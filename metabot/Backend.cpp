@@ -13,29 +13,20 @@ namespace Metabot
     static std::mutex mutex;
     static std::map<std::string, Backend *> backends;
 
+    Backend::BackendMotor::BackendMotor()
+        : maxTorque(0.5),
+        maxSpeed(4*M_PI),
+        speedGain(30),
+        torqueGain(0.04)
+    {
+    }
+
     Backend::BackendConfig::BackendConfig()
         : mode(MODE_TORQUE),
         density(1.25),
+        gain(30),
         backlash(true)
     {
-    }
-
-    double Backend::BackendConfig::getMaxTorque(std::string motor)
-    {
-        if (motors.count(motor)) {
-            return motors[motor].maxTorque;
-        }
-
-        return 0.5;
-    }
-
-    double Backend::BackendConfig::getMaxSpeed(std::string motor)
-    {
-        if (motors.count(motor)) {
-            return motors[motor].maxSpeed;
-        }
-
-        return 4*M_PI;
     }
 
     Backend *Backend::get(std::string name)
@@ -94,6 +85,9 @@ namespace Metabot
             if (json.isMember("density")) {
                 config.density = json["density"].asDouble();
             }
+            if (json.isMember("gain")) {
+                config.gain = json["gain"].asDouble();
+            }
             if (json.isMember("motors")) {
                 for (auto &entry : json["motors"].getMemberNames()) {
                     auto &motor = json["motors"][entry];
@@ -102,6 +96,12 @@ namespace Metabot
                     }
                     if (motor.isMember("maxSpeed")) {
                         config.motors[entry].maxSpeed = motor["maxSpeed"].asDouble();
+                    }
+                    if (motor.isMember("speedGain")) {
+                        config.motors[entry].speedGain = motor["speedGain"].asDouble();
+                    }
+                    if (motor.isMember("torqueGain")) {
+                        config.motors[entry].torqueGain = motor["torqueGain"].asDouble();
                     }
                 }
             }

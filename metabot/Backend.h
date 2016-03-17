@@ -22,8 +22,11 @@ namespace Metabot
         public:
             struct BackendMotor
             {
+                BackendMotor();
                 double maxTorque;
                 double maxSpeed;
+                double speedGain;
+                double torqueGain;
             };
 
             struct BackendConfig
@@ -31,10 +34,9 @@ namespace Metabot
                 BackendConfig();
                 int mode;
                 double density;
+                double gain;
                 bool backlash;
                 std::map<std::string, BackendMotor> motors;
-                double getMaxTorque(std::string motor);
-                double getMaxSpeed(std::string motor);
             };
 
             static Backend *get(std::string name);
