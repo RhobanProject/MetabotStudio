@@ -20,6 +20,7 @@ module body(width=120, height=150, depth=80)
             }
 
             translate([-18,0,height])
+            rotate([0,0,x>0?180:0])
             rotate([0,270,90]) {
                 mx28_with_arm();
                 //:Anchor mx28 male

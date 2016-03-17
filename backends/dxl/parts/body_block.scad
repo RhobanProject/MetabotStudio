@@ -18,6 +18,10 @@ module body_block(width=130, height=180, depth=80)
         
         translate([-depth*2/3+2.5,2.5-width/2-MX64Width/2,MX64Depth/2-0.1])
             cube([depth-5, MX64Width+width-5, -5+13+height-MX64Depth/2-MX28Height]);
+        
+            translate([-depth*2/3+2.5,2.5-(width-MX28Depth)/2,height-MX28Height+13-6]) {
+                cube([depth-5,width-MX28Depth-5,20]);
+            }
     }
 }
 
