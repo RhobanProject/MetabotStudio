@@ -33,6 +33,7 @@ set(ALL_SOURCES
     spline/Polynom.cpp
     spline/NewtonBinomial.cpp
     spline/Combination.cpp
+    spline/Function.cpp
 
     bullet/World.cpp
     bullet/GLDebugDrawer.cpp
