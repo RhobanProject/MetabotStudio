@@ -2,6 +2,8 @@
 #include <getopt.h>
 #include <sstream>
 #include <deque>
+#include <thread>
+#include <mutex>
 #include <map>
 #include <mutex>
 #include <unistd.h>
@@ -18,6 +20,7 @@
 #include "ExperienceTest.h"
 #include "ExperienceWalk.h"
 #include "ExperienceCheckpoints.h"
+#include "ExperienceStandUp.h"
 #include "Generator.h"
 
 #include <iostream>
@@ -52,8 +55,11 @@ int main(int argc, char *argv[])
     std::string mode = "sim";
     std::string experience = "walk";
 
-    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:b")) != -1) {
         switch (index) {
+            case 'b':
+                mode = "brute";
+                break;
             case 'N':
                 noServer = true;
                 break;
@@ -124,6 +130,8 @@ int main(int argc, char *argv[])
             runner = new Experience::Runner<ExperienceZero>();
         } else if (experience == "sinus") {
             runner = new Experience::Runner<ExperienceSinus>();
+        } else if (experience == "standup") {
+            runner = new Experience::Runner<ExperienceStandUp>();
         }
 
         runner->init(robotFile, factor, !noServer, 0.001);
@@ -172,6 +180,75 @@ int main(int argc, char *argv[])
 
         if (mode == "sim") {
             printf("score=%lf\n", runner->run(parameters, duration));
+        }
+
+        if (mode == "brute") {
+            auto evaluate = [robotFile, external, duration, experience](Experience::Parameters parameters) {
+                std::stringstream ss;
+                ss << "./sim -x " << experience << " -N -d " << duration << " -r " << robotFile 
+                    << " " << parameters.toString();
+                auto result = execute(ss.str());
+                auto parts = split(result, '=');
+                if (parts.size() == 2 && parts[0] == "score") {
+                    return atof(parts[1].c_str());
+                } else {
+                    return 1e9;
+                }
+            };
+
+            std::mutex mutex;
+            std::vector<Experience::Parameters> todo;
+            auto getNext = [&parameters, &mutex, &todo]() {
+                Experience::Parameters task;
+                bool over = false;
+
+                mutex.lock();
+                if (todo.size()) {
+                    task = todo.back();
+                    todo.pop_back();
+                } else {
+                    over = true;
+                }
+                // Update params
+                mutex.unlock();
+
+                if (over) {
+                    throw std::string("over");
+                }
+
+                return task;
+            };
+
+            for (float p2=0; p2<1; p2+=0.025) {
+                parameters.set("p2", p2);
+                for (float p3=0; p3<1; p3+=0.025) {
+                    parameters.set("p3", p3);
+                    for (float p4=0; p4<1; p4+=0.025) {
+                        parameters.set("p4", p4);
+                        todo.push_back(parameters);
+                    }
+                }
+            }
+
+            std::vector<std::thread*> threads;
+            for (int t=0; t<48; t++) {
+                std::thread *x = new std::thread([&evaluate, &getNext, &mutex]() {
+                    try {
+                        while (true) {
+                            auto params = getNext();
+                            auto result = evaluate(params);
+                            mutex.lock();
+                            std::cout << params.toString() << " score=" << result << std::endl;
+                            mutex.unlock();
+                        }
+                    } catch (std::string over) {
+                    }
+                });
+                threads.push_back(x);
+            }
+            for (auto x : threads) {
+                x->join();
+            }
         }
 
         if (mode == "cmaes") {

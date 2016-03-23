@@ -35,6 +35,7 @@ set (SOURCES
     ExperienceController.cpp
     ExperienceWalk.cpp
     ExperienceCheckpoints.cpp
+    ExperienceStandUp.cpp
     Generator.cpp
 
     util.cpp

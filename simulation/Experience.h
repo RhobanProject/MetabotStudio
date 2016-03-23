@@ -127,16 +127,17 @@ class Experience
                     if (serv) serv->loadRobot(&robot);
                     if (serv) serv->disableMarker();
 
-                    // Creating the experience
-                    T experience;
-                    experience.init(parameters, &robot);
-
                     if (duration == 0.0) {
                         duration = T::defaultDuration();
                     }
 
                     // Creating the simulation
                     Simulation simulation(duration, serv, robot, dt);
+
+                    // Creating the experience
+                    T experience;
+                    experience.init(parameters, &robot);
+
                     simulation.factor = factor;
                     simulation.run([&experience](Simulation *simulation) {
                         experience.control(simulation);
