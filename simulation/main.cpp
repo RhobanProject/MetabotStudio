@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
             //cmaparams.set_max_fevals(10000000);
             cmaparams.set_elitism(2);
             cmaparams.set_x0(0, 1);
-            cmaparams.set_ftolerance(1e-7);
+            cmaparams.set_ftolerance(1e-6);
             cmaparams.set_xtolerance(1e-3);
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
