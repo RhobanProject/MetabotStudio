@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ExperienceController.h"
+#include "ExperimentController.h"
 
-class ExperienceCheckpoints : public ExperienceController
+class ExperimentCheckpoints : public ExperimentController
 {
     public:
-        virtual void init(Experience::Parameters &parameters, Metabot::Robot *robot);
+        virtual void init(Experiment::Parameters &parameters, Metabot::Robot *robot);
         virtual void control(Simulation *simulation);
         virtual double score(Simulation *simulation);
         virtual double scoreOver(Simulation *simulation)=0;
@@ -23,13 +23,13 @@ class ExperienceCheckpoints : public ExperienceController
         double maxStep, maxTurn, kT;
 };
 
-class ExperienceCheckpointsEfficience : public ExperienceCheckpoints
+class ExperimentCheckpointsEfficience : public ExperimentCheckpoints
 {
     public:
         double scoreOver(Simulation *simulation);
 };
 
-class ExperienceCheckpointsSpeed : public ExperienceCheckpoints
+class ExperimentCheckpointsSpeed : public ExperimentCheckpoints
 {
     public:
         double scoreOver(Simulation *simulation);

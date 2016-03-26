@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Experience.h"
+#include "Experiment.h"
 
-class ExperienceZero : public Experience
+class ExperimentZero : public Experiment
 {
     public:
         virtual void control(Simulation *simulation);
 };
 
-class ExperienceSinus : public Experience
+class ExperimentSinus : public Experiment
 {
     public:
         virtual void control(Simulation *simulation);

@@ -1,6 +1,6 @@
-#include "ExperienceWalk.h"
+#include "ExperimentWalk.h"
 
-double ExperienceWalkEfficience::score(Simulation *simulation)
+double ExperimentWalkEfficience::score(Simulation *simulation)
 {
     // Here, we try to maximize the distance across X axis, taking in
     // account the energy cost
@@ -8,7 +8,7 @@ double ExperienceWalkEfficience::score(Simulation *simulation)
     return cost*collisionsPenalty()/(simulation->duration*fabs(state.x()));
 }
 
-double ExperienceWalkSpeed::score(Simulation *simulation)
+double ExperimentWalkSpeed::score(Simulation *simulation)
 {
     // Here, we try to maximize the distance across X axis, disregarding the
     // cost

@@ -1,13 +1,13 @@
-#include "ExperienceTest.h"
+#include "ExperimentTest.h"
 
-void ExperienceZero::control(Simulation *simulation)
+void ExperimentZero::control(Simulation *simulation)
 {
     simulation->robot.foreachComponent([simulation](Metabot::Component *component) {
         component->setTarget(0.0, simulation->dt);
     });
 }
 
-void ExperienceSinus::control(Simulation *simulation)
+void ExperimentSinus::control(Simulation *simulation)
 {
     simulation->robot.foreachComponent([simulation](Metabot::Component *component) {
         component->setTarget(sin(simulation->t), simulation->dt);

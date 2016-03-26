@@ -16,11 +16,11 @@
 #include "util/util.h"
 #include "verbose.h"
 #include <cmaes.h>
-#include "Experience.h"
-#include "ExperienceTest.h"
-#include "ExperienceWalk.h"
-#include "ExperienceCheckpoints.h"
-#include "ExperienceStandUp.h"
+#include "Experiment.h"
+#include "ExperimentTest.h"
+#include "ExperimentWalk.h"
+#include "ExperimentCheckpoints.h"
+#include "ExperimentStandUp.h"
 #include "Generator.h"
 
 #include <iostream>
@@ -40,7 +40,7 @@ static void usage()
     std::cout << "  -e: enable external mode for simulation" << std::endl;
     std::cout << "  -N: no server mode" << std::endl;
     std::cout << "  -G: generate a robot" << std::endl;
-    std::cout << "  -x [exp]: specify experience" << std::endl;
+    std::cout << "  -x [exp]: specify experiment" << std::endl;
     exit(1);
 }
 
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     bool noServer = false;
     std::string robotFile = "";
     std::string mode = "sim";
-    std::string experience = "walk";
+    std::string experiment = "walk";
 
     while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:b")) != -1) {
         switch (index) {
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
                 mode = "generate";
                 break;
             case 'x':
-                experience = std::string(optarg);
+                experiment = std::string(optarg);
                 break;
         }
     }
@@ -114,30 +114,30 @@ int main(int argc, char *argv[])
     }
 
     try {
-        // Creating the experience
-        Experience::BaseRunner *runner = NULL;
-        if (experience == "walk") {
-            runner = new Experience::Runner<ExperienceWalkEfficience>();
-        } else if (experience == "walk-speed") {
-            runner = new Experience::Runner<ExperienceWalkSpeed>();
-        } else if (experience == "checkpoints") {
-            runner = new Experience::Runner<ExperienceCheckpointsEfficience>();
-        } else if (experience == "checkpoints-speed") {
-            runner = new Experience::Runner<ExperienceCheckpointsSpeed>();
-        } else if (experience == "none") {
-            runner = new Experience::Runner<Experience>();
-        } else if (experience == "zero") {
-            runner = new Experience::Runner<ExperienceZero>();
-        } else if (experience == "sinus") {
-            runner = new Experience::Runner<ExperienceSinus>();
-        } else if (experience == "standup") {
-            runner = new Experience::Runner<ExperienceStandUp>();
+        // Creating the experiment
+        Experiment::BaseRunner *runner = NULL;
+        if (experiment == "walk") {
+            runner = new Experiment::Runner<ExperimentWalkEfficience>();
+        } else if (experiment == "walk-speed") {
+            runner = new Experiment::Runner<ExperimentWalkSpeed>();
+        } else if (experiment == "checkpoints") {
+            runner = new Experiment::Runner<ExperimentCheckpointsEfficience>();
+        } else if (experiment == "checkpoints-speed") {
+            runner = new Experiment::Runner<ExperimentCheckpointsSpeed>();
+        } else if (experiment == "none") {
+            runner = new Experiment::Runner<Experiment>();
+        } else if (experiment == "zero") {
+            runner = new Experiment::Runner<ExperimentZero>();
+        } else if (experiment == "sinus") {
+            runner = new Experiment::Runner<ExperimentSinus>();
+        } else if (experiment == "standup") {
+            runner = new Experiment::Runner<ExperimentStandUp>();
         }
 
         runner->init(robotFile, factor, !noServer, 0.001);
 
         // Reading parameters
-        Experience::Parameters parameters;
+        Experiment::Parameters parameters;
         
         // This tells to the parameters that given names should not be
         // optimized
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
             parameters.add(param.name, param.getMin(), param.getMax(), param.getNumericValue());
         }
         
-        // Experience parameters
+        // Experiment parameters
         runner->initParameters(parameters, &robot);
 
         // Context parameters
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
                 try {
                     parameters.set(parts[0], atof(parts[1].c_str()));
                     parameters.check(parts[0]);
-                } catch (Experience::ParameterError error) {
+                } catch (Experiment::ParameterError error) {
                     printf("score=%lf\n", error.error);
                     exit(0);
                 }
@@ -183,9 +183,9 @@ int main(int argc, char *argv[])
         }
 
         if (mode == "brute") {
-            auto evaluate = [robotFile, external, duration, experience](Experience::Parameters parameters) {
+            auto evaluate = [robotFile, external, duration, experiment](Experiment::Parameters parameters) {
                 std::stringstream ss;
-                ss << "./sim -x " << experience << " -N -d " << duration << " -r " << robotFile 
+                ss << "./sim -x " << experiment << " -N -d " << duration << " -r " << robotFile 
                     << " " << parameters.toString();
                 auto result = execute(ss.str());
                 auto parts = split(result, '=');
@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
             };
 
             std::mutex mutex;
-            std::vector<Experience::Parameters> todo;
+            std::vector<Experiment::Parameters> todo;
             auto getNext = [&parameters, &mutex, &todo]() {
-                Experience::Parameters task;
+                Experiment::Parameters task;
                 bool over = false;
 
                 mutex.lock();
@@ -269,20 +269,20 @@ int main(int argc, char *argv[])
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
 
-            FitFunc robotSim = [robotFile, external, &parameters, &runner, duration, experience](const double *x, const int N)
+            FitFunc robotSim = [robotFile, external, &parameters, &runner, duration, experiment](const double *x, const int N)
             {
-                Experience::Parameters params = parameters;
+                Experiment::Parameters params = parameters;
 
                 try {
                     params.fromArray(x, N);
-                } catch (Experience::ParameterError err) {
+                } catch (Experiment::ParameterError err) {
                     return err.error;
                 }
                 std::cout << params.toString() << std::endl;
 
                 if (external) {
                     std::stringstream ss;
-                    ss << "./sim -x " << experience << " -N -d " << duration << " -r " << robotFile << " " << params.toString();
+                    ss << "./sim -x " << experiment << " -N -d " << duration << " -r " << robotFile << " " << params.toString();
                     auto result = execute(ss.str());
                     auto parts = split(result, '=');
                     if (parts.size() == 2 && parts[0] == "score") {
@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
                 try {
                     bestParameters.fromArray(best.get_x_ptr(), best.get_x_size());
                     std::cout << bestParameters.toString() << std::endl;
-                } catch (Experience::ParameterError err) {
+                } catch (Experiment::ParameterError err) {
                     std::cout << "(out of range)" << std::endl;
                 }
 

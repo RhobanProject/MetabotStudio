@@ -1,14 +1,14 @@
 #include "verbose.h"
-#include "ExperienceController.h"
+#include "ExperimentController.h"
 
-ExperienceController::~ExperienceController()
+ExperimentController::~ExperimentController()
 {
     if (controller) {
         delete controller;
     }
 }
 
-void ExperienceController::initParameters(Parameters &parameters, Metabot::Robot *robot)
+void ExperimentController::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
     // Posture parameters
     parameters.add("x", 0, 3, 0.8);
@@ -33,7 +33,7 @@ void ExperienceController::initParameters(Parameters &parameters, Metabot::Robot
     }
 }
 
-void ExperienceController::init(Experience::Parameters &parameters, Metabot::Robot *robot)
+void ExperimentController::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
 {
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
     controller = new Controller(robot);
@@ -60,13 +60,14 @@ void ExperienceController::init(Experience::Parameters &parameters, Metabot::Rob
     collisions = 0;        
 }
 
-void ExperienceController::control(Simulation *simulation)
+void ExperimentController::control(Simulation *simulation)
 {
     cost += controller->update(simulation->dt, simulation->t, simulation->robot);
-    collisions += simulation->robot.world.getAutoCollisions();
+    collisions += simulation->robot.world.getAutoCollisions()
+        + simulation->robot.world.getGroundNonTipCollisions();
 }
         
-double ExperienceController::collisionsPenalty()
+double ExperimentController::collisionsPenalty()
 {
     return (1 + pow(collisions, 4));
 }

@@ -24,6 +24,7 @@ void ExperienceWalk::control(Simulation *simulation)
     cost += setMotorTargets(simulation, angles);
     
     collisions += simulation->robot.world.getAutoCollisions();
+    collisions += simulation->robot.world.getGroundNonTipCollisions();
 }
 
 double ExperienceWalk::collisionsPenalty()

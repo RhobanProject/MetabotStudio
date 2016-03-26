@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 #include <spline/Function.h>
-#include "Experience.h"
+#include "Experiment.h"
 
 #define LEFT_HIP_YAW            11
 #define LEFT_HIP_ROLL           12
@@ -26,7 +26,7 @@
 #define HEAD_YAW                20
 #define HEAD_PITCH              21
 
-class ExperienceStandUp : public Experience
+class ExperimentStandUp : public Experiment
 {
     public:
         static double defaultDuration();

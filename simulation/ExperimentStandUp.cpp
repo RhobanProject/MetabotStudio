@@ -1,11 +1,11 @@
-#include "ExperienceStandUp.h"
+#include "ExperimentStandUp.h"
         
-double ExperienceStandUp::defaultDuration()
+double ExperimentStandUp::defaultDuration()
 {
     return 15;
 }
         
-void ExperienceStandUp::init(Parameters &parameters, Metabot::Robot *robot)
+void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
 {
     // Put the robot on the front at the begining
     robot->foreachComponent([](Metabot::Component *component) {
@@ -21,7 +21,7 @@ void ExperienceStandUp::init(Parameters &parameters, Metabot::Robot *robot)
     splines = Function::fromFile("standup.json");
 }
 
-void ExperienceStandUp::control(Simulation *simulation)
+void ExperimentStandUp::control(Simulation *simulation)
 {
     angles[LEFT_SHOULDER_PITCH] = -splines["shoulder_pitch"].get(simulation->t);
     angles[RIGHT_SHOULDER_PITCH] = splines["shoulder_pitch"].get(simulation->t);
@@ -45,7 +45,7 @@ void ExperienceStandUp::control(Simulation *simulation)
     });
 }
         
-double ExperienceStandUp::getAngle(int index)
+double ExperimentStandUp::getAngle(int index)
 {
     if (angles.count(index)) {
         return angles[index]*M_PI/180.0;

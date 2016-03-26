@@ -1,26 +1,26 @@
-#include "ExperienceCheckpoints.h"
+#include "ExperimentCheckpoints.h"
         
-void ExperienceCheckpoints::initParameters(Parameters &parameters, Metabot::Robot *robot)
+void ExperimentCheckpoints::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
-    ExperienceController::initParameters(parameters, robot);
+    ExperimentController::initParameters(parameters, robot);
 
     parameters.add("maxTurn", 0, 3, 0.8);
     parameters.add("kt", 0, 3, 0.7);
 }
         
-double ExperienceCheckpoints::defaultDuration()
+double ExperimentCheckpoints::defaultDuration()
 {
     return 15.0;
 }
         
-bool ExperienceCheckpoints::optimizeTurn()
+bool ExperimentCheckpoints::optimizeTurn()
 {
     return true;
 }
 
-void ExperienceCheckpoints::init(Experience::Parameters &parameters, Metabot::Robot *robot)
+void ExperimentCheckpoints::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
 {
-    ExperienceController::init(parameters, robot);
+    ExperimentController::init(parameters, robot);
 
     announcedCheckpoint = -1;
     currentCheckpoint = 0;
@@ -35,7 +35,7 @@ void ExperienceCheckpoints::init(Experience::Parameters &parameters, Metabot::Ro
     controlT = 0;
 }
 
-void ExperienceCheckpoints::control(Simulation *simulation)
+void ExperimentCheckpoints::control(Simulation *simulation)
 {
     if (announcedCheckpoint != currentCheckpoint) {
         if (simulation->server) {
@@ -81,10 +81,10 @@ void ExperienceCheckpoints::control(Simulation *simulation)
         }
     }
 
-    ExperienceController::control(simulation);
+    ExperimentController::control(simulation);
 }
 
-double ExperienceCheckpoints::score(Simulation *simulation)
+double ExperimentCheckpoints::score(Simulation *simulation)
 {
     if (simulation->over) {
         return scoreOver(simulation);
@@ -100,12 +100,12 @@ double ExperienceCheckpoints::score(Simulation *simulation)
     }
 }
                 
-double ExperienceCheckpointsEfficience::scoreOver(Simulation *simulation)
+double ExperimentCheckpointsEfficience::scoreOver(Simulation *simulation)
 {
     return cost*collisionsPenalty();
 }
 
-double ExperienceCheckpointsSpeed::scoreOver(Simulation *simulation)
+double ExperimentCheckpointsSpeed::scoreOver(Simulation *simulation)
 {
     return simulation->t*collisionsPenalty();
 }

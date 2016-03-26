@@ -30,12 +30,12 @@ endif (USE_DOUBLE_PRECISION)
 set (SOURCES
     Controller.cpp
     Simulation.cpp
-    Experience.cpp
-    ExperienceTest.cpp
-    ExperienceController.cpp
-    ExperienceWalk.cpp
-    ExperienceCheckpoints.cpp
-    ExperienceStandUp.cpp
+    Experiment.cpp
+    ExperimentTest.cpp
+    ExperimentController.cpp
+    ExperimentWalk.cpp
+    ExperimentCheckpoints.cpp
+    ExperimentStandUp.cpp
     Generator.cpp
 
     util.cpp

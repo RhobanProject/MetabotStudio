@@ -2,13 +2,13 @@
 
 #include <Robot.h>
 #include "Controller.h"
-#include "Experience.h"
+#include "Experiment.h"
 
-class ExperienceController : public Experience
+class ExperimentController : public Experiment
 {
     public:
-        virtual ~ExperienceController();
-        void init(Experience::Parameters &parameters, Metabot::Robot *robot);
+        virtual ~ExperimentController();
+        void init(Experiment::Parameters &parameters, Metabot::Robot *robot);
         void control(Simulation *simulation);
         double collisionsPenalty();
         

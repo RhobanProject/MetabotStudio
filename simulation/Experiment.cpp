@@ -4,41 +4,41 @@
 #include "verbose.h"
 #include "Simulation.h"
 #include "Controller.h"
-#include "Experience.h"
+#include "Experiment.h"
 
-Experience::ParameterError::ParameterError(double error)
+Experiment::ParameterError::ParameterError(double error)
     : error(error)
 {
 }
 
-double Experience::Parameter::normalize()
+double Experiment::Parameter::normalize()
 {
     double delta = max-min;
     return (value-min)/delta;
 }
 
-void Experience::Parameter::fromNormalized(double n)
+void Experiment::Parameter::fromNormalized(double n)
 {
     double delta = max-min;
     value = min+n*delta;
 }
 
-void Experience::Parameter::check()
+void Experiment::Parameter::check()
 {
     if (value < min) throw ParameterError(1e7+fabs(value-min));
     if (value > max) throw ParameterError(1e7+fabs(value-max));
 }
 
-Experience::Parameters::Parameters()
+Experiment::Parameters::Parameters()
 {
 }
                 
-void Experience::Parameters::doNotOptimize(std::string name)
+void Experiment::Parameters::doNotOptimize(std::string name)
 {
     notOptimized.insert(name);
 }
                 
-void Experience::Parameters::add(std::string name, double min, double max, double value, bool optimize)
+void Experiment::Parameters::add(std::string name, double min, double max, double value, bool optimize)
 {
     if (notOptimized.count(name)) optimize=false;
     Parameter param;
@@ -51,19 +51,19 @@ void Experience::Parameters::add(std::string name, double min, double max, doubl
     values[name] = param;
 }
 
-void Experience::Parameters::set(std::string name, double value)
+void Experiment::Parameters::set(std::string name, double value)
 {
     if (values.count(name)) {
         values[name].value = value;
     }
 }
 
-void Experience::Parameters::check(std::string name)
+void Experiment::Parameters::check(std::string name)
 {
     values[name].check();
 }
                 
-double Experience::Parameters::get(std::string name)
+double Experiment::Parameters::get(std::string name)
 {
     if (values.count(name)) {
         return values[name].value;
@@ -72,7 +72,7 @@ double Experience::Parameters::get(std::string name)
     return 0.0;
 }
                 
-std::vector<std::string> Experience::Parameters::getAll()
+std::vector<std::string> Experiment::Parameters::getAll()
 {
     std::vector<std::string> names;
 
@@ -83,7 +83,7 @@ std::vector<std::string> Experience::Parameters::getAll()
     return names;
 }
 
-std::vector<double> Experience::Parameters::toVector()
+std::vector<double> Experiment::Parameters::toVector()
 {
     std::vector<double> vector;
     for (auto name : order) {
@@ -94,7 +94,7 @@ std::vector<double> Experience::Parameters::toVector()
     return vector;
 }
 
-void Experience::Parameters::fromArray(const double *x, const int N)
+void Experiment::Parameters::fromArray(const double *x, const int N)
 {
     int k = 0;
     for (auto name : order) {
@@ -105,7 +105,7 @@ void Experience::Parameters::fromArray(const double *x, const int N)
     }
 }
                 
-std::string Experience::Parameters::toString()
+std::string Experiment::Parameters::toString()
 {
     std::stringstream ss;
     for (auto name : order) {
@@ -115,24 +115,24 @@ std::string Experience::Parameters::toString()
     return ss.str();
 }
 
-void Experience::init(Experience::Parameters &parameters, Metabot::Robot *robot)
+void Experiment::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
 {
 }
 
-void Experience::control(Simulation *simulation)
+void Experiment::control(Simulation *simulation)
 {
 }
         
-double Experience::score(Simulation *simulation)
+double Experiment::score(Simulation *simulation)
 {
     return 0.0;
 } 
         
-void Experience::initParameters(Parameters &parameters, Metabot::Robot *robot)
+void Experiment::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
 }
         
-double Experience::defaultDuration()
+double Experiment::defaultDuration()
 {
     return 6.0;
 }

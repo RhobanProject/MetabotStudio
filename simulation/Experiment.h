@@ -11,7 +11,7 @@
 #include "Simulation.h"
 #include "verbose.h"
 
-class Experience
+class Experiment
 {
     public:
         class ParameterError
@@ -134,16 +134,16 @@ class Experience
                     // Creating the simulation
                     Simulation simulation(duration, serv, robot, dt);
 
-                    // Creating the experience
-                    T experience;
-                    experience.init(parameters, &robot);
+                    // Creating the experiment
+                    T experiment;
+                    experiment.init(parameters, &robot);
 
                     simulation.factor = factor;
-                    simulation.run([&experience](Simulation *simulation) {
-                        experience.control(simulation);
+                    simulation.run([&experiment](Simulation *simulation) {
+                        experiment.control(simulation);
                     });
 
-                    return experience.score(&simulation);
+                    return experiment.score(&simulation);
                 }
 
                 Metabot::Server *server;
@@ -154,10 +154,10 @@ class Experience
                 pthread_t serverThread;
         };
 
-        // Called on experience initialization
+        // Called on experiment initialization
         virtual void init(Parameters &parameters, Metabot::Robot *robot);
 
-        // Called on each tick of the experience
+        // Called on each tick of the experiment
         virtual void control(Simulation *simulation);
 
         // Called at the end to compute the score
@@ -166,6 +166,6 @@ class Experience
         // Initialize parameters
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
 
-        // Default experience duration
+        // Default experiment duration
         static double defaultDuration();
 };
