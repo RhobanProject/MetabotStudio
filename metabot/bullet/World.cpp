@@ -97,6 +97,37 @@ void World::stepSimulation(float deltaTime)
        }
        */
 }
+        
+double World::getGroundNonTipCollisions()
+{
+    double result = 0.0;
+
+    if (m_dynamicsWorld) {
+        int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+        for (int i=0;i<numManifolds;i++) {
+            btPersistentManifold* contactManifold =  m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+            auto A = contactManifold->getBody0();
+            auto B = contactManifold->getBody1();
+
+            if (A == ground || B == ground) {
+                if (A == ground) A = B;
+                if (A->getUserPointer()) {
+                    Metabot::Component *component = (Metabot::Component*)(A->getUserPointer());
+                    if (component->tips.size() == 0) {
+                        int nb = contactManifold->getNumContacts();
+                        for (int k=0; k<nb; k++) {
+                            auto contactPoint = contactManifold->getContactPoint(k);
+                            auto force = fabs(contactPoint.m_appliedImpulse);
+                            result += force;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
 
 double World::getAutoCollisions()
 {
@@ -115,19 +146,6 @@ double World::getAutoCollisions()
                     auto contactPoint = contactManifold->getContactPoint(k);
                     auto force = fabs(contactPoint.m_appliedImpulse);
                     result += force;
-                }
-            } else {
-                if (A == ground) A = B;
-                if (A->getUserPointer()) {
-                    Metabot::Component *component = (Metabot::Component*)(A->getUserPointer());
-                    if (component->tips.size() == 0) {
-                        int nb = contactManifold->getNumContacts();
-                        for (int k=0; k<nb; k++) {
-                            auto contactPoint = contactManifold->getContactPoint(k);
-                            auto force = fabs(contactPoint.m_appliedImpulse);
-                            result += force;
-                        }
-                    }
                 }
             }
         }
