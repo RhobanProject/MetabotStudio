@@ -51,9 +51,9 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
         for (int t=1; t<=6; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            f.addPoint(t, parameters.get(ss.str()));
+            f.addPoint(t*1.5, parameters.get(ss.str()));
         }
-        f.addPoint(6, 0);
+        f.addPoint(6*1.5, 0);
         splines[name] = f;
     }
     // splines = Function::fromFile("standup.json");
@@ -115,7 +115,7 @@ double ExperimentStandUp::score(Simulation *simulation)
 
 double ExperimentStandUp::defaultDuration()
 {
-    return 15;
+    return 20;
 }
 
 double ExperimentStandUp::collisionsPenalty()
