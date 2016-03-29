@@ -18,7 +18,11 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
         for (int t=1; t<=5; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            parameters.add(ss.str(), -150, 150, 0);
+            double min = -150;
+            double max = 150;
+            if (name == "elbow") max = 1;
+            if (name == "knee") min = -1;
+            parameters.add(ss.str(), min, max, 0);
         }
     }
 }
