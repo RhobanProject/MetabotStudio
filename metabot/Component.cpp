@@ -402,17 +402,9 @@ namespace Metabot
 
         // Creating rigid body
         // if (above == NULL) dynamics.mass = 0;
-        auto bFriction = world->friction;
-
-        if (id == 10 || id == 19) {
-            world->friction = 0.6;
-        }
-
         body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
                 localInertia, com.inverse());
         body->setUserPointer(this);
-        
-        world->friction = bFriction;
 
         // Child
         for (auto anchor : anchors) {

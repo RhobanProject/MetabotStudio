@@ -7,6 +7,10 @@ double ExperimentStandUp::defaultDuration()
         
 void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
 {
+    // Sets the friction on the arms
+    robot->getComponentById(LEFT_ELBOW)->body->setFriction(0.6);
+    robot->getComponentById(RIGHT_ELBOW)->body->setFriction(0.6);
+
     // Put the robot on the front at the begining
     robot->foreachComponent([](Metabot::Component *component) {
         if (component->body) {
