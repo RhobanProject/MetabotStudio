@@ -35,6 +35,7 @@ namespace Metabot
                 int mode;
                 double density;
                 double gain;
+                double voxelsResolution;
                 bool backlash;
                 std::map<std::string, BackendMotor> motors;
             };

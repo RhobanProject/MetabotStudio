@@ -25,7 +25,8 @@ namespace Metabot
         : mode(MODE_TORQUE),
         density(1.25),
         gain(30),
-        backlash(true)
+        backlash(true),
+        voxelsResolution(1.0)
     {
     }
 
@@ -87,6 +88,9 @@ namespace Metabot
             }
             if (json.isMember("gain")) {
                 config.gain = json["gain"].asDouble();
+            }
+            if (json.isMember("voxelsResolution")) {
+                config.voxelsResolution = json["voxelsResolution"].asDouble();
             }
             if (json.isMember("motors")) {
                 for (auto &entry : json["motors"].getMemberNames()) {

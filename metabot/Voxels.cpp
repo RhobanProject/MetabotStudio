@@ -12,9 +12,8 @@
 
 namespace Metabot
 {
-    Dynamics Voxels::voxelize(Model m, double density, double mass)
+    Dynamics Voxels::voxelize(Model m, double density, double mass, double resolution)
     {
-        float resolution = 1.0;
 #ifdef METHOD_RANDOM
         srand (time(NULL));
 #endif

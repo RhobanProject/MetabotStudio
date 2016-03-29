@@ -68,9 +68,10 @@ namespace Metabot
         auto module = backend->getModule(name);
         std::string key = hash() + ".dynamics";
 
-        std::string data = backend->cache->get(key, [this]() {
+        std::string data = backend->cache->get(key, [backend, this]() {
             // std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
-            auto dynamics = Voxels::voxelize(this->getModel(), this->density, this->mass);
+            auto dynamics = Voxels::voxelize(this->getModel(), this->density, this->mass, 
+                    backend->config.voxelsResolution);
             // std::cout << dynamics.toString();
             // std::cout << std::endl;
 

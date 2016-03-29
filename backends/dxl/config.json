@@ -1,5 +1,6 @@
 {
     "backlash": false,
+    "voxelsResolution": 3,
     "mode": "motor",
     "motors": {
         "mx28": {
@@ -15,5 +16,5 @@
             "torqueGain": 0.05
         }
     },
-    "density": 2.5
+    "density": 3
 }
