@@ -3,7 +3,7 @@ include<../models/mx28-values.scad>;
 include<../models/mx64-values.scad>;
 
 //:Part
-//:Mass 1000
+//:Mass 600
 module body_block(width=130, height=180, depth=80)
 {
     difference() {

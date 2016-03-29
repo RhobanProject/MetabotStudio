@@ -15,7 +15,7 @@ module mx64_u_arm_to_side(height=60, thickness=2)
     mx64_u(height=height, thickness=thickness, mode="");
     
     translate([0,0,-thickness/2-MX64Width/2])
-    rotate([90,0,0]) {
+    rotate([90,0,90]) {
         mx64_with_arm();
         //:Anchor mx64 male
     }

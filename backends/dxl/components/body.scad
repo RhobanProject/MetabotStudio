@@ -10,11 +10,12 @@ use <../parts/body_block.scad>;
 //:Parameter depth
 module body(width=120, height=150, depth=80)
 {
+    translate([-15,0,0])
     body_block(width=width, height=height, depth=depth);
     
     for (x=[-width/2,width/2]) {
         translate([0,x,0]) {
-            translate([-10,0,0])
+            translate([-18,0,0])
             rotate([180,0,180]) {
                 mx64_with_arm();
                 //:Anchor mx64 male

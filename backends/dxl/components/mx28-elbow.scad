@@ -5,9 +5,8 @@ use <../models/mx28-with-arm.scad>;
 
 //:Component "MX28 Elbow"
 //:Parameter length
-//:Parameter height
 //:Parameter thickness
-module mx28_elbow(length=80, height=30, thickness=2)
+module mx28_elbow(length=80, thickness=2)
 {
     rotate([0,0,90])
     mx28_l(mode="arm", length=length+MX28Width/2, thickness=thickness);
