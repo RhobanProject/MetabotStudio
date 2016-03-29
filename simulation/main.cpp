@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
                 if (parts.size() == 2 && parts[0] == "score") {
                     return atof(parts[1].c_str());
                 } else {
-                    return 1e9;
+                    return 1e20;
                 }
             };
 

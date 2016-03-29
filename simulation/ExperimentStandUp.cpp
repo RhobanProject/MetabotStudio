@@ -18,7 +18,7 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
         for (int t=0; t<=6; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            parameters.add(ss.str(), -180, 180, 0);
+            parameters.add(ss.str(), -150, 150, 0);
         }
     }
 }
@@ -103,7 +103,7 @@ double ExperimentStandUp::score(Simulation *simulation)
 
     if (fabs(rpy.y()) > 0.1) {
         // The standup failed
-        score = 1e5 + pitch*collisionsPenalty();
+        score = 1e6 + pitch + collisionsPenalty();
     } else {
         score = cost*collisionsPenalty()*pitch;
     }
@@ -118,6 +118,6 @@ double ExperimentStandUp::defaultDuration()
 
 double ExperimentStandUp::collisionsPenalty()
 {
-    return (1 + pow(collisions, 4));
+    return (1 + pow(collisions, 2));
 }
         

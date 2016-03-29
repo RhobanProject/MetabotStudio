@@ -25,8 +25,8 @@ void Experiment::Parameter::fromNormalized(double n)
 
 void Experiment::Parameter::check()
 {
-    if (value < min) throw ParameterError(1e7+fabs(value-min));
-    if (value > max) throw ParameterError(1e7+fabs(value-max));
+    if (value < min) throw ParameterError(1e10+fabs(value-min));
+    if (value > max) throw ParameterError(1e10+fabs(value-max));
 }
 
 Experiment::Parameters::Parameters()
