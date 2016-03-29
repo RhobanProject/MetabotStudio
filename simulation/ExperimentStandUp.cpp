@@ -1,12 +1,35 @@
 #include "ExperimentStandUp.h"
         
-double ExperimentStandUp::defaultDuration()
+std::vector<std::string> ExperimentStandUp::splineNames()
 {
-    return 15;
+    std::vector<std::string> names;
+    names.push_back("shoulder_pitch");
+    names.push_back("elbow");
+    names.push_back("hip_pitch");
+    names.push_back("knee");
+    names.push_back("ankle_pitch");
+
+    return names;
+}
+        
+void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *robot)
+{
+    for (auto name : splineNames()) {
+        for (int t=0; t<=6; t++) {
+            std::stringstream ss;
+            ss << name << "_" << t;
+            parameters.add(ss.str(), -180, 180, 0);
+        }
+    }
 }
         
 void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
 {
+    // Cost and collisions
+    cost = 0;
+    collisions = 0;
+    pitch = 0;
+
     // Sets the friction on the arms
     robot->getComponentById(LEFT_ELBOW)->body->setFriction(0.6);
     robot->getComponentById(RIGHT_ELBOW)->body->setFriction(0.6);
@@ -22,7 +45,16 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
     });
     
     // Loading splines
-    splines = Function::fromFile("standup.json");
+    for (auto name : splineNames()) {
+        Function f;
+        for (int t=0; t<=6; t++) {
+            std::stringstream ss;
+            ss << name << "_" << t;
+            f.addPoint(t, parameters.get(ss.str()));
+        }
+        splines[name] = f;
+    }
+ splines = Function::fromFile("standup.json");
 }
 
 void ExperimentStandUp::control(Simulation *simulation)
@@ -42,11 +74,16 @@ void ExperimentStandUp::control(Simulation *simulation)
     angles[LEFT_KNEE] = splines["knee"].get(simulation->t);
     angles[RIGHT_KNEE] = splines["knee"].get(simulation->t);
     
-    angles[HEAD_PITCH] = 60;
+    //angles[HEAD_PITCH] = 60;
  
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
-        component->setTarget(this->getAngle(component->id), simulation->dt);
+        this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
     });
+    
+    collisions += simulation->robot.world.getAutoCollisions();
+    auto state = simulation->robot.getState();
+    auto rpy = state.toRPY();
+    pitch += fabs(rpy.y())*simulation->dt;
 }
         
 double ExperimentStandUp::getAngle(int index)
@@ -57,3 +94,30 @@ double ExperimentStandUp::getAngle(int index)
         return 0.0;
     }
 }
+        
+double ExperimentStandUp::score(Simulation *simulation)
+{
+    double score = 0;
+    auto state = simulation->robot.getState();
+    auto rpy = state.toRPY();
+
+    if (fabs(rpy.y()) > 0.1) {
+        // The standup failed
+        score = 1e5 + pitch*collisionsPenalty();
+    } else {
+        score = cost*collisionsPenalty()*pitch;
+    }
+
+    return score;
+}
+
+double ExperimentStandUp::defaultDuration()
+{
+    return 15;
+}
+
+double ExperimentStandUp::collisionsPenalty()
+{
+    return (1 + pow(collisions, 4));
+}
+        
