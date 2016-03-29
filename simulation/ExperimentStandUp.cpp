@@ -15,7 +15,7 @@ std::vector<std::string> ExperimentStandUp::splineNames()
 void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
     for (auto name : splineNames()) {
-        for (int t=0; t<=6; t++) {
+        for (int t=0; t<=5; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
             parameters.add(ss.str(), -150, 150, 0);
@@ -52,6 +52,7 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
             ss << name << "_" << t;
             f.addPoint(t, parameters.get(ss.str()));
         }
+        f.addPoint(6, 0);
         splines[name] = f;
     }
     // splines = Function::fromFile("standup.json");
