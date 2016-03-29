@@ -54,7 +54,7 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
         }
         splines[name] = f;
     }
- splines = Function::fromFile("standup.json");
+    // splines = Function::fromFile("standup.json");
 }
 
 void ExperimentStandUp::control(Simulation *simulation)
