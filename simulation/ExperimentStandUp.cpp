@@ -22,6 +22,7 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
             double max = 150;
             if (name == "elbow") max = 1;
             if (name == "knee") min = -1;
+            if (name == "hip_pitch") max = 25;
             parameters.add(ss.str(), min, max, 0);
         }
     }
