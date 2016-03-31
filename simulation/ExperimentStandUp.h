@@ -43,5 +43,5 @@ class ExperimentStandUp : public Experiment
 
         double getAngle(int index);
 
-        double cost, collisions, pitch;
+        double cost, collisions, maxHeight;
 };

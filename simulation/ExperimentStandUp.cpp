@@ -33,7 +33,7 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
     // Cost and collisions
     cost = 0;
     collisions = 0;
-    pitch = 0;
+    maxHeight = 0;
 
     // Sets the friction on the arms
     robot->getComponentById(LEFT_ELBOW)->body->setFriction(0.6);
@@ -86,11 +86,14 @@ void ExperimentStandUp::control(Simulation *simulation)
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
         this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
     });
-    
-    collisions += simulation->robot.world.getAutoCollisions();
-    auto state = simulation->robot.getState();
-    auto rpy = state.toRPY();
-    pitch += fabs(rpy.y())*simulation->dt;
+   
+    if (simulation->t > 1) {
+        collisions += simulation->robot.world.getAutoCollisions();
+        auto state = simulation->robot.getComponentById(HEAD_PITCH)->getState();
+        if (state.z() > maxHeight) {
+            maxHeight = state.z();
+        }
+    }
 }
         
 double ExperimentStandUp::getAngle(int index)
@@ -110,9 +113,9 @@ double ExperimentStandUp::score(Simulation *simulation)
 
     if (fabs(rpy.y()) > 0.1) {
         // The standup failed
-        score = 1e6 + pitch + collisionsPenalty();
+        score = 1e6 + 10000/maxHeight + collisionsPenalty();
     } else {
-        score = cost*collisionsPenalty()*pitch;
+        score = cost*collisionsPenalty()*(10000/maxHeight);
     }
 
     return score;
