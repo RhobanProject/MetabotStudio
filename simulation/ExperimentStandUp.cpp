@@ -115,7 +115,7 @@ double ExperimentStandUp::score(Simulation *simulation)
         // The standup failed
         score = 1e6 + 10000/maxHeight + collisionsPenalty();
     } else {
-        score = cost*collisionsPenalty()*(10000/maxHeight);
+        score = cost*collisionsPenalty();
     }
 
     return score;
