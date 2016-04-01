@@ -12,6 +12,20 @@ ExperimentShoot::ExperimentShoot()
 std::vector<std::string> ExperimentShoot::splineNames()
 {
     std::vector<std::string> names;
+    names.push_back("a_hip_pitch");
+    names.push_back("a_ankle_pitch");
+    names.push_back("a_hip_pitch");
+    names.push_back("a_hip_yaw");
+    names.push_back("a_knee");
+
+    names.push_back("b_hip_pitch");
+    names.push_back("b_ankle_pitch");
+    names.push_back("b_hip_pitch");
+    names.push_back("b_hip_yaw");
+    names.push_back("b_hip_roll");
+
+    names.push_back("roll");
+
     return names;
 }
         
@@ -19,30 +33,28 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
 {
     for (auto name : splineNames()) {
         for (int t=1; t<=5; t++) {
-            /*
             std::stringstream ss;
             ss << name << "_" << t;
             double min = -150;
             double max = 150;
-            if (name == "elbow") max = 1;
-            if (name == "knee") min = -1;
-            if (name == "hip_pitch") max = 25;
+            if (name == "a_hip_pitch" || name == "b_hip_pitch") max = 25;
             parameters.add(ss.str(), min, max, 0);
-            */
         }
     }
 
-    parameters.add("freq", 0, 4, 1.8);
-    parameters.add("rise", 0, 1, 0.02);
-    parameters.add("step", 0, 1, 0.0);
-    parameters.add("swing", 0, 1, 0.02);
-    parameters.add("swingPhase", 0, 1, 0.025);
-    parameters.add("footY", 0, 1, 0.025);
-    parameters.add("x", 0, 1, 0.01);
-    parameters.add("z", 0, 1, 0.02);
-    parameters.add("pitch", 0, 30, 10);
-    parameters.add("roll", 0, 30, 0);
-    parameters.add("air", 0, 1, 0);
+    parameters.add("file", 0, 1, 0, false);
+
+    parameters.add("freq", 0, 4, 1.95, false);
+    parameters.add("rise", 0, 1, 0.025, false);
+    parameters.add("step", -1, 1, 0.0, false);
+    parameters.add("swing", 0, 1, 0.01, false);
+    parameters.add("swingPhase", 0, 1, 0.0, false);
+    parameters.add("footY", -1, 1, 0.02, false);
+    parameters.add("x", -1, 1, 0.01, false);
+    parameters.add("z", 0, 1, 0.03, false);
+    parameters.add("pitch", -30, 30, 15, false);
+    parameters.add("roll", -30, 30, 0, false);
+    parameters.add("air", 0, 1, 0, false);
 }
 
 std::map<int, TransformMatrix> initStates;
@@ -50,16 +62,15 @@ bool passed = false;
         
 void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
 {
-    robot->root->body->setMassProps(0, btVector3(1.5,1.5,1.5));
-
     // Cost and collisions
     cost = 0;
     ct = 0;
     st = 0;
     collisions = 0;
     maxHeight = 0;
+    trigger = false;
+    shooting = false;
 
-    /*
     // Loading splines
     for (auto name : splineNames()) {
         Function f;
@@ -67,13 +78,15 @@ void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
         for (int t=1; t<=6; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            f.addPoint(t*1.8, parameters.get(ss.str()));
+            f.addPoint(t, parameters.get(ss.str()));
         }
-        f.addPoint(6*1.8, 0);
+        f.addPoint(2, 0);
         splines[name] = f;
     }
-    //splines = Function::fromFile("standup.json");
-    */
+
+    if (parameters.get("file") > 0.5) {
+        splines = Function::fromFile("shoot.json");
+    }
 
     params.freq = parameters.get("freq");
     params.enabledGain = 1;
@@ -114,10 +127,13 @@ void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
     params.extraRightPitch = 0;
     params.extraRightRoll = 0;
 
-    angles[LEFT_SHOULDER_ROLL] = 15;
-    angles[RIGHT_SHOULDER_ROLL] = -15;
+    angles[LEFT_SHOULDER_ROLL] = 23;
+    angles[RIGHT_SHOULDER_ROLL] = -23;
 
     air = parameters.get("air")>0.5;
+    if (air) {
+        robot->root->body->setMassProps(0, btVector3(1,1,1));
+    }
 }
 
 void ExperimentShoot::control(Simulation *simulation)
@@ -130,11 +146,11 @@ void ExperimentShoot::control(Simulation *simulation)
           body->setMassProps(comp->mass, comp->inertia);
         }
     }
-        ct += simulation->dt;
+    ct += simulation->dt;
 
-    if (ct > 0.02) {
-        ct -= 0.02;
-        if (Leph::IKWalk::walk(model, params, st, 0.02)) {
+    if (ct >= 0.01) {
+        ct -= 0.01;
+        if (Leph::IKWalk::walk(model, params, st, 0.01)) {
             angles[LEFT_HIP_YAW] = RAD2DEG(model.getDOF("left_hip_yaw"));
             angles[LEFT_HIP_ROLL] = RAD2DEG(model.getDOF("left_hip_roll"));
             angles[LEFT_HIP_PITCH] = RAD2DEG(model.getDOF("left_hip_pitch"));
@@ -148,12 +164,38 @@ void ExperimentShoot::control(Simulation *simulation)
             angles[RIGHT_KNEE] = RAD2DEG(model.getDOF("right_knee"));
             angles[RIGHT_ANKLE_ROLL] = RAD2DEG(model.getDOF("right_ankle_roll"));
             angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
+            
+        }
+        if (simulation->t > 3/params.freq && !trigger) {
+            trigger = true;
+            shooting = true;
+            slowmo = true;
+            shootT = st;
+            factorSave = simulation->factor;
+            simulation->factor = 0.15;
+        }
+        if (slowmo && simulation->t>4/params.freq) {
+            simulation->factor = factorSave;
+            slowmo = false;
+        }
 
-            std::cout << "~~~" << std::endl;
-            std::cout << angles[LEFT_HIP_ROLL] << "/";
-            std::cout << angles[RIGHT_HIP_ROLL] << std::endl;
-            std::cout << angles[LEFT_HIP_ROLL] << "/";
-            std::cout << angles[RIGHT_HIP_ROLL] << std::endl;
+        if (shooting) {
+            double splineT = (st-shootT)*12;
+            angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
+            angles[RIGHT_ANKLE_PITCH] -= splines["a_ankle_pitch"].get(splineT);
+            angles[RIGHT_HIP_YAW] += splines["a_hip_yaw"].get(splineT);
+            angles[RIGHT_KNEE] += splines["a_knee"].get(splineT);
+            
+            angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
+            angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
+            angles[LEFT_HIP_YAW] += splines["b_hip_yaw"].get(splineT);
+//            angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
+
+            params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
+
+            if (splineT > 3) {
+                shooting = false;
+            }
         }
     }
     

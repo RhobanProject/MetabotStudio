@@ -20,8 +20,9 @@ class ExperimentShoot : public Experiment
         double collisionsPenalty();
 
     protected:
+        bool trigger, shooting, slowmo;
         bool air;
-        double ct, st;
+        double ct, st, shootT, factorSave;
         Leph::HumanoidFloatingModel model;
         Leph::IKWalk::Parameters params;
         std::map<int, float> angles;
