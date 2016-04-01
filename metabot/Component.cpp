@@ -351,7 +351,7 @@ namespace Metabot
     btRigidBody *Component::toBullet(World *world, AnchorPoint *above, TransformMatrix matrix)
     {
         // Computing com matrix
-        btMatrix3x3 inertia(
+        btMatrix3x3 inertiaM(
                 dynamics.ixx/1e9, dynamics.ixy/1e9, dynamics.ixz/1e9,
                 dynamics.ixy/1e9, dynamics.iyy/1e9, dynamics.iyz/1e9,
                 dynamics.ixz/1e9, dynamics.iyz/1e9, dynamics.izz/1e9
@@ -359,8 +359,8 @@ namespace Metabot
         btMatrix3x3 rot;
 
         // Getting inertia principal axes
-        inertia.diagonalize(rot, 0.00001, 20);
-        auto nInertia = inertia*rot;
+        inertiaM.diagonalize(rot, 0.00001, 20);
+        auto nInertia = inertiaM*rot;
         btVector3 localInertia(
                 nInertia[0][0], nInertia[1][1], nInertia[2][2]
                 );
@@ -402,8 +402,10 @@ namespace Metabot
 
         // Creating rigid body
         // if (above == NULL) dynamics.mass = 0;
-        body = world->createRigidBody(dynamics.mass/1000.0, matrix.toBullet(), compound,
-                localInertia, com.inverse());
+        inertia = localInertia;
+        mass = dynamics.mass/1000.0;
+        body = world->createRigidBody(mass, matrix.toBullet(), compound,
+                inertia, com.inverse());
         body->setUserPointer(this);
 
         // Child

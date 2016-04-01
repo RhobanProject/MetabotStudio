@@ -3,6 +3,9 @@
 #include <Component.h>
 #include "World.h"
 
+#define GROUP_GROUND    1
+#define GROUP_ROBOT     2
+
     World::World()
 :       m_broadphase(0),
     m_dispatcher(0),
@@ -273,7 +276,7 @@ btRigidBody* World::createRigidBody(float mass, btTransform startTransform, btCo
 #endif//
 
     body->setUserIndex(-1);
-    m_dynamicsWorld->addRigidBody(body);
+    m_dynamicsWorld->addRigidBody(body, group, mask);
     bodies.push_back(body);
 
     return body;
@@ -393,7 +396,11 @@ void World::clear(bool makeGround)
         plane->setMargin(0.0);
         auto trans = btTransform::getIdentity();
         trans.getOrigin().setZ(-10);
+        group = GROUP_GROUND;
+        mask = GROUP_ROBOT;
         ground = createRigidBody(0.0, trans, plane);
+        group = GROUP_ROBOT;
+        mask = GROUP_GROUND|GROUP_ROBOT;
     }
 }
 

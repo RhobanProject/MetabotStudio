@@ -51,6 +51,9 @@ class World
         btDiscreteDynamicsWorld* m_dynamicsWorld;
 
     protected:
+        short group;
+        short mask;
+
         // Elements
         std::vector<btCollisionShape *> shapes;
         std::vector<btRigidBody *> bodies;

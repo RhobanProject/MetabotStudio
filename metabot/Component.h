@@ -54,6 +54,8 @@ namespace Metabot
             btHingeConstraint *hinge;
             btHingeConstraint *posHinge;
             btTransform com;
+            btVector3 inertia;
+            double mass;
             btRigidBody *toBullet(World *world, AnchorPoint *above=NULL, TransformMatrix matrix=TransformMatrix::identity());
             TransformMatrix getState();
             void setState(TransformMatrix matrix);
