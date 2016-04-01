@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "Spline.hpp"
 
-namespace Leph {
+namespace Metabot {
 
 double Spline::pos(double t) const
 {

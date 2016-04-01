@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "Combination.hpp"
 
-namespace Leph {
+namespace Metabot {
 
 unsigned long Combination::binomialCoefficient(
     size_t k, size_t n)

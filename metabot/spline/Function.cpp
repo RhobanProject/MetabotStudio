@@ -6,7 +6,8 @@
 #endif
 #include "Function.h"
 
-
+namespace Metabot
+{
 Function::Function()
     : nbPoints(0)
 {
@@ -128,4 +129,5 @@ double Function::getMod(double x)
     }
 
     return get(x);
+}
 }

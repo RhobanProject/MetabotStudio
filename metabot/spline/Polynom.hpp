@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-namespace Leph {
+namespace Metabot {
 
 /**
  * Polynom

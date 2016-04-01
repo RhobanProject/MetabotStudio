@@ -142,8 +142,8 @@ Controller::Controller(Metabot::Robot *robot)
 
 void Controller::setupFunctions()
 {
-    step = Leph::CubicSpline();
-    rise = Leph::CubicSpline();
+    step = Metabot::CubicSpline();
+    rise = Metabot::CubicSpline();
     
     step.addPoint(0, 0.5, -1/support);
     step.addPoint(support, -0.5, -1/support);

@@ -4,7 +4,7 @@
 #include "Combination.hpp"
 #include "Polynom.hpp"
 
-namespace Leph {
+namespace Metabot {
 
 /**
  * NewtonBinomial

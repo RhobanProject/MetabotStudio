@@ -3,7 +3,7 @@
 
 #include "Spline.hpp"
 
-namespace Leph {
+namespace Metabot {
 
 /**
  * CubicSpline

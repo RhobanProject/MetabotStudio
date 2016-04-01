@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Leph {
+namespace Metabot {
 
 Polynom NewtonBinomial::expandPolynom(
     double y, unsigned int degree)

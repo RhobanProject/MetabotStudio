@@ -8,6 +8,8 @@
 #define FUNCTION_DEFAULT_POINTS 16
 #endif
 
+namespace Metabot
+{
 class Function
 {
     public:
@@ -66,3 +68,4 @@ class Function
          */
         int nbPoints;
 };
+}

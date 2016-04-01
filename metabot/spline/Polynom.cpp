@@ -1,7 +1,7 @@
 #include "Polynom.hpp"
 #include "NewtonBinomial.hpp"
 
-namespace Leph {
+namespace Metabot {
         
 Polynom::Polynom() :
     _coefs()

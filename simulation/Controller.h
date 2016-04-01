@@ -60,8 +60,8 @@ class Controller
         float t;
         float ut;
 
-        Leph::CubicSpline rise;
-        Leph::CubicSpline step;
+        Metabot::CubicSpline rise;
+        Metabot::CubicSpline step;
 
     protected:
         std::vector<Leg> legs;

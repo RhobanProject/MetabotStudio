@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Polynom.hpp"
 
-namespace Leph {
+namespace Metabot {
 
 /**
  * Spline

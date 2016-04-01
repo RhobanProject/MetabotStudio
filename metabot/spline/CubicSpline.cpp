@@ -2,7 +2,7 @@
 #include <algorithm>
 #include "CubicSpline.hpp"
 
-namespace Leph {
+namespace Metabot {
 
 void CubicSpline::addPoint(double time, double position, 
     double velocity)
