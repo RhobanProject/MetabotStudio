@@ -43,6 +43,7 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
     }
 
     parameters.add("file", 0, 1, 0, false);
+    parameters.add("shoot", 0, 1, 1, false);
 
     parameters.add("freq", 0, 4, 1.95, false);
     parameters.add("rise", 0, 1, 0.025, false);
@@ -70,6 +71,7 @@ void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
     maxHeight = 0;
     trigger = false;
     shooting = false;
+    enableShoot = parameters.get("shoot")>0.5;
 
     // Loading splines
     for (auto name : splineNames()) {
@@ -166,35 +168,42 @@ void ExperimentShoot::control(Simulation *simulation)
             angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
             
         }
-        if (simulation->t > 3/params.freq && !trigger) {
-            trigger = true;
-            shooting = true;
-            slowmo = true;
-            shootT = st;
-            factorSave = simulation->factor;
-            simulation->factor = 0.15;
-        }
-        if (slowmo && simulation->t>4/params.freq) {
-            simulation->factor = factorSave;
-            slowmo = false;
-        }
 
-        if (shooting) {
-            double splineT = (st-shootT)*12;
-            angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
-            angles[RIGHT_ANKLE_PITCH] -= splines["a_ankle_pitch"].get(splineT);
-            angles[RIGHT_HIP_YAW] += splines["a_hip_yaw"].get(splineT);
-            angles[RIGHT_KNEE] += splines["a_knee"].get(splineT);
-            
-            angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
-            angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
-            angles[LEFT_HIP_YAW] += splines["b_hip_yaw"].get(splineT);
-//            angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
+        if (enableShoot) {
+            if (simulation->t > 3/params.freq && !trigger) {
+                trigger = true;
+                shooting = true;
+                shootT = st;
+            }
+            if (!slowmo && simulation->t > 2.8/params.freq) {
+                if (simulation->factor < 1.5) {
+                    slowmo = true;
+                    factorSave = simulation->factor;
+                    simulation->factor = 0.15;
+                }
+            }
+            if (slowmo && simulation->t>3.7/params.freq) {
+                simulation->factor = factorSave;
+                slowmo = false;
+            }
 
-            params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
+            if (shooting) {
+                double splineT = (st-shootT)*12;
+                angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
+                angles[RIGHT_ANKLE_PITCH] -= splines["a_ankle_pitch"].get(splineT);
+                angles[RIGHT_HIP_YAW] += splines["a_hip_yaw"].get(splineT);
+                angles[RIGHT_KNEE] += splines["a_knee"].get(splineT);
+                
+                angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
+                angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
+                angles[LEFT_HIP_YAW] += splines["b_hip_yaw"].get(splineT);
+    //            angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
 
-            if (splineT > 3) {
-                shooting = false;
+                params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
+
+                if (splineT > 3) {
+                    shooting = false;
+                }
             }
         }
     }

@@ -20,7 +20,7 @@ class ExperimentShoot : public Experiment
         double collisionsPenalty();
 
     protected:
-        bool trigger, shooting, slowmo;
+        bool enableShoot, trigger, shooting, slowmo;
         bool air;
         double ct, st, shootT, factorSave;
         Leph::HumanoidFloatingModel model;
