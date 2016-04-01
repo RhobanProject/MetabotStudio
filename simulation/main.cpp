@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
                 } catch (Experiment::ParameterError err) {
                     return err.error;
                 }
-                std::cout << params.toString() << std::endl;
+                //std::cout << params.toString() << std::endl;
 
                 if (external) {
                     std::stringstream ss;
