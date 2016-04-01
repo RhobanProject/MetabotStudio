@@ -16,6 +16,8 @@ std::vector<std::string> ExperimentStandUp::splineNames()
 void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
     parameters.add("file", 0, 1, 0, false);
+    
+    auto seed = Function::fromFile("seed.json");
     for (auto name : splineNames()) {
         for (int t=1; t<=5; t++) {
             std::stringstream ss;
@@ -25,7 +27,7 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
             if (name == "elbow") max = 1;
             if (name == "knee") min = -1;
             if (name == "hip_pitch") max = 25;
-            parameters.add(ss.str(), min, max, 0);
+            parameters.add(ss.str(), min, max, seed[name].get(t));
         }
     }
 }
