@@ -1,4 +1,5 @@
 #include "ExperimentStandUp.h"
+#include "sigmaban.h"
         
 std::vector<std::string> ExperimentStandUp::splineNames()
 {
@@ -61,7 +62,7 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
         f.addPoint(6*1.8, 0);
         splines[name] = f;
     }
-    // splines = Function::fromFile("standup.json");
+    splines = Function::fromFile("standup.json");
 }
 
 void ExperimentStandUp::control(Simulation *simulation)

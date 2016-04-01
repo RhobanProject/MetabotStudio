@@ -12,6 +12,9 @@ set (BASE
 set (METABOT_DIR
     "${BASE}/metabot/" CACHE STRING "Metabot directory")
 
+set (MODEL_DIR
+    "${BASE}/../Model/" CACHE STRING "Leph model directory")
+
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-reorder -pedantic -fno-elide-constructors -fopenmp")
 
 include_directories("${METABOT_DIR}")
@@ -22,6 +25,10 @@ add_subdirectory(${METABOT_DIR} metabot)
 include_directories("${BULLET_DIR}/src")
 include_directories(${BULLET_INCLUDE_DIRS})
 include_directories("${EIGEN3_INCLUDE_DIR}")
+
+# Model
+add_subdirectory("${MODEL_DIR}" model)
+include_directories(${LEPHCODE_INCLUDE_DIRECTORIES})
 
 if (USE_DOUBLE_PRECISION)
 add_definitions( -DBT_USE_DOUBLE_PRECISION)
@@ -36,6 +43,7 @@ set (SOURCES
     ExperimentWalk.cpp
     ExperimentCheckpoints.cpp
     ExperimentStandUp.cpp
+    ExperimentShoot.cpp
     Generator.cpp
 
     util.cpp
@@ -44,4 +52,5 @@ set (SOURCES
     )
 
 add_executable(sim ${SOURCES})
-target_link_libraries(sim pthread libmetabot ${DEPS_LIBRARIES})
+target_link_libraries(sim pthread libmetabot ${DEPS_LIBRARIES} LephCode)
+

@@ -4,10 +4,13 @@
 #include <string>
 #include <spline/Function.h>
 #include "Experiment.h"
+#include <Model/HumanoidFloatingModel.hpp>
+#include <IKWalk/IKWalk.hpp>
 
-class ExperimentStandUp : public Experiment
+class ExperimentShoot : public Experiment
 {
     public:
+        ExperimentShoot();
         static std::vector<std::string> splineNames();
         static double defaultDuration();
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
@@ -17,6 +20,10 @@ class ExperimentStandUp : public Experiment
         double collisionsPenalty();
 
     protected:
+        bool air;
+        double ct, st;
+        Leph::HumanoidFloatingModel model;
+        Leph::IKWalk::Parameters params;
         std::map<int, float> angles;
         std::map<std::string, Function> splines;
 
