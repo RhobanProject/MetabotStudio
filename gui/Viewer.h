@@ -52,7 +52,7 @@ public:
     void dontMove();
 
     // Translation
-    float tX, tY;
+    float tX, tY, tZ;
     float mTX, mTY;
 
     // Mode (normal? physics?)

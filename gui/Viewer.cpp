@@ -133,7 +133,7 @@ void Viewer::resizeGL(int width, int height)
     glEnable(GL_LIGHTING);
     if (robot) {
         if (autorotate) {
-            alpha += 0.02;
+            alpha += 0.002;
         }
 
         float aX = radius*cos(beta);
@@ -159,6 +159,9 @@ void Viewer::resizeGL(int width, int height)
         auto state = client.robot->getState();
         tX = -state.x();
         tY = -state.y();
+        tZ = -state.z();
+    } else {
+        tZ = 0;
     }
 }
 
@@ -187,7 +190,7 @@ void Viewer::paintGL()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
     glColor4ub(250, 250, 250, 255);
 
-    glTranslatef(tX, tY, 0);
+    glTranslatef(tX, tY, tZ);
     glPushMatrix();
     if (mode == MODE_NORMAL) {
         robot->openGLDraw(false);
