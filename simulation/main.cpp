@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     std::string robotFile = "";
     std::string mode = "sim";
     std::string experiment = "walk";
+    std::cout.precision(16);
 
     while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:b")) != -1) {
         switch (index) {
