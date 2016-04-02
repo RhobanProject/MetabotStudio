@@ -43,3 +43,9 @@ int uniform(int a, int b)
     std::uniform_int_distribution<int> distribution(a,b);
     return distribution(generator);
 }
+
+double randDouble()
+{
+    std::uniform_real_distribution<double> distribution(0,1);
+    return distribution(generator);
+}

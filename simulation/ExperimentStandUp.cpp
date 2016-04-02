@@ -28,6 +28,7 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
             if (name == "knee") min = -1;
             if (name == "hip_pitch") max = 25;
             parameters.add(ss.str(), min, max, seed[name].get(t));
+            parameters.randomize(ss.str());
         }
     }
 }
