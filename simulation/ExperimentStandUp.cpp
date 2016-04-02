@@ -16,6 +16,7 @@ std::vector<std::string> ExperimentStandUp::splineNames()
 void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
     parameters.add("file", 0, 1, 0, false);
+    parameters.add("factor", 0, 10, 1.8, false);
     
     auto seed = Function::fromFile("seed.json");
     for (auto name : splineNames()) {
@@ -38,6 +39,7 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
     cost = 0;
     collisions = 0;
     maxHeight = 0;
+    factor = parameters.get("factor");
 
     // Sets the friction on the arms
     robot->getComponentById(LEFT_ELBOW)->body->setFriction(0.6);
@@ -53,6 +55,8 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
         }
     });
     
+    //robot->root->body->setMassProps(0, btVector3(1,1,1));
+    
     // Loading splines
     for (auto name : splineNames()) {
         Function f;
@@ -60,9 +64,9 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
         for (int t=1; t<=6; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            f.addPoint(t*1.8, parameters.get(ss.str()));
+            f.addPoint(t, parameters.get(ss.str()));
         }
-        f.addPoint(6*1.8, 0);
+        f.addPoint(6, 0);
         splines[name] = f;
     }
     if (parameters.get("file")>0.5) {
@@ -72,21 +76,23 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
 
 void ExperimentStandUp::control(Simulation *simulation)
 {
-    angles[LEFT_SHOULDER_PITCH] = -splines["shoulder_pitch"].get(simulation->t);
-    angles[RIGHT_SHOULDER_PITCH] = splines["shoulder_pitch"].get(simulation->t);
+    double t = simulation->t/factor;
 
-    angles[LEFT_ELBOW] = -splines["elbow"].get(simulation->t);
-    angles[RIGHT_ELBOW] = -splines["elbow"].get(simulation->t);
+    angles[LEFT_SHOULDER_PITCH] = -splines["shoulder_pitch"].get(t);
+    angles[RIGHT_SHOULDER_PITCH] = splines["shoulder_pitch"].get(t);
+
+    angles[LEFT_ELBOW] = -splines["elbow"].get(t);
+    angles[RIGHT_ELBOW] = -splines["elbow"].get(t);
     
-    angles[LEFT_ANKLE_PITCH] = -splines["ankle_pitch"].get(simulation->t);
-    angles[RIGHT_ANKLE_PITCH] = -splines["ankle_pitch"].get(simulation->t);
+    angles[LEFT_ANKLE_PITCH] = -splines["ankle_pitch"].get(t);
+    angles[RIGHT_ANKLE_PITCH] = -splines["ankle_pitch"].get(t);
     
-    angles[LEFT_HIP_PITCH] = splines["hip_pitch"].get(simulation->t);
-    angles[RIGHT_HIP_PITCH] = splines["hip_pitch"].get(simulation->t);
+    angles[LEFT_HIP_PITCH] = splines["hip_pitch"].get(t);
+    angles[RIGHT_HIP_PITCH] = splines["hip_pitch"].get(t);
     
-    angles[LEFT_KNEE] = splines["knee"].get(simulation->t);
-    angles[RIGHT_KNEE] = splines["knee"].get(simulation->t);
-    
+    angles[LEFT_KNEE] = splines["knee"].get(t);
+    angles[RIGHT_KNEE] = splines["knee"].get(t);
+   
     //angles[HEAD_PITCH] = 60;
  
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
