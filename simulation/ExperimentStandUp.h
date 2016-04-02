@@ -17,6 +17,7 @@ class ExperimentStandUp : public Experiment
         double collisionsPenalty();
 
     protected:
+        double factor;
         std::map<int, float> angles;
         std::map<std::string, Function> splines;
 
