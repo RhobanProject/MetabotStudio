@@ -7,6 +7,7 @@ std::string execute(std::string command);
 double getTime();
 
 int uniform(int a, int b);
+double randDouble();
 
 template<typename T>
 T &randVec(std::vector<T> &vec)

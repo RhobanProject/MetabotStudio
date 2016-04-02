@@ -5,6 +5,7 @@
 #include "Simulation.h"
 #include "Controller.h"
 #include "Experiment.h"
+#include "util.h"
 
 Experiment::ParameterError::ParameterError(double error)
     : error(error)
@@ -27,6 +28,12 @@ void Experiment::Parameter::check()
 {
     if (value < min) throw ParameterError(1e10+fabs(value-min));
     if (value > max) throw ParameterError(1e10+fabs(value-max));
+}
+
+void Experiment::Parameter::randomize()
+{
+    double delta = max-min;
+    value = min+randDouble()*delta;
 }
 
 Experiment::Parameters::Parameters()
@@ -55,6 +62,13 @@ void Experiment::Parameters::set(std::string name, double value)
 {
     if (values.count(name)) {
         values[name].value = value;
+    }
+}
+                
+void Experiment::Parameters::randomize(std::string name)
+{
+    if (values.count(name)) {
+        values[name].randomize();
     }
 }
 

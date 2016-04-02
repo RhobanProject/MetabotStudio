@@ -27,6 +27,7 @@ class Experiment
             public:
                 void check();
                 double normalize();
+                void randomize();
                 void fromNormalized(double n);
 
                 std::string name;
@@ -43,6 +44,7 @@ class Experiment
                 void doNotOptimize(std::string name);
                 void add(std::string name, double min, double max, double value, bool optimize=true);
                 void set(std::string name, double value);
+                void randomize(std::string name);
                 void check(std::string name);
                 double get(std::string name);
 
