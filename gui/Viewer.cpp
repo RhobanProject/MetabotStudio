@@ -203,7 +203,7 @@ void Viewer::paintGL()
             // Mirror
             glScalef(1.0, 1.0, -1.0);
             if (sin(beta) > 0) {
-                client.robot->openGLDraw(true, 0.25);
+                client.robot->openGLDraw(true);
             }
         }
         client.unlock();
@@ -384,9 +384,9 @@ void Viewer::drawGridLines()
             ye = (ye+1)%2;
 
             if ((xe%2) == (ye%2)) {
-                glColor4f(0.8, 0.8, 0.8, 0.5);
+                glColor4f(0.8, 0.8, 0.8, 0.7);
             } else {
-                glColor4f(1.0, 1.0, 1.0, 0.5);
+                glColor4f(1.0, 1.0, 1.0, 0.7);
             }
 
             glVertex3f(x, y, pZ);
