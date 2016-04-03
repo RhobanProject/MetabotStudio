@@ -147,7 +147,7 @@ double ExperimentStandUp::score(Simulation *simulation)
     if (iteration >= 4) {
         score = cost*collisionsPenalty();
     } else {
-        score += 1e7*(3-iteration);
+        score += 1e7*(4-iteration);
         score += 10000/maxHeight;
         score += collisionsPenalty();
     }
