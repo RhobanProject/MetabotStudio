@@ -70,7 +70,7 @@ class Experiment
         };
 
         template<typename T>
-            class Runner : public BaseRunner
+        class Runner : public BaseRunner
         {
             public:
                 void init(std::string robotFile_, double factor_, bool runServer, double dt_)
@@ -133,19 +133,24 @@ class Experiment
                         duration = T::defaultDuration();
                     }
 
-                    // Creating the simulation
-                    Simulation simulation(duration, serv, robot, dt);
-
-                    // Creating the experiment
+                    // Experiment
                     T experiment;
-                    experiment.init(parameters, &robot);
 
-                    simulation.factor = factor;
-                    simulation.run([&experiment](Simulation *simulation) {
-                        experiment.control(simulation);
-                    });
+                    while (true) {
+                        // Creating the simulation
+                        Simulation simulation(duration, serv, robot, dt);
 
-                    return experiment.score(&simulation);
+                        // Creating the experiment
+                        experiment.init(parameters, &robot);
+
+                        simulation.factor = factor;
+                        simulation.run([&experiment](Simulation *simulation) {
+                            experiment.control(simulation);
+                        });
+                        if (experiment.end(&simulation)) {
+                            return experiment.score(&simulation);
+                        }
+                    }
                 }
 
                 Metabot::Server *server;
@@ -161,6 +166,9 @@ class Experiment
 
         // Called on each tick of the experiment
         virtual void control(Simulation *simulation);
+
+        // Ends the simulation
+        virtual bool end(Simulation *simulation);
 
         // Called at the end to compute the score
         virtual double score(Simulation *simulation);

@@ -1,6 +1,11 @@
 #include "ExperimentStandUp.h"
 #include "sigmaban.h"
         
+ExperimentStandUp::ExperimentStandUp()
+{
+    iteration = 1;
+}
+        
 std::vector<std::string> ExperimentStandUp::splineNames()
 {
     std::vector<std::string> names;
@@ -16,7 +21,7 @@ std::vector<std::string> ExperimentStandUp::splineNames()
 void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
     parameters.add("file", 0, 1, 0, false);
-    parameters.add("factor", 0, 10, 1.8, false);
+    parameters.add("factor", 0, 10, 1.0, false);
     
     auto seed = Function::fromFile("seed.json");
     for (auto name : splineNames()) {
@@ -75,9 +80,25 @@ void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
     }
 }
 
+bool ExperimentStandUp::end(Simulation *simulation)
+{
+    auto state = simulation->robot.getState();
+    auto rpy = state.toRPY();
+
+    if (fabs(rpy.y()) < 0.15) {
+        iteration++;
+
+        return iteration >= 4;
+    } else {
+        return true;
+    }
+}
+
 void ExperimentStandUp::control(Simulation *simulation)
 {
-    double t = simulation->t/factor;
+    double t = simulation->t*factor;
+    if (iteration == 2) t /= 1.5;
+    if (iteration == 3) t *= 1.5;
 
     angles[LEFT_SHOULDER_PITCH] = -splines["shoulder_pitch"].get(t);
     angles[RIGHT_SHOULDER_PITCH] = splines["shoulder_pitch"].get(t);
@@ -122,13 +143,13 @@ double ExperimentStandUp::score(Simulation *simulation)
 {
     double score = 0;
     auto state = simulation->robot.getState();
-    auto rpy = state.toRPY();
 
-    if (fabs(rpy.y()) > 0.1) {
-        // The standup failed
-        score = 1e6 + 10000/maxHeight + collisionsPenalty();
-    } else {
+    if (iteration >= 4) {
         score = cost*collisionsPenalty();
+    } else {
+        score += 1e7*(3-iteration);
+        score += 10000/maxHeight;
+        score += collisionsPenalty();
     }
 
     return score;
@@ -136,7 +157,7 @@ double ExperimentStandUp::score(Simulation *simulation)
 
 double ExperimentStandUp::defaultDuration()
 {
-    return 20;
+    return 12;
 }
 
 double ExperimentStandUp::collisionsPenalty()

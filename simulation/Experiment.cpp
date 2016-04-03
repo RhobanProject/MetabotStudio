@@ -133,6 +133,11 @@ void Experiment::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
 {
 }
 
+bool Experiment::end(Simulation *simulation)
+{
+    return true;
+}
+
 void Experiment::control(Simulation *simulation)
 {
 }
