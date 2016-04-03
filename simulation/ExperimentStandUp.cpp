@@ -85,7 +85,7 @@ bool ExperimentStandUp::end(Simulation *simulation)
     auto state = simulation->robot.getState();
     auto rpy = state.toRPY();
 
-    if (fabs(rpy.y()) < 0.15) {
+    if (fabs(rpy.x()) < 0.15 && fabs(rpy.y()) < 0.15) {
         iteration++;
 
         return iteration >= 4;
