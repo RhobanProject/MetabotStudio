@@ -300,15 +300,13 @@ double ExperimentShoot::getAngle(int index)
 double ExperimentShoot::score(Simulation *simulation)
 {
     double score = 0;
-    auto state = simulation->robot.getState();
-    auto rpy = state.toRPY();
 
     if (iteration >= 4) {
         for (auto shoot : shoots) {
             if (fabs(shoot.x()) < 0.1) score += 1e6;
             else score += fabs(10000/shoot.x());
         }
-        score += collisionsPenalty();
+        score += collisionsPenalty()/25;
     } else {
         return 1e7;
     }
