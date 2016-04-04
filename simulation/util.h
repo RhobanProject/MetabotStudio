@@ -2,6 +2,13 @@
 
 #include <string>
 
+#ifndef RAD2DEG
+#define RAD2DEG(a) ((a)*180.0/M_PI)
+#endif
+#ifndef DEG2RAD
+#define DEG2RAD(a) ((a)*M_PI/180.0)
+#endif
+
 std::string homeDir(std::string path);
 std::string execute(std::string command);
 double getTime();

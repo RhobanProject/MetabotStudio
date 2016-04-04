@@ -44,6 +44,8 @@ set (SOURCES
     ExperimentCheckpoints.cpp
     ExperimentStandUp.cpp
     ExperimentShoot.cpp
+    ExperimentStaticShoot.cpp
+    ExperimentIKWalk.cpp
     Generator.cpp
 
     util.cpp

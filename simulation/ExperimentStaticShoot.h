@@ -7,10 +7,10 @@
 #include <Model/HumanoidFloatingModel.hpp>
 #include <IKWalk/IKWalk.hpp>
 
-class ExperimentShoot : public ExperimentIKWalk
+class ExperimentStaticShoot : public ExperimentIKWalk
 {
     public:
-        ExperimentShoot();
+        ExperimentStaticShoot();
         static std::vector<std::string> splineNames();
         static double defaultDuration();
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);

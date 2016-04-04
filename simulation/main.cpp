@@ -22,6 +22,7 @@
 #include "ExperimentCheckpoints.h"
 #include "ExperimentStandUp.h"
 #include "ExperimentShoot.h"
+#include "ExperimentStaticShoot.h"
 #include "Generator.h"
 
 #include <iostream>
@@ -136,6 +137,8 @@ int main(int argc, char *argv[])
             runner = new Experiment::Runner<ExperimentStandUp>();
         } else if (experiment == "shoot") {
             runner = new Experiment::Runner<ExperimentShoot>();
+        } else if (experiment == "staticshoot") {
+            runner = new Experiment::Runner<ExperimentStaticShoot>();
         }
 
         runner->init(robotFile, factor, !noServer, 0.001);

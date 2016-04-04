@@ -1,14 +1,14 @@
 #include <com/Client.h>
-#include "ExperimentShoot.h"
+#include "ExperimentStaticShoot.h"
 #include "sigmaban.h"
 #include "util.h"
 
-ExperimentShoot::ExperimentShoot()
+ExperimentStaticShoot::ExperimentStaticShoot()
 {
     iteration = 1;
 }
 
-std::vector<std::string> ExperimentShoot::splineNames()
+std::vector<std::string> ExperimentStaticShoot::splineNames()
 {
     std::vector<std::string> names;
     names.push_back("a_hip_pitch");
@@ -28,7 +28,7 @@ std::vector<std::string> ExperimentShoot::splineNames()
     return names;
 }
 
-void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *robot)
+void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robot *robot)
 {
     ExperimentIKWalk::initParameters(parameters, robot);
 
@@ -46,7 +46,7 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
     parameters.add("air", 0, 1, 0, false);
 }
 
-void ExperimentShoot::makeBall(Simulation *simulation)
+void ExperimentStaticShoot::makeBall(Simulation *simulation)
 {
     if (!ball && iteration <= 2) {
         double ballDistance;
@@ -74,7 +74,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
     }
 }
 
-void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &parameters)
+void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
     // The ball is not still there
     ball = NULL;
@@ -109,6 +109,8 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
 
 
     this->ExperimentIKWalk::init(simulation, parameters);
+    params.riseGain = 0;
+    params.swingGain = 0;
     
     angles[LEFT_SHOULDER_ROLL] = 23;
     angles[RIGHT_SHOULDER_ROLL] = -23;
@@ -119,7 +121,7 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
     }
 }
 
-bool ExperimentShoot::end(Simulation *simulation)
+bool ExperimentStaticShoot::end(Simulation *simulation)
 {
     auto state = simulation->robot.getState();
     auto rpy = state.toRPY();
@@ -144,7 +146,7 @@ bool ExperimentShoot::end(Simulation *simulation)
     }
 }
 
-void ExperimentShoot::control(Simulation *simulation)
+void ExperimentStaticShoot::control(Simulation *simulation)
 {
     // Ball
     if (ball) {
@@ -228,7 +230,7 @@ void ExperimentShoot::control(Simulation *simulation)
     }
 }
 
-double ExperimentShoot::getAngle(int index)
+double ExperimentStaticShoot::getAngle(int index)
 {
     if (angles.count(index)) {
         return angles[index]*M_PI/180.0;
@@ -237,7 +239,7 @@ double ExperimentShoot::getAngle(int index)
     }
 }
 
-double ExperimentShoot::score(Simulation *simulation)
+double ExperimentStaticShoot::score(Simulation *simulation)
 {
     double score = 0;
 
@@ -254,12 +256,12 @@ double ExperimentShoot::score(Simulation *simulation)
     return score;
 }
 
-double ExperimentShoot::defaultDuration()
+double ExperimentStaticShoot::defaultDuration()
 {
     return 6;
 }
 
-double ExperimentShoot::collisionsPenalty()
+double ExperimentStaticShoot::collisionsPenalty()
 {
     return (1 + pow(collisions, 2));
 }
