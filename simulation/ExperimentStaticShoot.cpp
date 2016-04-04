@@ -33,19 +33,19 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
     ExperimentIKWalk::initParameters(parameters, robot);
 
     // Going on one leg
-    parameters.add("left_hip_yaw", -180, 180, 0);
-    parameters.add("left_hip_roll", -180, 180, 0);
-    parameters.add("left_hip_pitch", -180, 25, 0);
-    parameters.add("left_knee", -1, 180, 0);
-    parameters.add("left_ankle_pitch", -180, 180, 0);
-    parameters.add("left_ankle_roll", -180, 180, 0);
+    parameters.add("left_hip_yaw", -150, 150, 0);
+    parameters.add("left_hip_roll", -150, 150, 0);
+    parameters.add("left_hip_pitch", -150, 25, 0);
+    parameters.add("left_knee", -1, 150, 0);
+    parameters.add("left_ankle_pitch", -150, 150, 0);
+    parameters.add("left_ankle_roll", -150, 150, 0);
     
-    parameters.add("right_hip_yaw", -180, 180, 0);
-    parameters.add("right_hip_roll", -180, 180, 0);
-    parameters.add("right_hip_pitch", -180, 25, 0);
-    parameters.add("right_knee", -1, 180, 0);
-    parameters.add("right_ankle_pitch", -180, 180, 0);
-    parameters.add("right_ankle_roll", -180, 180, 0);
+    parameters.add("right_hip_yaw", -150, 150, 0);
+    parameters.add("right_hip_roll", -150, 150, 0);
+    parameters.add("right_hip_pitch", -150, 25, 0);
+    parameters.add("right_knee", -1, 150, 0);
+    parameters.add("right_ankle_pitch", -150, 150, 0);
+    parameters.add("right_ankle_roll", -150, 150, 0);
     
     // Rising leg
     parameters.add("height", 0, 1, 0.03);
@@ -209,7 +209,7 @@ void ExperimentStaticShoot::control(Simulation *simulation)
 double ExperimentStaticShoot::getAngle(int index)
 {
     if (angles.count(index)) {
-        return angles[index]*M_PI/180.0;
+        return DEG2RAD(angles[index]);
     } else {
         return 0.0;
     }
