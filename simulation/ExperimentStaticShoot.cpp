@@ -11,11 +11,19 @@ ExperimentStaticShoot::ExperimentStaticShoot()
 std::vector<std::string> ExperimentStaticShoot::splineNames()
 {
     std::vector<std::string> names;
-    names.push_back("sX");
-    names.push_back("sY");
-    names.push_back("sZ");
-    names.push_back("sR");
-    names.push_back("sP");
+    names.push_back("left_hip_yaw");
+    names.push_back("left_hip_roll");
+    names.push_back("left_hip_pitch");
+    names.push_back("left_knee");
+    names.push_back("left_ankle_pitch");
+    names.push_back("left_ankle_roll");
+    
+    names.push_back("right_hip_yaw");
+    names.push_back("right_hip_roll");
+    names.push_back("right_hip_pitch");
+    names.push_back("right_knee");
+    names.push_back("right_ankle_pitch");
+    names.push_back("right_ankle_roll");
 
     return names;
 }
@@ -25,12 +33,19 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
     ExperimentIKWalk::initParameters(parameters, robot);
 
     // Going on one leg
-    parameters.add("sX", -0.1, 0.1, 0);
-    parameters.add("sY", -0.1, 0.1, 0);
-    parameters.add("sZ", -0.1, 0.1, 0);
-    parameters.add("sR", -40, 40, 0);
-    parameters.add("sP", -40, 40, 0);
-    parameters.add("footSpace", 0, 0.1, 0.03);
+    parameters.add("left_hip_yaw", -180, 180, 0);
+    parameters.add("left_hip_roll", -180, 180, 0);
+    parameters.add("left_hip_pitch", -180, 25, 0);
+    parameters.add("left_knee", -1, 180, 0);
+    parameters.add("left_ankle_pitch", -180, 180, 0);
+    parameters.add("left_ankle_roll", -180, 180, 0);
+    
+    parameters.add("right_hip_yaw", -180, 180, 0);
+    parameters.add("right_hip_roll", -180, 180, 0);
+    parameters.add("right_hip_pitch", -180, 25, 0);
+    parameters.add("right_knee", -1, 180, 0);
+    parameters.add("right_ankle_pitch", -180, 180, 0);
+    parameters.add("right_ankle_roll", -180, 180, 0);
     
     // Rising leg
     parameters.add("height", 0, 1, 0.03);
@@ -88,12 +103,6 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
         f.addPoint(3, parameters.get(name));
         splines[name] = f;
     }
-    
-    Function rise;
-    rise.addPoint(0, 0);
-    rise.addPoint(4, 0);
-    rise.addPoint(5, parameters.get("height"));
-    splines["height"] = rise;
 
     if (parameters.get("file") > 0.5) {
         splines = Function::fromFile("shoot.json");
@@ -152,19 +161,6 @@ void ExperimentStaticShoot::control(Simulation *simulation)
     ct += simulation->dt;
 
     if (ct >= 0.01) {
-        params.extraLeftX = splines["sX"].get(simulation->t);
-        params.extraRightX = splines["sX"].get(simulation->t);
-
-        params.extraLeftY = splines["sY"].get(simulation->t);
-        params.extraRightY = splines["sY"].get(simulation->t);
-
-        params.extraLeftZ = splines["sZ"].get(simulation->t);
-        params.extraRightZ = splines["sZ"].get(simulation->t);
-        params.extraRightZ += splines["height"].get(simulation->t);
-
-        params.trunkPitch = DEG2RAD(splines["sP"].get(simulation->t));
-        params.trunkRoll = DEG2RAD(splines["sR"].get(simulation->t));
-
         ct -= 0.01;
         if (Leph::IKWalk::walk(model, params, st, 0.01)) {
             angles[LEFT_HIP_YAW] = RAD2DEG(model.getDOF("left_hip_yaw"));
@@ -180,8 +176,21 @@ void ExperimentStaticShoot::control(Simulation *simulation)
             angles[RIGHT_KNEE] = RAD2DEG(model.getDOF("right_knee"));
             angles[RIGHT_ANKLE_ROLL] = RAD2DEG(model.getDOF("right_ankle_roll"));
             angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
-
         }
+
+        angles[LEFT_HIP_YAW] += splines["left_hip_yaw"].get(simulation->t);
+        angles[LEFT_HIP_ROLL] += splines["left_hip_roll"].get(simulation->t);
+        angles[LEFT_HIP_PITCH] += splines["left_hip_pitch"].get(simulation->t);
+        angles[LEFT_KNEE] += splines["left_knee"].get(simulation->t);
+        angles[LEFT_ANKLE_ROLL] -= splines["left_ankle_roll"].get(simulation->t);
+        angles[LEFT_ANKLE_PITCH] -= splines["left_ankle_pitch"].get(simulation->t);
+        
+        angles[RIGHT_HIP_YAW] += splines["right_hip_yaw"].get(simulation->t);
+        angles[RIGHT_HIP_ROLL] += splines["right_hip_roll"].get(simulation->t);
+        angles[RIGHT_HIP_PITCH] += splines["right_hip_pitch"].get(simulation->t);
+        angles[RIGHT_KNEE] += splines["right_knee"].get(simulation->t);
+        angles[RIGHT_ANKLE_ROLL] += splines["right_ankle_roll"].get(simulation->t);
+        angles[RIGHT_ANKLE_PITCH] -= splines["right_ankle_pitch"].get(simulation->t);
     }
 
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
