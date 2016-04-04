@@ -38,7 +38,7 @@ void ExperimentIKWalk::init(Simulation *simulation, Experiment::Parameters &para
     params.lateralGain = 0;
 
     params.trunkXOffset = parameters.get("x");
-    params.trunkYOffset = 0.0;
+    params.trunkYOffset = parameters.get("y");
     params.trunkZOffset = parameters.get("z");
     params.trunkRoll = DEG2RAD(parameters.get("roll"));
     params.trunkPitch = DEG2RAD(parameters.get("pitch"));

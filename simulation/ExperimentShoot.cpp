@@ -99,7 +99,7 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
             ss << name << "_" << t;
             f.addPoint(t, parameters.get(ss.str()));
         }
-        f.addPoint(2, 0);
+        f.addPoint(7, 0);
         splines[name] = f;
     }
 

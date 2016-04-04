@@ -11,19 +11,11 @@ ExperimentStaticShoot::ExperimentStaticShoot()
 std::vector<std::string> ExperimentStaticShoot::splineNames()
 {
     std::vector<std::string> names;
-    names.push_back("a_hip_pitch");
-    names.push_back("a_ankle_pitch");
-    names.push_back("a_hip_pitch");
-    names.push_back("a_hip_yaw");
-    names.push_back("a_knee");
-
-    names.push_back("b_hip_pitch");
-    names.push_back("b_ankle_pitch");
-    names.push_back("b_hip_pitch");
-    names.push_back("b_hip_yaw");
-    names.push_back("b_hip_roll");
-
-    names.push_back("roll");
+    names.push_back("sX");
+    names.push_back("sY");
+    names.push_back("sZ");
+    names.push_back("sR");
+    names.push_back("sP");
 
     return names;
 }
@@ -32,18 +24,16 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
 {
     ExperimentIKWalk::initParameters(parameters, robot);
 
-    for (auto name : splineNames()) {
-        for (int t=1; t<=5; t++) {
-            std::stringstream ss;
-            ss << name << "_" << t;
-            double min = -150;
-            double max = 150;
-            if (name == "a_hip_pitch" || name == "b_hip_pitch") max = 25;
-            parameters.add(ss.str(), min, max, 0);
-        }
-    }
-
-    parameters.add("air", 0, 1, 0, false);
+    // Going on one leg
+    parameters.add("sX", -0.1, 0.1, 0);
+    parameters.add("sY", -0.1, 0.1, 0);
+    parameters.add("sZ", -0.1, 0.1, 0);
+    parameters.add("sR", -40, 40, 0);
+    parameters.add("sP", -40, 40, 0);
+    parameters.add("footSpace", 0, 0.1, 0.03);
+    
+    // Rising leg
+    parameters.add("rise", 0, 1, 0.03);
 }
 
 void ExperimentStaticShoot::makeBall(Simulation *simulation)
@@ -76,6 +66,13 @@ void ExperimentStaticShoot::makeBall(Simulation *simulation)
 
 void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
+    left = 0;
+    right = 0;
+    fallT = 0;
+
+    // Ball
+    makeBall(simulation);
+
     // The ball is not still there
     ball = NULL;
 
@@ -85,23 +82,20 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
     st = 0;
     collisions = 0;
     maxHeight = 0;
-    trigger = false;
-    shooting = false;
-    slowmo = false;
-    enableShoot = parameters.get("shoot")>0.5;
 
     // Loading splines
     for (auto name : splineNames()) {
         Function f;
         f.addPoint(0, 0);
-        for (int t=1; t<=6; t++) {
-            std::stringstream ss;
-            ss << name << "_" << t;
-            f.addPoint(t, parameters.get(ss.str()));
-        }
-        f.addPoint(2, 0);
+        f.addPoint(3, parameters.get(name));
         splines[name] = f;
     }
+    
+    Function rise;
+    rise.addPoint(0, 0);
+    rise.addPoint(4, 0);
+    rise.addPoint(5, parameters.get("rise"));
+    splines["rise"] = rise;
 
     if (parameters.get("file") > 0.5) {
         splines = Function::fromFile("shoot.json");
@@ -111,14 +105,10 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
     this->ExperimentIKWalk::init(simulation, parameters);
     params.riseGain = 0;
     params.swingGain = 0;
-    
+    params.footYOffset = parameters.get("footSpace");
+
     angles[LEFT_SHOULDER_ROLL] = 23;
     angles[RIGHT_SHOULDER_ROLL] = -23;
-
-    air = parameters.get("air")>0.5;
-    if (air) {
-        simulation->robot.root->body->setMassProps(0, btVector3(1,1,1));
-    }
 }
 
 bool ExperimentStaticShoot::end(Simulation *simulation)
@@ -137,6 +127,9 @@ bool ExperimentStaticShoot::end(Simulation *simulation)
         ball = NULL;
     }
 
+    return true;
+
+    /*
     if (fabs(rpy.x()) < 0.35 && fabs(rpy.y()) < 0.35) {
         iteration++;
 
@@ -144,10 +137,15 @@ bool ExperimentStaticShoot::end(Simulation *simulation)
     } else {
         return true;
     }
+    */
 }
 
 void ExperimentStaticShoot::control(Simulation *simulation)
 {
+    if (fallen(simulation) && fallT<0.1) {
+        fallT = simulation->t;
+    }
+
     // Ball
     if (ball) {
         auto ballState = simulation->robot.world.getState(ball);
@@ -157,6 +155,19 @@ void ExperimentStaticShoot::control(Simulation *simulation)
     ct += simulation->dt;
 
     if (ct >= 0.01) {
+        params.extraLeftX = splines["sX"].get(simulation->t);
+        params.extraRightY = splines["sX"].get(simulation->t);
+
+        params.extraLeftY = splines["sY"].get(simulation->t);
+        params.extraRightY = splines["sY"].get(simulation->t);
+
+        params.extraLeftZ = splines["sZ"].get(simulation->t);
+        params.extraRightZ = splines["sZ"].get(simulation->t);
+
+        params.trunkPitch = DEG2RAD(splines["sP"].get(simulation->t));
+        params.trunkRoll = DEG2RAD(splines["sR"].get(simulation->t));
+        params.extraRightZ = splines["rise"].get(simulation->t);
+
         ct -= 0.01;
         if (Leph::IKWalk::walk(model, params, st, 0.01)) {
             angles[LEFT_HIP_YAW] = RAD2DEG(model.getDOF("left_hip_yaw"));
@@ -174,48 +185,7 @@ void ExperimentStaticShoot::control(Simulation *simulation)
             angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
 
         }
-
-        if (enableShoot) {
-            if (simulation->t > 3/params.freq && !trigger) {
-                trigger = true;
-                shooting = true;
-                shootT = st;
-            }
-            if (!slowmo && simulation->t > 2.8/params.freq) {
-                makeBall(simulation);
-                if (simulation->factor < 1.5) {
-                    slowmo = true;
-                    factorSave = simulation->factor;
-                    simulation->factor = 0.3;
-                }
-            }
-            if (slowmo && simulation->t>3.7/params.freq) {
-                simulation->factor = factorSave;
-                slowmo = false;
-            }
-
-            if (shooting) {
-                double splineT = (st-shootT)*12;
-                angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
-                angles[RIGHT_ANKLE_PITCH] -= splines["a_ankle_pitch"].get(splineT);
-                angles[RIGHT_HIP_YAW] += splines["a_hip_yaw"].get(splineT);
-                angles[RIGHT_KNEE] += splines["a_knee"].get(splineT);
-
-                angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
-                angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
-                angles[LEFT_HIP_YAW] += splines["b_hip_yaw"].get(splineT);
-                angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
-
-                params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
-
-                if (splineT > 3) {
-                    shooting = false;
-                }
-            }
-        }
     }
-
-    //angles[HEAD_PITCH] = 60;
 
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
             this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
@@ -239,9 +209,35 @@ double ExperimentStaticShoot::getAngle(int index)
     }
 }
 
+bool ExperimentStaticShoot::fallen(Simulation *simulation)
+{
+    auto robot = &simulation->robot;
+    auto &world = robot->world;
+    double nleft = world.getGroundCollisions(robot->getComponentById(LEFT_ANKLE_ROLL)->body);
+    double nright = world.getGroundCollisions(robot->getComponentById(RIGHT_ANKLE_ROLL)->body);
+    auto other = world.getGroundNonTipCollisions()-nleft-nright;
+    left = 0.9*left+0.1*nleft;
+    right = 0.9*right+0.1*nright;
+
+    return other>0.001;
+}
+
 double ExperimentStaticShoot::score(Simulation *simulation)
 {
     double score = 0;
+    
+    // Fallen?
+    if (fallT > 0.1) {
+        return 1e6 + 1000/fallT;
+    }
+
+    // Ground force repartition
+    if (right > 1e-3) {
+        return right;
+    } else {
+        auto state = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
+        return 1/state.z();
+    }
 
     if (iteration >= 4) {
         for (auto shoot : shoots) {

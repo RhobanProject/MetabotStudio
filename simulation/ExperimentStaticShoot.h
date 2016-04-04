@@ -21,18 +21,19 @@ class ExperimentStaticShoot : public ExperimentIKWalk
         double collisionsPenalty();
 
     protected:
+        double left, right;
+        double fallT;
         std::vector<Vect> shoots;
         TransformMatrix shootFrame;
         int iteration;
         btRigidBody *ball;
-        bool enableShoot, trigger, shooting, slowmo;
-        bool air;
         double ct, st, shootT, factorSave;
         std::map<int, float> angles;
         std::map<std::string, Function> splines;
 
         void makeBall(Simulation *simulation);
         double getAngle(int index);
+        bool fallen(Simulation *simulation);
 
         double cost, collisions, maxHeight;
 };
