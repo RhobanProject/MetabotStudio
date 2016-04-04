@@ -113,8 +113,10 @@ void Experiment::Parameters::fromArray(const double *x, const int N)
     int k = 0;
     for (auto name : order) {
         if (values[name].optimize) {
-            values[name].fromNormalized(x[k++]);
-            values[name].check();
+            if (k < N) {
+                values[name].fromNormalized(x[k++]);
+                values[name].check();
+            }
         }
     }
 }

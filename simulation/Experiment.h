@@ -129,7 +129,7 @@ class Experiment
                     if (serv) serv->loadRobot(&robot);
                     if (serv) serv->disableMarker();
 
-                    if (duration == 0.0) {
+                    if (duration <= 0.1) {
                         duration = T::defaultDuration();
                     }
 
