@@ -12,7 +12,7 @@ class ExperimentStandUp : public Experiment
         static std::vector<std::string> splineNames();
         static double defaultDuration();
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
-        void init(Parameters &parameters, Metabot::Robot *robot);
+        void init(Simulation *simulation, Parameters &parameters);
         bool end(Simulation *simulation);
         void control(Simulation *simulation);
         double score(Simulation *simulation);

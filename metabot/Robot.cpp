@@ -587,6 +587,7 @@ namespace Metabot
             root->toBullet(&world);
         }
         world.freeze();
+        world.zOffset = 0;
     }
             
     TransformMatrix Robot::getState()

@@ -33,10 +33,10 @@ void ExperimentController::initParameters(Parameters &parameters, Metabot::Robot
     }
 }
 
-void ExperimentController::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
+void ExperimentController::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
     if (isVerbose()) std::cout << "Initializing the controller..." << std::endl;
-    controller = new Controller(robot);
+    controller = new Controller(&simulation->robot);
     controller->x = parameters.get("x");
     controller->y = parameters.get("y");
     controller->z = parameters.get("z");
@@ -50,7 +50,7 @@ void ExperimentController::init(Experiment::Parameters &parameters, Metabot::Rob
     controller->turn = parameters.get("turn");
     controller->setupFunctions();
 
-    for (int k=1; k<=robot->tips(); k++) {
+    for (int k=1; k<=simulation->robot.tips(); k++) {
         std::stringstream p;
         p << "p" << k;
         controller->phases[k-1] = parameters.get(p.str());

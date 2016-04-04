@@ -18,9 +18,9 @@ bool ExperimentCheckpoints::optimizeTurn()
     return true;
 }
 
-void ExperimentCheckpoints::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
+void ExperimentCheckpoints::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
-    ExperimentController::init(parameters, robot);
+    ExperimentController::init(simulation, parameters);
 
     announcedCheckpoint = -1;
     currentCheckpoint = 0;

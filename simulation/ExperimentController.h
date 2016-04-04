@@ -8,7 +8,7 @@ class ExperimentController : public Experiment
 {
     public:
         virtual ~ExperimentController();
-        void init(Experiment::Parameters &parameters, Metabot::Robot *robot);
+        void init(Simulation *simulation, Parameters &parameters);
         void control(Simulation *simulation);
         double collisionsPenalty();
         

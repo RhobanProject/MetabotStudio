@@ -17,6 +17,9 @@ class World
         // Step the simulation by a given time
         virtual void stepSimulation(float deltaTime);
 
+        // Gets the graphics state
+        TransformMatrix getState(btRigidBody *body);
+
         // Clear (empty the world)
         void clear(bool makeGround=true);
         void freeze();

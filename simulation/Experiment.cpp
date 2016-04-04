@@ -131,7 +131,7 @@ std::string Experiment::Parameters::toString()
     return ss.str();
 }
 
-void Experiment::init(Experiment::Parameters &parameters, Metabot::Robot *robot)
+void Experiment::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
 }
 

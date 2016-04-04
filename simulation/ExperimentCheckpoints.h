@@ -5,7 +5,7 @@
 class ExperimentCheckpoints : public ExperimentController
 {
     public:
-        virtual void init(Experiment::Parameters &parameters, Metabot::Robot *robot);
+        void init(Simulation *simulation, Parameters &parameters);
         virtual void control(Simulation *simulation);
         virtual double score(Simulation *simulation);
         virtual double scoreOver(Simulation *simulation)=0;

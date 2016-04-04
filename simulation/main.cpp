@@ -259,6 +259,7 @@ int main(int argc, char *argv[])
             double start = getTime();
 
             // CMAES parameters
+            //CMAParameters<> cmaparams(parameters.toVector(), -1, 64);
             CMAParameters<> cmaparams(parameters.toVector(), -1, 64);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
@@ -266,7 +267,7 @@ int main(int argc, char *argv[])
             cmaparams.set_restarts(3);
             //cmaparams.set_max_hist(3);
             //cmaparams.set_max_fevals(10000000);
-            cmaparams.set_elitism(2);
+            //cmaparams.set_elitism(0);
             //cmaparams.set_x0(0, 1);
             cmaparams.set_ftolerance(1e-6);
             cmaparams.set_xtolerance(1e-3);
@@ -287,6 +288,7 @@ int main(int argc, char *argv[])
                 if (external) {
                     std::stringstream ss;
                     ss << "./sim -x " << experiment << " -N -d " << duration << " -r " << robotFile << " " << params.toString();
+                    // std::cout << ss.str() << std::endl;
                     auto result = execute(ss.str());
                     auto parts = split(result, '=');
                     if (parts.size() == 2 && parts[0] == "score") {

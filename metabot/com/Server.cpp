@@ -25,7 +25,13 @@ namespace Metabot
     {
         invoke("update", robot->stateToJson());
     }
-            
+
+    void Server::init()
+    {
+        disableMarker();
+        removeShapes();
+    }
+
     void Server::updateMarker(double x, double y)
     {
         Json::Value marker(Json::arrayValue);
@@ -33,7 +39,7 @@ namespace Metabot
         marker[1] = y;
         invoke("marker", marker);
     }
-            
+
     void Server::disableMarker()
     {
         Json::Value marker(Json::arrayValue);
@@ -56,5 +62,34 @@ namespace Metabot
         memcpy(zmq_msg_data(&message), data.c_str(), data.size());
         zmq_msg_send(&message, pub, 0);
         zmq_msg_close(&message);
+    }
+
+    void Server::addShape(int id, int type, TransformMatrix matrix, std::vector<double> params)
+    {
+        Json::Value args(Json::arrayValue);
+        args[0] = id;
+        args[1] = type;
+        args[2] = matrix.toJson();
+
+        Json::Value paramsJson(Json::arrayValue);
+        for (int k=0; k<params.size(); k++) {
+            paramsJson[k] = params[k];
+        }
+        args[3] = paramsJson;
+        invoke("addShape", args);
+    }
+
+    void Server::updateShape(int id, TransformMatrix matrix)
+    {
+        Json::Value args(Json::arrayValue);
+        args[0] = id;
+        args[1] = matrix.toJson();
+
+        invoke("updateShape", args);
+    }
+
+    void Server::removeShapes()
+    {
+        invoke("removeShapes");
     }
 }

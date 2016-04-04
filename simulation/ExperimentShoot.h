@@ -14,12 +14,17 @@ class ExperimentShoot : public Experiment
         static std::vector<std::string> splineNames();
         static double defaultDuration();
         static void initParameters(Parameters &parameters, Metabot::Robot *robot);
-        virtual void init(Parameters &parameters, Metabot::Robot *robot);
+        void init(Simulation *simulation, Parameters &parameters);
+        virtual bool end(Simulation *simulation);
         virtual void control(Simulation *simulation);
         double score(Simulation *simulation);
         double collisionsPenalty();
 
     protected:
+        std::vector<Vect> shoots;
+        TransformMatrix shootFrame;
+        int iteration;
+        btRigidBody *ball;
         bool enableShoot, trigger, shooting, slowmo;
         bool air;
         double ct, st, shootT, factorSave;
@@ -28,6 +33,7 @@ class ExperimentShoot : public Experiment
         std::map<int, float> angles;
         std::map<std::string, Function> splines;
 
+        void makeBall(Simulation *simulation);
         double getAngle(int index);
 
         double cost, collisions, maxHeight;

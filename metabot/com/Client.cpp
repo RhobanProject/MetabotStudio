@@ -77,5 +77,35 @@ namespace Metabot
                 hasMarker = false;
             }
         }
+
+        if (command == "addShape") {
+            lock();
+            int id = arguments[0].asInt();
+            Shape shape;
+            shape.type = arguments[1].asInt();
+            shape.matrix = TransformMatrix::fromJSON(arguments[2]);
+
+            for (int k=0; k<arguments[3].size(); k++) {
+                shape.params.push_back(arguments[3][k].asFloat());
+            }
+
+            shapes[id] = shape;
+            unlock();
+        }
+
+        if (command == "updateShape") {
+            lock();
+            int id = arguments[0].asInt();
+            if (shapes.count(id)) {
+                shapes[id].matrix = TransformMatrix::fromJSON(arguments[1]);
+            }
+            unlock();
+        }
+
+        if (command == "removeShapes") {
+            lock();
+            shapes.clear();
+            unlock();
+        }
     }
 }

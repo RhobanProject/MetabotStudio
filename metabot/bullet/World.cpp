@@ -62,6 +62,14 @@
     clear();
 }
 
+TransformMatrix World::getState(btRigidBody *body)
+{
+    btTransform trans;
+    auto state = (btDefaultMotionState*)body->getMotionState();
+    trans = state->m_graphicsWorldTrans;
+    return TransformMatrix::fromBullet(trans);
+}
+
 World::~World()
 {
     clear(false);

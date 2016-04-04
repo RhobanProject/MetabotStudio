@@ -201,14 +201,28 @@ void Viewer::paintGL()
             client.robot->openGLDraw(true);
 
             // Mirror
+            glPushMatrix();
             glScalef(1.0, 1.0, -1.0);
             if (sin(beta) > 0) {
                 client.robot->openGLDraw(true);
             }
+            glPopMatrix();
+        }
+        glColor4ub(222, 0, 250, 255);
+        for (auto entry : client.shapes) {
+            auto shape = entry.second;
+            glPushMatrix();
+            shape.matrix.openGLMult();
+            if (shape.type == COM_SHAPE_SPHERE) {
+                GLUquadric *quad = gluNewQuadric();
+                gluSphere(quad, shape.params[0], 100, 20);
+                gluDeleteQuadric(quad);
+            }
+            glPopMatrix();
         }
         client.unlock();
     }
-    glPopMatrix();
+    glPopMatrix();glPopMatrix();
     glStencilFunc(GL_ALWAYS, 255, -1);
 
     if (mode == MODE_PHYSICS && client.hasMarker) {

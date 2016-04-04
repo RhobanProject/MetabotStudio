@@ -39,8 +39,9 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
     }
 }
         
-void ExperimentStandUp::init(Parameters &parameters, Metabot::Robot *robot)
+void ExperimentStandUp::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
+    auto robot = &simulation->robot;
     // Cost and collisions
     cost = 0;
     collisions = 0;

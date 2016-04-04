@@ -289,6 +289,21 @@ namespace Metabot
     {
         return values[2][3];
     }
+           
+    void TransformMatrix::setX(float x)
+    {
+        values[0][3] = x;
+    }
+
+    void TransformMatrix::setY(float y)
+    {
+        values[1][3] = y;
+    }
+
+    void TransformMatrix::setZ(float z)
+    {
+        values[2][3] = z;
+    }
 
     Symbolic TransformMatrix::toSymbolic()
     {

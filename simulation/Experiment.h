@@ -127,7 +127,7 @@ class Experiment
 
                     if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
                     if (serv) serv->loadRobot(&robot);
-                    if (serv) serv->disableMarker();
+                    if (serv) serv->init();
 
                     if (duration <= 0.1) {
                         duration = T::defaultDuration();
@@ -141,7 +141,7 @@ class Experiment
                         Simulation simulation(duration, serv, robot, dt);
 
                         // Creating the experiment
-                        experiment.init(parameters, &robot);
+                        experiment.init(&simulation, parameters);
 
                         simulation.factor = factor;
                         simulation.run([&experiment](Simulation *simulation) {
@@ -162,7 +162,7 @@ class Experiment
         };
 
         // Called on experiment initialization
-        virtual void init(Parameters &parameters, Metabot::Robot *robot);
+        virtual void init(Simulation *simulation, Parameters &parameters);
 
         // Called on each tick of the experiment
         virtual void control(Simulation *simulation);

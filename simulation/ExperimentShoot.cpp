@@ -1,3 +1,4 @@
+#include <com/Client.h>
 #include "ExperimentShoot.h"
 #include "sigmaban.h"
 
@@ -7,8 +8,9 @@
 ExperimentShoot::ExperimentShoot()
     : model(Leph::SigmabanModel)
 {
+    iteration = 1;
 }
-        
+
 std::vector<std::string> ExperimentShoot::splineNames()
 {
     std::vector<std::string> names;
@@ -60,9 +62,40 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
 
 std::map<int, TransformMatrix> initStates;
 bool passed = false;
-        
-void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
+
+void ExperimentShoot::makeBall(Simulation *simulation)
 {
+    if (!ball && iteration <= 2) {
+        double ballDistance;
+        double radius = 75;
+        double mass = 0.15;
+
+        if (iteration == 1) ballDistance = 190;
+        if (iteration == 2) ballDistance = 150;
+
+        shootFrame = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
+
+        // Creating ball
+        auto &world = simulation->robot.world;
+        auto shape = world.createSphere(radius/1000.0);
+        btVector3 inertia;
+        shape->calculateLocalInertia(mass, inertia);
+        TransformMatrix offset = TransformMatrix::identity();
+        offset.setX(-ballDistance);
+        offset.setZ(100);
+        shootFrame = shootFrame.multiply(offset);
+        ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
+        ball->setDamping(0, 1.5);
+        if (simulation->server) simulation->server->addShape(0, COM_SHAPE_SPHERE, 
+                TransformMatrix::identity(), {radius});
+    }
+}
+        
+void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &parameters)
+{
+    // The ball is not still there
+    ball = NULL;
+
     // Cost and collisions
     cost = 0;
     ct = 0;
@@ -71,6 +104,7 @@ void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
     maxHeight = 0;
     trigger = false;
     shooting = false;
+    slowmo = false;
     enableShoot = parameters.get("shoot")>0.5;
 
     // Loading splines
@@ -134,12 +168,42 @@ void ExperimentShoot::init(Parameters &parameters, Metabot::Robot *robot)
 
     air = parameters.get("air")>0.5;
     if (air) {
-        robot->root->body->setMassProps(0, btVector3(1,1,1));
+        simulation->robot.root->body->setMassProps(0, btVector3(1,1,1));
+    }
+}
+        
+bool ExperimentShoot::end(Simulation *simulation)
+{
+    auto state = simulation->robot.getState();
+    auto rpy = state.toRPY();
+
+    if (simulation->server) simulation->server->init();
+
+    if (iteration < 3) {
+        auto st = simulation->robot.world.getState(ball);
+        auto tmp = st.multiply(shootFrame.invert());
+        tmp = shootFrame.invert().multiply(st);
+        auto shoot = Vect(-tmp.x(), tmp.y(), tmp.z());
+        shoots.push_back(shoot);
+    }
+
+    if (fabs(rpy.x()) < 0.35 && fabs(rpy.y()) < 0.35) {
+        iteration++;
+
+        return iteration >= 4;
+    } else {
+        return true;
     }
 }
 
 void ExperimentShoot::control(Simulation *simulation)
 {
+    // Ball
+    if (ball) {
+        auto ballState = simulation->robot.world.getState(ball);
+        if (simulation->server) simulation->server->updateShape(0, ballState);
+    }
+
     if (simulation->t > 1 && !passed) {
         passed = true;
         auto comp = simulation->robot.root;
@@ -176,10 +240,11 @@ void ExperimentShoot::control(Simulation *simulation)
                 shootT = st;
             }
             if (!slowmo && simulation->t > 2.8/params.freq) {
+                makeBall(simulation);
                 if (simulation->factor < 1.5) {
                     slowmo = true;
                     factorSave = simulation->factor;
-                    simulation->factor = 0.15;
+                    simulation->factor = 0.3;
                 }
             }
             if (slowmo && simulation->t>3.7/params.freq) {
@@ -197,7 +262,7 @@ void ExperimentShoot::control(Simulation *simulation)
                 angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
                 angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
                 angles[LEFT_HIP_YAW] += splines["b_hip_yaw"].get(splineT);
-    //            angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
+                angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
 
                 params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
 
@@ -222,7 +287,7 @@ void ExperimentShoot::control(Simulation *simulation)
         }
     }
 }
-        
+
 double ExperimentShoot::getAngle(int index)
 {
     if (angles.count(index)) {
@@ -238,11 +303,13 @@ double ExperimentShoot::score(Simulation *simulation)
     auto state = simulation->robot.getState();
     auto rpy = state.toRPY();
 
-    if (fabs(rpy.y()) > 0.1) {
-        // The standup failed
-        score = 1e6 + 10000/maxHeight + collisionsPenalty();
-    } else {
-        score = cost*collisionsPenalty();
+    if (iteration >= 4) {
+        for (auto shoot : shoots) {
+            score += 10000/shoot.x();
+        }
+        score += collisionsPenalty();
+    } else {
+        return 1e7;
     }
 
     return score;
@@ -250,7 +317,7 @@ double ExperimentShoot::score(Simulation *simulation)
 
 double ExperimentShoot::defaultDuration()
 {
-    return 20;
+    return 6;
 }
 
 double ExperimentShoot::collisionsPenalty()
