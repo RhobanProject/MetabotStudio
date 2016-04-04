@@ -33,7 +33,7 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
     parameters.add("footSpace", 0, 0.1, 0.03);
     
     // Rising leg
-    parameters.add("rise", 0, 1, 0.03);
+    parameters.add("height", 0, 1, 0.03);
 }
 
 void ExperimentStaticShoot::makeBall(Simulation *simulation)
@@ -94,8 +94,8 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
     Function rise;
     rise.addPoint(0, 0);
     rise.addPoint(4, 0);
-    rise.addPoint(5, parameters.get("rise"));
-    splines["rise"] = rise;
+    rise.addPoint(5, parameters.get("height"));
+    splines["height"] = rise;
 
     if (parameters.get("file") > 0.5) {
         splines = Function::fromFile("shoot.json");
@@ -162,7 +162,7 @@ void ExperimentStaticShoot::control(Simulation *simulation)
 
         params.extraLeftZ = splines["sZ"].get(simulation->t);
         params.extraRightZ = splines["sZ"].get(simulation->t);
-        params.extraRightZ += splines["rise"].get(simulation->t);
+        params.extraRightZ += splines["height"].get(simulation->t);
 
         params.trunkPitch = DEG2RAD(splines["sP"].get(simulation->t));
         params.trunkRoll = DEG2RAD(splines["sR"].get(simulation->t));
