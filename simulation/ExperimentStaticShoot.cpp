@@ -236,7 +236,7 @@ double ExperimentStaticShoot::score(Simulation *simulation)
         return 1e3+right;
     } else {
         auto state = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
-        return 1/state.z();
+        return cost+collisionsPenalty()/state.z();
     }
 
     if (iteration >= 4) {
