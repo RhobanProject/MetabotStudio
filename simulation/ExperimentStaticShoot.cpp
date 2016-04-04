@@ -101,7 +101,6 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
         splines = Function::fromFile("shoot.json");
     }
 
-
     this->ExperimentIKWalk::init(simulation, parameters);
     params.riseGain = 0;
     params.swingGain = 0;
@@ -156,7 +155,7 @@ void ExperimentStaticShoot::control(Simulation *simulation)
 
     if (ct >= 0.01) {
         params.extraLeftX = splines["sX"].get(simulation->t);
-        params.extraRightY = splines["sX"].get(simulation->t);
+        params.extraRightX = splines["sX"].get(simulation->t);
 
         params.extraLeftY = splines["sY"].get(simulation->t);
         params.extraRightY = splines["sY"].get(simulation->t);
