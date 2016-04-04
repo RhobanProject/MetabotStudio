@@ -109,6 +109,32 @@ void World::stepSimulation(float deltaTime)
        */
 }
         
+double World::getGroundCollisions(btRigidBody *body)
+{
+    double result = 0.0;
+
+    if (m_dynamicsWorld) {
+        int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+        for (int i=0;i<numManifolds;i++) {
+            btPersistentManifold* contactManifold =  m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+            auto A = contactManifold->getBody0();
+            auto B = contactManifold->getBody1();
+
+            if ((A == body && B == ground)
+             || (B == body && A == ground)) {
+                int nb = contactManifold->getNumContacts();
+                for (int k=0; k<nb; k++) {
+                    auto contactPoint = contactManifold->getContactPoint(k);
+                    auto force = fabs(contactPoint.m_appliedImpulse);
+                    result += force;
+                }
+            }
+        }
+    }
+
+    return result;
+}
+        
 double World::getGroundNonTipCollisions()
 {
     double result = 0.0;

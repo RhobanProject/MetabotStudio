@@ -41,6 +41,7 @@ class World
         // Creating a rigid body
         btRigidBody* createRigidBody(float mass, btTransform startTransform, btCollisionShape* shape, btVector3 inertia = btVector3(0, 0, 0), btTransform com = btTransform::getIdentity());
 
+        double getGroundCollisions(btRigidBody *body);
         double getGroundNonTipCollisions();
         double getAutoCollisions();
         Vect getGroundForce(bool friction=true);
