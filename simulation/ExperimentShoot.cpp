@@ -305,7 +305,8 @@ double ExperimentShoot::score(Simulation *simulation)
 
     if (iteration >= 4) {
         for (auto shoot : shoots) {
-            score += 10000/shoot.x();
+            if (fabs(shoot.x()) < 0.1) score += 1e6;
+            else score += fabs(10000/shoot.x());
         }
         score += collisionsPenalty();
     } else {
