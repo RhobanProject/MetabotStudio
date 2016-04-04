@@ -227,9 +227,14 @@ double ExperimentStaticShoot::score(Simulation *simulation)
     if (fallT > 0.1) {
         return 1e6 + 1000/fallT;
     }
+    
+    // Checking right foot
+    auto robot = &simulation->robot;
+    auto &world = robot->world;
+    double nright = world.getGroundCollisions(robot->getComponentById(RIGHT_ANKLE_ROLL)->body);
 
     // Ground force repartition
-    if (right > 1e-4) {
+    if (nright > 1e-7) {
         return 1e3+right;
     } else {
         auto state = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
