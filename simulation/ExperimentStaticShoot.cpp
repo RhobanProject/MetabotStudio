@@ -71,10 +71,8 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
     fallT = 0;
 
     // Ball
-    makeBall(simulation);
-
-    // The ball is not still there
     ball = NULL;
+    makeBall(simulation);
 
     // Cost and collisions
     cost = 0;
