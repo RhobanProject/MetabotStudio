@@ -163,10 +163,10 @@ void ExperimentStaticShoot::control(Simulation *simulation)
 
         params.extraLeftZ = splines["sZ"].get(simulation->t);
         params.extraRightZ = splines["sZ"].get(simulation->t);
+        params.extraRightZ += splines["rise"].get(simulation->t);
 
         params.trunkPitch = DEG2RAD(splines["sP"].get(simulation->t));
         params.trunkRoll = DEG2RAD(splines["sR"].get(simulation->t));
-        params.extraRightZ = splines["rise"].get(simulation->t);
 
         ct -= 0.01;
         if (Leph::IKWalk::walk(model, params, st, 0.01)) {
