@@ -232,7 +232,7 @@ double ExperimentStaticShoot::score(Simulation *simulation)
     }
 
     // Ground force repartition
-    if (right > 1e-3) {
+    if (right > 1e-4) {
         return 1e3+right;
     } else {
         auto state = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
