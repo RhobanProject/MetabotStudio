@@ -309,7 +309,7 @@ double ExperimentShoot::score(Simulation *simulation)
             else score += fabs(10000/shoot.x());
         }
         score += collisionsPenalty();
-    } else {
+    } else {
         return 1e7;
     }
 
