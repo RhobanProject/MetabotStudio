@@ -253,7 +253,7 @@ double ExperimentStaticShoot::score(Simulation *simulation)
 
 double ExperimentStaticShoot::defaultDuration()
 {
-    return 6;
+    return 10;
 }
 
 double ExperimentStaticShoot::collisionsPenalty()
