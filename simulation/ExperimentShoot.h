@@ -28,7 +28,7 @@ class ExperimentShoot : public ExperimentIKWalk
         bool enableShoot, trigger, shooting, slowmo;
         bool air;
         double ct, st, shootT, factorSave;
-        double baseFreq, shootFreq;
+        double baseFreq, shootFreq, shootStep;
         double lastSplineT;
         std::map<int, float> angles;
         std::map<std::string, Function> splines;

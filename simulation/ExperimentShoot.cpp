@@ -3,6 +3,8 @@
 #include "sigmaban.h"
 #include "util.h"
 
+#define POINTS  3
+
 ExperimentShoot::ExperimentShoot()
 {
     iteration = 1;
@@ -35,7 +37,7 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
     ExperimentIKWalk::initParameters(parameters, robot);
 
     for (auto name : splineNames()) {
-        for (int t=1; t<=4; t++) {
+        for (int t=1; t<=POINTS; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
             double min = -150;
@@ -46,6 +48,7 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
 
     parameters.add("air", 0, 1, 0, false);
     parameters.add("shootFreq", 0, 3, 1.5);
+    parameters.add("shootStep", 0, 3, 0.06);
 }
 
 void ExperimentShoot::makeBall(Simulation *simulation)
@@ -67,7 +70,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         shape->calculateLocalInertia(mass, inertia);
         TransformMatrix offset = TransformMatrix::identity();
         offset.setX(ballDistance);
-        offset.setZ(100);
+        offset.setZ(80);
         shootFrame = shootFrame.multiply(offset);
         ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
         if (simulation->server) simulation->server->addShape(0, COM_SHAPE_SPHERE, 
@@ -95,10 +98,10 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
     for (auto name : splineNames()) {
         Function f;
         f.addPoint(0, 0);
-        for (int t=1; t<=4; t++) {
+        for (int t=1; t<=POINTS; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            f.addPoint(t/5.0, parameters.get(ss.str()));
+            f.addPoint(t/(POINTS+1.0), parameters.get(ss.str()));
         }
         f.addPoint(1, 0);
         splines[name] = f;
@@ -111,6 +114,7 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
     this->ExperimentIKWalk::init(simulation, parameters);
     baseFreq = params.freq;
     shootFreq = parameters.get("shootFreq");
+    shootStep = parameters.get("shootStep");
     
     angles[LEFT_SHOULDER_ROLL] = 23;
     angles[RIGHT_SHOULDER_ROLL] = -23;
@@ -181,10 +185,13 @@ void ExperimentShoot::control(Simulation *simulation)
         if (enableShoot) {
             double startAt = 4;
             if (simulation->t > startAt/params.freq && !trigger) {
+                params.stepGain = shootStep;
+            }
+            if (simulation->t > (startAt+0.5)/params.freq && !trigger) {
                 trigger = true;
                 shooting = true;
                 lastSplineT = 0;
-                params.freq=shootFreq;
+                params.freq = shootFreq;
                 shootT = st;
             }
             if (!slowmo && simulation->t > (startAt-0.3)/params.freq) {
@@ -201,7 +208,7 @@ void ExperimentShoot::control(Simulation *simulation)
             }
 
             if (shooting) {
-                double splineT = st-shootT;
+                double splineT = (st-shootT)*2;
                 angles[RIGHT_HIP_YAW] += splines["a_hip_yaw"].get(splineT);
                 angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
                 angles[RIGHT_HIP_ROLL] += splines["a_hip_roll"].get(splineT);
@@ -220,7 +227,8 @@ void ExperimentShoot::control(Simulation *simulation)
 
                 if (splineT < lastSplineT) {
                     shooting = false;
-                    params.freq=baseFreq;
+                    params.stepGain = 0.0;
+                    params.freq = baseFreq;
                 }
                 lastSplineT = splineT;
             }
