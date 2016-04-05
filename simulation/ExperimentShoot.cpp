@@ -58,7 +58,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         if (iteration == 1) ballDistance = 190;
         if (iteration == 2) ballDistance = 150;
 
-        shootFrame = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
+        shootFrame = simulation->robot.getComponentById(LEFT_ANKLE_ROLL)->getState();
 
         // Creating ball
         auto &world = simulation->robot.world;
@@ -66,7 +66,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         btVector3 inertia;
         shape->calculateLocalInertia(mass, inertia);
         TransformMatrix offset = TransformMatrix::identity();
-        offset.setX(-ballDistance);
+        offset.setX(ballDistance);
         offset.setZ(100);
         shootFrame = shootFrame.multiply(offset);
         ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
@@ -132,7 +132,7 @@ bool ExperimentShoot::end(Simulation *simulation)
         auto st = simulation->robot.world.getState(ball);
         auto tmp = st.multiply(shootFrame.invert());
         tmp = shootFrame.invert().multiply(st);
-        auto shoot = Vect(-tmp.x(), tmp.y(), tmp.z());
+        auto shoot = Vect(tmp.x(), tmp.y(), tmp.z());
         shoots.push_back(shoot);
         ball = NULL;
     }
