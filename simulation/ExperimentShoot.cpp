@@ -44,6 +44,7 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
     }
 
     parameters.add("air", 0, 1, 0, false);
+    parameters.add("shootFreq", 0, 3, 1.5);
 }
 
 void ExperimentShoot::makeBall(Simulation *simulation)
@@ -107,8 +108,9 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
         splines = Function::fromFile("shoot.json");
     }
 
-
     this->ExperimentIKWalk::init(simulation, parameters);
+    baseFreq = params.freq;
+    shootFreq = parameters.get("shootFreq");
     
     angles[LEFT_SHOULDER_ROLL] = 23;
     angles[RIGHT_SHOULDER_ROLL] = -23;
@@ -177,6 +179,7 @@ void ExperimentShoot::control(Simulation *simulation)
             if (simulation->t > 3/params.freq && !trigger) {
                 trigger = true;
                 shooting = true;
+                params.freq=shootFreq;
                 shootT = st;
             }
             if (!slowmo && simulation->t > 2.8/params.freq) {
@@ -208,6 +211,7 @@ void ExperimentShoot::control(Simulation *simulation)
 
                 if (splineT > 3) {
                     shooting = false;
+                    params.freq=baseFreq;
                 }
             }
         }
