@@ -69,7 +69,6 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         offset.setZ(100);
         shootFrame = shootFrame.multiply(offset);
         ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
-        ball->setDamping(0, 1);
         if (simulation->server) simulation->server->addShape(0, COM_SHAPE_SPHERE, 
                 TransformMatrix::identity(), {radius});
     }
@@ -152,6 +151,10 @@ void ExperimentShoot::control(Simulation *simulation)
     if (ball) {
         auto ballState = simulation->robot.world.getState(ball);
         if (simulation->server) simulation->server->updateShape(0, ballState);
+    
+        auto &world = simulation->robot.world;
+        auto ballGround = world.getGroundCollisions(ball);
+        ball->setDamping(0, fabs(ballGround)>1e-7 ? 1 : 0);
     }
 
     ct += simulation->dt;
