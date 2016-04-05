@@ -1,3 +1,4 @@
+#include <math.h>
 #include <com/Client.h>
 #include "ExperimentStaticShoot.h"
 #include "sigmaban.h"
@@ -81,6 +82,8 @@ void ExperimentStaticShoot::makeBall(Simulation *simulation)
 
 void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
+    lastState = simulation->robot.getState();
+
     left = 0;
     right = 0;
     fallT = 0;
@@ -225,12 +228,23 @@ bool ExperimentStaticShoot::fallen(Simulation *simulation)
     left = 0.5*left+0.5*nleft;
     right = 0.5*right+0.5*nright;
 
+    auto state = robot->getState();
+    double speed = sqrt(pow(state.x()-lastState.x(), 2) +
+            pow(state.y()-lastState.y(), 2) +
+            pow(state.z()-lastState.z(), 2))*simulation->dt;
+    trunkSpeed = 0.8*trunkSpeed + 0.2*speed;
+    lastState = state;
+
     return other>0.001;
 }
 
 double ExperimentStaticShoot::score(Simulation *simulation)
 {
     double score = 0;
+
+    if (trunkSpeed > 1e-4) {
+        return 1e7;
+    }
     
     // Fallen?
     if (fallT > 0.1) {

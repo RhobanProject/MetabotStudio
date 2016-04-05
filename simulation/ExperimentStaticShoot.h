@@ -21,6 +21,8 @@ class ExperimentStaticShoot : public ExperimentIKWalk
         double collisionsPenalty();
 
     protected:
+        TransformMatrix lastState;
+        double trunkSpeed;
         double left, right;
         double fallT;
         std::vector<Vect> shoots;
