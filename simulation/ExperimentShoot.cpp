@@ -183,6 +183,7 @@ void ExperimentShoot::control(Simulation *simulation)
             if (simulation->t > startAt/params.freq && !trigger) {
                 trigger = true;
                 shooting = true;
+                lastSplineT = 0;
                 params.freq=shootFreq;
                 shootT = st;
             }
@@ -217,10 +218,11 @@ void ExperimentShoot::control(Simulation *simulation)
 
                 params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
 
-                if (splineT > 3) {
+                if (splineT < lastSplineT) {
                     shooting = false;
                     params.freq=baseFreq;
                 }
+                lastSplineT = splineT;
             }
         }
     }
