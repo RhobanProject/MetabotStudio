@@ -52,7 +52,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
     if (!ball && iteration <= 2) {
         double ballDistance;
         double radius = 75;
-        double mass = 0.15;
+        double mass = 0.200;
 
         if (iteration == 1) ballDistance = 190;
         if (iteration == 2) ballDistance = 150;
@@ -69,7 +69,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         offset.setZ(100);
         shootFrame = shootFrame.multiply(offset);
         ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
-        ball->setDamping(0, 1.5);
+        ball->setDamping(0, 0.99);
         if (simulation->server) simulation->server->addShape(0, COM_SHAPE_SPHERE, 
                 TransformMatrix::identity(), {radius});
     }
