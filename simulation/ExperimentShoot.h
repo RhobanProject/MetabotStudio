@@ -29,6 +29,7 @@ class ExperimentShoot : public ExperimentIKWalk
         bool air;
         double ct, st, shootT, factorSave;
         double baseFreq, shootFreq;
+        double lastSplineT;
         std::map<int, float> angles;
         std::map<std::string, Function> splines;
 
