@@ -39,15 +39,15 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
     // Going on one leg
     parameters.add("left_hip_yaw", -150, 150, 0);
     parameters.add("left_hip_roll", -150, 150, 0);
-    parameters.add("left_hip_pitch", -150, 50, 0);
-    parameters.add("left_knee", -30, 150, 0);
+    parameters.add("left_hip_pitch", -150, 150, 0);
+    parameters.add("left_knee", -150, 150, 0);
     parameters.add("left_ankle_pitch", -150, 150, 0);
     parameters.add("left_ankle_roll", -150, 150, 0);
     
     parameters.add("right_hip_yaw", -150, 150, 0);
     parameters.add("right_hip_roll", -150, 150, 0);
-    parameters.add("right_hip_pitch", -150, 50, 0);
-    parameters.add("right_knee", -30, 150, 0);
+    parameters.add("right_hip_pitch", -150, 150, 0);
+    parameters.add("right_knee", -150, 150, 0);
     parameters.add("right_ankle_pitch", -150, 150, 0);
     parameters.add("right_ankle_roll", -150, 150, 0);
     
