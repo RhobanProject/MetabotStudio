@@ -1,7 +1,7 @@
 Collisions=false;
 
 //:Part
-module foot(width=142, height=82, thickness=2, cleats=25)
+module foot(width=142, height=82, thickness=2, cleats=12)
 {
     cube([width, height, thickness], center=true);
     
@@ -11,7 +11,7 @@ module foot(width=142, height=82, thickness=2, cleats=25)
             translate([x,y,-cleats/2]) {
                 cylinder(r=6, h=cleats, center=true);
                 translate([0,0,-cleats/2])
-                sphere(r=6);
+                sphere(r=9);
             }
         }
     }
