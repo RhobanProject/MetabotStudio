@@ -17,7 +17,7 @@ void ExperimentIKWalk::initParameters(Parameters &parameters, Metabot::Robot *ro
     parameters.add("rise", 0, 1, 0.025, false);
     parameters.add("step", -1, 1, 0.0, false);
     parameters.add("swing", 0, 1, 0.01, false);
-    parameters.add("swingPhase", 0, 1, 0.2, false);
+    parameters.add("swingPhase", 0, 1, 0.0, false);
     parameters.add("footY", -1, 1, 0.02, false);
     parameters.add("x", -1, 1, 0.01, false);
     parameters.add("y", -1, 1, 0.0, false);

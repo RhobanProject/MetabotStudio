@@ -22,6 +22,7 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
 {
     parameters.add("file", 0, 1, 0, false);
     parameters.add("factor", 0, 10, 1.0, false);
+    parameters.add("back", 0, 1, 0, false);
     
     auto seed = Function::fromFile("seed.json");
     for (auto name : splineNames()) {
@@ -52,11 +53,13 @@ void ExperimentStandUp::init(Simulation *simulation, Experiment::Parameters &par
     robot->getComponentById(LEFT_ELBOW)->body->setFriction(0.6);
     robot->getComponentById(RIGHT_ELBOW)->body->setFriction(0.6);
 
+    bool back = parameters.get("back")>0.5;
+
     // Put the robot on the front at the begining
-    robot->foreachComponent([](Metabot::Component *component) {
+    robot->foreachComponent([back](Metabot::Component *component) {
         if (component->body) {
             auto trans = TransformMatrix::fromBullet(component->body->getWorldTransform());
-            trans = TransformMatrix::rotationY(M_PI/2).multiply(trans);
+            trans = TransformMatrix::rotationY(back ? -M_PI/2 : M_PI/2).multiply(trans);
             trans.values[2][3] += 100;
             component->body->setWorldTransform(trans.toBullet());
         }
