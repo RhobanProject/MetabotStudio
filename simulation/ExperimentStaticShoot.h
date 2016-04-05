@@ -22,6 +22,7 @@ class ExperimentStaticShoot : public ExperimentIKWalk
 
     protected:
         TransformMatrix lastState;
+        double factor;
         double trunkSpeed;
         double left, right;
         double fallT;

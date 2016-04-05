@@ -33,6 +33,9 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
 {
     ExperimentIKWalk::initParameters(parameters, robot);
 
+    // Speed factor
+    parameters.add("factor", 0, 10, 1);
+
     // Going on one leg
     parameters.add("left_hip_yaw", -150, 150, 0);
     parameters.add("left_hip_roll", -150, 150, 0);
@@ -87,6 +90,9 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
     left = 0;
     right = 0;
     fallT = 0;
+    
+    // Speed factor
+    factor = parameters.get("factor");
 
     // Ball
     ball = NULL;
@@ -103,7 +109,7 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
     for (auto name : splineNames()) {
         Function f;
         f.addPoint(0, 0);
-        f.addPoint(3, parameters.get(name));
+        f.addPoint(3/factor, parameters.get(name));
         splines[name] = f;
     }
 
