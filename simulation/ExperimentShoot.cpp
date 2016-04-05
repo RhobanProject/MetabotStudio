@@ -69,7 +69,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         offset.setZ(100);
         shootFrame = shootFrame.multiply(offset);
         ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
-        ball->setDamping(0, 0.99);
+        ball->setDamping(0, 1);
         if (simulation->server) simulation->server->addShape(0, COM_SHAPE_SPHERE, 
                 TransformMatrix::identity(), {radius});
     }
@@ -176,13 +176,14 @@ void ExperimentShoot::control(Simulation *simulation)
         }
 
         if (enableShoot) {
-            if (simulation->t > 3/params.freq && !trigger) {
+            double startAt = 4;
+            if (simulation->t > startAt/params.freq && !trigger) {
                 trigger = true;
                 shooting = true;
                 params.freq=shootFreq;
                 shootT = st;
             }
-            if (!slowmo && simulation->t > 2.8/params.freq) {
+            if (!slowmo && simulation->t > (startAt-0.3)/params.freq) {
                 makeBall(simulation);
                 if (simulation->factor < 1.5) {
                     slowmo = true;
@@ -190,7 +191,7 @@ void ExperimentShoot::control(Simulation *simulation)
                     simulation->factor = 0.3;
                 }
             }
-            if (slowmo && simulation->t>3.7/params.freq) {
+            if (slowmo && simulation->t>(startAt+1+0.3)/params.freq) {
                 simulation->factor = factorSave;
                 slowmo = false;
             }
