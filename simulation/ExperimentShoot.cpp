@@ -11,17 +11,19 @@ ExperimentShoot::ExperimentShoot()
 std::vector<std::string> ExperimentShoot::splineNames()
 {
     std::vector<std::string> names;
-    names.push_back("a_hip_pitch");
-    names.push_back("a_ankle_pitch");
-    names.push_back("a_hip_pitch");
     names.push_back("a_hip_yaw");
+    names.push_back("a_hip_pitch");
+    names.push_back("a_hip_roll");
     names.push_back("a_knee");
+    names.push_back("a_ankle_pitch");
+    names.push_back("a_ankle_roll");
 
-    names.push_back("b_hip_pitch");
-    names.push_back("b_ankle_pitch");
-    names.push_back("b_hip_pitch");
     names.push_back("b_hip_yaw");
+    names.push_back("b_hip_pitch");
     names.push_back("b_hip_roll");
+    names.push_back("b_knee");
+    names.push_back("b_ankle_pitch");
+    names.push_back("b_ankle_roll");
 
     names.push_back("roll");
 
@@ -33,12 +35,11 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
     ExperimentIKWalk::initParameters(parameters, robot);
 
     for (auto name : splineNames()) {
-        for (int t=1; t<=5; t++) {
+        for (int t=1; t<=4; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
             double min = -150;
             double max = 150;
-            if (name == "a_hip_pitch" || name == "b_hip_pitch") max = 25;
             parameters.add(ss.str(), min, max, 0);
         }
     }
@@ -94,12 +95,12 @@ void ExperimentShoot::init(Simulation *simulation, Experiment::Parameters &param
     for (auto name : splineNames()) {
         Function f;
         f.addPoint(0, 0);
-        for (int t=1; t<=6; t++) {
+        for (int t=1; t<=4; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
-            f.addPoint(t, parameters.get(ss.str()));
+            f.addPoint(t/5.0, parameters.get(ss.str()));
         }
-        f.addPoint(7, 0);
+        f.addPoint(1, 0);
         splines[name] = f;
     }
 
@@ -175,7 +176,6 @@ void ExperimentShoot::control(Simulation *simulation)
             angles[RIGHT_KNEE] = RAD2DEG(model.getDOF("right_knee"));
             angles[RIGHT_ANKLE_ROLL] = RAD2DEG(model.getDOF("right_ankle_roll"));
             angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
-
         }
 
         if (enableShoot) {
@@ -200,16 +200,20 @@ void ExperimentShoot::control(Simulation *simulation)
             }
 
             if (shooting) {
-                double splineT = (st-shootT)*12;
-                angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
-                angles[RIGHT_ANKLE_PITCH] -= splines["a_ankle_pitch"].get(splineT);
+                double splineT = st-shootT;
                 angles[RIGHT_HIP_YAW] += splines["a_hip_yaw"].get(splineT);
+                angles[RIGHT_HIP_PITCH] += splines["a_hip_pitch"].get(splineT);
+                angles[RIGHT_HIP_ROLL] += splines["a_hip_roll"].get(splineT);
                 angles[RIGHT_KNEE] += splines["a_knee"].get(splineT);
+                angles[RIGHT_ANKLE_ROLL] -= splines["a_ankle_roll"].get(splineT);
+                angles[RIGHT_ANKLE_PITCH] -= splines["a_ankle_pitch"].get(splineT);
 
-                angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
-                angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
                 angles[LEFT_HIP_YAW] += splines["b_hip_yaw"].get(splineT);
+                angles[LEFT_HIP_PITCH] += splines["b_hip_pitch"].get(splineT);
                 angles[LEFT_HIP_ROLL] += splines["b_hip_roll"].get(splineT);
+                angles[LEFT_KNEE] += splines["b_knee"].get(splineT);
+                angles[LEFT_ANKLE_PITCH] -= splines["b_ankle_pitch"].get(splineT);
+                angles[LEFT_ANKLE_ROLL] += splines["b_ankle_roll"].get(splineT);
 
                 params.trunkRoll = DEG2RAD(splines["roll"].get(splineT));
 
