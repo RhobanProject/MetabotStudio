@@ -222,8 +222,8 @@ bool ExperimentStaticShoot::fallen(Simulation *simulation)
     double nleft = world.getGroundCollisions(robot->getComponentById(LEFT_ANKLE_ROLL)->body);
     double nright = world.getGroundCollisions(robot->getComponentById(RIGHT_ANKLE_ROLL)->body);
     auto other = world.getGroundNonTipCollisions()-nleft-nright;
-    left = 0.9*left+0.1*nleft;
-    right = 0.9*right+0.1*nright;
+    left = 0.5*left+0.5*nleft;
+    right = 0.5*right+0.5*nright;
 
     return other>0.001;
 }
@@ -237,13 +237,8 @@ double ExperimentStaticShoot::score(Simulation *simulation)
         return 1e6 + 1000/fallT;
     }
     
-    // Checking right foot
-    auto robot = &simulation->robot;
-    auto &world = robot->world;
-    double nright = world.getGroundCollisions(robot->getComponentById(RIGHT_ANKLE_ROLL)->body);
-
     // Ground force repartition
-    if (nright > 1e-7) {
+    if (right > 1e-5) {
         return 1e3+right;
     } else {
         auto state = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL)->getState();
