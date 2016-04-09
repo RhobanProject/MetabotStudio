@@ -1,5 +1,7 @@
 #include "ExperimentStandUp.h"
 #include "sigmaban.h"
+
+#define POINTS 4
         
 ExperimentStandUp::ExperimentStandUp()
 {
@@ -26,7 +28,7 @@ void ExperimentStandUp::initParameters(Parameters &parameters, Metabot::Robot *r
     
     auto seed = Function::fromFile("seed.json");
     for (auto name : splineNames()) {
-        for (int t=1; t<=5; t++) {
+        for (int t=1; t<=POINTS; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
             double min = -150;
@@ -71,7 +73,7 @@ void ExperimentStandUp::init(Simulation *simulation, Experiment::Parameters &par
     for (auto name : splineNames()) {
         Function f;
         f.addPoint(0, 0);
-        for (int t=1; t<=6; t++) {
+        for (int t=1; t<=POINTS; t++) {
             std::stringstream ss;
             ss << name << "_" << t;
             f.addPoint(t, parameters.get(ss.str()));
@@ -118,7 +120,7 @@ void ExperimentStandUp::control(Simulation *simulation)
     
     angles[LEFT_KNEE] = splines["knee"].get(t);
     angles[RIGHT_KNEE] = splines["knee"].get(t);
-   
+
     //angles[HEAD_PITCH] = 60;
  
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
