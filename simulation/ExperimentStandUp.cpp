@@ -123,9 +123,11 @@ void ExperimentStandUp::control(Simulation *simulation)
 
     //angles[HEAD_PITCH] = 60;
  
-    simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
-        this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
+    double stepCost = 0;
+    simulation->robot.foreachComponent([&stepCost, this, simulation](Metabot::Component *component) {
+        stepCost += component->setTarget(this->getAngle(component->id), simulation->dt);
     });
+    cost += stepCost;
    
     if (simulation->t > 1) {
         collisions += simulation->robot.world.getAutoCollisions();

@@ -998,8 +998,8 @@ namespace Metabot
 
             if (hinge->getJointFeedback()) {
                 auto fb = hinge->getJointFeedback();
-                cost += fb->m_appliedTorqueBodyA.norm();
-                cost += fb->m_appliedTorqueBodyB.norm();
+                cost += fb->m_appliedTorqueBodyA.norm()*dt;
+                cost += fb->m_appliedTorqueBodyB.norm()*dt;
             }
         } else if (backend->config.mode == MODE_TORQUE) {
             btVector3 hingeAxisLocalA =
