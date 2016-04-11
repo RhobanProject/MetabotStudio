@@ -955,6 +955,16 @@ namespace Metabot
             return 0;
         }
 
+        if (!hinge->getJointFeedback()) {
+            auto fb = new btJointFeedback();
+            fb->m_appliedForceBodyA.setZero();
+            fb->m_appliedTorqueBodyA.setZero();
+            fb->m_appliedForceBodyB.setZero();
+            fb->m_appliedTorqueBodyB.setZero();
+            hinge->enableFeedback(true);
+            hinge->setJointFeedback(fb);
+        }
+
         auto above = aboveAnchor();
         auto motor = backend->config.motors[above->type];
         double maxSpeed = motor.maxSpeed;
@@ -966,6 +976,7 @@ namespace Metabot
 
         // vel = vel*0.9 + 0.1*getVelocity();
         vel = vel*0.8 + 0.2*(pos-lastPos)/dt;
+        //vel = getVelocity();
 
         // Speed servoing
         float error = alpha-pos;
@@ -981,8 +992,15 @@ namespace Metabot
         // Torque servoing
         targetForce = bound(errorVel*motor.torqueGain, -maxForce, maxForce);
 
+        double cost = 0;
         if (backend->config.mode == MODE_MOTORS) {
             hinge->enableAngularMotor(true, targetVel, dt*maxForce);
+
+            if (hinge->getJointFeedback()) {
+                auto fb = hinge->getJointFeedback();
+                cost += fb->m_appliedTorqueBodyA.norm();
+                cost += fb->m_appliedTorqueBodyB.norm();
+            }
         } else if (backend->config.mode == MODE_TORQUE) {
             btVector3 hingeAxisLocalA =
                 hinge->getFrameOffsetA().getBasis().getColumn(2);
@@ -1002,14 +1020,15 @@ namespace Metabot
             hinge->getRigidBodyA().applyTorque(hingeTorqueA);
             hinge->getRigidBodyB().applyTorque(-hingeTorqueB);
 
-
             // This can be used to add some frictions
             // hinge->enableAngularMotor(true, 0.0, dt*0.02);
+
+            cost = fabs(targetForce*dt);
         }
-            
+
         if (body) body->activate();
         lastPos = pos;
 
-        return fabs(targetForce*dt);
+        return cost;
     }
 }
