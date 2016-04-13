@@ -11,11 +11,11 @@ namespace Metabot
         ss << "    " << (transform.multiply(matrix)).toURDF() << std::endl;
         ss << "    <geometry>" << std::endl;
         if (type == SHAPE_BOX) {
-            ss << "      <box><size>" << ((a-RETRACTION)/1000) << " " << ((b-RETRACTION)/1000) << " " << ((c-RETRACTION)/1000) << "</size></box>" << std::endl;
+            ss << "      <box size=\"" << ((a-RETRACTION)/1000) << " " << ((b-RETRACTION)/1000) << " " << ((c-RETRACTION)/1000) << "\"/>" << std::endl;
         } else if (type == SHAPE_SPHERE) {
-            ss << "      <sphere><radius>" << ((r-RETRACTION)/1000) << "</radius></sphere>" << std::endl;
+            ss << "      <sphere radius=\"" << ((r-RETRACTION)/1000) << "\"/>" << std::endl;
         } else if (type == SHAPE_CYLINDER) {
-            ss << "      <cylinder><radius>" << ((r-RETRACTION)/1000) << "</radius><length>" << ((h-RETRACTION)/1000) << "</length></cylinder>" << std::endl;
+            ss << "      <cylinder radius=\"" << ((r-RETRACTION)/1000) << "\" length=\"" << ((h-RETRACTION)/1000) << "\"/>" << std::endl;
         }
         ss << "    </geometry>";
 
