@@ -43,6 +43,8 @@ namespace Metabot
             void walkDynamics(Dynamics &global, TransformMatrix matrix=TransformMatrix::identity(), bool verbose=false);
             void writeJS(std::stringstream &ss, std::string parent="",
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
+            void writeURDF(std::stringstream &ss, std::string parent="", 
+                    TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
             void writeSDF(std::stringstream &ss, std::string parent="", 
                     TransformMatrix preTransform=TransformMatrix::identity(), AnchorPoint *above=NULL);
 

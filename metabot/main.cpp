@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     string output = "";
     string backendName = "";
 
-    while ((index = getopt(argc, argv, "p:bc:w:s:vS:dj:kD:C")) != -1) {
+    while ((index = getopt(argc, argv, "p:bc:w:s:vS:dj:kD:CU:")) != -1) {
         switch (index) {
             case 'D': {
                     auto parts = split(string(optarg), '=', 2);
@@ -105,6 +105,10 @@ int main(int argc, char *argv[])
                 break;
             case 'v':
                 mode = "voxelize";
+                break;
+            case 'U':
+                output = string(optarg);
+                mode = "urdf";
                 break;
             case 'S':
                 output = string(optarg);
@@ -178,6 +182,9 @@ int main(int argc, char *argv[])
         } else if (mode == "js") {
             needRobot();
             robot->writeJS(output);
+        } else if (mode == "urdf") {
+            needRobot();
+            robot->writeURDF(output);
         } else if (mode == "sdf") {
             needRobot();
             robot->writeSDF(output);

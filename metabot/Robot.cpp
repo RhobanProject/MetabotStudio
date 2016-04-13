@@ -149,6 +149,38 @@ namespace Metabot
         std::string filename = directory+"robot.js";
         file_put_contents(filename, ss.str());
     }
+    
+    void Robot::writeURDF(std::string directory)
+    {
+        if (directory!="") {
+            directory += "/";
+        }
+        directory += "urdf/";
+        if (!is_directory(directory)) {
+            makedir(directory);
+        }
+
+        computeDynamics();
+        
+        foreachComponent([directory](Component *instance) {
+            for (auto ref : instance->refs()) {
+                auto model = ref->getModel();
+                model.scale(1/1000.0);
+                std::string fn;
+                fn = directory+ref->hash()+".stl";
+                saveModelToFileBinary(fn.c_str(), &model);
+            }
+        });
+
+        std::stringstream ss;
+        ss << "<robot name=\"metabot\">" << std::endl;
+        if (root != NULL) {
+            root->writeURDF(ss);
+        }
+        ss << "</robot>" << std::endl;
+        std::string filename = directory+"robot.urdf";
+        file_put_contents(filename, ss.str());
+    }
 
     void Robot::writeSDF(std::string directory)
     {

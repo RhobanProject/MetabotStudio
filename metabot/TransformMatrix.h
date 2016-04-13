@@ -31,6 +31,7 @@ namespace Metabot
 
             Vect toRPY();
             std::string toJS();
+            std::string toURDF();
             std::string toSDF();
 
             Vect apply(Vect vector);
