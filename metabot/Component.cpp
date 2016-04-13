@@ -293,7 +293,7 @@ namespace Metabot
             ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
 
             auto motor = backend->config.motors[above->anchor->type];
-            ss << "    <limit effort=\"" << motor.maxTorque << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
+            ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
             ss << "  </joint>" << std::endl;
         }
 
