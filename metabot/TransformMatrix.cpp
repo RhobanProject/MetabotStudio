@@ -249,18 +249,10 @@ namespace Metabot
         auto rpy = eulerAngles(values);
         
         std::stringstream ss;
-        ss << "<pose>";
-        ss << values[0][3]/1000 << " " << values[1][3]/1000 << " " << values[2][3]/1000 << " ";
-        ss << rpy[0] << " " << rpy[1] << " " << rpy[2];
-        ss << "</pose>";
-
-        /*
-        std::stringstream ss;
         ss << "<origin";
         ss << " xyz=\"" << values[0][3]/1000 << " " << values[1][3]/1000 << " " << values[2][3]/1000 << "\"";
         ss << " rpy=\"" << rpy[0] << " " << rpy[1] << " " << rpy[2] << "\"";
         ss << "/>";
-        */
 
         return ss.str();
     }
