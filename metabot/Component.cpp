@@ -265,12 +265,12 @@ namespace Metabot
         ss << "    <origin xyz=\"" << (com.x()/1000) << " " 
             << (com.y()/1000) << " " << (com.z()/1000) << "\" rpy=\"0 0 0\"/>" << std::endl;
         ss << "    <mass value=\"" << (dynamics.mass/1000.0) << "\"/>" << std::endl;
-        ss << "    <inertia ixx=\"" << dynamics.ixx << 
-            "\"  ixy=\"" << dynamics.ixy << 
-            "\"  ixz=\"" << dynamics.ixz << 
-            "\" iyy=\"" << dynamics.iyy << 
-            "\" iyz=\"" << dynamics.iyz << 
-            "\" izz=\"" << dynamics.izz << 
+        ss << "    <inertia ixx=\"" << dynamics.ixx/1e9 << 
+            "\"  ixy=\"" << dynamics.ixy/1e9 << 
+            "\"  ixz=\"" << dynamics.ixz/1e9 << 
+            "\" iyy=\"" << dynamics.iyy/1e9 << 
+            "\" iyz=\"" << dynamics.iyz/1e9 << 
+            "\" izz=\"" << dynamics.izz/1e9 << 
             "\" />" << std::endl;
         ss << "  </inertial>" << std::endl;
 
