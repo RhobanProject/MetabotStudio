@@ -23,10 +23,17 @@ namespace Metabot
         auto max = m.max();
         Point3 com(0, 0, 0);
 
+        zero.x -= resolution;
+        zero.y -= resolution;
+        zero.z -= resolution;
+        max.x += resolution;
+        max.y += resolution;
+        max.z += resolution;
+
         // Dimensions
-        int width = (max.x+1-zero.x)/resolution;
-        int height = (max.y+1-zero.y)/resolution;
-        int depth = (max.z+1-zero.z)/resolution;
+        int width = (max.x-zero.x)/resolution;
+        int height = (max.y-zero.y)/resolution;
+        int depth = (max.z-zero.z)/resolution;
         Dynamics dynamics;
 
         int cubes = 0;
