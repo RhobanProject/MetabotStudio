@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 {
     float factor = 100.0;
     float duration = 0.0;
+    double dt = 0.001;
     int index;
     bool external = false;
     bool noServer = false;
@@ -58,8 +59,11 @@ int main(int argc, char *argv[])
     std::string experiment = "walk";
     std::cout.precision(16);
 
-    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:b")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:bD:")) != -1) {
         switch (index) {
+            case 'D':
+                dt = atof(optarg);
+                break;
             case 'b':
                 mode = "brute";
                 break;
@@ -139,9 +143,12 @@ int main(int argc, char *argv[])
             runner = new Experiment::Runner<ExperimentShoot>();
         } else if (experiment == "staticshoot") {
             runner = new Experiment::Runner<ExperimentStaticShoot>();
+        } else {
+            std::cerr << "Unknown experiment: " << experiment << std::endl;
+            return EXIT_FAILURE;
         }
 
-        runner->init(robotFile, factor, !noServer, 0.001);
+        runner->init(robotFile, factor, !noServer, dt);
 
         // Reading parameters
         Experiment::Parameters parameters;
@@ -263,7 +270,7 @@ int main(int argc, char *argv[])
 
             // CMAES parameters
             //CMAParameters<> cmaparams(parameters.toVector(), -1, 64);
-            CMAParameters<> cmaparams(parameters.toVector(), -1, 64);
+            CMAParameters<> cmaparams(parameters.toVector(), -1, 16);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
             //cmaparams.set_max_iter(100);
