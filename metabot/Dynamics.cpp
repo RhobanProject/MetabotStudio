@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <json/json.h>
+#include "util/Bin.h"
 #include "Dynamics.h"
 
 namespace Metabot
@@ -82,56 +83,49 @@ namespace Metabot
             
     std::string Dynamics::serialize()
     {
-        Json::Value json;
-        json["computed"] = computed;
-        json["volume"] = volume;
-        json["mass"] = mass;
-        json["com"] = Json::Value(Json::arrayValue);
-        json["com"][0] = com.values[0];
-        json["com"][1] = com.values[1];
-        json["com"][2] = com.values[2];
+        Metabot::Bin bin;
+
+        bin.appendInt(computed);
+        bin.appendFloat(volume);
+        bin.appendFloat(mass);
+        bin.appendFloat(com.values[0]);
+        bin.appendFloat(com.values[1]);
+        bin.appendFloat(com.values[2]);
+
+        bin.appendInt(cubes.size());
 
         int k = 0;
-        json["cubes"] = Json::Value(Json::arrayValue);
         for (auto cube : cubes) {
-            json["cubes"][k] = Json::Value(Json::arrayValue);
-            json["cubes"][k][0] = cube.pos.values[0];
-            json["cubes"][k][1] = cube.pos.values[1];
-            json["cubes"][k][2] = cube.pos.values[2];
-            json["cubes"][k][3] = cube.mass;
+            bin.appendFloat(cube.pos.values[0]);
+            bin.appendFloat(cube.pos.values[1]);
+            bin.appendFloat(cube.pos.values[2]);
+            bin.appendFloat(cube.mass);
             k++;
         }
 
-        Json::FastWriter writer;
-        return writer.write(json);
+        return bin.get();
     }
     
     Dynamics Dynamics::unserialize(std::string data)
     {
-        Dynamics dynamics;
-        Json::Value json;
-        Json::Reader reader;
+        Dynamics dyn;
+        Metabot::Bin bin(data);
 
-        if (reader.parse(data, json)) {
-            dynamics.computed = json["computed"].asBool();
-            dynamics.volume = json["volume"].asFloat();
-            dynamics.mass = json["mass"].asFloat();
-            dynamics.com.values[0] = json["com"][0].asFloat();
-            dynamics.com.values[1] = json["com"][1].asFloat();
-            dynamics.com.values[2] = json["com"][2].asFloat();
+        dyn.computed = bin.readInt();
+        dyn.volume = bin.readFloat();
+        dyn.mass = bin.readFloat();
+        dyn.com.values[0] = bin.readFloat();
+        dyn.com.values[1] = bin.readFloat();
+        dyn.com.values[2] = bin.readFloat();
 
-            for (auto cube : json["cubes"]) {
-                DynamicsCube c;
-                c.pos.values[0] = cube[0].asFloat();
-                c.pos.values[1] = cube[1].asFloat();
-                c.pos.values[2] = cube[2].asFloat();
-                c.mass = cube[3].asFloat();
-
-                dynamics.cubes.push_back(c);
-            }
+        dyn.cubes.resize(bin.readInt());
+        for (int k=0; k<dyn.cubes.size(); k++) {
+            dyn.cubes[k].pos.values[0] = bin.readFloat();
+            dyn.cubes[k].pos.values[1] = bin.readFloat();
+            dyn.cubes[k].pos.values[2] = bin.readFloat();
+            dyn.cubes[k].mass = bin.readFloat();
         }
-        dynamics.updateInertia();
 
-        return dynamics;
+        return dyn;
     }
 }

@@ -27,6 +27,7 @@ set(ALL_SOURCES
     util/Cache.cpp
     util/sha1.cpp
     util/util.cpp
+    util/Bin.cpp
 
     spline/Spline.cpp
     spline/CubicSpline.cpp

@@ -66,7 +66,7 @@ namespace Metabot
     void Ref::analyze(Backend *backend)
     {
         auto module = backend->getModule(name);
-        std::string key = hash() + ".dynamics";
+        std::string key = hash() + ".dynabin";
 
         std::string data = backend->cache->get(key, [backend, this]() {
             // std::cout << "Analyzing part " << name << "... " << std::endl << std::flush;
