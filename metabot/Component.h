@@ -134,6 +134,7 @@ namespace Metabot
 
             double dbg;
 
+            std::string name;
             int id;
     };
 }

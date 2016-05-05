@@ -29,6 +29,7 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
 
     // Showing welcome menu only
     ui->scrollArea->hide();
+    ui->nameBox->hide();
     ui->anchor->hide();
     ui->orientation->hide();
     ui->range->hide();
@@ -94,6 +95,10 @@ void ComponentWizard::setupInstance()
 {
     ui->scrollArea->show();
     ui->welcome->hide();
+
+    // Instance name
+    ui->nameBox->show();
+    ui->name->setText(QString::fromStdString(instance->name));
 
     if (anchor == NULL) {
         // We're working on robot root, anchor doesn't really matter
@@ -340,4 +345,11 @@ void ComponentWizard::on_min_editingFinished()
 void ComponentWizard::on_max_editingFinished()
 {
     anchor->maximum = DEG2RAD(ui->max->text().toFloat());
+}
+
+void ComponentWizard::on_name_editingFinished()
+{
+    if (instance) {
+        instance->name = ui->name->text().toStdString();
+    }
 }

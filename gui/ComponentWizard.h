@@ -51,6 +51,8 @@ private slots:
 
     void on_max_editingFinished();
 
+    void on_name_editingFinished();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;

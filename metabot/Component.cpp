@@ -946,6 +946,7 @@ namespace Metabot
     {
         Json::Value json(Json::objectValue);
 
+        json["name"] = name;
         json["component"] = module->getName();
         json["parameters"] = parameters.toJson();
         json["anchors"] = Json::Value(Json::objectValue);

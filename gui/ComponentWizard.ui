@@ -104,6 +104,18 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
+             <widget class="QGroupBox" name="nameBox">
+              <property name="title">
+               <string>Name</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QLineEdit" name="name"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="anchor">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">

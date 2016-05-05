@@ -249,6 +249,10 @@ namespace Metabot
         instance->parametersFromJson(json["parameters"]);
         instance->compile(robot);
 
+        if (json.isMember("name")) {
+            instance->name = json["name"].asString();
+        }
+
         Json::Value &anchors = json["anchors"];
         for (auto anchor : instance->anchors) {
             std::stringstream ss;
