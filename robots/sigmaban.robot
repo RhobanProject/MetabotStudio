@@ -23,6 +23,7 @@
                                                          "component" : {
                                                             "anchors" : {},
                                                             "component" : "mx64_foot",
+                                                            "name" : "right_ankle_roll",
                                                             "parameters" : {
                                                                "height" : {
                                                                   "max" : "",
@@ -46,6 +47,7 @@
                                                       }
                                                    },
                                                    "component" : "mx64_block",
+                                                   "name" : "right_ankle_pitch",
                                                    "parameters" : {}
                                                 },
                                                 "maximum" : 3.1415927410125732,
@@ -58,11 +60,12 @@
                                              }
                                           },
                                           "component" : "mx64_arms",
+                                          "name" : "right_knee",
                                           "parameters" : {
                                              "length" : {
                                                 "max" : "",
                                                 "min" : "",
-                                                "val" : "106"
+                                                "val" : "108"
                                              }
                                           }
                                        },
@@ -76,11 +79,12 @@
                                     }
                                  },
                                  "component" : "mx64_u_arm_to_side",
+                                 "name" : "right_hip_pitch",
                                  "parameters" : {
                                     "height" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "72"
+                                       "val" : "74"
                                     },
                                     "thickness" : {
                                        "max" : "",
@@ -99,6 +103,7 @@
                            }
                         },
                         "component" : "mx64_block",
+                        "name" : "right_hip_roll",
                         "parameters" : {}
                      },
                      "maximum" : 3.1415927410125732,
@@ -111,6 +116,7 @@
                   }
                },
                "component" : "mx64_u_arm",
+               "name" : "right_hip_yaw",
                "parameters" : {
                   "height" : {
                      "max" : "",
@@ -142,6 +148,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "mx28_elbow",
+                                 "name" : "right_elbow",
                                  "parameters" : {
                                     "height" : {
                                        "max" : "",
@@ -170,6 +177,7 @@
                            }
                         },
                         "component" : "mx28_u_l",
+                        "name" : "right_shoulder_roll",
                         "parameters" : {
                            "height" : {
                               "max" : "",
@@ -198,6 +206,7 @@
                   }
                },
                "component" : "mx28_u_arm",
+               "name" : "right_shoulder_pitch",
                "parameters" : {
                   "height" : {
                      "max" : "",
@@ -238,6 +247,7 @@
                                                          "component" : {
                                                             "anchors" : {},
                                                             "component" : "mx64_foot",
+                                                            "name" : "left_ankle_roll",
                                                             "parameters" : {
                                                                "height" : {
                                                                   "max" : "",
@@ -261,6 +271,7 @@
                                                       }
                                                    },
                                                    "component" : "mx64_block",
+                                                   "name" : "left_ankle_pitch",
                                                    "parameters" : {}
                                                 },
                                                 "maximum" : 3.1415927410125732,
@@ -273,11 +284,12 @@
                                              }
                                           },
                                           "component" : "mx64_arms",
+                                          "name" : "left_knee",
                                           "parameters" : {
                                              "length" : {
                                                 "max" : "",
                                                 "min" : "",
-                                                "val" : "106"
+                                                "val" : "108"
                                              }
                                           }
                                        },
@@ -291,11 +303,12 @@
                                     }
                                  },
                                  "component" : "mx64_u_arm_to_side",
+                                 "name" : "left_hip_pitch",
                                  "parameters" : {
                                     "height" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "72"
+                                       "val" : "74"
                                     },
                                     "thickness" : {
                                        "max" : "",
@@ -314,6 +327,7 @@
                            }
                         },
                         "component" : "mx64_block",
+                        "name" : "left_hip_roll",
                         "parameters" : {}
                      },
                      "maximum" : 3.1415927410125732,
@@ -326,6 +340,7 @@
                   }
                },
                "component" : "mx64_u_arm",
+               "name" : "left_hip_yaw",
                "parameters" : {
                   "height" : {
                      "max" : "",
@@ -357,6 +372,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "mx28_elbow",
+                                 "name" : "left_elbow",
                                  "parameters" : {
                                     "height" : {
                                        "max" : "",
@@ -385,6 +401,7 @@
                            }
                         },
                         "component" : "mx28_u_l",
+                        "name" : "left_shoulder_roll",
                         "parameters" : {
                            "height" : {
                               "max" : "",
@@ -413,6 +430,7 @@
                   }
                },
                "component" : "mx28_u_arm",
+               "name" : "left_shoulder_pitch",
                "parameters" : {
                   "height" : {
                      "max" : "",
@@ -441,6 +459,7 @@
                      "component" : {
                         "anchors" : {},
                         "component" : "mx28_alone",
+                        "name" : "head_pitch",
                         "parameters" : {}
                      },
                      "maximum" : 3.1415927410125732,
@@ -453,6 +472,7 @@
                   }
                },
                "component" : "mx28_u_arm",
+               "name" : "head_yaw",
                "parameters" : {
                   "height" : {
                      "max" : "",
@@ -476,6 +496,7 @@
          }
       },
       "component" : "body",
+      "name" : "trunk",
       "parameters" : {
          "depth" : {
             "max" : "",
