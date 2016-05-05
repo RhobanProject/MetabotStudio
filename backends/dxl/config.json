@@ -1,6 +1,6 @@
 {
     "backlash": false,
-    "voxelsResolution": 3,
+    "voxelsResolution": 1,
     "mode": "motor",
     "motors": {
         "mx28": {
