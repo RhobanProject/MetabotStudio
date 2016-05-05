@@ -230,7 +230,11 @@ namespace Metabot
 
         // Adding the component and linking it to the parent
         std::stringstream tmp;
-        tmp << module->getName() << "_" << id;
+        if (name != "") {
+            tmp << name;
+        } else {
+            tmp << module->getName() << "_" << id;
+        }
         std::string name = tmp.str();
         ss << "  <link name=\"" << name << "\">" << std::endl;
 
@@ -246,6 +250,9 @@ namespace Metabot
             tmp << module->getName() << "_" << ref->name << "_" << id << "_" << (refid++);
             auto refName = tmp.str();
             auto jointName = refName+"_joint";
+            if (this->name != "") {
+                jointName = this->name;
+            }
 
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
@@ -295,6 +302,30 @@ namespace Metabot
             auto motor = backend->config.motors[above->anchor->type];
             ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
             ss << "  </joint>" << std::endl;
+        }
+
+        // Drawing tips
+        int tipNum = 0;
+        for (auto tip : tips) {
+            std::stringstream tmp;
+            tmp << name << "_tip";
+            if (tipNum > 0) tmp << "_" << tipNum;
+            std::string tipName = tmp.str();
+
+            ss << "<link name=\"" << tipName << "\">" << std::endl;
+            ss << "    <inertial>" << std::endl;
+            ss << "    <origin xyz=\"0 0 0\" rpy=\"0 0 0\" />" << std::endl;
+            ss << "    <mass value=\"0\" />" << std::endl;
+            ss << "    <inertia ixx=\"0\" ixy=\"0\" ixz=\"0\" iyy=\"0\" iyz=\"0\" izz=\"0\" />" << std::endl;
+            ss << "    </inertial>" << std::endl;
+            ss << "</link>" << std::endl;
+            ss << "<joint name=\"" << tipName << "_fixed\" type=\"fixed\">" << std::endl;
+            ss << "    <origin xyz=\"" << tip.x() << " " << tip.y() << " " << tip.z()
+                << "\" rpy=\"0 0 0\" />" << std::endl;
+            ss << "    <parent link=\"" << name << "\" />" << std::endl;
+            ss << "    <child link=\"" << tipName << "\" />" << std::endl;
+            ss << "    <axis xyz=\"0 0 0\" />" << std::endl;
+            ss << "</joint>" << std::endl;
         }
 
         // Drawing sub-components
