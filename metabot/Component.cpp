@@ -610,7 +610,12 @@ namespace Metabot
     std::string Component::fullName()
     {
         std::stringstream ss;
-        ss << module->getName() << " #" << id;
+        if (name != "") {
+            ss << name;
+        } else {
+            ss << module->getName();
+        }
+        ss << " #" << id;
         return ss.str();
     }
 
