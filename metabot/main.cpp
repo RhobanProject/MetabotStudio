@@ -40,6 +40,7 @@ void usage()
     cerr << "   -s [output.stl]: Export the given robot to stl" << endl;
     cerr << "   -p [output directory]: exports the parts to print (stl and quantity)" << endl;
     cerr << "   -S [output directory]: saves to SDF" << endl;
+    cerr << "   -U [output directory]: saves to URDF" << endl;
     cerr << "   -j [output directory]: save to JS (three loading operation)" << endl;
     cerr << "   -b: shows the BOM" << endl;
     cerr << "   -d: compute the dynamics" << endl;
