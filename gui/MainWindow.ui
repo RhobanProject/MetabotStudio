@@ -147,6 +147,7 @@
     <addaction name="actionReset_view"/>
     <addaction name="actionGrid"/>
     <addaction name="actionXYZ"/>
+    <addaction name="actionComponent_frames"/>
     <addaction name="actionAutorotate"/>
     <addaction name="action_tree"/>
     <addaction name="actionCollisions"/>
@@ -347,6 +348,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionComponent_frames">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Component XYZ</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
    </property>
   </action>
  </widget>

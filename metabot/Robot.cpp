@@ -57,7 +57,7 @@ namespace Metabot
         } else {
             int n = 0;
 
-            foreachComponent([&n](Component *instance) {
+            foreachComponent([&n](Component *instance, TransformMatrix m) {
                 n += instance->tips.size();
             });
 
@@ -80,7 +80,7 @@ namespace Metabot
     {
         std::map<std::string, Dynamics> analysis;
         
-        foreachComponent([this, &analysis](Component *instance) {
+        foreachComponent([this, &analysis](Component *instance, TransformMatrix m) {
             for (auto ref : instance->refs()) {
                 if (analysis.count(ref->hash())) {
                     ref->setDynamics(analysis[ref->hash()]);
@@ -126,7 +126,7 @@ namespace Metabot
             makedir(directory);
         }
  
-        foreachComponent([directory, this](Component *instance) {
+        foreachComponent([directory, this](Component *instance, TransformMatrix m) {
             for (auto ref : instance->refs()) {
                 ref->parameters.set("$fn", "7");
                 ref->compile(this->backend, DEFINE_JS);
@@ -162,7 +162,7 @@ namespace Metabot
 
         computeDynamics();
         
-        foreachComponent([directory](Component *instance) {
+        foreachComponent([directory](Component *instance, TransformMatrix m) {
             for (auto ref : instance->refs()) {
                 auto model = ref->getModel();
                 model.scale(1/1000.0);
@@ -193,7 +193,7 @@ namespace Metabot
 
         computeDynamics();
         
-        foreachComponent([directory](Component *instance) {
+        foreachComponent([directory](Component *instance, TransformMatrix m) {
             for (auto ref : instance->refs()) {
                 auto model = ref->getModel();
                 model.scale(1/1000.0);
@@ -249,7 +249,7 @@ namespace Metabot
 
             if (!reader.parse(data, json)) {
                 std::stringstream ss;
-                ss << "Unable to read the file " << filename << ": " << std::endl << reader.getFormatedErrorMessages();
+                ss << "Unable to read the file " << filename << ": " << std::endl << reader.getFormattedErrorMessages();
                 throw ss.str();
             }
 
@@ -270,7 +270,7 @@ namespace Metabot
 
             if (!reader.parse(data, json)) {
                 std::stringstream ss;
-                ss << "Unable to read the file " << filename << ": " << std::endl << reader.getFormatedErrorMessages();
+                ss << "Unable to read the file " << filename << ": " << std::endl << reader.getFormattedErrorMessages();
                 throw ss.str();
             }
 
@@ -316,7 +316,7 @@ namespace Metabot
         Json::Value json(Json::objectValue);
         json["components"] = Json::Value(Json::objectValue);
 
-        foreachComponent([&json](Component *instance) {
+        foreachComponent([&json](Component *instance, TransformMatrix m) {
             std::stringstream ss;
             ss << instance->id;
             json["components"][ss.str()] = instance->getState().toJson();
@@ -338,7 +338,7 @@ namespace Metabot
     void Robot::stateFromJson(Json::Value json)
     {
         try {
-            foreachComponent([&json](Component *instance) {
+            foreachComponent([&json](Component *instance, TransformMatrix m) {
                 std::stringstream ss;
                 ss << instance->id;
                 std::string id = ss.str();
@@ -360,7 +360,7 @@ namespace Metabot
             
     Vect Robot::getCollisionsCOP()
     {
-        double total;
+        double total = 0;
         Vect cop(0, 0, 0);
         for (auto point : collisionPoints) {
             double w = point.second.norm();
@@ -439,7 +439,7 @@ namespace Metabot
             
     void Robot::unHighlight()
     {
-        foreachComponent([](Component *instance) {
+        foreachComponent([](Component *instance, TransformMatrix m) {
             instance->highlight = false;
             for (auto anchor : instance->anchors) {
                 anchor->highlight = false;
@@ -449,7 +449,7 @@ namespace Metabot
 
     void Robot::unHover()
     {
-        foreachComponent([](Component *instance) {
+        foreachComponent([](Component *instance, TransformMatrix m) {
             instance->hover = false;
             for (auto anchor : instance->anchors) {
                 anchor->hover = false;
@@ -467,7 +467,7 @@ namespace Metabot
         AnchorPoint *anchor = NULL;
         id -= 200;
 
-        foreachComponent([&anchor, id](Component *instance) {
+        foreachComponent([&anchor, id](Component *instance, TransformMatrix m) {
             if (instance->hover) {
                 int n = 1;
                 for (auto a : instance->anchors) {
@@ -479,10 +479,10 @@ namespace Metabot
         return anchor;
     }
     
-    void Robot::foreachComponent(std::function<void(Component *instance)> method)
+    void Robot::foreachComponent(std::function<void(Component *instance, TransformMatrix m)> method)
     {
         if (root != NULL) {
-            root->foreachComponent(method);
+            root->foreachComponent(method, TransformMatrix::identity());
         }
     }
 
@@ -525,7 +525,7 @@ namespace Metabot
     void Robot::number()
     {
         int id = 1;
-        foreachComponent([&id](Component *component) {
+        foreachComponent([&id](Component *component, TransformMatrix m) {
             component->id = (id++);
         });
     }
@@ -551,7 +551,7 @@ namespace Metabot
         Component *bestInstance = NULL;
         float bestDistance = -1;
 
-        foreachComponent([this, pt, &bestInstance, &bestDistance](Component *instance) {
+        foreachComponent([this, pt, &bestInstance, &bestDistance](Component *instance, TransformMatrix m) {
             Vect v(0, 0, 0);
             auto partPoint = this->getPoint(instance, v);
             float distance = partPoint.distance(pt);
@@ -567,7 +567,7 @@ namespace Metabot
     Component *Robot::getComponentById(int id)
     {
         Component *componentInstance = NULL;
-        foreachComponent([id, &componentInstance](Component *instance) {
+        foreachComponent([id, &componentInstance](Component *instance, TransformMatrix m) {
             if (instance->id == id) {
                 componentInstance = instance;
             }
@@ -579,7 +579,7 @@ namespace Metabot
     Refs Robot::getParts()
     {
         Refs parts;
-        foreachComponent([&parts](Component *instance) {
+        foreachComponent([&parts](Component *instance, TransformMatrix m) {
             parts.merge(instance->parts);
         });
         return parts;
@@ -588,7 +588,7 @@ namespace Metabot
     BOM Robot::getBOM()
     {
         BOM bom;
-        foreachComponent([&bom](Component *instance) {
+        foreachComponent([&bom](Component *instance, TransformMatrix m) {
             bom.merge(instance->bom);
         });
 

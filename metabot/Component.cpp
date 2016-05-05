@@ -971,13 +971,15 @@ namespace Metabot
         return json;
     }
 
-    void Component::foreachComponent(std::function<void(Component *component)> method)
+    void Component::foreachComponent(std::function<void(Component *component, TransformMatrix m)> method, TransformMatrix m)
     {
-        method(this);
+        method(this, m);
 
         for (auto anchor : anchors) {
             if (anchor->anchor != NULL && anchor->above) {
-                anchor->anchor->component->foreachComponent(method);
+                TransformMatrix t = m.multiply(anchor->transformationForward());
+                t = t.multiply(anchor->anchor->transformationBackward());
+                anchor->anchor->component->foreachComponent(method, t);
             }
         }
     }

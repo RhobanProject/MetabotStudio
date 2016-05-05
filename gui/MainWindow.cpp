@@ -693,3 +693,9 @@ void MainWindow::on_backendSelected(QString backend)
     delete oldRobot;
     drawTree();
 }
+
+void MainWindow::on_actionComponent_frames_triggered()
+{
+    viewer->drawFrames = ui->actionComponent_frames->isChecked();
+    viewer->redraw();
+}

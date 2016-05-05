@@ -105,6 +105,8 @@ private slots:
 
     void on_backendSelected(QString backend);
 
+    void on_actionComponent_frames_triggered();
+
 private:
     BackendSelector backendSelector;
     QSettings settings;

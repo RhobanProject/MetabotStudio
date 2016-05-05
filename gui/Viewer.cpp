@@ -19,6 +19,7 @@ Viewer::Viewer(int framesPerSecond, QWidget *parent, char *name)
     shouldRedraw = true;
     drawXYZ = true;
     drawGrid = true;
+    drawFrames = false;
     alpha = 0;
     pressed = false;
     movePressed = false;
@@ -255,6 +256,18 @@ void Viewer::paintGL()
         drawAxis();
     }
 
+    if (drawFrames) {
+        Metabot::Robot *frobot = (mode == MODE_NORMAL) ? robot : client.robot;
+        frobot->foreachComponent([this](Metabot::Component *component, Metabot::TransformMatrix m) {
+            if (component->highlight) {
+                glPushMatrix();
+                m.openGLMult();
+                this->drawAxis(2);
+                glPopMatrix();
+            }
+        });
+    }
+
     // Drawing ground collisions
     client.lock();
     glLineWidth(3.0);
@@ -423,9 +436,9 @@ void Viewer::drawGridLines()
     glEnd();
 }
 
-void Viewer::drawAxis()
+void Viewer::drawAxis(float width)
 {
-    glLineWidth(5.0);
+    glLineWidth(width);
     glBegin(GL_LINES);
     glColor3f(0.9, 0.0, 0.0);
     glVertex3f(0, 0, 0);

@@ -60,7 +60,7 @@ namespace Metabot
             void stateFromJson(Json::Value json);
             Vect getCollisionsCOP();
 
-            void foreachComponent(std::function<void(Component *instance)> method);
+            void foreachComponent(std::function<void(Component *instance, TransformMatrix m)> method);
             void foreachAnchor(std::function<void(AnchorPoint *anchor)> method);
             std::vector<float> getZeros();
             std::vector<AnchorPoint*> getAnchors();

@@ -27,7 +27,7 @@ public:
 
     void drawBackground();
     void drawGridLines();
-    void drawAxis();
+    void drawAxis(float width=5.0);
 
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
@@ -46,7 +46,7 @@ public:
     float plateX1, plateY1;
     float plateX2, plateY2;
     float plateZ;
-    bool drawGrid, drawXYZ;
+    bool drawGrid, drawXYZ, drawFrames;
 
     void setAutorotate(bool value);
     void dontMove();

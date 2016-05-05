@@ -77,7 +77,7 @@ namespace Metabot
             void compile(Robot *robot=NULL, bool update=false);
 
 #ifndef NOCPP11
-            void foreachComponent(std::function<void(Component *instance)> method);
+            void foreachComponent(std::function<void(Component *instance, TransformMatrix m)> method, TransformMatrix m);
             void foreachAnchor(std::function<void(AnchorPoint *instance)> method);
 #endif
             
