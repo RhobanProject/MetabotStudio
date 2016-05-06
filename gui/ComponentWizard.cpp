@@ -211,6 +211,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         // Create the instance
         instance = robot->backend->instanciate(data.toStdString());
         instance->compile(robot);
+        instance->name = oldInstance->name;
 
         if (oldInstance != NULL) {
             instance->moveAnchors(oldInstance->anchors);
@@ -291,6 +292,7 @@ void ComponentWizard::on_generate_clicked()
         }
     }
 
+    instance->name = previous->name;
     previous->detachAll();
     delete previous;
 

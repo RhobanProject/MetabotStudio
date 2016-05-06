@@ -256,15 +256,29 @@ void Viewer::paintGL()
         drawAxis();
     }
 
-    if (drawFrames) {
+    if (drawFrames && mode == MODE_NORMAL) {
         Metabot::Robot *frobot = (mode == MODE_NORMAL) ? robot : client.robot;
         frobot->foreachComponent([this](Metabot::Component *component, Metabot::TransformMatrix m) {
+            // Drawing part frame
             if (component->highlight) {
                 glPushMatrix();
                 m.openGLMult();
                 this->drawAxis(2);
                 glPopMatrix();
             }
+            // Drawing tips
+            for (auto tip : component->tips) {
+                glPushMatrix();
+                m.openGLMult();
+                tip.openGLMult();
+                glColor4ub(222, 255, 0, 255);
+                GLUquadric *quad = gluNewQuadric();
+                gluSphere(quad, 4, 100, 20);
+                gluDeleteQuadric(quad);
+                this->drawAxis(1);
+                glPopMatrix();
+            }
+
         });
     }
 
