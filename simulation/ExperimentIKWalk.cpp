@@ -16,6 +16,8 @@ void ExperimentIKWalk::initParameters(Parameters &parameters, Metabot::Robot *ro
     parameters.add("freq", 0, 4, 1.8, false);
     parameters.add("rise", 0, 1, 0.025, false);
     parameters.add("step", -1, 1, 0.0, false);
+    parameters.add("lateral", -1, 1, 0.0, false);
+    parameters.add("turn", -50, 50, 0.0, false);
     parameters.add("swing", 0, 1, 0.01, false);
     parameters.add("swingPhase", 0, 1, 0.0, false);
     parameters.add("footY", -1, 1, 0.02, false);
@@ -33,9 +35,9 @@ void ExperimentIKWalk::init(Simulation *simulation, Experiment::Parameters &para
     params.supportPhaseRatio = 0.0;
     params.footYOffset = parameters.get("footY");
     params.stepGain = parameters.get("step");
+    params.lateralGain = parameters.get("lateral");
+    params.turnGain = parameters.get("turn");
     params.riseGain = parameters.get("rise");
-    params.turnGain = 0;
-    params.lateralGain = 0;
 
     params.trunkXOffset = parameters.get("x");
     params.trunkYOffset = parameters.get("y");

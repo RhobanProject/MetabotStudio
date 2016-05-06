@@ -34,7 +34,7 @@ void ExperimentStaticShoot::initParameters(Parameters &parameters, Metabot::Robo
     ExperimentIKWalk::initParameters(parameters, robot);
 
     // Speed factor
-    parameters.add("factor", 1, 10, 1);
+    parameters.add("factor", 0, 10, 1);
 
     // Going on one leg
     parameters.add("left_hip_yaw", -150, 150, 0);
@@ -110,6 +110,7 @@ void ExperimentStaticShoot::init(Simulation *simulation, Experiment::Parameters 
         Function f;
         f.addPoint(0, 0);
         f.addPoint(3/factor, parameters.get(name));
+        f.addPoint(6/factor, parameters.get(name));
         splines[name] = f;
     }
 
@@ -202,7 +203,7 @@ void ExperimentStaticShoot::control(Simulation *simulation)
         angles[RIGHT_ANKLE_PITCH] -= splines["right_ankle_pitch"].get(simulation->t);
     }
 
-    simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
+    simulation->robot.foreachComponent([this, simulation](Metabot::Component *component, Metabot::TransformMatrix m) {
             this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
             });
 

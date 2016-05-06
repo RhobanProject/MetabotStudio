@@ -178,7 +178,7 @@ void ExperimentShoot::control(Simulation *simulation)
             angles[RIGHT_HIP_ROLL] = RAD2DEG(model.getDOF("right_hip_roll"));
             angles[RIGHT_HIP_PITCH] = RAD2DEG(model.getDOF("right_hip_pitch"));
             angles[RIGHT_KNEE] = RAD2DEG(model.getDOF("right_knee"));
-            angles[RIGHT_ANKLE_ROLL] = RAD2DEG(model.getDOF("right_ankle_roll"));
+            angles[RIGHT_ANKLE_ROLL] = -RAD2DEG(model.getDOF("right_ankle_roll"));
             angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
         }
 
@@ -237,7 +237,7 @@ void ExperimentShoot::control(Simulation *simulation)
 
     //angles[HEAD_PITCH] = 60;
 
-    simulation->robot.foreachComponent([this, simulation](Metabot::Component *component) {
+    simulation->robot.foreachComponent([this, simulation](Metabot::Component *component, Metabot::TransformMatrix m) {
             this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
             });
 

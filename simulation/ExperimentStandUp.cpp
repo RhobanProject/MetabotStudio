@@ -1,7 +1,7 @@
 #include "ExperimentStandUp.h"
 #include "sigmaban.h"
 
-#define POINTS 4
+#define POINTS 5
         
 ExperimentStandUp::ExperimentStandUp()
 {
@@ -58,7 +58,7 @@ void ExperimentStandUp::init(Simulation *simulation, Experiment::Parameters &par
     bool back = parameters.get("back")>0.5;
 
     // Put the robot on the front at the begining
-    robot->foreachComponent([back](Metabot::Component *component) {
+    robot->foreachComponent([back](Metabot::Component *component, Metabot::TransformMatrix m) {
         if (component->body) {
             auto trans = TransformMatrix::fromBullet(component->body->getWorldTransform());
             trans = TransformMatrix::rotationY(back ? -M_PI/2 : M_PI/2).multiply(trans);
@@ -124,7 +124,7 @@ void ExperimentStandUp::control(Simulation *simulation)
     //angles[HEAD_PITCH] = 60;
  
     double stepCost = 0;
-    simulation->robot.foreachComponent([&stepCost, this, simulation](Metabot::Component *component) {
+    simulation->robot.foreachComponent([&stepCost, this, simulation](Metabot::Component *component, TransformMatrix m) {
         stepCost += component->setTarget(this->getAngle(component->id), simulation->dt);
     });
     cost += stepCost;
