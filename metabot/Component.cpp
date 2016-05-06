@@ -69,6 +69,7 @@ namespace Metabot
             }
         }
 
+        component->name = name;
         component->shapes = shapes;
         component->collisions = collisions;
         component->dynamics = dynamics;
@@ -293,7 +294,7 @@ namespace Metabot
         
         // Linking it to the parent
         if (above!=NULL) {
-            ss << "  <joint name=\"" << name << "_parent\" type=\"revolute\">" << std::endl;
+            ss << "  <joint name=\"" << name << "\" type=\"revolute\">" << std::endl;
             ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
             ss << "    <child link=\"" << name << "\"/>" << std::endl;
             ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
@@ -320,8 +321,8 @@ namespace Metabot
             ss << "    </inertial>" << std::endl;
             ss << "</link>" << std::endl;
             ss << "<joint name=\"" << tipName << "_fixed\" type=\"fixed\">" << std::endl;
-            ss << "    <origin xyz=\"" << tip.x() << " " << tip.y() << " " << tip.z()
-                << "\" rpy=\"0 0 0\" />" << std::endl;
+            auto m = preTransform.multiply(tip);
+            ss << m.toURDF() << std::endl;
             ss << "    <parent link=\"" << name << "\" />" << std::endl;
             ss << "    <child link=\"" << tipName << "\" />" << std::endl;
             ss << "    <axis xyz=\"0 0 0\" />" << std::endl;
