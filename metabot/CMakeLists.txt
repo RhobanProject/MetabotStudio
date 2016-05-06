@@ -5,6 +5,7 @@ find_package (Deps)
 
 deps_add_library ("rhobandeps/jsoncpp")
 deps_add_library ("rhobandeps/bullet3")
+deps_add_library ("rhobandeps/libzmq")
 
 OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
 
@@ -89,7 +90,6 @@ add_library(libmetabot ${ALL_SOURCES})
 target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} 
     ${DEPS_LIBRARIES}
     symbolic 
-    zmq
     )
 
 if (OPENGL)

@@ -5,6 +5,7 @@ find_package(Deps)
 deps_add_library ("rhobandeps/jsoncpp")
 deps_add_library ("rhobandeps/bullet3")
 deps_add_library ("rhobandeps/libcmaes")
+deps_add_library ("rhobandeps/libzmq")
 
 set (BASE
     "${CMAKE_SOURCE_DIR}/..")
