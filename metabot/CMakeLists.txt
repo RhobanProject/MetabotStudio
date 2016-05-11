@@ -84,15 +84,14 @@ include_directories("${PROJECT_SOURCE_DIR}/scad/")
 
 add_library(libmetabot ${ALL_SOURCES})
 
-target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} 
-    ${DEPS_LIBRARIES}
-    )
-
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()
 
 add_executable(metabot "main.cpp")
-target_link_libraries(metabot libmetabot)
+target_link_libraries(metabot libmetabot
+    ${CMAKE_THREAD_LIBS_INIT} 
+    ${DEPS_LIBRARIES}
+    )
 
 install(TARGETS metabot DESTINATION bin)
