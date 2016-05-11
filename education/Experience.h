@@ -121,16 +121,12 @@ class Experience
 
                     if (isVerbose()) std::cout << "* Computing dynamics..." << std::endl;
                     robot.computeDynamics();
-                    robot.setMotorsLimit(parameters.get("maxSpeed"), parameters.get("maxTorque"));
                     // robot.printDynamics();
 
                     if (isVerbose()) std::cout << "* Publishing the robot..." << std::endl;
                     if (serv) serv->loadRobot(&robot);
                     if (serv) serv->disableMarker();
 
-                    // Creating the experience
-                    T experience;
-                    experience.init(parameters, &robot);
 
                     if (duration == 0.0) {
                         duration = T::defaultDuration();
@@ -138,6 +134,11 @@ class Experience
 
                     // Creating the simulation
                     Simulation simulation(duration, serv, robot, dt);
+                    
+                    // Creating the experience
+                    T experience;
+
+                    experience.init(parameters, &robot);
                     simulation.factor = factor;
                     simulation.run([&experience](Simulation *simulation) {
                         experience.control(simulation);

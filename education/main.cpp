@@ -129,8 +129,6 @@ int main(int argc, char *argv[])
 
         // Context parameters
         parameters.add("friction", 0, 1, 0.5, false);
-        parameters.add("maxSpeed", 0, 100, 4*M_PI, false);
-        parameters.add("maxTorque", 0, 100, 0.5, false);
 
         // Reading parameters from command line
         for (int k=optind; k<argc; k++) {
