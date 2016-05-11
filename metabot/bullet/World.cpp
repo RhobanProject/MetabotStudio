@@ -35,6 +35,8 @@
         SOLVER_USE_2_FRICTION_DIRECTIONS
         ;
 
+//    m_dynamicsWorld->getSolverInfo().m_numIterations = 1000;
+
     /*
     // Adding a box
     btRigidBody *last = NULL;
