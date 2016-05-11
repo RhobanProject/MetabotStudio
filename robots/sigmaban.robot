@@ -1,7 +1,7 @@
 {
    "backend" : "dxl",
    "parameters" : {},
-   "tips" : 0,
+   "tips" : 4,
    "tree" : {
       "anchors" : {
          "0" : {
@@ -25,6 +25,11 @@
                                                             "component" : "mx64_foot",
                                                             "name" : "right_ankle_roll",
                                                             "parameters" : {
+                                                               "excentricity" : {
+                                                                  "max" : "",
+                                                                  "min" : "",
+                                                                  "val" : "-5"
+                                                               },
                                                                "height" : {
                                                                   "max" : "",
                                                                   "min" : "",
@@ -39,7 +44,7 @@
                                                          },
                                                          "maximum" : 3.1415927410125732,
                                                          "minimum" : -3.1415927410125732,
-                                                         "orientationX" : 3.1415927410125732,
+                                                         "orientationX" : 0,
                                                          "orientationY" : 0,
                                                          "orientationZ" : 0,
                                                          "remote" : 0,
@@ -249,6 +254,11 @@
                                                             "component" : "mx64_foot",
                                                             "name" : "left_ankle_roll",
                                                             "parameters" : {
+                                                               "excentricity" : {
+                                                                  "max" : "",
+                                                                  "min" : "",
+                                                                  "val" : "5"
+                                                               },
                                                                "height" : {
                                                                   "max" : "",
                                                                   "min" : "",
