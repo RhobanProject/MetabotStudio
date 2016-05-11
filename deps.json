@@ -4,6 +4,7 @@
         "rhobandeps/bullet3",
         "rhobandeps/jsoncpp", 
         "rhobandeps/libcmaes",
-        "rhobandeps/libzmq"
+        "rhobandeps/libzmq",
+        "rhobandeps/symbolic"
     ]
 }
