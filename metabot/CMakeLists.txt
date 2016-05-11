@@ -6,6 +6,7 @@ find_package (Deps)
 deps_add_library ("rhobandeps/jsoncpp")
 deps_add_library ("rhobandeps/bullet3")
 deps_add_library ("rhobandeps/libzmq")
+deps_add_library ("rhobandeps/symbolic")
 
 OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
 
@@ -80,16 +81,11 @@ endif (USE_DOUBLE_PRECISION)
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/util/")
 include_directories("${PROJECT_SOURCE_DIR}/scad/")
-include_directories("${PROJECT_SOURCE_DIR}/sym/")
-
-add_library(symbolic sym/symbolicc++.cpp)
-set_target_properties(symbolic PROPERTIES COMPILE_DEFINITIONS "LIBSYMBOLICCPLUSPLUS")
 
 add_library(libmetabot ${ALL_SOURCES})
 
 target_link_libraries(libmetabot ${CMAKE_THREAD_LIBS_INIT} 
     ${DEPS_LIBRARIES}
-    symbolic 
     )
 
 if (OPENGL)
