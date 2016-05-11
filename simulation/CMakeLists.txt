@@ -6,6 +6,7 @@ deps_add_library ("rhobandeps/jsoncpp")
 deps_add_library ("rhobandeps/bullet3")
 deps_add_library ("rhobandeps/libcmaes")
 deps_add_library ("rhobandeps/libzmq")
+deps_add_library ("rhobandeps/symbolic")
 
 set (BASE
     "${CMAKE_SOURCE_DIR}/..")
