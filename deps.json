@@ -5,6 +5,8 @@
         "rhobandeps/jsoncpp", 
         "rhobandeps/libcmaes",
         "rhobandeps/libzmq",
-        "rhobandeps/symbolic"
+        "rhobandeps/symbolic",
+        "rhobanproject/model",
+        "rhoban/rhal"
     ]
 }

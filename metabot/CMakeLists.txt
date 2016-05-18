@@ -88,10 +88,11 @@ if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
 endif ()
 
+target_link_libraries (libmetabot ${DEPS_LIBRARIES})
+
 add_executable(metabot "main.cpp")
 target_link_libraries(metabot libmetabot
     ${CMAKE_THREAD_LIBS_INIT} 
-    ${DEPS_LIBRARIES}
     )
 
 install(TARGETS metabot DESTINATION bin)
