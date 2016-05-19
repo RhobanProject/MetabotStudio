@@ -3,10 +3,7 @@ project(metabot)
 find_package (Threads)
 find_package (Deps)
 
-deps_add_library ("rhobandeps/jsoncpp")
-deps_add_library ("rhobandeps/bullet3")
-deps_add_library ("rhobandeps/libzmq")
-deps_add_library ("rhobandeps/symbolic")
+deps_add_libraries ()
 
 OPTION(USE_DOUBLE_PRECISION "Use double precision" ON)
 

@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 find_package(Eigen3 REQUIRED)
 find_package(Deps)
 
-deps_add_library ("rhobandeps/libcmaes")
-deps_add_library ("rhobanproject/model")
+deps_add_libraries ()
 
 set (BASE
     "${CMAKE_SOURCE_DIR}/..")
