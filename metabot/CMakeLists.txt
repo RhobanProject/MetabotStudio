@@ -79,7 +79,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/util/")
 include_directories("${PROJECT_SOURCE_DIR}/scad/")
 
-add_library(libmetabot ${ALL_SOURCES})
+add_library(libmetabot SHARED ${ALL_SOURCES})
 
 if (OPENGL)
     target_link_libraries(libmetabot GL GLU)
