@@ -27,8 +27,6 @@ std::vector<std::string> ExperimentShoot::splineNames()
     names.push_back("b_ankle_pitch");
     names.push_back("b_ankle_roll");
 
-    names.push_back("roll");
-
     return names;
 }
 
@@ -48,7 +46,8 @@ void ExperimentShoot::initParameters(Parameters &parameters, Metabot::Robot *rob
 
     parameters.add("air", 0, 1, 0, false);
     parameters.add("shootFreq", 0, 3, 1.5);
-    parameters.add("shootStep", 0, 3, 0.06);
+    parameters.add("shootFactor", 0, 5, 1.0);
+    parameters.add("shootStep", 0, 3, 0.0, false);
 }
 
 void ExperimentShoot::makeBall(Simulation *simulation)
@@ -70,7 +69,7 @@ void ExperimentShoot::makeBall(Simulation *simulation)
         shape->calculateLocalInertia(mass, inertia);
         TransformMatrix offset = TransformMatrix::identity();
         offset.setX(ballDistance);
-        offset.setZ(80);
+        offset.setZ(radius+5);
         shootFrame = shootFrame.multiply(offset);
         ball = world.createRigidBody(mass, shootFrame.toBullet(), shape, inertia);
         if (simulation->server) simulation->server->addShape(0, COM_SHAPE_SPHERE, 
