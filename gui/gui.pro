@@ -45,24 +45,21 @@ FORMS    += MainWindow.ui \
 DEFINES += OPENGL BT_USE_DOUBLE_PRECISION
 CONFIG += c++11
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljsoncpp
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/json/lib/ -llibmetabot -ljsoncpp
-else:symbian: LIBS += -llibmetabot -ljson
-else:unix: LIBS += -L$$PWD/../metabot/build/ -L$$PWD/../metabot/build/-L$$PWD/../metabot/build/json/lib -llibmetabot -ljsoncpp -lsymbolic
-unix: LIBS += -L$$PWD/../metabot/build/bullet/src/BulletCollision
-unix: LIBS += -L$$PWD/../metabot/build/bullet/src/BulletDynamics
-unix: LIBS += -L$$PWD/../metabot/build/bullet/src/LinearMath
+METABOT_BUILD=$$PWD/../metabot/build/
+win32:CONFIG(release, debug|release): LIBS += -L$$METABOT_BUILD -llibmetabot
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$METABOT_BUILD -llibmetabot
+else:symbian: LIBS += -llibmetabot
+else:unix: LIBS += -L$$METABOT_BUILD -llibmetabot
+QMAKE_RPATHDIR += $$METABOT_BUILD
+
+LIBS += $$system(php $HOME/deps/deps.php cflags rhobandeps/bullet3 rhobandeps/symbolic)
 
 INCLUDEPATH += $$PWD/../ $$PWD/../metabot/ $$PWD/../metabot/sym/ $$PWD/../metabot/scad/ $$PWD/../metabot/util/
 DEPENDPATH += $$PWD/../
 
-win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib
-else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../metabot/build/libmetabot.lib
-else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../metabot/build/liblibmetabot.a
-
-win32: LIBS += -lglu32 -lBulletDynamics -lBulletCollision -lLinearMath -lzmq -lrhoban_jsoncpp
-mac: LIBS += -framework OpenGL -lzmq -lrhoban_jsoncpp
-else:unix: LIBS += -lGLU -lBulletDynamics -lBulletCollision -lLinearMath -lzmq -lrhoban_jsoncpp
+win32: LIBS += -lglu32
+mac: LIBS += -framework OpenGL
+else:unix: LIBS += -lGLU 
 
 RESOURCES += \
     icons.qrc
