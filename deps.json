@@ -6,7 +6,6 @@
         "rhobandeps/libcmaes",
         "rhobandeps/libzmq",
         "rhobandeps/symbolic",
-        "rhobanproject/model",
-        "rhoban/rhal"
+        "rhobanproject/model"
     ]
 }
