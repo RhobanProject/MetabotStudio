@@ -197,13 +197,13 @@ namespace Metabot
                 case MODULE_PARAMS:
                     // Parsing parameters of the module
                     if (c == ')') {
-                        if (trim(tmpName) != "") {
+                        if (trim(tmpName) != "" && module.hasParameter(trim(tmpName))) {
                             module.getParameter(trim(tmpName)).value = trim(tmpValue);
                         }
                         moduleState = MODULE_WAITING;
                     } else if (c == ',') {
                         equals = 0;
-                        if (trim(tmpName) != "") {
+                        if (trim(tmpName) != "" && module.hasParameter(trim(tmpName))) {
                             module.getParameter(trim(tmpName)).value = trim(tmpValue);
                             tmpName = "";
                             tmpValue = "";
