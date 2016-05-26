@@ -103,6 +103,7 @@ namespace Metabot
                                 description = parts[2];
                             }
                             module.getParameter(name).description = description;
+                            module.getParameter(name).expose = true;
                         }
                     }
                     if (annotation == "mass" && parts.size()>1) {
@@ -197,13 +198,13 @@ namespace Metabot
                 case MODULE_PARAMS:
                     // Parsing parameters of the module
                     if (c == ')') {
-                        if (trim(tmpName) != "" && module.hasParameter(trim(tmpName))) {
+                        if (trim(tmpName) != "") {
                             module.getParameter(trim(tmpName)).value = trim(tmpValue);
                         }
                         moduleState = MODULE_WAITING;
                     } else if (c == ',') {
                         equals = 0;
-                        if (trim(tmpName) != "" && module.hasParameter(trim(tmpName))) {
+                        if (trim(tmpName) != "") {
                             module.getParameter(trim(tmpName)).value = trim(tmpValue);
                             tmpName = "";
                             tmpValue = "";

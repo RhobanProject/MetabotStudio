@@ -191,6 +191,7 @@ void ComponentWizard::setupInstance()
         // Adding parameter widgets
         for (auto entry : instance->module->getParameters()) {
             auto parameter = entry.second;
+            if (!parameter.expose) continue;
             ParameterWidget *parameterWidget = new ParameterWidget(instance, parameter.name);
             parameters.push_back(parameterWidget);
             ui->parameters_items->addWidget(parameterWidget);
@@ -220,9 +221,9 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
         // Create the instance
         instance = robot->backend->instanciate(data.toStdString());
         instance->compile(robot);
-        instance->name = oldInstance->name;
 
         if (oldInstance != NULL) {
+            instance->name = oldInstance->name;
             instance->moveAnchors(oldInstance->anchors);
             delete oldInstance;
         }

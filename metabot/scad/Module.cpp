@@ -166,7 +166,8 @@ namespace Metabot
         file_put_contents(input, scad.str());
         
         // Uncomment that to see the compile command called
-        // std::cout << "compile(): " << command << std::endl;
+        std::cout << "compile(): " << command << std::endl;
+        std::cout << scad.str() << std::endl;
 
         FILE *process = popen(command.c_str(), "r");
         int result = pclose(process);

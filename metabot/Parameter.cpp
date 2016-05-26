@@ -3,11 +3,12 @@
 namespace Metabot
 {
     Parameter::Parameter()
+        : expose(false)
     {
     }
 
     Parameter::Parameter(std::string name_, std::string value_, std::string description_)
-        : name(name_), value(value_), description(description_)
+        : name(name_), value(value_), description(description_), expose(false)
     {
     }
 

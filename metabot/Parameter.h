@@ -23,5 +23,6 @@ namespace Metabot
             std::string value;
             std::string description;
             std::string min, max;
+            bool expose;
     };
 }
