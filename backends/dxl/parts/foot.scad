@@ -15,10 +15,6 @@ module foot(width=142, height=82, thickness=2, cleats=12)
             }
         }
     }
-    
-    translate([0,0,-cleats-9]) {
-        //:Tip
-    }
 }
 
 foot();
