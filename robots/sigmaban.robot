@@ -1,7 +1,7 @@
 {
    "backend" : "dxl",
    "parameters" : {},
-   "tips" : 4,
+   "tips" : 5,
    "tree" : {
       "anchors" : {
          "0" : {
@@ -40,8 +40,10 @@
                                                                   "min" : "",
                                                                   "val" : "2"
                                                                }
-                                                            }
+                                                            },
+                                                            "tipName" : "right_foot_tip"
                                                          },
+                                                         "inverted" : false,
                                                          "maximum" : 3.1415927410125732,
                                                          "minimum" : -3.1415927410125732,
                                                          "orientationX" : 0,
@@ -53,8 +55,10 @@
                                                    },
                                                    "component" : "mx64_block",
                                                    "name" : "right_ankle_pitch",
-                                                   "parameters" : {}
+                                                   "parameters" : {},
+                                                   "tipName" : ""
                                                 },
+                                                "inverted" : false,
                                                 "maximum" : 3.1415927410125732,
                                                 "minimum" : -3.1415927410125732,
                                                 "orientationX" : 0,
@@ -72,8 +76,10 @@
                                                 "min" : "",
                                                 "val" : "105"
                                              }
-                                          }
+                                          },
+                                          "tipName" : ""
                                        },
+                                       "inverted" : true,
                                        "maximum" : 3.1415927410125732,
                                        "minimum" : -3.1415927410125732,
                                        "orientationX" : 0,
@@ -96,8 +102,10 @@
                                        "min" : "",
                                        "val" : "2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : true,
                               "maximum" : 3.1415927410125732,
                               "minimum" : -3.1415927410125732,
                               "orientationX" : 0,
@@ -109,8 +117,10 @@
                         },
                         "component" : "mx64_block",
                         "name" : "right_hip_roll",
-                        "parameters" : {}
+                        "parameters" : {},
+                        "tipName" : ""
                      },
+                     "inverted" : true,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -133,8 +143,10 @@
                      "min" : "",
                      "val" : "2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : true,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -170,8 +182,10 @@
                                        "min" : "",
                                        "val" : "2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : "right_arm_tip"
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : -3.1415927410125732,
                               "orientationX" : 0,
@@ -199,8 +213,10 @@
                               "min" : "",
                               "val" : "2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : true,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -223,8 +239,10 @@
                      "min" : "",
                      "val" : "2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : true,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -269,8 +287,10 @@
                                                                   "min" : "",
                                                                   "val" : "2"
                                                                }
-                                                            }
+                                                            },
+                                                            "tipName" : "left_foot_tip"
                                                          },
+                                                         "inverted" : false,
                                                          "maximum" : 3.1415927410125732,
                                                          "minimum" : -3.1415927410125732,
                                                          "orientationX" : 0,
@@ -282,8 +302,10 @@
                                                    },
                                                    "component" : "mx64_block",
                                                    "name" : "left_ankle_pitch",
-                                                   "parameters" : {}
+                                                   "parameters" : {},
+                                                   "tipName" : ""
                                                 },
+                                                "inverted" : false,
                                                 "maximum" : 3.1415927410125732,
                                                 "minimum" : -3.1415927410125732,
                                                 "orientationX" : 0,
@@ -301,8 +323,10 @@
                                                 "min" : "",
                                                 "val" : "105"
                                              }
-                                          }
+                                          },
+                                          "tipName" : ""
                                        },
+                                       "inverted" : true,
                                        "maximum" : 3.1415927410125732,
                                        "minimum" : -3.1415927410125732,
                                        "orientationX" : 0,
@@ -325,8 +349,10 @@
                                        "min" : "",
                                        "val" : "2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : true,
                               "maximum" : 3.1415927410125732,
                               "minimum" : -3.1415927410125732,
                               "orientationX" : 0,
@@ -338,8 +364,10 @@
                         },
                         "component" : "mx64_block",
                         "name" : "left_hip_roll",
-                        "parameters" : {}
+                        "parameters" : {},
+                        "tipName" : ""
                      },
+                     "inverted" : true,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -362,8 +390,10 @@
                      "min" : "",
                      "val" : "2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : true,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -399,8 +429,10 @@
                                        "min" : "",
                                        "val" : "2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : "left_arm_tip"
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : -3.1415927410125732,
                               "orientationX" : 0,
@@ -428,8 +460,10 @@
                               "min" : "",
                               "val" : "2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : true,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -452,8 +486,10 @@
                      "min" : "",
                      "val" : "2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -468,10 +504,12 @@
                   "0" : {
                      "component" : {
                         "anchors" : {},
-                        "component" : "mx28_alone",
+                        "component" : "mx28_head",
                         "name" : "head_pitch",
-                        "parameters" : {}
+                        "parameters" : {},
+                        "tipName" : "head_tip"
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -494,8 +532,10 @@
                      "min" : "",
                      "val" : "2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -523,6 +563,7 @@
             "min" : "",
             "val" : "93"
          }
-      }
+      },
+      "tipName" : ""
    }
 }
