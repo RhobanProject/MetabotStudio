@@ -71,6 +71,9 @@ namespace Metabot
 
             // Orientation
             float orientationX, orientationY, orientationZ;
+            
+            // Is the anchor inverted?
+            bool inverted=false;
 
             // Valid range
             float minimum, maximum;

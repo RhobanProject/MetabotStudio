@@ -70,6 +70,7 @@ namespace Metabot
         }
 
         component->name = name;
+        component->tipName = tipName;
         component->shapes = shapes;
         component->collisions = collisions;
         component->dynamics = dynamics;
@@ -297,7 +298,7 @@ namespace Metabot
             ss << "  <joint name=\"" << name << "\" type=\"revolute\">" << std::endl;
             ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
             ss << "    <child link=\"" << name << "\"/>" << std::endl;
-            ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
+            ss << "    <axis xyz=\"0 0 " << above->sign() << "\"/>" << std::endl;
             ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
 
             auto motor = backend->config.motors[above->anchor->type];
@@ -309,8 +310,14 @@ namespace Metabot
         int tipNum = 0;
         for (auto tip : tips) {
             std::stringstream tmp;
-            tmp << name << "_tip";
+
+            if (this->tipName == "") {
+                tmp << name << "_tip";
+            } else {
+                tmp << this->tipName;
+            }
             if (tipNum > 0) tmp << "_" << tipNum;
+
             std::string tipName = tmp.str();
 
             ss << "<link name=\"" << tipName << "\">" << std::endl;
@@ -320,7 +327,7 @@ namespace Metabot
             ss << "    <inertia ixx=\"0\" ixy=\"0\" ixz=\"0\" iyy=\"0\" iyz=\"0\" izz=\"0\" />" << std::endl;
             ss << "    </inertial>" << std::endl;
             ss << "</link>" << std::endl;
-            ss << "<joint name=\"" << tipName << "_fixed\" type=\"fixed\">" << std::endl;
+            ss << "<joint name=\"" << tipName << "\" type=\"fixed\">" << std::endl;
             auto m = preTransform.multiply(tip);
             ss << m.toURDF() << std::endl;
             ss << "    <parent link=\"" << name << "\" />" << std::endl;
@@ -422,7 +429,7 @@ namespace Metabot
             ss << "    <child>" << name << "</child>" << std::endl;
             ss << above->transformationForward().toSDF() << std::endl;
             ss << "    <axis>" << std::endl;
-            ss << "         <xyz>0 0 1</xyz>" << std::endl;
+            ss << "         <xyz>0 0 " << above->sign() << "</xyz>" << std::endl;
             ss << "          <limit>" << std::endl;
             // XXX: This limits should be configurable
             ss << "              <lower>" << -M_PI << "</lower>" << std::endl;
@@ -984,6 +991,7 @@ namespace Metabot
         Json::Value json(Json::objectValue);
 
         json["name"] = name;
+        json["tipName"] = tipName;
         json["component"] = module->getName();
         json["parameters"] = parameters.toJson();
         json["anchors"] = Json::Value(Json::objectValue);
@@ -998,6 +1006,7 @@ namespace Metabot
                 json["anchors"][id]["orientationX"] = anchor->orientationX;
                 json["anchors"][id]["orientationY"] = anchor->orientationY;
                 json["anchors"][id]["orientationZ"] = anchor->orientationZ;
+                json["anchors"][id]["inverted"] = anchor->inverted;
                 json["anchors"][id]["minimum"] = anchor->minimum;
                 json["anchors"][id]["maximum"] = anchor->maximum;
                 json["anchors"][id]["remote"] = anchor->anchor->id;

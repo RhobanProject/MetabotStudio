@@ -252,6 +252,9 @@ namespace Metabot
         if (json.isMember("name")) {
             instance->name = json["name"].asString();
         }
+        if (json.isMember("tipName")) {
+            instance->tipName = json["tipName"].asString();
+        }
 
         Json::Value &anchors = json["anchors"];
         for (auto anchor : instance->anchors) {
@@ -272,6 +275,9 @@ namespace Metabot
                 }
                 if (anchors[id].isMember("orientationZ")) {
                     anchor->orientationZ = anchors[id]["orientationZ"].asFloat();
+                }
+                if (anchors[id].isMember("inverted")) {
+                    anchor->inverted = anchors[id]["inverted"].asBool();
                 }
                 if (anchors[id].isMember("minimum")) {
                     anchor->minimum = anchors[id]["minimum"].asFloat();

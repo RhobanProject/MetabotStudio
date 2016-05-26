@@ -135,6 +135,7 @@ namespace Metabot
             double dbg;
 
             std::string name;
+            std::string tipName;
             int id;
     };
 }

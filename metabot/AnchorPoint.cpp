@@ -10,7 +10,7 @@ namespace Metabot
     AnchorPoint::AnchorPoint(Json::Value json, TransformMatrix matrix_)
         : type(""), matrix(matrix_), anchor(NULL), above(true), alpha(0.0), zero(0.0), 
         orientationX(0), orientationY(0), orientationZ(0), cached(false),
-        minimum(-M_PI), maximum(M_PI)
+        minimum(-M_PI), maximum(M_PI), inverted(false)
     {
         if (json.isObject()) {
             type = json["name"].asString();
@@ -44,7 +44,10 @@ namespace Metabot
 
     int AnchorPoint::sign()
     {
-        return male ? 1 : -1;
+        int s = male ? 1 : -1;
+        if (inverted) s *= -1;
+
+        return s;
     }
             
     AnchorPoint *AnchorPoint::clone()
@@ -61,6 +64,7 @@ namespace Metabot
         orientationX = other->orientationX;
         orientationY = other->orientationY;
         orientationZ = other->orientationZ;
+        inverted = other->inverted;
         minimum = other->minimum;
         maximum = other->maximum;
         alpha = other->alpha;

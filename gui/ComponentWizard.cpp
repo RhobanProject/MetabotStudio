@@ -28,12 +28,11 @@ ComponentWizard::ComponentWizard(Viewer *viewer_,
     setWindowTitle("Component wizard");
 
     // Showing welcome menu only
-    ui->scrollArea->hide();
+    ui->tabWidget->hide();
     ui->nameBox->hide();
     ui->anchor->hide();
     ui->orientation->hide();
     ui->range->hide();
-    ui->parameters->hide();
     ui->generate->hide();
     ui->ok->setEnabled(false);
 
@@ -93,12 +92,23 @@ void ComponentWizard::fill()
 
 void ComponentWizard::setupInstance()
 {
-    ui->scrollArea->show();
+    ui->tabWidget->show();
     ui->welcome->hide();
 
     // Instance name
     ui->nameBox->show();
     ui->name->setText(QString::fromStdString(instance->name));
+
+    // Tip name
+    ui->tipBox->setVisible(instance->tips.size() > 0);
+    ui->tipName->setText(QString::fromStdString(instance->tipName));
+
+    // Inverted flag
+    auto above = instance->aboveAnchor();
+    ui->inverted->setVisible(above != NULL);
+    if (above) {
+        ui->inverted->setChecked(above->inverted);
+    }
 
     if (anchor == NULL) {
         // We're working on robot root, anchor doesn't really matter
@@ -185,7 +195,6 @@ void ComponentWizard::setupInstance()
             parameters.push_back(parameterWidget);
             ui->parameters_items->addWidget(parameterWidget);
         }
-        ui->parameters->show();
     }
 
     // Enabling buttons and adjusting size
@@ -353,5 +362,22 @@ void ComponentWizard::on_name_editingFinished()
 {
     if (instance) {
         instance->name = ui->name->text().toStdString();
+    }
+}
+
+void ComponentWizard::on_tipName_editingFinished()
+{
+    if (instance) {
+        instance->tipName = ui->tipName->text().toStdString();
+    }
+}
+
+void ComponentWizard::on_inverted_clicked()
+{
+    if (instance) {
+        auto above = instance->aboveAnchor();
+        if (above) {
+            above->inverted = ui->inverted->isChecked();
+        }
     }
 }

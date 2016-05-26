@@ -53,6 +53,11 @@ private slots:
 
     void on_name_editingFinished();
 
+
+    void on_tipName_editingFinished();
+
+    void on_inverted_clicked();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;
