@@ -5,20 +5,21 @@ use <../models/mx64-with-arm.scad>;
 
 //:Component "MX64 Foot"
 //:Parameter height
+//:Parameter uheight
 //:Parameter thickness
 //:Parameter excentricity
-module mx64_foot(height=30, thickness=2, excentricity=0, cleats=12)
+module mx64_foot(height=50, uheight=30, thickness=2, excentricity=0, cleats=20)
 {
-    translate([0,0,height])
+    translate([0,0,uheight])
         rotate([0,90,0]) {
             //mx64_with_arm();
             //:Anchor mx64 female
         }
-    mx64_u(height=height, thickness=thickness, mode="none");
+    mx64_u(height=uheight, thickness=thickness, mode="none");
 
     translate([0,0,-thickness]) {
         translate([0,excentricity,0]) {
-            foot(thickness=thickness, cleats=cleats);
+            foot(thickness=thickness, cleats=height-uheight);
         }
 
         translate([0,0,-cleats-9]) {
@@ -27,4 +28,4 @@ module mx64_foot(height=30, thickness=2, excentricity=0, cleats=12)
     }
 }
 
-mx64_foot();
+mx64_foot(height=60);

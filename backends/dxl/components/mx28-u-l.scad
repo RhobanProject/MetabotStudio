@@ -9,9 +9,9 @@ use <../models/mx28-with-arm.scad>;
 //:Parameter thickness
 module mx28_u_l(length=80, height=30, thickness=2)
 {
-    mx28_l(mode="none", length=length+MX28Width/2, thickness=thickness);
+    mx28_l(mode="none", length=length-MX28Width+12, thickness=thickness);
     
-    translate([0,MX28Width/2,-length]) 
+    translate([0,MX28Width/2,-length+MX28Height-12]) 
     rotate([90,0,0]) {
         mx28_u(mode="none", height=height, thickness=thickness);
         
@@ -29,4 +29,4 @@ module mx28_u_l(length=80, height=30, thickness=2)
     }
 }
 
-mx28_u_l();
+mx28_u_l(length=100);

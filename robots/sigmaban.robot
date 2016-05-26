@@ -25,6 +25,11 @@
                                                             "component" : "mx64_foot",
                                                             "name" : "right_ankle_roll",
                                                             "parameters" : {
+                                                               "cleats" : {
+                                                                  "max" : "",
+                                                                  "min" : "",
+                                                                  "val" : "20"
+                                                               },
                                                                "excentricity" : {
                                                                   "max" : "",
                                                                   "min" : "",
@@ -33,7 +38,7 @@
                                                                "height" : {
                                                                   "max" : "",
                                                                   "min" : "",
-                                                                  "val" : "29"
+                                                                  "val" : "60"
                                                                },
                                                                "thickness" : {
                                                                   "max" : "",
@@ -41,7 +46,7 @@
                                                                   "val" : "2"
                                                                }
                                                             },
-                                                            "tipName" : "right_foot_tip"
+                                                            "tipName" : ""
                                                          },
                                                          "inverted" : false,
                                                          "maximum" : 3.1415927410125732,
@@ -95,7 +100,7 @@
                                     "height" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "93.7"
+                                       "val" : "95"
                                     },
                                     "thickness" : {
                                        "max" : "",
@@ -167,15 +172,10 @@
                                  "component" : "mx28_elbow",
                                  "name" : "right_elbow",
                                  "parameters" : {
-                                    "height" : {
-                                       "max" : "",
-                                       "min" : "",
-                                       "val" : "30"
-                                    },
                                     "length" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "70"
+                                       "val" : "130"
                                     },
                                     "thickness" : {
                                        "max" : "",
@@ -183,7 +183,7 @@
                                        "val" : "2"
                                     }
                                  },
-                                 "tipName" : "right_arm_tip"
+                                 "tipName" : ""
                               },
                               "inverted" : false,
                               "maximum" : 3.1415927410125732,
@@ -206,7 +206,7 @@
                            "length" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "72"
+                              "val" : "108"
                            },
                            "thickness" : {
                               "max" : "",
@@ -272,6 +272,11 @@
                                                             "component" : "mx64_foot",
                                                             "name" : "left_ankle_roll",
                                                             "parameters" : {
+                                                               "cleats" : {
+                                                                  "max" : "",
+                                                                  "min" : "",
+                                                                  "val" : "20"
+                                                               },
                                                                "excentricity" : {
                                                                   "max" : "",
                                                                   "min" : "",
@@ -280,7 +285,7 @@
                                                                "height" : {
                                                                   "max" : "",
                                                                   "min" : "",
-                                                                  "val" : "29"
+                                                                  "val" : "60"
                                                                },
                                                                "thickness" : {
                                                                   "max" : "",
@@ -288,7 +293,7 @@
                                                                   "val" : "2"
                                                                }
                                                             },
-                                                            "tipName" : "left_foot_tip"
+                                                            "tipName" : ""
                                                          },
                                                          "inverted" : false,
                                                          "maximum" : 3.1415927410125732,
@@ -342,7 +347,7 @@
                                     "height" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "93.7"
+                                       "val" : "95"
                                     },
                                     "thickness" : {
                                        "max" : "",
@@ -414,15 +419,10 @@
                                  "component" : "mx28_elbow",
                                  "name" : "left_elbow",
                                  "parameters" : {
-                                    "height" : {
-                                       "max" : "",
-                                       "min" : "",
-                                       "val" : "30"
-                                    },
                                     "length" : {
                                        "max" : "",
                                        "min" : "",
-                                       "val" : "70"
+                                       "val" : "130"
                                     },
                                     "thickness" : {
                                        "max" : "",
@@ -430,7 +430,7 @@
                                        "val" : "2"
                                     }
                                  },
-                                 "tipName" : "left_arm_tip"
+                                 "tipName" : ""
                               },
                               "inverted" : false,
                               "maximum" : 3.1415927410125732,
@@ -453,7 +453,7 @@
                            "length" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "72"
+                              "val" : "108"
                            },
                            "thickness" : {
                               "max" : "",
@@ -506,8 +506,14 @@
                         "anchors" : {},
                         "component" : "mx28_head",
                         "name" : "head_pitch",
-                        "parameters" : {},
-                        "tipName" : "head_tip"
+                        "parameters" : {
+                           "cameraHeight" : {
+                              "max" : "",
+                              "min" : "",
+                              "val" : "55"
+                           }
+                        },
+                        "tipName" : ""
                      },
                      "inverted" : false,
                      "maximum" : 3.1415927410125732,

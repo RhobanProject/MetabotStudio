@@ -23,4 +23,4 @@ module mx64_arms(length=100)
         mx64_arms_plate(length=length);
 }
 
-mx64_arms();
+mx64_arms(length=100);
