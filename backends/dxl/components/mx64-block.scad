@@ -8,7 +8,7 @@ module mx64_block()
 {
     mx64_with_arm();
     
-    translate([0,0,MX64Depth+9]) {
+    translate([0,0,MX64Depth+6]) {
         rotate([90,0,0]) {
             //:Anchor mx64 male
             mx64_with_arm();
