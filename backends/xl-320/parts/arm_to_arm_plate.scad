@@ -14,4 +14,4 @@ module arm_to_arm_plate(distance=50, thickness=2.2)
         }
 }
 
-arm_to_arm();
+arm_to_arm_plate();
