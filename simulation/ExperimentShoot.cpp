@@ -170,15 +170,15 @@ void ExperimentShoot::control(Simulation *simulation)
             angles[LEFT_HIP_ROLL] = RAD2DEG(model.getDOF("left_hip_roll"));
             angles[LEFT_HIP_PITCH] = RAD2DEG(model.getDOF("left_hip_pitch"));
             angles[LEFT_KNEE] = RAD2DEG(model.getDOF("left_knee"));
-            angles[LEFT_ANKLE_ROLL] = -RAD2DEG(model.getDOF("left_ankle_roll"));
-            angles[LEFT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("left_ankle_pitch"));
+            angles[LEFT_ANKLE_ROLL] = RAD2DEG(model.getDOF("left_ankle_roll"));
+            angles[LEFT_ANKLE_PITCH] = RAD2DEG(model.getDOF("left_ankle_pitch"));
 
             angles[RIGHT_HIP_YAW] = RAD2DEG(model.getDOF("right_hip_yaw"));
             angles[RIGHT_HIP_ROLL] = RAD2DEG(model.getDOF("right_hip_roll"));
             angles[RIGHT_HIP_PITCH] = RAD2DEG(model.getDOF("right_hip_pitch"));
             angles[RIGHT_KNEE] = RAD2DEG(model.getDOF("right_knee"));
-            angles[RIGHT_ANKLE_ROLL] = -RAD2DEG(model.getDOF("right_ankle_roll"));
-            angles[RIGHT_ANKLE_PITCH] = -RAD2DEG(model.getDOF("right_ankle_pitch"));
+            angles[RIGHT_ANKLE_ROLL] = RAD2DEG(model.getDOF("right_ankle_roll"));
+            angles[RIGHT_ANKLE_PITCH] = RAD2DEG(model.getDOF("right_ankle_pitch"));
         }
 
         if (enableShoot) {
@@ -237,7 +237,7 @@ void ExperimentShoot::control(Simulation *simulation)
     //angles[HEAD_PITCH] = 60;
 
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component, Metabot::TransformMatrix m) {
-            this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
+            this->cost += component->setTarget(-this->getAngle(component->id), simulation->dt);
             });
 
     if (simulation->t > 1) {

@@ -106,14 +106,14 @@ void ExperimentStandUp::control(Simulation *simulation)
     if (iteration == 2) t /= 1.5;
     if (iteration == 3) t *= 1.5;
 
-    angles[LEFT_SHOULDER_PITCH] = -splines["shoulder_pitch"].get(t);
+    angles[LEFT_SHOULDER_PITCH] = splines["shoulder_pitch"].get(t);
     angles[RIGHT_SHOULDER_PITCH] = splines["shoulder_pitch"].get(t);
 
-    angles[LEFT_ELBOW] = -splines["elbow"].get(t);
-    angles[RIGHT_ELBOW] = -splines["elbow"].get(t);
+    angles[LEFT_ELBOW] = splines["elbow"].get(t);
+    angles[RIGHT_ELBOW] = splines["elbow"].get(t);
     
-    angles[LEFT_ANKLE_PITCH] = -splines["ankle_pitch"].get(t);
-    angles[RIGHT_ANKLE_PITCH] = -splines["ankle_pitch"].get(t);
+    angles[LEFT_ANKLE_PITCH] = splines["ankle_pitch"].get(t);
+    angles[RIGHT_ANKLE_PITCH] = splines["ankle_pitch"].get(t);
     
     angles[LEFT_HIP_PITCH] = splines["hip_pitch"].get(t);
     angles[RIGHT_HIP_PITCH] = splines["hip_pitch"].get(t);
@@ -125,7 +125,7 @@ void ExperimentStandUp::control(Simulation *simulation)
  
     double stepCost = 0;
     simulation->robot.foreachComponent([&stepCost, this, simulation](Metabot::Component *component, TransformMatrix m) {
-        stepCost += component->setTarget(this->getAngle(component->id), simulation->dt);
+        stepCost += component->setTarget(-this->getAngle(component->id), simulation->dt);
     });
     cost += stepCost;
    
