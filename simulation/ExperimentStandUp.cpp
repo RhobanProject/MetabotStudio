@@ -125,7 +125,7 @@ void ExperimentStandUp::control(Simulation *simulation)
  
     double stepCost = 0;
     simulation->robot.foreachComponent([&stepCost, this, simulation](Metabot::Component *component, TransformMatrix m) {
-        stepCost += component->setTarget(-this->getAngle(component->id), simulation->dt);
+        stepCost += component->setTarget(this->getAngle(component->id), simulation->dt);
     });
     cost += stepCost;
    

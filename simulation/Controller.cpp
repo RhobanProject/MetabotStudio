@@ -208,7 +208,7 @@ double Controller::update(float dt, float t, Metabot::Robot &robot)
         int k = 0;
         for (auto &item : leg.tip.chain) {
             if (item.type == CHAIN_ROTATION) {
-                auto alpha = -leg.alphas[k++];
+                auto alpha = leg.alphas[k++];
                 cost += fabs(robot.getComponentById(item.jointId)->setTarget(alpha, dt));
             }
         }

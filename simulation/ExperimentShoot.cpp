@@ -165,6 +165,7 @@ void ExperimentShoot::control(Simulation *simulation)
 
     if (ct >= 0.01) {
         ct -= 0.01;
+
         if (Leph::IKWalk::walk(model, params, st, 0.01)) {
             angles[LEFT_HIP_YAW] = RAD2DEG(model.getDOF("left_hip_yaw"));
             angles[LEFT_HIP_ROLL] = RAD2DEG(model.getDOF("left_hip_roll"));
@@ -232,12 +233,19 @@ void ExperimentShoot::control(Simulation *simulation)
                 lastSplineT = splineT;
             }
         }
+        
+    auto left = simulation->robot.getComponentById(LEFT_ANKLE_ROLL);
+    auto leftCols = simulation->robot.world.getGroundCollisions(left->body);
+    auto right = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL);
+    auto rightCols = simulation->robot.world.getGroundCollisions(right->body);
+    printf("%g %g\n", leftCols, rightCols);
+    fflush(stdout);
     }
 
     //angles[HEAD_PITCH] = 60;
 
     simulation->robot.foreachComponent([this, simulation](Metabot::Component *component, Metabot::TransformMatrix m) {
-            this->cost += component->setTarget(-this->getAngle(component->id), simulation->dt);
+            this->cost += component->setTarget(this->getAngle(component->id), simulation->dt);
             });
 
     if (simulation->t > 1) {
