@@ -58,6 +58,8 @@ private slots:
 
     void on_inverted_clicked();
 
+    void on_computeDynamics_clicked();
+
 private:
     // Robot and anchor we're working on
     Viewer *viewer;

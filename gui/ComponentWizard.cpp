@@ -387,3 +387,11 @@ void ComponentWizard::on_inverted_clicked()
         }
     }
 }
+
+void ComponentWizard::on_computeDynamics_clicked()
+{
+    if (instance) {
+        instance->computeDynamics();
+        ui->dynamics->setText(QString::fromStdString(instance->getDynamics().toString()));
+    }
+}
