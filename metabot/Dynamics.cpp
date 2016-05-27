@@ -45,16 +45,30 @@ namespace Metabot
         updateInertia();
     }
 
-    std::string Dynamics::toString()
+    std::string Dynamics::toString(bool html)
     {
         std::stringstream ss;
         if (computed) {
-            ss << "Voxels: " << cubes.size() << std::endl;
-            ss << "Volume: " << volume << "mm^3" << std::endl;
-            ss << "Mass: " << mass << "g" << std::endl;
-            ss << "COM: " << com.x() << ", " << com.y() << ", " << com.z() << std::endl;
-            ss << "Inertia: ixx=" << ixx << ", iyy=" << iyy << ", izz=" << izz << 
-                ", ixy=" << ixy << ", iyz=" << iyz << ", ixz=" << ixz << std::endl;
+            if (html) {
+                ss << "<b>Voxels:</b><br/> " << cubes.size() << "<br/>";
+                ss << "<b>Volume:</b><br/> " << volume << "mm^3" << "<br/>";
+                ss << "<b>Mass:</b><br/> " << mass << "g" << "<br/>";
+                ss << "<b>COM:</b><br/> " << com.x() << ", " << com.y() << ", " << com.z() << "<br/>";
+                ss << "<b>Inertia:</b><br/>";
+                ss << "-<b>Ixx</b>: " << ixx << "<br/>";
+                ss << "-<b>Iyy</b>: " << iyy << "<br/>";
+                ss << "-<b>Izz</b>: " << izz << "<br/>";
+                ss << "-<b>Ixy</b>: " << ixy << "<br/>";
+                ss << "-<b>Ixx</b>: " << ixz << "<br/>";
+                ss << "-<b>Ixx</b>: " << iyz << "<br/>";
+            } else {
+                ss << "Voxels: " << cubes.size() << std::endl;
+                ss << "Volume: " << volume << "mm^3" << std::endl;
+                ss << "Mass: " << mass << "g" << std::endl;
+                ss << "COM: " << com.x() << ", " << com.y() << ", " << com.z() << std::endl;
+                ss << "Inertia: ixx=" << ixx << ", iyy=" << iyy << ", izz=" << izz << 
+                    ", ixy=" << ixy << ", iyz=" << iyz << ", ixz=" << ixz << std::endl;
+            }
         } else {
             ss << "No dynamics (no geometry or not computed)" << std::endl;
         }

@@ -392,6 +392,6 @@ void ComponentWizard::on_computeDynamics_clicked()
 {
     if (instance) {
         instance->computeDynamics();
-        ui->dynamics->setText(QString::fromStdString(instance->getDynamics().toString()));
+        ui->dynamics->setText(QString::fromStdString(instance->getDynamics().toString(true)));
     }
 }

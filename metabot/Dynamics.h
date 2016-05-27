@@ -33,7 +33,7 @@ namespace Metabot
             // Update inertia from cubes
             void updateInertia();
 
-            std::string toString();
+            std::string toString(bool html=false);
 
             void combine(const Dynamics &other, TransformMatrix matrix);
 

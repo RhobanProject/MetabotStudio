@@ -15,7 +15,7 @@ DynamicsWindow::~DynamicsWindow()
 
 void DynamicsWindow::setDynamics(Metabot::Dynamics dynamics)
 {
-    ui->dynamics->setText(QString::fromStdString(dynamics.toString()));
+    ui->dynamics->setText(QString::fromStdString(dynamics.toString(true)));
 }
 
 void DynamicsWindow::on_pushButton_clicked()
