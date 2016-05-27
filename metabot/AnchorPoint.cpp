@@ -118,6 +118,8 @@ namespace Metabot
 
         if (above) {
             anchor->attach(this, false);
+        } else {
+            computeMatrixes();
         }
     }
 
@@ -173,13 +175,22 @@ namespace Metabot
     void AnchorPoint::computeMatrixes()
     {
         {
-            auto orientation = orientationMatrix();
             auto rotation = TransformMatrix::rotationZ(sign()*(zero+alpha));
-            forwardAbove = matrix.multiply(orientation.multiply(rotation));
+            forwardAbove = matrix;
+            if (!male) {
+                auto orientation = orientationMatrix();
+                forwardAbove = forwardAbove.multiply(orientation);
+            }
+            forwardAbove = forwardAbove.multiply(rotation);
             backwardAbove = forwardAbove.invert();
         }
         {
-            forward = matrix;
+            if (!male && anchor) {
+                auto orientation = anchor->orientationMatrix();
+                forward = matrix.multiply(orientation);
+            } else {
+                forward = matrix;
+            }
             backward = forward.invert();
         }
             

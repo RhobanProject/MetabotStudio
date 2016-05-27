@@ -1103,7 +1103,7 @@ namespace Metabot
         double maxSpeed = motor.maxSpeed;
         double maxTorque = motor.maxTorque;
 
-        alpha = alpha*above->sign();
+        alpha = -alpha*above->sign();
         auto pos = posHinge->getHingeAngle();
         //auto pos = hinge->getHingeAngle();
 
