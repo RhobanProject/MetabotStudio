@@ -243,8 +243,13 @@ namespace Metabot
         // Adding parts and models, linked to component
         int refid = 0;
         auto preTransform = TransformMatrix::identity();
+        auto signRotate = TransformMatrix::identity();
         if (above != NULL) {
             preTransform = above->transformationBackward();
+            if (above->anchor->sign() < 0) {
+                signRotate = TransformMatrix::rotationX(M_PI);
+            }
+            preTransform = signRotate.invert().multiply(preTransform);
         }
         for (auto ref : refs()) {
             dynamics.combine(ref->getDynamics(), ref->matrix);
@@ -292,14 +297,13 @@ namespace Metabot
             
         ss << "  </link>" << std::endl;
 
-        
         // Linking it to the parent
         if (above!=NULL) {
             ss << "  <joint name=\"" << name << "\" type=\"revolute\">" << std::endl;
             ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
             ss << "    <child link=\"" << name << "\"/>" << std::endl;
-            ss << "    <axis xyz=\"0 0 " << above->sign() << "\"/>" << std::endl;
-            ss << parentPreTransform.multiply(above->anchor->transformationForward()).toURDF() << std::endl;
+            ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
+            ss << parentPreTransform.multiply(above->anchor->transformationForward().multiply(signRotate)).toURDF() << std::endl;
 
             auto motor = backend->config.motors[above->anchor->type];
             ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
@@ -429,7 +433,7 @@ namespace Metabot
             ss << "    <child>" << name << "</child>" << std::endl;
             ss << above->transformationForward().toSDF() << std::endl;
             ss << "    <axis>" << std::endl;
-            ss << "         <xyz>0 0 " << above->sign() << "</xyz>" << std::endl;
+            ss << "         <xyz>0 0 1</xyz>" << std::endl;
             ss << "          <limit>" << std::endl;
             // XXX: This limits should be configurable
             ss << "              <lower>" << -M_PI << "</lower>" << std::endl;

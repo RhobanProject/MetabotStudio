@@ -94,7 +94,7 @@
                                        "minimum" : -3.1415927410125732,
                                        "orientationX" : 0,
                                        "orientationY" : 0,
-                                       "orientationZ" : -1.5707963705062866,
+                                       "orientationZ" : 1.5707963705062866,
                                        "remote" : 0,
                                        "zero" : 0
                                     }
@@ -115,7 +115,7 @@
                                  },
                                  "tipName" : ""
                               },
-                              "inverted" : true,
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : -3.1415927410125732,
                               "orientationX" : 0,
@@ -161,7 +161,7 @@
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : -1.5707963705062866,
+            "orientationZ" : 1.5707963705062866,
             "remote" : 1,
             "zero" : 0
          },
@@ -346,7 +346,7 @@
                                        "minimum" : -3.1415927410125732,
                                        "orientationX" : 0,
                                        "orientationY" : 0,
-                                       "orientationZ" : -1.5707963705062866,
+                                       "orientationZ" : 1.5707963705062866,
                                        "remote" : 0,
                                        "zero" : 0
                                     }
@@ -367,7 +367,7 @@
                                  },
                                  "tipName" : ""
                               },
-                              "inverted" : true,
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : -3.1415927410125732,
                               "orientationX" : 0,
@@ -413,7 +413,7 @@
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : -1.5707963705062866,
+            "orientationZ" : 1.5707963705062866,
             "remote" : 1,
             "zero" : 0
          },
@@ -523,7 +523,7 @@
                               "val" : "55"
                            }
                         },
-                        "tipName" : "head_tip"
+                        "tipName" : "camera"
                      },
                      "inverted" : false,
                      "maximum" : 3.1415927410125732,
