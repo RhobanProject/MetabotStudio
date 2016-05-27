@@ -224,6 +224,7 @@ void ComponentWizard::on_listWidget_itemSelectionChanged()
 
         if (oldInstance != NULL) {
             instance->name = oldInstance->name;
+            instance->tipName = oldInstance->name;
             instance->moveAnchors(oldInstance->anchors);
             delete oldInstance;
         }
@@ -303,6 +304,7 @@ void ComponentWizard::on_generate_clicked()
     }
 
     instance->name = previous->name;
+    instance->tipName = previous->tipName;
     previous->detachAll();
     delete previous;
 
