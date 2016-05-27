@@ -188,7 +188,7 @@
                                        "val" : "2"
                                     }
                                  },
-                                 "tipName" : ""
+                                 "tipName" : "right_arm_tip"
                               },
                               "inverted" : false,
                               "maximum" : 3.1415927410125732,
@@ -440,7 +440,7 @@
                                        "val" : "2"
                                     }
                                  },
-                                 "tipName" : ""
+                                 "tipName" : "left_arm_tip"
                               },
                               "inverted" : false,
                               "maximum" : 3.1415927410125732,
