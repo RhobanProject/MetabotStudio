@@ -334,6 +334,7 @@ void ComponentWizard::on_orientationX_editingFinished()
 {
     anchor->orientationX = DEG2RAD(ui->orientationX->text().toFloat());
     anchor->computeMatrixes();
+    if (anchor->anchor) anchor->anchor->computeMatrixes();
     viewer->redraw();
 }
 
@@ -341,6 +342,7 @@ void ComponentWizard::on_orientationY_editingFinished()
 {
     anchor->orientationY = DEG2RAD(ui->orientationY->text().toFloat());
     anchor->computeMatrixes();
+    if (anchor->anchor) anchor->anchor->computeMatrixes();
     viewer->redraw();
 }
 
@@ -348,6 +350,7 @@ void ComponentWizard::on_orientationZ_editingFinished()
 {
     anchor->orientationZ = DEG2RAD(ui->orientationZ->text().toFloat());
     anchor->computeMatrixes();
+    if (anchor->anchor) anchor->anchor->computeMatrixes();
     viewer->redraw();
 }
 
