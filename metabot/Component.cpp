@@ -222,8 +222,15 @@ namespace Metabot
             }
         }
     }
+
+    // Simplifies small numbers (for <axis>)
+    static float smp(float s) {
+        if (s < 1e-3) return 0;
+        else return s;
+    }
     
-    void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix parentPreTransform, AnchorPoint *above)
+    void Component::writeURDF(std::stringstream &ss, std::string parent, TransformMatrix parentPreTransform, 
+            AnchorPoint *above)
     {
         Dynamics dynamics;
 
@@ -243,14 +250,24 @@ namespace Metabot
         // Adding parts and models, linked to component
         int refid = 0;
         auto preTransform = TransformMatrix::identity();
-        auto signRotate = TransformMatrix::identity();
+
+        auto jointFrame = TransformMatrix::identity();
+        auto jointBasis = TransformMatrix::identity();
+        auto jointAxis = TransformMatrix::identity();
         if (above != NULL) {
             preTransform = above->transformationBackward();
-            if (above->anchor->sign() < 0) {
-                signRotate = TransformMatrix::rotationX(M_PI);
-            }
-            preTransform = signRotate.invert().multiply(preTransform);
+           
+            jointFrame = parentPreTransform.multiply(above->anchor->transformationForward());
+            jointBasis = jointFrame;
+            jointBasis.setX(0);
+            jointBasis.setY(0);
+            jointBasis.setZ(0);
+            jointAxis = jointBasis.multiply(TransformMatrix::translation(0, 0, above->anchor->sign()));
+
+            jointFrame = jointFrame.multiply(jointBasis.invert());
+            preTransform = jointBasis.multiply(preTransform);
         }
+
         for (auto ref : refs()) {
             dynamics.combine(ref->getDynamics(), ref->matrix);
             tmp.str("");
@@ -302,8 +319,8 @@ namespace Metabot
             ss << "  <joint name=\"" << name << "\" type=\"revolute\">" << std::endl;
             ss << "    <parent link=\"" << parent << "\"/>" << std::endl;
             ss << "    <child link=\"" << name << "\"/>" << std::endl;
-            ss << "    <axis xyz=\"0 0 1\"/>" << std::endl;
-            ss << parentPreTransform.multiply(above->anchor->transformationForward().multiply(signRotate)).toURDF() << std::endl;
+            ss << "    <axis xyz=\"" << smp(jointAxis.x()) << " " << smp(jointAxis.y()) << " " << smp(jointAxis.z()) << "\"/>" << std::endl;
+            ss << jointFrame.toURDF() << std::endl;
 
             auto motor = backend->config.motors[above->anchor->type];
             ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
