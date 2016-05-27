@@ -44,9 +44,14 @@
                                                                   "max" : "",
                                                                   "min" : "",
                                                                   "val" : "2"
+                                                               },
+                                                               "uheight" : {
+                                                                  "max" : "",
+                                                                  "min" : "",
+                                                                  "val" : "30"
                                                                }
                                                             },
-                                                            "tipName" : ""
+                                                            "tipName" : "right_foot_tip"
                                                          },
                                                          "inverted" : false,
                                                          "maximum" : 3.1415927410125732,
@@ -291,9 +296,14 @@
                                                                   "max" : "",
                                                                   "min" : "",
                                                                   "val" : "2"
+                                                               },
+                                                               "uheight" : {
+                                                                  "max" : "",
+                                                                  "min" : "",
+                                                                  "val" : "30"
                                                                }
                                                             },
-                                                            "tipName" : ""
+                                                            "tipName" : "left_foot_tip"
                                                          },
                                                          "inverted" : false,
                                                          "maximum" : 3.1415927410125732,
@@ -513,7 +523,7 @@
                               "val" : "55"
                            }
                         },
-                        "tipName" : ""
+                        "tipName" : "head_tip"
                      },
                      "inverted" : false,
                      "maximum" : 3.1415927410125732,
