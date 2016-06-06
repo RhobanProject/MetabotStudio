@@ -233,13 +233,15 @@ void ExperimentShoot::control(Simulation *simulation)
                 lastSplineT = splineT;
             }
         }
-        
+    
+        /*
     auto left = simulation->robot.getComponentById(LEFT_ANKLE_ROLL);
     auto leftCols = simulation->robot.world.getGroundCollisions(left->body);
     auto right = simulation->robot.getComponentById(RIGHT_ANKLE_ROLL);
     auto rightCols = simulation->robot.world.getGroundCollisions(right->body);
     printf("%g %g\n", leftCols, rightCols);
     fflush(stdout);
+    */
     }
 
     //angles[HEAD_PITCH] = 60;
