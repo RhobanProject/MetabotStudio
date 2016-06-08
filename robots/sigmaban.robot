@@ -520,7 +520,7 @@
                            "cameraHeight" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "55"
+                              "val" : "61"
                            }
                         },
                         "tipName" : "camera"
