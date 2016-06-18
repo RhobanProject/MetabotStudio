@@ -3,25 +3,31 @@ include<../models/mx28-values.scad>;
 include<../models/mx64-values.scad>;
 
 //:Part
-//:Mass 600
 module body_block(width=130, height=180, depth=80)
 {
-    difference() {
-        union() {
-            translate([-depth*2/3,-width/2-MX64Width/2,MX64Depth/2])
-                cube([depth, MX64Width+width, 13+height-MX64Depth/2-MX28Height]);
-            
-            translate([-depth*2/3,-(width-MX28Depth)/2,height-MX28Height+13]) {
-                cube([depth,width-MX28Depth,20]);
-            }
-        }
-        
-        translate([-depth*2/3+2.5,2.5-width/2-MX64Width/2,MX64Depth/2-0.1])
-            cube([depth-5, MX64Width+width-5, -5+13+height-MX64Depth/2-MX28Height]);
-        
-            translate([-depth*2/3+2.5,2.5-(width-MX28Depth)/2,height-MX28Height+13-6]) {
-                cube([depth-5,width-MX28Depth-5,20]);
-            }
+    plateWidth=width+41;
+    p1 = MX64Depth;
+    p2 = height+MX64Depth/2-MX28ShaftOffset-MX28Height/2;
+    
+    translate([MX64Height/2-MX64ShaftOffset,-plateWidth/2,0]) {
+        cube([45,plateWidth,3]);
+    }
+    
+    translate([-40,-plateWidth/2,p1]) {
+        cube([100,plateWidth,3]);
+    }
+    
+    translate([-40,-plateWidth/2,p2]) {
+        cube([65,plateWidth,3]);
+    }
+    
+    dX = 25;
+    dY = width/2+12;
+    translate([-8,0,0])
+    for (x=[-dX,dX]) 
+        for (y=[-dY,dY])
+    translate([x,y,MX64Depth]) {
+        cylinder(r=8, h=p2-p1);
     }
 }
 
