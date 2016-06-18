@@ -517,10 +517,15 @@
                         "component" : "mx28_head",
                         "name" : "head_pitch",
                         "parameters" : {
+                           "cameraDepth" : {
+                              "max" : "",
+                              "min" : "",
+                              "val" : "10"
+                           },
                            "cameraHeight" : {
                               "max" : "",
                               "min" : "",
-                              "val" : "61"
+                              "val" : "62"
                            }
                         },
                         "tipName" : "camera"
@@ -569,10 +574,15 @@
             "min" : "",
             "val" : "90"
          },
+         "headHeight" : {
+            "max" : "",
+            "min" : "",
+            "val" : "185"
+         },
          "height" : {
             "max" : "",
             "min" : "",
-            "val" : "153"
+            "val" : "138"
          },
          "width" : {
             "max" : "",
