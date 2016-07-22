@@ -158,9 +158,9 @@ void Viewer::resizeGL(int width, int height)
 
     if (mode == MODE_PHYSICS && client.robot) {
         auto state = client.robot->getState();
-        tX = tX*0.9-0.1*state.x();
-        tY = tY*0.9-0.1*state.y();
-        tZ = tZ*0.9-0.1*state.z();
+        tX = tX*0.8-0.2*state.x();
+        tY = tY*0.8-0.2*state.y();
+        tZ = tZ*0.8-0.2*state.z();
     } else {
         tZ = 0;
     }
