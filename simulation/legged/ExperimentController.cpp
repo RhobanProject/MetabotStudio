@@ -24,6 +24,7 @@ void ExperimentController::initParameters(Parameters &parameters, Metabot::Robot
     parameters.add("dx", -300, 300, 60);
     parameters.add("dy", -300, 300, 0, false);
     parameters.add("turn", -3, 3, 0, false);
+    parameters.add("swing", -100, 100, 0);
 
     // Leg phases
     for (int k=1; k<=robot->tips(); k++) {
@@ -49,6 +50,7 @@ void ExperimentController::init(Simulation *simulation, Experiment::Parameters &
     controller->dy = parameters.get("dy");
     controller->turn = parameters.get("turn");
     controller->setupFunctions();
+    controller->swingGain = parameters.get("swing");
 
     for (int k=1; k<=simulation->robot.tips(); k++) {
         std::stringstream p;

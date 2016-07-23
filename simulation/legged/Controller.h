@@ -53,6 +53,9 @@ class Controller
         float freq;
         float *phases;
 
+        // Swing
+        float swingGain;
+
         // Dynamic parameters
         float dx, dy, turn;
 
@@ -62,8 +65,8 @@ class Controller
 
         Metabot::CubicSpline rise;
         Metabot::CubicSpline step;
+        Metabot::CubicSpline swing;
 
-    protected:
         std::vector<Leg> legs;
         Metabot::Robot *robot;
 };

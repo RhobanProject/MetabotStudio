@@ -144,16 +144,21 @@ void Controller::setupFunctions()
 {
     step = Metabot::CubicSpline();
     rise = Metabot::CubicSpline();
+    swing = Metabot::CubicSpline();
     
     step.addPoint(0, 0.5, -1/support);
     step.addPoint(support, -0.5, -1/support);
     step.addPoint(support+(1-support)/2, lX, lS/support);
-    step.addPoint(1, 0.5, -1/support);
+    step.addPoint(0, 0.5, -1/support);
 
     rise.addPoint(0, 0, 0);
     rise.addPoint(support, 0, 0);
     rise.addPoint(support+(1-support)/2, lH, 0);
     rise.addPoint(1, 0, 0);
+
+    swing.addPoint(0, -1, 0);
+    swing.addPoint(0.5, 1, 0);
+    swing.addPoint(1, -1, 0);
 
     /*
     for (float t=0; t<1; t+=0.01) {
@@ -185,7 +190,7 @@ void Controller::compute(float t_)
 
         // Applying trajectory
         tx += step.posMod(phase)*dx;
-        ty += step.posMod(phase)*dy;
+        ty += step.posMod(phase)*dy + swing.posMod(t)*swingGain;
 
         float tz = rise.posMod(phase) - z;
         
