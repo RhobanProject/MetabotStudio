@@ -6,6 +6,7 @@
 #ifdef ENABLE_LEGGED
 #include "legged/ExperimentWalk.h"
 #include "legged//ExperimentCheckpoints.h"
+#include "legged//ExperimentAnalyze.h"
 #endif
 
 #ifdef ENABLE_HUMANOID
@@ -39,6 +40,7 @@ static void initialize()
         registerExperiment<ExperimentWalkSpeed>("walk-speed");
         registerExperiment<ExperimentCheckpointsEfficience>("checkpoints");
         registerExperiment<ExperimentCheckpointsSpeed>("checkpoints-speed");
+        registerExperiment<ExperimentAnalyze>("analyze");
 #endif
 
 #ifdef ENABLE_HUMANOID

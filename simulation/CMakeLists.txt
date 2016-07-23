@@ -44,6 +44,7 @@ if (ENABLE_LEGGED)
         legged/ExperimentController.cpp
         legged/ExperimentWalk.cpp
         legged/ExperimentCheckpoints.cpp
+        legged/ExperimentAnalyze.cpp
     )
 endif ()
 
