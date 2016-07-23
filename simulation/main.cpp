@@ -11,18 +11,11 @@
 #include <Backend.h>
 #include <com/Server.h>
 #include <pthread.h>
-#include "Controller.h"
 #include "util.h"
 #include "util/util.h"
 #include "verbose.h"
 #include <cmaes.h>
 #include "Experiment.h"
-#include "ExperimentTest.h"
-#include "ExperimentWalk.h"
-#include "ExperimentCheckpoints.h"
-#include "ExperimentStandUp.h"
-#include "ExperimentShoot.h"
-#include "ExperimentStaticShoot.h"
 #include "Generator.h"
 #include "experiments.h"
 

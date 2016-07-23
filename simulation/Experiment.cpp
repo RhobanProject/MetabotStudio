@@ -3,7 +3,6 @@
 #include <math.h>
 #include "verbose.h"
 #include "Simulation.h"
-#include "Controller.h"
 #include "Experiment.h"
 #include "util.h"
 

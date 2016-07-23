@@ -3,12 +3,16 @@
 #include "experiments.h"
 #include "ExperimentTest.h"
 
-#include "ExperimentWalk.h"
-#include "ExperimentCheckpoints.h"
+#ifdef ENABLE_LEGGED
+#include "legged/ExperimentWalk.h"
+#include "legged//ExperimentCheckpoints.h"
+#endif
 
-#include "ExperimentStandUp.h"
-#include "ExperimentShoot.h"
-#include "ExperimentStaticShoot.h"
+#ifdef ENABLE_HUMANOID
+#include "humanoid/ExperimentStandUp.h"
+#include "humanoid/ExperimentShoot.h"
+#include "humanoid/ExperimentStaticShoot.h"
+#endif
 
 static std::map<std::string, Experiment::BaseRunner*> mapping;
 static bool initialized = false;
@@ -29,16 +33,20 @@ static void initialize()
         registerExperiment<ExperimentZero>("zero");
         registerExperiment<ExperimentSinus>("sinus");
 
+#ifdef ENABLE_LEGGED
         // Legged robot experiments
         registerExperiment<ExperimentWalkEfficience>("walk");
         registerExperiment<ExperimentWalkSpeed>("walk-speed");
         registerExperiment<ExperimentCheckpointsEfficience>("checkpoints");
         registerExperiment<ExperimentCheckpointsSpeed>("checkpoints-speed");
+#endif
 
+#ifdef ENABLE_HUMANOID
         // Humanoid experiments
         registerExperiment<ExperimentStandUp>("standup");
         registerExperiment<ExperimentShoot>("shoot");
         registerExperiment<ExperimentStaticShoot>("staticshoot");
+#endif
     }
 }
 
