@@ -28,6 +28,7 @@ endif (USE_DOUBLE_PRECISION)
 set (SOURCES
     Controller.cpp
     Simulation.cpp
+
     Experiment.cpp
     ExperimentTest.cpp
     ExperimentController.cpp
@@ -39,6 +40,7 @@ set (SOURCES
     ExperimentIKWalk.cpp
     Generator.cpp
 
+    experiments.cpp
     util.cpp
     main.cpp
     verbose.cpp

@@ -24,6 +24,7 @@
 #include "ExperimentShoot.h"
 #include "ExperimentStaticShoot.h"
 #include "Generator.h"
+#include "experiments.h"
 
 #include <iostream>
 
@@ -43,6 +44,7 @@ static void usage()
     std::cout << "  -N: no server mode" << std::endl;
     std::cout << "  -G: generate a robot" << std::endl;
     std::cout << "  -x [exp]: specify experiment" << std::endl;
+    std::cout << "  -l: list experiments" << std::endl;
     exit(1);
 }
 
@@ -59,7 +61,7 @@ int main(int argc, char *argv[])
     std::string experiment = "walk";
     std::cout.precision(16);
 
-    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:bD:")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:bD:l")) != -1) {
         switch (index) {
             case 'D':
                 dt = atof(optarg);
@@ -101,7 +103,19 @@ int main(int argc, char *argv[])
             case 'x':
                 experiment = std::string(optarg);
                 break;
+            case 'l':
+                mode = "list";
+                break;
         }
+    }
+    
+    if (mode == "list") {
+        std::cout << "Available experiments:" << std::endl;
+        for (auto &name : getExperiments()) {
+            std::cout << "* " << name.first << std::endl;
+        }
+
+        return 0;
     }
 
     if (mode == "generate") {
@@ -122,28 +136,9 @@ int main(int argc, char *argv[])
 
     try {
         // Creating the experiment
-        Experiment::BaseRunner *runner = NULL;
-        if (experiment == "walk") {
-            runner = new Experiment::Runner<ExperimentWalkEfficience>();
-        } else if (experiment == "walk-speed") {
-            runner = new Experiment::Runner<ExperimentWalkSpeed>();
-        } else if (experiment == "checkpoints") {
-            runner = new Experiment::Runner<ExperimentCheckpointsEfficience>();
-        } else if (experiment == "checkpoints-speed") {
-            runner = new Experiment::Runner<ExperimentCheckpointsSpeed>();
-        } else if (experiment == "none") {
-            runner = new Experiment::Runner<Experiment>();
-        } else if (experiment == "zero") {
-            runner = new Experiment::Runner<ExperimentZero>();
-        } else if (experiment == "sinus") {
-            runner = new Experiment::Runner<ExperimentSinus>();
-        } else if (experiment == "standup") {
-            runner = new Experiment::Runner<ExperimentStandUp>();
-        } else if (experiment == "shoot") {
-            runner = new Experiment::Runner<ExperimentShoot>();
-        } else if (experiment == "staticshoot") {
-            runner = new Experiment::Runner<ExperimentStaticShoot>();
-        } else {
+        auto runner = getExperiment(experiment);
+
+        if (runner == NULL) {
             std::cerr << "Unknown experiment: " << experiment << std::endl;
             return EXIT_FAILURE;
         }
