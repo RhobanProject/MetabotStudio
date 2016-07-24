@@ -149,7 +149,7 @@ void Controller::setupFunctions()
     step.addPoint(0, 0.5, -1/support);
     step.addPoint(support, -0.5, -1/support);
     step.addPoint(support+(1-support)/2, lX, lS/support);
-    step.addPoint(0, 0.5, -1/support);
+    step.addPoint(1, 0.5, -1/support);
 
     rise.addPoint(0, 0, 0);
     rise.addPoint(support, 0, 0);
