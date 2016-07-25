@@ -457,6 +457,25 @@ namespace Metabot
         });
     }
             
+    btVector3 Robot::getBulletCOM()
+    {
+        btVector3 com(0, 0, 0);
+        double total = 0;
+
+        foreachComponent([&com, &total](Component *instance, TransformMatrix m) {
+            if (instance->body) {
+                com += instance->body->getCenterOfMassPosition()*instance->mass;
+                total += instance->mass;
+            }
+        });
+
+        if (total > 0) {
+            return com/total;
+        } else {
+            return btVector3(0, 0, 0);
+        }
+    }
+            
     std::string Robot::getValue(std::string name)
     {
         return parameters.get(name);

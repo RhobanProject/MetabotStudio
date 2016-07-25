@@ -77,6 +77,8 @@ namespace Metabot
             void unHighlight();
             void unHover();
 
+            btVector3 getBulletCOM();
+
             std::string getValue(std::string name);
 
             void toBullet();
