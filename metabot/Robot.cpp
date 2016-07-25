@@ -362,7 +362,8 @@ namespace Metabot
     {
         double total = 0;
         Vect cop(0, 0, 0);
-        for (auto point : collisionPoints) {
+        auto points = world.getGroundCollisions();
+        for (auto point : points) {
             double w = point.second.norm();
             total += w;
             cop.values[0] += point.first.x()*w;
