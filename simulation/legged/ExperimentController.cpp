@@ -21,7 +21,7 @@ void ExperimentController::initParameters(Parameters &parameters, Metabot::Robot
     parameters.add("lH", 0, 100, 20);
     parameters.add("lS", 0, 10, 1);
     parameters.add("support", 0, 1, 0.5);
-    parameters.add("dx", -300, 300, 60);
+    parameters.add("dx", 0, 300, 60);
     parameters.add("dy", -300, 300, 0, false);
     parameters.add("turn", -3, 3, 0, false);
     parameters.add("swing", -100, 100, 0);
