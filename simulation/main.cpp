@@ -38,6 +38,9 @@ static void usage()
     std::cout << "  -G: generate a robot" << std::endl;
     std::cout << "  -x [exp]: specify experiment" << std::endl;
     std::cout << "  -l: list experiments" << std::endl;
+    std::cout << "  -F: CMA-ES f-tolerance" << std::endl;
+    std::cout << "  -R: CMA-ES restarts" << std::endl;
+    std::cout << "  -L: CMA-ES lambda" << std::endl;
     exit(1);
 }
 
@@ -45,6 +48,9 @@ int main(int argc, char *argv[])
 {
     float factor = 100.0;
     float duration = 0.0;
+    double ftolerance = 1e-6;
+    int restarts = 4;
+    int lambda = 16;
     double dt = 0.001;
     int index;
     bool external = false;
@@ -54,8 +60,17 @@ int main(int argc, char *argv[])
     std::string experiment = "walk";
     std::cout.precision(16);
 
-    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:bD:l")) != -1) {
+    while ((index = getopt(argc, argv, "r:vtf:d:ceNGx:bD:lF:R:L:")) != -1) {
         switch (index) {
+            case 'F':
+                ftolerance = atof(optarg);
+                break;
+            case 'R':
+                restarts = atoi(optarg);
+                break;
+            case 'L':
+                lambda = atoi(optarg);
+                break;
             case 'D':
                 dt = atof(optarg);
                 break;
@@ -258,16 +273,16 @@ int main(int argc, char *argv[])
 
             // CMAES parameters
             //CMAParameters<> cmaparams(parameters.toVector(), -1, 64);
-            CMAParameters<> cmaparams(parameters.toVector(), -1, 16);
+            CMAParameters<> cmaparams(parameters.toVector(), -1, lambda);
             cmaparams.set_algo(BIPOP_CMAES);
             cmaparams.set_quiet(false);
-            //cmaparams.set_max_iter(100);
-            cmaparams.set_restarts(3);
+            //cmaparams.set_max_iter(100); 
+            cmaparams.set_restarts(restarts);
             //cmaparams.set_max_hist(3);
             //cmaparams.set_max_fevals(10000000);
             //cmaparams.set_elitism(0);
             //cmaparams.set_x0(0, 1);
-            cmaparams.set_ftolerance(1e-6);
+            cmaparams.set_ftolerance(ftolerance);
             cmaparams.set_xtolerance(1e-3);
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
