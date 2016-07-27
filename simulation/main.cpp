@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     float duration = 0.0;
     double ftolerance = 1e-6;
     int restarts = 4;
-    int lambda = 16;
+    int lambda = 48;
     double dt = 0.001;
     int index;
     bool external = false;
