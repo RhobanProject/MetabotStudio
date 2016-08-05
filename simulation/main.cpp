@@ -287,6 +287,8 @@ int main(int argc, char *argv[])
             cmaparams.set_mt_feval(true);
             cmaparams.set_ftarget(0.0);
 
+            printf("CMA-ES: restarts=%d, ftolerance=%g, lambda=%d\n", restarts, ftolerance, lambda);
+
             FitFunc robotSim = [robotFile, external, &parameters, &runner, duration, experiment](const double *x, const int N)
             {
                 Experiment::Parameters params = parameters;
