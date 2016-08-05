@@ -30,6 +30,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "bottom_leg",
+                                 "name" : "",
                                  "parameters" : {
                                     "FixationAngle" : {
                                        "max" : "",
@@ -66,8 +67,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -78,6 +81,7 @@
                            }
                         },
                         "component" : "arm_to_arm",
+                        "name" : "",
                         "parameters" : {
                            "Distance" : {
                               "max" : "",
@@ -89,18 +93,21 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
                      "orientationY" : 0,
-                     "orientationZ" : -1.5707963705062866,
+                     "orientationZ" : 0,
                      "remote" : 0,
                      "zero" : 0
                   }
                },
                "component" : "block",
+               "name" : "",
                "parameters" : {
                   "Internal" : {
                      "max" : "",
@@ -112,8 +119,10 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -132,6 +141,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "bottom_leg",
+                                 "name" : "",
                                  "parameters" : {
                                     "FixationAngle" : {
                                        "max" : "",
@@ -168,8 +178,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -180,6 +192,7 @@
                            }
                         },
                         "component" : "arm_to_arm",
+                        "name" : "",
                         "parameters" : {
                            "Distance" : {
                               "max" : "",
@@ -191,18 +204,21 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
                      "orientationY" : 0,
-                     "orientationZ" : -1.5707963705062866,
+                     "orientationZ" : 0,
                      "remote" : 0,
                      "zero" : 0
                   }
                },
                "component" : "block",
+               "name" : "",
                "parameters" : {
                   "Internal" : {
                      "max" : "",
@@ -214,8 +230,10 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -234,6 +252,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "bottom_leg",
+                                 "name" : "",
                                  "parameters" : {
                                     "FixationAngle" : {
                                        "max" : "",
@@ -270,8 +289,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -282,6 +303,7 @@
                            }
                         },
                         "component" : "arm_to_arm",
+                        "name" : "",
                         "parameters" : {
                            "Distance" : {
                               "max" : "",
@@ -293,18 +315,21 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
                      "orientationY" : 0,
-                     "orientationZ" : -1.5707963705062866,
+                     "orientationZ" : 0,
                      "remote" : 0,
                      "zero" : 0
                   }
                },
                "component" : "block",
+               "name" : "",
                "parameters" : {
                   "Internal" : {
                      "max" : "",
@@ -316,8 +341,10 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -336,6 +363,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "bottom_leg",
+                                 "name" : "",
                                  "parameters" : {
                                     "FixationAngle" : {
                                        "max" : "",
@@ -372,8 +400,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -384,6 +414,7 @@
                            }
                         },
                         "component" : "arm_to_arm",
+                        "name" : "",
                         "parameters" : {
                            "Distance" : {
                               "max" : "",
@@ -395,18 +426,21 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
                      "orientationY" : 0,
-                     "orientationZ" : -1.5707963705062866,
+                     "orientationZ" : 0,
                      "remote" : 0,
                      "zero" : 0
                   }
                },
                "component" : "block",
+               "name" : "",
                "parameters" : {
                   "Internal" : {
                      "max" : "",
@@ -418,8 +452,10 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
@@ -430,6 +466,7 @@
          }
       },
       "component" : "body_arms",
+      "name" : "",
       "parameters" : {
          "Legs" : {
             "max" : "",
@@ -446,6 +483,7 @@
             "min" : "",
             "val" : "2.2"
          }
-      }
+      },
+      "tipName" : ""
    }
 }
