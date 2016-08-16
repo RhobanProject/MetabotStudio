@@ -40,6 +40,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "u_leg_angle",
+                                 "name" : "",
                                  "parameters" : {
                                     "Angle" : {
                                        "max" : "",
@@ -71,8 +72,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -83,6 +86,7 @@
                            }
                         },
                         "component" : "side_to_side",
+                        "name" : "",
                         "parameters" : {
                            "HolesToBorder" : {
                               "max" : "",
@@ -99,8 +103,10 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -111,6 +117,7 @@
                   }
                },
                "component" : "arm_u",
+               "name" : "",
                "parameters" : {
                   "Angle" : {
                      "max" : "",
@@ -132,13 +139,15 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : 1.5707963705062866,
+            "orientationZ" : -1.5707963705062866,
             "remote" : 0,
             "zero" : 0
          },
@@ -152,6 +161,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "u_leg_angle",
+                                 "name" : "",
                                  "parameters" : {
                                     "Angle" : {
                                        "max" : "",
@@ -183,8 +193,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -195,6 +207,7 @@
                            }
                         },
                         "component" : "side_to_side",
+                        "name" : "",
                         "parameters" : {
                            "HolesToBorder" : {
                               "max" : "",
@@ -211,8 +224,10 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -223,6 +238,7 @@
                   }
                },
                "component" : "arm_u",
+               "name" : "",
                "parameters" : {
                   "Angle" : {
                      "max" : "",
@@ -244,13 +260,15 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : 1.5707963705062866,
+            "orientationZ" : -1.5707963705062866,
             "remote" : 0,
             "zero" : 0
          },
@@ -264,6 +282,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "u_leg_angle",
+                                 "name" : "",
                                  "parameters" : {
                                     "Angle" : {
                                        "max" : "",
@@ -295,10 +314,12 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
-                              "maximum" : 0,
-                              "minimum" : -3.1415927410125732,
+                              "inverted" : false,
+                              "maximum" : 3.1415927410125732,
+                              "minimum" : 0,
                               "orientationX" : 0,
                               "orientationY" : 3.1415927410125732,
                               "orientationZ" : 0,
@@ -307,6 +328,7 @@
                            }
                         },
                         "component" : "side_to_side",
+                        "name" : "",
                         "parameters" : {
                            "HolesToBorder" : {
                               "max" : "",
@@ -323,8 +345,10 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -335,6 +359,7 @@
                   }
                },
                "component" : "arm_u",
+               "name" : "",
                "parameters" : {
                   "Angle" : {
                      "max" : "",
@@ -356,13 +381,15 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : 1.5707963705062866,
+            "orientationZ" : -1.5707963705062866,
             "remote" : 0,
             "zero" : 0
          },
@@ -376,6 +403,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "u_leg_angle",
+                                 "name" : "",
                                  "parameters" : {
                                     "Angle" : {
                                        "max" : "",
@@ -407,10 +435,12 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
-                              "maximum" : 0,
-                              "minimum" : -3.1415927410125732,
+                              "inverted" : false,
+                              "maximum" : 3.1415927410125732,
+                              "minimum" : 0,
                               "orientationX" : 0,
                               "orientationY" : 3.1415927410125732,
                               "orientationZ" : 0,
@@ -419,6 +449,7 @@
                            }
                         },
                         "component" : "side_to_side",
+                        "name" : "",
                         "parameters" : {
                            "HolesToBorder" : {
                               "max" : "",
@@ -435,8 +466,10 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -447,6 +480,7 @@
                   }
                },
                "component" : "arm_u",
+               "name" : "",
                "parameters" : {
                   "Angle" : {
                      "max" : "",
@@ -468,13 +502,15 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : 1.5707963705062866,
+            "orientationZ" : -1.5707963705062866,
             "remote" : 0,
             "zero" : 0
          },
@@ -488,6 +524,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "u_leg_angle",
+                                 "name" : "",
                                  "parameters" : {
                                     "Angle" : {
                                        "max" : "",
@@ -519,8 +556,10 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
+                              "inverted" : false,
                               "maximum" : 3.1415927410125732,
                               "minimum" : 0,
                               "orientationX" : 0,
@@ -531,6 +570,7 @@
                            }
                         },
                         "component" : "side_to_side",
+                        "name" : "",
                         "parameters" : {
                            "HolesToBorder" : {
                               "max" : "",
@@ -547,8 +587,10 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -559,6 +601,7 @@
                   }
                },
                "component" : "arm_u",
+               "name" : "",
                "parameters" : {
                   "Angle" : {
                      "max" : "",
@@ -580,13 +623,15 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : 1.5707963705062866,
+            "orientationZ" : -1.5707963705062866,
             "remote" : 0,
             "zero" : 0
          },
@@ -600,6 +645,7 @@
                               "component" : {
                                  "anchors" : {},
                                  "component" : "u_leg_angle",
+                                 "name" : "",
                                  "parameters" : {
                                     "Angle" : {
                                        "max" : "",
@@ -631,10 +677,12 @@
                                        "min" : "",
                                        "val" : "2.2"
                                     }
-                                 }
+                                 },
+                                 "tipName" : ""
                               },
-                              "maximum" : 0,
-                              "minimum" : -3.1415927410125732,
+                              "inverted" : false,
+                              "maximum" : 3.1415927410125732,
+                              "minimum" : 0,
                               "orientationX" : 0,
                               "orientationY" : 3.1415927410125732,
                               "orientationZ" : 0,
@@ -643,6 +691,7 @@
                            }
                         },
                         "component" : "side_to_side",
+                        "name" : "",
                         "parameters" : {
                            "HolesToBorder" : {
                               "max" : "",
@@ -659,8 +708,10 @@
                               "min" : "",
                               "val" : "2.2"
                            }
-                        }
+                        },
+                        "tipName" : ""
                      },
+                     "inverted" : false,
                      "maximum" : 3.1415927410125732,
                      "minimum" : -3.1415927410125732,
                      "orientationX" : 0,
@@ -671,6 +722,7 @@
                   }
                },
                "component" : "arm_u",
+               "name" : "",
                "parameters" : {
                   "Angle" : {
                      "max" : "",
@@ -692,18 +744,21 @@
                      "min" : "",
                      "val" : "2.2"
                   }
-               }
+               },
+               "tipName" : ""
             },
+            "inverted" : false,
             "maximum" : 3.1415927410125732,
             "minimum" : -3.1415927410125732,
             "orientationX" : 0,
             "orientationY" : 0,
-            "orientationZ" : 1.5707963705062866,
+            "orientationZ" : -1.5707963705062866,
             "remote" : 0,
             "zero" : 0
          }
       },
       "component" : "body_side",
+      "name" : "",
       "parameters" : {
          "Legs" : {
             "max" : "",
@@ -720,6 +775,7 @@
             "min" : "",
             "val" : "2.2"
          }
-      }
+      },
+      "tipName" : ""
    }
 }
