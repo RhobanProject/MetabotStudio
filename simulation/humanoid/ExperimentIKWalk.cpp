@@ -26,13 +26,14 @@ void ExperimentIKWalk::initParameters(Parameters &parameters, Metabot::Robot *ro
     parameters.add("z", 0, 1, 0.03, false);
     parameters.add("pitch", -30, 30, 11, false);
     parameters.add("roll", -30, 30, 0, false);
+    parameters.add("support", 0, 1, 0, false);
 }
 
 void ExperimentIKWalk::init(Simulation *simulation, Experiment::Parameters &parameters)
 {
     params.freq = parameters.get("freq");
     params.enabledGain = 1;
-    params.supportPhaseRatio = 0.0;
+    params.supportPhaseRatio = parameters.get("support");
     params.footYOffset = parameters.get("footY");
     params.stepGain = parameters.get("step");
     params.lateralGain = parameters.get("lateral");

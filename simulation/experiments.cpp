@@ -40,7 +40,9 @@ static void initialize()
         registerExperiment<ExperimentWalkSpeed>("walk-speed");
         registerExperiment<ExperimentCheckpointsEfficience>("checkpoints");
         registerExperiment<ExperimentCheckpointsSpeed>("checkpoints-speed");
-        registerExperiment<ExperimentAnalyze>("analyze");
+        registerExperiment<ExperimentAnalyzeDump>("analyze-dump");
+        registerExperiment<ExperimentAnalyzeInitial>("analyze-initial");
+        registerExperiment<ExperimentAnalyzePath>("analyze-path");
 #endif
 
 #ifdef ENABLE_HUMANOID

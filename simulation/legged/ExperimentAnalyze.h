@@ -5,8 +5,24 @@
 #include "ExperimentAnalyze.h"
 #include "ExperimentController.h"
 
-class ExperimentAnalyze : public ExperimentController
+class ExperimentAnalyzeDump : public ExperimentController
 {
     public:
         void control(Simulation *simulation);
+};
+
+class ExperimentAnalyzeInitial : public ExperimentController
+{
+    public:
+        void control(Simulation *simulation);
+};
+
+class ExperimentAnalyzePath : public ExperimentController
+{
+    public:
+        ExperimentAnalyzePath();
+        void control(Simulation *simulation);
+    
+    protected:
+        Vect cop;
 };
