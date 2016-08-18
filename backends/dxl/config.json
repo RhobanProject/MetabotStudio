@@ -7,14 +7,14 @@
             "maxTorque": 2.8,
             "maxSpeed": 12,
             "speedGain": 45,
-            "torqueGain": 0.05
+            "torqueGain": 0.5
         },
         "mx64": {
             "maxTorque": 6.4,
             "maxSpeed": 14,
             "speedGain": 20,
-            "torqueGain": 0.05
+            "torqueGain": 0.5
         }
     },
-    "density": 4
+    "density": 4.25
 }
