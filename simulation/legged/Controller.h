@@ -55,6 +55,7 @@ class Controller
 
         // Swing
         float swingGain;
+        float swingPhase;
 
         // Dynamic parameters
         float dx, dy, turn;

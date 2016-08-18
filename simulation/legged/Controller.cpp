@@ -190,7 +190,7 @@ void Controller::compute(float t_)
 
         // Applying trajectory
         tx += step.posMod(phase)*dx;
-        ty += step.posMod(phase)*dy + swing.posMod(t)*swingGain;
+        ty += step.posMod(phase)*dy + swing.posMod(t+swingPhase)*swingGain;
 
         float tz = rise.posMod(phase) - z;
         
