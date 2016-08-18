@@ -24,7 +24,7 @@ void ExperimentController::initParameters(Parameters &parameters, Metabot::Robot
     parameters.add("dx", -300, 300, 60);
     parameters.add("dy", -300, 300, 0, false);
     parameters.add("turn", -3, 3, 0, false);
-    parameters.add("swing", -100, 100, 0);
+    parameters.add("swing", 0, 100, 0);
     parameters.add("swingPhase", 0, 1, 0);
 
     // Leg phases
