@@ -41,6 +41,7 @@ static void usage()
     std::cout << "  -F: CMA-ES f-tolerance" << std::endl;
     std::cout << "  -R: CMA-ES restarts" << std::endl;
     std::cout << "  -L: CMA-ES lambda" << std::endl;
+    std::cout << "  -D: dt simulation" << std::endl;
     exit(1);
 }
 
