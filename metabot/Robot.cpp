@@ -11,6 +11,13 @@
 #include "Component.h"
 #include "Ref.h"
 #include "util.h"
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
+#include <boost/geometry/geometries/register/point.hpp>
+
+namespace bg = boost::geometry;
+BOOST_GEOMETRY_REGISTER_BOOST_TUPLE_CS(cs::cartesian)
 
 namespace Metabot
 {
@@ -371,7 +378,11 @@ namespace Metabot
             cop.values[2] += point.first.z()*w;
         }
 
-        return cop.multiply(1/total);
+        if (total == 0) {
+            return Vect(0, 0, 0);
+        } else {
+            return cop.multiply(1/total);
+        }
     }
 
     Json::Value Robot::toJson()
@@ -456,6 +467,29 @@ namespace Metabot
                 anchor->hover = false;
             }
         });
+    }
+            
+    bool Robot::comWithinSupport()
+    {
+        typedef boost::tuple<float, float> boostPoint;
+        typedef bg::model::polygon<boostPoint> boostPolygon;
+
+        // Getting robot COM
+        auto com = getBulletCOM();
+
+        // Getting collision points
+        auto points = world.getGroundCollisions();
+        boostPolygon poly, hull;
+        for (auto &e : points) {
+            auto p = e.first;
+            bg::append(poly, boostPoint(p.x(), p.y()));
+        }
+
+        // Computing convex hull
+        bg::convex_hull(poly, hull);
+
+        // Is the com within the convex hull of contact points?
+        return bg::within(boostPoint(com.x(), com.y()), hull);
     }
             
     btVector3 Robot::getBulletCOM()
