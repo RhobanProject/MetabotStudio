@@ -71,23 +71,6 @@ void ExperimentController::control(Simulation *simulation)
         + simulation->robot.world.getGroundNonTipCollisions();
 
     /*
-    static Vect cop(0, 0, 0);
-    auto st = simulation->robot.root->getState();
-    auto pos = simulation->robot.getBulletCOM();
-    auto tmp = cop.multiply(0.97);
-    cop = simulation->robot.getCollisionsCOP().multiply(0.03).add(tmp);
-    std::cout << simulation->t << " " 
-        // 2 3 4
-        << pos.x() << " " << pos.y() << " " << pos.z() << " " <<
-        // 5 6 7
-        cop.x() << " " << cop.y() << " " << cop.z() << " " <<
-        // 8 9 10
-        st.x()/1000.0 << " " << st.y()/1000.0 << " " << st.z()/1000.0 << std::endl;
-    //std::cout << simulation->robot.comWithinSupport() << std::endl;
-    //
-    */
-
-    /*
     static double xs = 0, ys = 0;
     auto collisions = simulation->robot.world.getGroundCollisions();
     double x = 0, y = 0;
