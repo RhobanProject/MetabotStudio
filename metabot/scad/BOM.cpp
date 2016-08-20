@@ -74,4 +74,40 @@ namespace Metabot
         }
         return oss.str();
     }
+    
+    std::string BOM::toHTML()
+    {
+        std::ostringstream oss;
+        float price = 0.0;
+        oss << "<style>td { padding:3px; } table { margin-bottom: 5px; }</style>";
+        oss << "<table>";
+        oss << "<thead>";
+        oss << "<tr>";
+        oss << "<td><b>Name</b></td> <td><b>Quantity</b></td> <td><b>Price</b></td>"
+            << "<td><b>Total</b></td> <td><b>More</b></td>";
+        oss << "</tr>";
+        oss << "</thead>";
+        for (auto all : entries) {
+            oss << "<tr>";
+            BOMEntry entry = all.second;
+            if (entry.quantity) {
+                oss << "<td><b>" << entry.name << "</b></td>";
+                oss << "<td>" << entry.quantity << "</td>";
+                oss << "<td>$ " << entry.price << "</td>";
+                oss << "<td>$ " << entry.quantity*entry.price << "</td>";
+                price += entry.quantity*entry.price;
+
+                if (entry.url != "") {
+                    oss << "<td><a href=\"" << entry.url << "\">Buy</a></td>";
+                } else {
+                    oss << "<td>-</td>";
+                }
+                oss << std::endl;
+            }
+            oss << "</tr>";
+        }
+        oss << "<tr><td></td><td></td><td></td><td><b>$ " << price << "</b></td><td></td></tr>";
+        oss << "</table>";
+        return oss.str();
+    }
 }

@@ -26,6 +26,7 @@ namespace Metabot
             void merge(const BOM &other);
             void append(const BOMEntry &entry);
             std::string toString();
+            std::string toHTML();
 
             std::map<std::string, BOMEntry> entries;
     };
