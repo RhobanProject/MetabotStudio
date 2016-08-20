@@ -72,7 +72,8 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
         translate([0,0,10-xOffset])
             rotate([90,0,0])
             leg(sizeA, sizeB, sizeC, sizeBottom,
-                    sizeTop, mode, fixationAngle, thickness, false);
+                    sizeTop, mode, fixationAngle, thickness, holesPosition,
+        bevelCorner, false);
     } else {
         difference() {
         translate([0,xOffset,-sizeA+holesPosition]) {
@@ -116,4 +117,4 @@ module leg(sizeA=60, sizeB=20, sizeC=20, sizeBottom=10,
     }
 }
 
-leg();
+leg(print=true);
