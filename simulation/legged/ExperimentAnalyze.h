@@ -22,6 +22,7 @@ class ExperimentAnalyzePath : public ExperimentController
     public:
         ExperimentAnalyzePath();
         void control(Simulation *simulation);
+        double score(Simulation *simulation);
     
     protected:
         Vect cop;

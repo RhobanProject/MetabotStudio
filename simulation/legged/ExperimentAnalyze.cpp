@@ -60,6 +60,11 @@ ExperimentAnalyzePath::ExperimentAnalyzePath()
     std::cout << "# 8, 9, 10: cop position (world frame)" << std::endl;
     std::cout << "# 11, 12, 13: trunk position (world frame)" << std::endl;
 }
+        
+double ExperimentAnalyzePath::score(Simulation *simulation)
+{
+    exit(0);
+}
 
 void ExperimentAnalyzePath::control(Simulation *simulation)
 {
