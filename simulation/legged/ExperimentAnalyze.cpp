@@ -38,14 +38,12 @@ void ExperimentAnalyzeDump::control(Simulation *simulation)
 #endif
 
 #if 1
-    if (simulation->t > 0.5) {
-        // Dumping reachable space
-        for (auto &leg : controller->legs) {
-            dump(leg);
-            exit(0);
-        }
+    // Dumping reachable space
+    for (auto &leg : controller->legs) {
+        dump(leg);
         exit(0);
     }
+    exit(0);
 #endif
 }
 
