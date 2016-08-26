@@ -184,13 +184,13 @@ void Controller::compute(float t_)
         // Applying rotation
         float tx_ = tx;
         float ty_ = ty;
-        float theta = step.posMod(phase)*(-turn);
+        float theta = -step.posMod(phase)*(-turn);
         float l = dx/(-turn);
 
         // Applying trajectory
         if (fabs(turn) > 1e-3) {
-            tx = tx_*cos(-theta) - (ty_+l)*sin(-theta);
-            ty = tx_*sin(-theta) + (ty_+l)*cos(-theta) - l;
+            tx = tx_*cos(theta) - (ty_+l)*sin(theta);
+            ty = tx_*sin(theta) + (ty_+l)*cos(theta) - l;
         } else {
             tx += step.posMod(phase)*dx;
             ty += step.posMod(phase)*dy + swing.posMod(t+swingPhase)*swingGain;
