@@ -124,10 +124,11 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
     }
     double bestScore = 1e9;
     double bestp2, bestp3, bestp4;
+    controller->freq = 1;
             
     {
         std::ofstream svg("gait.svg");
-        boost::geometry::svg_mapper<boostPoint> mapper(svg, 400, 400, "");
+        boost::geometry::svg_mapper<boostPoint> mapper(svg, 300, 300, "");
 
         int yDivide = 0;
         double xOffset = 0;
@@ -135,14 +136,9 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
         double score = 0;
         double over = 0;
         for (double t=0.0; t<1.0; t+=0.03) {
-            xOffset += 500;
-            yDivide++;
-            if (yDivide > 5) {
-                yDivide = 0;
-                yOffset += 400;
-            }
             boostPolygon poly;
             controller->compute(t);
+            std::cout << xOffset << " / " << yOffset << std::endl;
            
             bool isFirst = true;
             boostPoint first;
@@ -170,7 +166,7 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
         
             for (int k=0; k<4; k++) {
                 auto &leg = controller->legs[k];
-                boostPoint point(xOffset+leg.xTarget, leg.yTarget);
+                boostPoint point(xOffset+leg.xTarget, leg.yTarget+yOffset);
                 mapper.add(point);
             
                 if (leg.zTarget < (-controller->z+1)) {
@@ -180,7 +176,6 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
                 }
             }
 
-
             if (bg::num_points(poly) > 0) {
                 if (!bg::within(boostPoint(0, 0), poly)) {
                     score += bg::distance(boostPoint(0, 0), poly);
@@ -189,6 +184,14 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
                 }
             } else {
                 score += 1e6;
+            }
+            
+            xOffset += 600;
+            yDivide++;
+            if (yDivide > 4) {
+                yDivide = 0;
+                xOffset = 0;
+                yOffset -= 500;
             }
         }
     }
@@ -205,17 +208,18 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
     for (auto &leg : controller->legs) {
         leg.dummy = true;
     }
+    controller->freq = 1;
 
 #ifdef MODE_BEST
     double bestScore = 1e9;
     double bestp2, bestp3, bestp4;
 #endif
                         
-    for (double p2=0; p2<1; p2+=0.03) {
+    for (double p2=0; p2<1; p2+=0.05) {
         controller->phases[1] = p2;
-        for (double p3=0; p3<1; p3+=0.03) {
+        for (double p3=0; p3<1; p3+=0.05) {
             controller->phases[2] = p3;
-            for (double p4=0; p4<1; p4+=0.03) {
+            for (double p4=0; p4<1; p4+=0.05) {
                 controller->phases[3] = p4;
     
                 double score = 0;
@@ -256,7 +260,6 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
                     if (score > bestScore) break;
 #endif
                 }
-                exit(0);
 
 #ifdef MODE_BEST
                 if (score < bestScore) {
