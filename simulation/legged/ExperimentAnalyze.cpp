@@ -38,14 +38,12 @@ void ExperimentAnalyzeDump::control(Simulation *simulation)
 #endif
 
 #if 1
-    if (simulation->t > 0.5) {
-        // Dumping reachable space
-        for (auto &leg : controller->legs) {
-            dump(leg);
-            exit(0);
-        }
+    // Dumping reachable space
+    for (auto &leg : controller->legs) {
+        dump(leg);
         exit(0);
     }
+    exit(0);
 #endif
 }
 
@@ -59,6 +57,11 @@ ExperimentAnalyzePath::ExperimentAnalyzePath()
     std::cout << "# 5, 6, 7: com position (world frame)" << std::endl;
     std::cout << "# 8, 9, 10: cop position (world frame)" << std::endl;
     std::cout << "# 11, 12, 13: trunk position (world frame)" << std::endl;
+}
+        
+double ExperimentAnalyzePath::score(Simulation *simulation)
+{
+    exit(0);
 }
 
 void ExperimentAnalyzePath::control(Simulation *simulation)

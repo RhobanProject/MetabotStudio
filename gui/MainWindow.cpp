@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pasteComponent("Paste", this),
     copyBuffer(NULL),
     robot(NULL), robotSave(NULL),
-    wizard(NULL), dynamics(NULL), parametersEditor(NULL),
+    wizard(NULL), dynamics(NULL), bom(NULL), parametersEditor(NULL),
     filename(""),
     zeros(NULL)
 {
@@ -698,4 +698,18 @@ void MainWindow::on_actionComponent_frames_triggered()
 {
     viewer->drawFrames = ui->actionComponent_frames->isChecked();
     viewer->redraw();
+}
+
+void MainWindow::on_actionBOM_triggered()
+{
+    QString bomList = QString::fromStdString(robot->getBOM().toHTML());
+
+    if (bom != NULL) {
+        bom->close();
+        delete bom;
+    }
+
+    bom = new BOMWindow();
+    bom->setBom(bomList);
+    bom->show();
 }

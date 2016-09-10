@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons.qrc">
+   <iconset>
     <normaloff>:/imgs/imgs/spidey.png</normaloff>:/imgs/imgs/spidey.png</iconset>
   </property>
   <widget class="QWidget" name="main">
@@ -112,7 +112,7 @@
      <x>0</x>
      <y>0</y>
      <width>630</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -138,6 +138,7 @@
     </property>
     <addaction name="actionZeros"/>
     <addaction name="actionCompute_dynamics"/>
+    <addaction name="actionBOM"/>
     <addaction name="actionParameters"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -361,6 +362,11 @@
     <string>Ctrl+J</string>
    </property>
   </action>
+  <action name="actionBOM">
+   <property name="text">
+    <string>BOM</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -370,8 +376,6 @@
    <header>ObjectsTree.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

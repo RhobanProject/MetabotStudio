@@ -611,6 +611,7 @@ namespace Metabot
                             rot.toBullet(),
                             childComponent->com.inverse()*anchor->anchor->transformationForward().multiply(rot).toBullet()
                             );
+                    //             Axe   Latéral Torsion
                     cone->setLimit(0.04, 0.02, 0.02);
                     //cone->setLimit(0.01, 0.01, 0.01);
                     // cone->setLimit(0.0, 0.0, 0.0);

@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     DynamicsWindow.cpp \
     ParametersEditor.cpp \
     ValueWidget.cpp \
-    BackendSelector.cpp
+    BackendSelector.cpp \
+    BOMWindow.cpp
 
 HEADERS  += MainWindow.h \
     ComponentWizard.h \
@@ -32,7 +33,8 @@ HEADERS  += MainWindow.h \
     DynamicsWindow.h \
     ParametersEditor.h \
     ValueWidget.h \
-    BackendSelector.h
+    BackendSelector.h \
+    BOMWindow.h
 
 FORMS    += MainWindow.ui \
     ComponentWizard.ui \
@@ -40,7 +42,8 @@ FORMS    += MainWindow.ui \
     ZerosEditor.ui \
     DynamicsWindow.ui \
     ParametersEditor.ui \
-    BackendSelector.ui
+    BackendSelector.ui \
+    BOMWindow.ui
 
 DEFINES += OPENGL BT_USE_DOUBLE_PRECISION
 CONFIG += c++11

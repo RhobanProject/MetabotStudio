@@ -13,6 +13,7 @@
 #include <metabot/Robot.h>
 #include "ComponentWizard.h"
 #include "DynamicsWindow.h"
+#include "BOMWindow.h"
 #include "ParametersEditor.h"
 #include "BackendSelector.h"
 
@@ -107,6 +108,8 @@ private slots:
 
     void on_actionComponent_frames_triggered();
 
+    void on_actionBOM_triggered();
+
 private:
     BackendSelector backendSelector;
     QSettings settings;
@@ -122,6 +125,7 @@ private:
     Ui::MainWindow *ui;
     Metabot::Backend *backend;
     DynamicsWindow *dynamics;
+    BOMWindow *bom;
     ParametersEditor *parametersEditor;
     ComponentWizard *wizard;
     std::map<QTreeWidgetItem*, Metabot::AnchorPoint*> items;

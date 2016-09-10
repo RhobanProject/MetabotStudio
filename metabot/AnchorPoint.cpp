@@ -259,9 +259,15 @@ namespace Metabot
             if (above && (highlight || hover)) {
                 matrix.openGLMult();
                 auto m = component->backend->getModel("anchor");
-                m.r = 0.4;
-                m.g = 0.3;
-                m.b = 1.0;
+                if (male) {
+                    m.r = 0.4;
+                    m.g = 0.3;
+                    m.b = 1.0;
+                } else {
+                    m.r = 1.0;
+                    m.g = 0.3;
+                    m.b = 0.7;
+                }
                 m.openGLDraw(alpha);
             }
         }
