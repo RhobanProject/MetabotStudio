@@ -237,11 +237,11 @@ int main(int argc, char *argv[])
                 return task;
             };
 
-            for (float p2=0; p2<1; p2+=0.025) {
+            for (float p2=0; p2<1; p2+=0.05) {
                 parameters.set("p2", p2);
-                for (float p3=0; p3<1; p3+=0.025) {
+                for (float p3=0; p3<1; p3+=0.05) {
                     parameters.set("p3", p3);
-                    for (float p4=0; p4<1; p4+=0.025) {
+                    for (float p4=0; p4<1; p4+=0.05) {
                         parameters.set("p4", p4);
                         todo.push_back(parameters);
                     }
@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
             cmaparams.set_restarts(restarts);
             //cmaparams.set_max_hist(3);
             //cmaparams.set_max_fevals(10000000);
-            //cmaparams.set_elitism(0);
+            cmaparams.set_elitism(2);
             //cmaparams.set_x0(0, 1);
             cmaparams.set_ftolerance(ftolerance);
             cmaparams.set_xtolerance(1e-3);
