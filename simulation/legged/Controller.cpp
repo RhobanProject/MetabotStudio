@@ -7,7 +7,7 @@
 using namespace libcmaes;
             
 Controller::Leg::Leg(Metabot::Kinematic::Tip tip_)
-    : tip(tip_)
+    : tip(tip_), dummy(false)
 {
     for (auto &item : tip.chain) {
         if (item.type == CHAIN_ROTATION) {
@@ -104,7 +104,13 @@ void Controller::Leg::gotoXYZ_rand(float x, float y, float z)
 
 void Controller::Leg::gotoXYZ(float x, float y, float z)
 {
-    gotoXYZ_rand(x,y,z);
+    xTarget = x;
+    yTarget = y;
+    zTarget = z;
+
+    if (!dummy) {
+        gotoXYZ_rand(x,y,z);
+    }
 }
 
 Controller::Controller(Metabot::Robot *robot)

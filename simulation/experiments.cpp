@@ -43,6 +43,9 @@ static void initialize()
         registerExperiment<ExperimentAnalyzeDump>("analyze-dump");
         registerExperiment<ExperimentAnalyzeInitial>("analyze-initial");
         registerExperiment<ExperimentAnalyzePath>("analyze-path");
+        registerExperiment<ExperimentAnalyzeStable>("analyze-stable");
+        registerExperiment<ExperimentAnalyzeDraw>("analyze-draw");
+        registerExperiment<ExperimentAnalyzeEffectiveSupport>("analyze-effective-support");
 #endif
 
 #ifdef ENABLE_HUMANOID

@@ -20,6 +20,8 @@ class Controller
             std::vector<double> alphas;
 
             // Leg vector and angle
+            bool dummy;
+            float xTarget, yTarget, zTarget;
             float xVec, yVec;
             float theta;
 
@@ -28,9 +30,6 @@ class Controller
         };
 
         Controller(Metabot::Robot *robot);
-
-        // Robot parameters
-        float l1, l2, l3;
 
         // Initializes the motion
         void setupFunctions();

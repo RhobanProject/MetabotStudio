@@ -27,3 +27,28 @@ class ExperimentAnalyzePath : public ExperimentController
     protected:
         Vect cop;
 };
+
+class ExperimentAnalyzeStable : public ExperimentController
+{
+    public:
+        void control(Simulation *simulation);
+};
+
+class ExperimentAnalyzeDraw : public ExperimentController
+{
+    public:
+        void control(Simulation *simulation);
+};
+
+class ExperimentAnalyzeEffectiveSupport : public ExperimentController
+{
+    public:
+        void init(Simulation *simulation, Parameters &parameters);
+        void control(Simulation *simulation);
+        double score(Simulation *simulation);
+
+    protected:
+        std::vector<Component *> legs;
+        std::vector<int> supportFrames;
+        int totalFrames;
+};
