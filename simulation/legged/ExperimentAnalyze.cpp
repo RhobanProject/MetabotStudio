@@ -199,7 +199,7 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
 
 void makePossibilities(
         std::vector<std::vector<float>> &possibilities,
-        int size, double epsilon = 0.01,
+        int size, double epsilon = 0.1,
         std::vector<float> prefix = std::vector<float>()
         )
 {
@@ -237,7 +237,7 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
 #ifdef MODE_BEST
         N++;
         double f = 100*N/(double)possibilities.size();
-        //printf("%02.2f%\r", f);
+        printf("%02.2f%\r", f);
         for (int k=0; k<phases.size(); k++) {
             controller->phases[k+1] = phases[k];
         }
@@ -282,11 +282,11 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
 
             if (bg::num_points(poly) > 0) {
                 if (!bg::within(boostPoint(0, 0), poly)) {
-                    score += bg::distance(boostPoint(0, 0), poly);
+                    score += pow(bg::distance(boostPoint(0, 0), poly), 1);
                 } else {
                     boostPoint c(0, 0);
                     bool isFirst = true;
-                    double nearest;
+                    double nearest = 0;
                     for (auto s : segments) {
                         double dist = bg::distance(c, s);
                         if (isFirst) {
@@ -341,12 +341,17 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
     }
 
 #ifdef MODE_BEST
+    /*
     if (controller->legs.size() == 4) {
         best[1] += 0.5;
         if (best[1] > 1) best[1] -= 1;
     }
+    */
     printf("%f ", bestScore);
-    for (auto p : best) printf("%f ", p);
+    int k = 2;
+    for (auto p : best) {
+        printf("p%d=%f ", (k++), p);
+    }
     printf("\n");
 #endif
 
