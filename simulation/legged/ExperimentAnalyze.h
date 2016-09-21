@@ -32,6 +32,7 @@ class ExperimentAnalyzeStable : public ExperimentController
 {
     public:
         void control(Simulation *simulation);
+        double scoreGait(std::vector<float> phases);
 };
 
 class ExperimentAnalyzeDraw : public ExperimentController

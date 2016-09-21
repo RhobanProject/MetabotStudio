@@ -163,7 +163,7 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
             mapper.map(poly, "fill:#70c4ff; stroke:#70c4ff; stroke-width:10");
             mapper.map(x, "fill:#8c1593", 15);
 
-            for (int k=0; k<4; k++) {
+            for (int k=0; k<controller->legs.size(); k++) {
                 auto &leg = controller->legs[k];
                 boostPoint point(xOffset+leg.xTarget, leg.yTarget+yOffset);
                 mapper.add(point);
@@ -199,7 +199,7 @@ void ExperimentAnalyzeDraw::control(Simulation *simulation)
 
 void makePossibilities(
         std::vector<std::vector<float>> &possibilities,
-        int size, double epsilon = 0.1,
+        int size, double epsilon = 0.025,
         std::vector<float> prefix = std::vector<float>()
         )
 {
@@ -217,6 +217,91 @@ void makePossibilities(
 
 #define MODE_BEST
 
+double ExperimentAnalyzeStable::scoreGait(std::vector<float> phases)
+{
+#ifdef MODE_BEST
+    for (int k=0; k<phases.size(); k++) {
+        controller->phases[k+1] = phases[k];
+    }
+#endif
+    /*
+    for (auto p : phases) {
+        printf("%g ", p);
+    }
+    printf("\n");
+    */
+
+    double score = 0;
+    double sscore = 0;
+    double over = 0;
+    for (double t=0.0; t<1.0; t+=0.025) {
+        std::vector<boostSegment> segments;
+        boostPolygon poly;
+        controller->compute(t);
+
+        bool isFirst = true;
+        boostPoint first;
+        boostPoint last;
+        for (int k=0; k<controller->legs.size(); k++) {
+            auto &leg = controller->legs[k];
+            if (leg.zTarget < (-controller->z+1e-3)) {
+                boostPoint point(leg.xTarget, leg.yTarget);
+                if (isFirst) {
+                    first = point;
+                    isFirst = false;
+                } else {
+                    segments.push_back(boostSegment(last, point));
+                }
+                last = point;
+                bg::append(poly, point);
+                //printf("(%g,%g)\n", leg.xTarget, leg.yTarget);
+            }
+        }
+        if (!isFirst) {
+            bg::append(poly, first);
+        }
+
+        if (bg::num_points(poly) > 0) {
+            if (!bg::within(boostPoint(0, 0), poly)) {
+                score += pow(bg::distance(boostPoint(0, 0), poly), 1);
+            } else {
+                boostPoint c(0, 0);
+                bool isFirst = true;
+                double nearest = 0;
+                for (auto s : segments) {
+                    double dist = bg::distance(c, s);
+                    if (isFirst) {
+                        isFirst = false;
+                        nearest = dist;
+                    } else {
+                        if (dist < nearest) nearest = dist;
+                    }
+                }
+
+                sscore += nearest;
+            }
+        } else {
+            score += 1e12;
+        }
+
+#ifdef MODE_BEST
+    /*
+    double vscore = score;
+    if (vscore < 0.1) {
+        vscore = -sscore;
+    }
+    if (vscore > bestScore) break;
+    */
+#endif
+    }
+
+    if (score < 0.1) {
+        score = -sscore;
+    }
+
+    return score;
+}
+
 void ExperimentAnalyzeStable::control(Simulation *simulation)
 {
     for (auto &leg : controller->legs) {
@@ -230,95 +315,21 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
 #endif
 
     std::vector<std::vector<float>> possibilities;
+#ifdef MODE_BEST
     makePossibilities(possibilities, controller->legs.size()-1);
+#else
+    possibilities.push_back(std::vector<float>());
+#endif
 
     long int N = 0;
-    for (auto &phases : possibilities) {
+    for (auto phases : possibilities) {
 #ifdef MODE_BEST
         N++;
         double f = 100*N/(double)possibilities.size();
         printf("%02.2f%\r", f);
-        for (int k=0; k<phases.size(); k++) {
-            controller->phases[k+1] = phases[k];
-        }
 #endif
 
-        /*
-        for (auto p : phases) {
-            printf("%g ", p);
-        }
-        printf("\n");
-        */
-
-        double score = 0;
-        double sscore = 0;
-        double over = 0;
-        for (double t=0.0; t<1.0; t+=0.03) {
-            std::vector<boostSegment> segments;
-            boostPolygon poly;
-            controller->compute(t);
-
-            bool isFirst = true;
-            boostPoint first;
-            boostPoint last;
-            for (int k=0; k<controller->legs.size(); k++) {
-                auto &leg = controller->legs[k];
-                if (leg.zTarget < (-controller->z+1e-3)) {
-                    boostPoint point(leg.xTarget, leg.yTarget);
-                    if (isFirst) {
-                        first = point;
-                        isFirst = false;
-                    } else {
-                        segments.push_back(boostSegment(last, point));
-                    }
-                    last = point;
-                    bg::append(poly, point);
-                    //printf("(%g,%g)\n", leg.xTarget, leg.yTarget);
-                }
-            }
-            if (!isFirst) {
-                bg::append(poly, first);
-            }
-
-            if (bg::num_points(poly) > 0) {
-                if (!bg::within(boostPoint(0, 0), poly)) {
-                    score += pow(bg::distance(boostPoint(0, 0), poly), 1);
-                } else {
-                    boostPoint c(0, 0);
-                    bool isFirst = true;
-                    double nearest = 0;
-                    for (auto s : segments) {
-                        double dist = bg::distance(c, s);
-                        if (isFirst) {
-                            isFirst = false;
-                            nearest = dist;
-                        } else {
-                            if (dist < nearest) nearest = dist;
-                        }
-                    }
-
-                    sscore += nearest;
-                }
-            } else {
-                score += 1e6;
-            }
-
-#ifdef MODE_BEST
-        /*
-        double vscore = score;
-        if (vscore < 0.1) {
-            vscore = -sscore;
-        }
-        if (vscore > bestScore) break;
-        */
-#endif
-        }
-
-        if (score < 0.1) {
-            score = -sscore;
-        }
-
-        // printf("=> %f\n", score);
+        double score = scoreGait(phases);
 
 #ifdef MODE_BEST
         if (score < bestScore) {
@@ -341,12 +352,6 @@ void ExperimentAnalyzeStable::control(Simulation *simulation)
     }
 
 #ifdef MODE_BEST
-    /*
-    if (controller->legs.size() == 4) {
-        best[1] += 0.5;
-        if (best[1] > 1) best[1] -= 1;
-    }
-    */
     printf("%f ", bestScore);
     int k = 2;
     for (auto p : best) {
