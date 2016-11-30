@@ -40,6 +40,10 @@ std::array<float,3> eulerAngles(const double4x4& R) {
         return { x, y, z };
     } else { //two solutions exist
         float y1 = -asin(R[2][0]);
+        if (y1 != y1) {
+            if (R[2][0] > 0) y1 = M_PI/2;
+            else y1 = -M_PI/2;
+        }
         float y2 = M_PI - y1;
 
         float x1 = atan2(R[2][1] / cos(y1), R[2][2] / cos(y1));
@@ -223,6 +227,15 @@ namespace Metabot
         m.values[0][1] = -sin(alpha);
         m.values[1][0] = sin(alpha);
         m.values[1][1] = cos(alpha);
+        return m;
+    }
+    TransformMatrix TransformMatrix::rotationZP(float alpha)
+    {
+        TransformMatrix m = TransformMatrix::identity();
+        m.values[0][0] = -sin(alpha);
+        m.values[0][1] = -cos(alpha);
+        m.values[1][0] = cos(alpha);
+        m.values[1][1] = -sin(alpha);
         return m;
     }
             
