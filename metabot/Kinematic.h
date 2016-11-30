@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -34,7 +35,9 @@ namespace Metabot
                     std::vector<Point3> positions(const std::vector<double> &alphas);
                     std::vector<ChainItem> chain;
                     std::map<int, int> angles;
-                    Symbolic x, y, z;
+                    std::shared_ptr<Symbolic> x;
+                    std::shared_ptr<Symbolic> y;
+                    std::shared_ptr<Symbolic> z;
             };
 
             Kinematic();

@@ -92,9 +92,9 @@ namespace Metabot
         std::stringstream ss;
         ss << "RobotKinematic::Point3D tip_" << (tipId++) << "_position() {" << std::endl;
         ss << "  RobotKinematic::Point3D point;" << std::endl;
-        ss << "  point.x = " << tip.x << ";" << std::endl;
-        ss << "  point.y = " << tip.y << ";" << std::endl;
-        ss << "  point.z = " << tip.z << ";" << std::endl;
+        ss << "  point.x = " << *tip.x << ";" << std::endl;
+        ss << "  point.y = " << *tip.y << ";" << std::endl;
+        ss << "  point.z = " << *tip.z << ";" << std::endl;
         ss << "  return point;" << std::endl;
         ss << "}" << std::endl <<  std::endl;
         code += ss.str();
