@@ -140,9 +140,9 @@ namespace Metabot
 
             // Computing x, y and z for this tip
             Symbolic matrix = parent*sym;
-            tip.x = matrix(0,3).simplify();
-            tip.y = matrix(1,3).simplify();
-            tip.z = matrix(2,3).simplify();
+            tip.x = std::make_shared<Symbolic>(matrix(0,3).simplify());
+            tip.y = std::make_shared<Symbolic>(matrix(1,3).simplify());
+            tip.z = std::make_shared<Symbolic>(matrix(2,3).simplify());
 
             // Adding this tip
             kinematic.addTip(tip);
@@ -192,7 +192,8 @@ namespace Metabot
             linkName = "link_root";
         }
 
-        auto preTransform = TransformMatrix::identity();
+        TransformMatrix preTransform = TransformMatrix::identity();
+        preTransform = TransformMatrix::rotationX(-M_PI/2);
         if (above != NULL) {
             preTransform = above->transformationBackward();
         }
