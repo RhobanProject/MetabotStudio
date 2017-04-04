@@ -129,6 +129,7 @@ namespace Metabot
                         moduleState = MODULE_MODULE;
                         state = PARSER_MODULE;
                         processModuleLine(line);
+                        brackets = 1;
                     }
                 }
             break;
