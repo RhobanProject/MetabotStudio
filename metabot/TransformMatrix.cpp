@@ -35,7 +35,6 @@ std::array<float,3> eulerAngles(const double4x4& R) {
     }
     else
     {
-	std::cout << "Singular (" << sy << "/" << R[0][0] << ", " << R[1][0] << ")!" << std::endl;
         x = atan2(R[0][1], R[1][1]);
         y = atan2(-R[2][0], sy);
         z = 0;
