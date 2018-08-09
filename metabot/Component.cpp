@@ -279,7 +279,6 @@ namespace Metabot
                 jointName = this->name;
             }
 
-            /*
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
             // XXX: This forces the file to be in an urdf/ folder
@@ -290,7 +289,6 @@ namespace Metabot
             ss << "      </material>" << std::endl;
             ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
             ss << "    </visual>" << std::endl;
-            */
         }
 
         // Adding dynamics
