@@ -17,30 +17,31 @@ bool closeEnough(const float& a, const float& b, const float& epsilon = std::num
     return (epsilon > fabs(a - b));
 }
 
-#define EULER_X 2
-#define EULER_Y 1
-#define EULER_Z 0
-
 std::array<float,3> eulerAngles(const double4x4& R) {
-    float sy = sqrt(R[0][0] * R[0][0] +  R[1][0] * R[1][0] );
- 
-    bool singular = sy < 1e-6; // If
- 
-    float x, y, z;
-    if (!singular)
+    float yaw, pitch, roll;
+
+    // first use the normal calculus
+    yaw = atan2(R[1][0], R[0][0]);
+    pitch = asin(-R[2][0]);
+    roll = atan2(R[2][1], R[2][2]);
+
+    // on pitch = +/-HalfPI
+    if (fabs(pitch) == (M_PI/2))
     {
-        x = atan2(R[2][1] , R[2][2]);
-        y = atan2(-R[2][0], sy);
-        z = atan2(R[1][0], R[0][0]);
-    }
-    else
-    {
-        x = atan2(R[0][1], R[1][1]);
-        y = atan2(-R[2][0], sy);
-        z = 0;
+	if (yaw > 0) {
+	    yaw -= M_PI;
+	} else {
+	    yaw += M_PI;
+	}
+
+	if (roll>0) {
+	    roll -= M_PI;
+	} else {
+	    roll += M_PI;
+	}
     }
 
-    return {x, y, z};
+    return {roll, pitch, yaw};
 }
 
 namespace Metabot
