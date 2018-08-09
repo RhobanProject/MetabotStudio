@@ -22,44 +22,26 @@ bool closeEnough(const float& a, const float& b, const float& epsilon = std::num
 #define EULER_Z 0
 
 std::array<float,3> eulerAngles(const double4x4& R) {
-    //check for gimbal lock
-    if (closeEnough(R[2][0], -1.0f) || closeEnough(R[2][0], 1.0f)) {
-        float x, y;
-        float z = 0;
-
-        if (closeEnough(R[2][0], -1.0f)) {
-            float d = atan2(R[0][1], R[0][2]);
-            y = M_PI/2;
-            x = d;
-        } else {
-            float d = atan2(-R[0][1], -R[0][2]);
-            y = -M_PI/2;
-            x = d;
-        }
-
-        return { x, y, z };
-    } else { //two solutions exist
-        float y1 = -asin(R[2][0]);
-        if (y1 != y1) {
-            if (R[2][0] > 0) y1 = M_PI/2;
-            else y1 = -M_PI/2;
-        }
-        float y2 = M_PI - y1;
-
-        float x1 = atan2(R[2][1] / cos(y1), R[2][2] / cos(y1));
-        float x2 = atan2(R[2][1] / cos(y2), R[2][2] / cos(y2));
-
-        float z1 = atan2(R[1][0] / cos(y1), R[0][0] / cos(y1));
-        float z2 = atan2(R[1][0] / cos(y2), R[0][0] / cos(y2));
-
-        //choose one solution to return
-        //for example the "shortest" rotation
-        if ((fabs(x1) + fabs(y1) + fabs(z1)) <= (fabs(x2) + fabs(y2) + fabs(z2))) {
-            return { x1, y1, z1 };
-        } else {
-            return { x2, y2, z2 };
-        }
+    float sy = sqrt(R[0][0] * R[0][0] +  R[1][0] * R[1][0] );
+ 
+    bool singular = sy < 1e-6; // If
+ 
+    float x, y, z;
+    if (!singular)
+    {
+        x = atan2(R[2][1] , R[2][2]);
+        y = atan2(-R[2][0], sy);
+        z = atan2(R[1][0], R[0][0]);
     }
+    else
+    {
+	std::cout << "Singular (" << sy << "/" << R[0][0] << ", " << R[1][0] << ")!" << std::endl;
+        x = atan2(R[0][1], R[1][1]);
+        y = atan2(-R[2][0], sy);
+        z = 0;
+    }
+
+    return {x, y, z};
 }
 
 namespace Metabot

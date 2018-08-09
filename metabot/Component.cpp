@@ -226,7 +226,7 @@ namespace Metabot
 
     // Simplifies small numbers (for <axis>)
     static float smp(float s) {
-        if (s < 1e-3) return 0;
+        if (fabs(s) < 1e-3) return 0;
         else return s;
     }
     
@@ -279,6 +279,7 @@ namespace Metabot
                 jointName = this->name;
             }
 
+            /*
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
             // XXX: This forces the file to be in an urdf/ folder
@@ -289,6 +290,7 @@ namespace Metabot
             ss << "      </material>" << std::endl;
             ss << "    " << preTransform.multiply(ref->matrix).toURDF() << std::endl;
             ss << "    </visual>" << std::endl;
+            */
         }
 
         // Adding dynamics
@@ -330,6 +332,7 @@ namespace Metabot
 
         // Drawing tips
         int tipNum = 0;
+        /*
         for (auto tip : tips) {
             std::stringstream tmp;
 
@@ -357,6 +360,7 @@ namespace Metabot
             ss << "    <axis xyz=\"0 0 0\" />" << std::endl;
             ss << "</joint>" << std::endl;
         }
+        */
 
         // Drawing sub-components
         for (auto anchor : anchors) {
