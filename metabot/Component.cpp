@@ -193,7 +193,7 @@ namespace Metabot
         }
 
         TransformMatrix preTransform = TransformMatrix::identity();
-        preTransform = TransformMatrix::rotationX(-M_PI/2);
+        preTransform = TransformMatrix::identity(); // rotationX(-M_PI/2);
         if (above != NULL) {
             preTransform = above->transformationBackward();
         }
@@ -282,7 +282,7 @@ namespace Metabot
             ss << "    <visual>" << std::endl;
             ss << "      <geometry>" << std::endl;
             // XXX: This forces the file to be in an urdf/ folder
-            ss << "        <mesh filename=\"package://urdf/" << ref->hash() << ".stl\"/>" << std::endl;
+            ss << "        <mesh filename=\"package://" << ref->hash() << ".stl\"/>" << std::endl;
             ss << "      </geometry>" << std::endl;
             ss << "      <material name=\"" << refName << "_material\">" << std::endl;
             ss << "        <color rgba=\"" << ref->r << " " << ref->g << " " << ref->b << " 1.0\"/>" << std::endl;
@@ -324,13 +324,14 @@ namespace Metabot
             ss << jointFrame.toURDF() << std::endl;
 
             auto motor = backend->config.motors[above->anchor->type];
-            ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
+            //ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" lower=\"" << -M_PI << "\" upper=\"" << M_PI << "\"/>" << std::endl;
+            ss << "    <limit effort=\"" << motor.maxTorque << "\" velocity=\"" << motor.maxSpeed << "\" />" << std::endl;
+            ss << "    <joint_properties friction=\"0.0\"/>" << std::endl;
             ss << "  </joint>" << std::endl;
         }
 
         // Drawing tips
         int tipNum = 0;
-        /*
         for (auto tip : tips) {
             std::stringstream tmp;
 
@@ -358,7 +359,6 @@ namespace Metabot
             ss << "    <axis xyz=\"0 0 0\" />" << std::endl;
             ss << "</joint>" << std::endl;
         }
-        */
 
         // Drawing sub-components
         for (auto anchor : anchors) {

@@ -135,7 +135,7 @@ namespace Metabot
  
         foreachComponent([directory, this](Component *instance, TransformMatrix m) {
             for (auto ref : instance->refs()) {
-                ref->parameters.set("$fn", "7");
+                ref->parameters.set("$fn", "15");
                 ref->compile(this->backend, DEFINE_JS);
                 auto model = ref->getModel();
                 model.scale(1/1000.0);
